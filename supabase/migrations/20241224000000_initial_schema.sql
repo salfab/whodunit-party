@@ -2,7 +2,7 @@
 -- Consolidated migration including all features
 
 -- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 
 -- Create enum types
 CREATE TYPE player_role AS ENUM ('investigator', 'guilty', 'innocent');
@@ -11,7 +11,7 @@ CREATE TYPE session_status AS ENUM ('lobby', 'playing', 'completed');
 
 -- Mysteries table
 CREATE TABLE mysteries (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   innocent_words TEXT[] NOT NULL DEFAULT '{}',
@@ -24,7 +24,7 @@ CREATE TABLE mysteries (
 
 -- Character sheets table
 CREATE TABLE character_sheets (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   mystery_id UUID NOT NULL REFERENCES mysteries(id) ON DELETE CASCADE,
   role player_role NOT NULL,
   dark_secret TEXT NOT NULL,
@@ -38,7 +38,7 @@ CREATE INDEX idx_character_sheets_role ON character_sheets(role);
 
 -- Game sessions table
 CREATE TABLE game_sessions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   status session_status NOT NULL DEFAULT 'lobby',
   join_code TEXT NOT NULL UNIQUE,
   current_mystery_id UUID REFERENCES mysteries(id) ON DELETE SET NULL,
@@ -51,7 +51,7 @@ CREATE INDEX idx_game_sessions_status ON game_sessions(status);
 
 -- Players table
 CREATE TABLE players (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id UUID NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   status player_status NOT NULL DEFAULT 'active',
@@ -68,7 +68,7 @@ CREATE INDEX idx_players_session_investigator ON players(session_id, has_been_in
 
 -- Player assignments table (links players to character sheets for a specific round)
 CREATE TABLE player_assignments (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id UUID NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
   player_id UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
   sheet_id UUID NOT NULL REFERENCES character_sheets(id) ON DELETE CASCADE,
@@ -82,7 +82,7 @@ CREATE INDEX idx_player_assignments_mystery ON player_assignments(mystery_id);
 
 -- Rounds table (tracks accusations and results)
 CREATE TABLE rounds (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id UUID NOT NULL REFERENCES game_sessions(id) ON DELETE CASCADE,
   mystery_id UUID NOT NULL REFERENCES mysteries(id) ON DELETE CASCADE,
   investigator_player_id UUID NOT NULL REFERENCES players(id) ON DELETE CASCADE,
