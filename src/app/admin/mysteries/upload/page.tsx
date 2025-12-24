@@ -104,7 +104,11 @@ export default function UploadMysteriesPage() {
     }
   };
 
-  coninnocent_words": ["manuscript", "inheritance", "betrayal"],
+  const exampleJson = `[
+  {
+    "title": "Murder at the Manor",
+    "description": "## The Crime\\n\\nLord Blackwood was found dead in his study at midnight...",
+    "innocent_words": ["manuscript", "inheritance", "betrayal"],
     "guilty_words": ["ledger", "poison", "desperate"],
     "character_sheets": [
       {
@@ -119,11 +123,7 @@ export default function UploadMysteriesPage() {
       },
       {
         "role": "innocent",
-        "dark_secret": "You're having an affair with the victim's spouse."
-      {
-        "role": "innocent",
         "dark_secret": "You're having an affair with the victim's spouse.",
-        "words_to_place": ["secret", "rendezvous", "passion"],
         "alibi": "I was walking in the garden."
       }
     ]
@@ -140,9 +140,9 @@ export default function UploadMysteriesPage() {
 
           <Typography variant="body1" paragraph color="text.secondary">
             Paste a JSON array of mystery objects below. Each mystery should include a title,
-            description, and an array of character sheets with roles (investigator, guilty, innocent).
-          </Typography>innocent_words (3 words for all innocent players), guilty_words (3 words for the guilty player),
-            
+            description, innocent_words (3 words for all innocent players), guilty_words (3 words for the guilty player),
+            and an array of character sheets with roles (investigator, guilty, innocent).
+          </Typography>
 
           {error && (
             <Alert severity="error" sx={{ mb: 3 }}>
