@@ -286,6 +286,58 @@ export default function LobbyPage() {
   const minPlayers = 5;
   const canStart = activePlayers.length >= minPlayers && readyCount === activePlayers.length;
 
+  // Start game when all players are ready
+  useEffect(() => {
+    if (canStart && session?.status === 'lobby') {
+      startGame();
+    }
+  }, [canStart, session?.status]);
+
+  async function startGame() {
+    try {
+      console.log('Starting game...');
+      
+      // First, get a random mystery
+      const mysteriesResponse = await fetch('/api/mysteries');
+      if (!mysteriesResponse.ok) {
+        throw new Error('Failed to fetch mysteries');
+      }
+      
+      const mysteries = await mysteriesResponse.json();
+      if (!mysteries || mysteries.length === 0) {
+        throw new Error('No mysteries available');
+      }
+      
+      // Pick a random mystery
+      const randomMystery = mysteries[Math.floor(Math.random() * mysteries.length)];
+      
+      // Call API to distribute roles and start the game
+      const response = await fetch(`/api/sessions/${sessionId}/distribute-roles`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          mysteryId: randomMystery.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to start game');
+      }
+
+      const data = await response.json();
+      console.log('Game started, redirecting to play page...');
+      
+      // Redirect to play page
+      window.location.href = `/play/${sessionId}`;
+    } catch (err: any) {
+      console.error('Error starting game:', err);
+      setError(err.message || 'Failed to start game');
+    }
+  }
+
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4, minHeight: '100vh' }}>
