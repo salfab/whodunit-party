@@ -42,6 +42,7 @@ interface PlayerOption {
 
 interface CharacterWithWords extends CharacterSheet {
   wordsToPlace: string[];
+  mystery: Mystery;
 }
 
 interface PlayerScore {
@@ -196,6 +197,8 @@ export default function PlayPage() {
         setAccusationResult({
           wasCorrect: existingRound.was_correct,
           role: existingRound.was_correct ? 'guilty' : 'innocent',
+          gameComplete: false,
+          message: ''
         });
       }
 
@@ -453,9 +456,9 @@ export default function PlayPage() {
 
       // Determine the message based on the player's role
       let message = '';
-      if (characterSheet.role === 'investigator') {
+      if (characterSheet?.role === 'investigator') {
         message = data.messages.investigator;
-      } else if (characterSheet.role === 'guilty') {
+      } else if (characterSheet?.role === 'guilty') {
         message = data.messages.guilty;
       } else {
         message = data.messages.innocent;
@@ -595,10 +598,11 @@ export default function PlayPage() {
 
           {/* Character Image */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <img
+            <Box
+              component="img"
               src={getRoleImage(characterSheet.role)}
               alt={characterSheet.role}
-              style={{ maxWidth: '200px', borderRadius: '8px' }}
+              sx={{ maxWidth: '200px', borderRadius: '8px' }}
               onError={(e) => {
                 // Fallback if image doesn't exist
                 (e.target as HTMLImageElement).style.display = 'none';
