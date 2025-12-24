@@ -1,0 +1,68 @@
+[
+  {
+    "title": "Murder at the Manor",
+    "description": "## The Crime\n\nLord Blackwood was found dead in his study at midnight, poisoned by arsenic in his evening brandy. The doors were locked from the inside, and only five guests had access to the study that evening.\n\n## Your Mission\n\nAs the investigator, you must question each guest, listen for their alibis, and determine who among them is guilty. Each person has secrets to hide, but only one is the murderer.",
+    "innocent_words": ["manuscript", "inheritance", "betrayal"],
+    "guilty_words": ["ledger", "poison", "desperate"],
+    "character_sheets": [
+      {
+        "role": "investigator",
+        "dark_secret": "You secretly **gambled away your family fortune** at the gentleman's club. You came to the manor hoping to borrow money from Lord Blackwood to pay off your debts before your family discovers the truth.",
+        "alibi": "I was in the **conservatory** all evening, reading Lord Blackwood's latest manuscript. I needed to prepare notes for our morning discussion about publishing rights.\n\nI did not leave the conservatory until I heard the screams."
+      },
+      {
+        "role": "guilty",
+        "dark_secret": "You've been **embezzling funds** from Lord Blackwood's estate for two years. Tonight, he discovered your ledger and threatened to report you to the authorities unless you confessed.\n\nYou couldn't let that happen. You slipped arsenic into his brandy while serving him in the study.",
+        "alibi": "I was in my **private chambers** on the second floor, writing letters to my family back home. I have the drafts as proof.\n\nI only came downstairs when I heard the commotion."
+      },
+      {
+        "role": "innocent",
+        "dark_secret": "You're having a **passionate affair** with Lady Blackwood. Tonight was supposed to be your secret rendezvous in the garden house, but she never showed up.\n\nYou're terrified someone might have seen you waiting.",
+        "alibi": "I was taking a long **walk in the garden**, enjoying the moonlight and fresh air. The weather was pleasant, and I needed time alone to think.\n\nI was near the pond when I heard the bells ringing."
+      },
+      {
+        "role": "innocent",
+        "dark_secret": "Last month, you **stole Lord Blackwood's valuable Renaissance painting** and replaced it with a masterful forgery. You've already sold the original at auction in Paris.\n\nYou live in fear that he'll discover the switch.",
+        "alibi": "I was in the **billiard room** practicing shots alone. I'm an amateur player, and I find the practice calming.\n\nI didn't realize anything was wrong until the butler came running in."
+      },
+      {
+        "role": "innocent",
+        "dark_secret": "You **witnessed the murder** through the study window while walking past. You saw someone slip something into Lord Blackwood's drink, but you're too afraid to speak up.\n\nWhat if the killer comes for you next?",
+        "alibi": "I retired to my **bedroom** early with a headache. I took a sleeping draught and was in bed by 10 PM.\n\nI heard nothing unusual until morning."
+      }
+    ]
+  },
+  {
+    "title": "Death at the Opera House",
+    "description": "## The Crime\n\nDiva Valentina Rose collapsed on stage during the final act of *La Traviata*. The autopsy revealed **cyanide poisoning** in her makeup.\n\n## The Setting\n\nBackstage at the Grand Opera House. Five people had access to her dressing room in the hour before her death.",
+    "innocent_words": ["reputation", "expose", "truth"],
+    "guilty_words": ["composition", "revenge", "justice"],
+    "character_sheets": [
+      {
+        "role": "investigator",
+        "dark_secret": "You're a **disgraced former opera critic** who lost your job after a scandal involving fabricated reviews. You're here under a false identity, hoping to redeem yourself by writing about Valentina.",
+        "alibi": "I was in the **press box** taking notes during the entire performance. My detailed timeline of events should prove my whereabouts.\n\nI only learned of her death when the show stopped."
+      },
+      {
+        "role": "guilty",
+        "dark_secret": "Valentina stole your original composition and claimed it as her own, launching her career while you remained unknown. Tonight was your **revenge**.\n\nYou mixed cyanide into her stage makeup, knowing she'd apply a fresh layer during intermission.",
+        "alibi": "I was in the **orchestra pit** conducting the performance. I never left my position until the tragic collapse.\n\nHundreds of people saw me there."
+      },
+      {
+        "role": "innocent",
+        "dark_secret": "You're **stealing from the opera house treasury** to fund your gambling addiction. Tonight you broke into the office safe during the performance.",
+        "alibi": "I was managing the **box office** and counting ticket receipts during the show. The financial records will confirm I was there.\n\nI never went backstage."
+      },
+      {
+        "role": "innocent",
+        "dark_secret": "You've been **blackmailing Valentina** about her secret past for months. You're terrified the police will discover your threatening letters.",
+        "alibi": "I was in the **costume department** on the third floor, doing last-minute alterations for Act III. The seamstresses can confirm.\n\nI didn't even know she'd collapsed until someone came running."
+      },
+      {
+        "role": "innocent",
+        "dark_secret": "You're having an **illicit affair** with Valentina. She promised to leave her wealthy husband for you, but recently changed her mind.\n\nYou were devastated, but you didn't kill her.",
+        "alibi": "I was in the **green room** with other performers, waiting for our curtain call. At least six people saw me there.\n\nI'm destroyed by her death."
+      }
+    ]
+  }
+]
