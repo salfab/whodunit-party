@@ -1,0 +1,48 @@
+Feature: Game Lobby
+  As a player
+  I want to see other players join the lobby in real-time
+  And see my ready state persist when I refresh
+  So that I can coordinate with other players to start the game
+
+  Background:
+    Given I am on the homepage
+    When I click on "Create Room"
+    And I click on "Generate Room Code"
+    Then I should see a room code displayed
+
+  Scenario: Player name displays correctly with "You" indicator
+    When I click on "Join This Room"
+    And I enter "Alice" in the player name field
+    And I click on "Join Game"
+    Then I should see "Alice" in the player list
+    And I should see the "You" indicator next to "Alice"
+
+  Scenario: New players appear in real-time for all connected players
+    Given I have joined the room as "Alice"
+    When another player "Bob" joins the same room
+    Then I should see "Bob" appear in the player list
+    And the player count should update to "2/5 minimum"
+
+  Scenario: Ready state persists after page refresh
+    Given I have joined the room as "Alice"
+    And 4 other players have joined
+    When I click the "Ready to Start" button
+    Then the button should change to "Not Ready"
+    And the ready count should show "1 / 5"
+    When I refresh the page
+    Then the button should still show "Not Ready"
+    And the ready count should still show "1 / 5"
+
+  Scenario: Ready count updates in real-time for all players
+    Given I have joined the room as "Alice"
+    And 4 other players have joined
+    When another player marks themselves as ready
+    Then I should see the ready count increase
+    And the count should update without refreshing
+
+  Scenario: All players ready enables game start
+    Given I have joined the room as "Alice"
+    And 4 other players have joined
+    When all 5 players mark themselves as ready
+    Then the ready count should show "5 / 5"
+    And the game should be able to start

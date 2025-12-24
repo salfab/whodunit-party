@@ -1,0 +1,43 @@
+Feature: Game Lobby
+  As a player in a game room
+  I want to see other players and mark myself as ready
+  So that we can start the game when everyone is ready
+
+  Background:
+    Given I am logged into a game room as "Player One"
+
+  Scenario: See other players joining the lobby
+    Then I should see "Player One" in the player list
+    When "Player Two" joins the game
+    Then I should see "Player Two" in the player list
+    When "Player Three" joins the game
+    Then I should see "Player Three" in the player list
+
+  Scenario: Mark myself as ready
+    Given there are 4 other players in the lobby
+    When I click the "Ready" button
+    Then my status should show as "Ready"
+    And the "Ready" button should change to "Not Ready"
+
+  Scenario: Game starts when all players are ready
+    Given there are 5 players in the lobby
+    And all other players are ready
+    When I click the "Ready" button
+    Then the game should start automatically
+    And I should be redirected to the character sheet page
+
+  Scenario: Cannot start game with less than 5 players
+    Given there are only 3 players in the lobby
+    And all players are ready
+    Then the game should not start
+    And I should see a message about minimum players
+
+  Scenario: Player disconnects from lobby
+    Given "Player Two" is in the lobby
+    When "Player Two" disconnects
+    Then "Player Two" should be marked as "Quit"
+    And their status should be visually different
+
+  Scenario: Display game code in lobby
+    Then I should see the game code displayed
+    And the game code should be the same as the join code
