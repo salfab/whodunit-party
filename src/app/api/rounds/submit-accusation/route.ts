@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     const accusedSheet = accusedAssignment.character_sheets as any;
     const wasCorrect = accusedSheet.role === 'guilty';
 
-    // Get current mystery ID
+    // Get current mystery ID and round count
     const { data: gameSession } = await supabase
       .from('game_sessions')
       .select('current_mystery_id')
@@ -93,6 +93,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get current round number for this session
+    const { data: existingRounds } = await supabase
+      .from('rounds')
+      .select('round_number')
+      .eq('session_id', session.sessionId)
+      .order('round_number', { ascending: false })
+      .limit(1);
+
+    const roundNumber = existingRounds && existingRounds.length > 0 
+      ? (existingRounds[0].round_number || 0) + 1 
+      : 1;
+
     // Create the round record
     const { data: round, error: roundError } = await supabase
       .from('rounds')
@@ -102,6 +114,7 @@ export async function POST(request: NextRequest) {
         investigator_player_id: session.playerId,
         accused_player_id: accusedPlayerId,
         was_correct: wasCorrect,
+        round_number: roundNumber,
       })
       .select()
       .single();
@@ -114,6 +127,74 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Calculate and update scores
+    const scoreUpdates: Array<{ id: string; increment: number }> = [];
+
+    if (wasCorrect) {
+      // Investigator found guilty: +2 points to investigator
+      scoreUpdates.push({ id: session.playerId, increment: 2 });
+    } else {
+      // Investigator accused innocent: +1 point to wrongly accused innocent
+      scoreUpdates.push({ id: accusedPlayerId, increment: 1 });
+      
+      // Find the guilty player and give them +2 points for escaping
+      const { data: guiltyAssignment } = await supabase
+        .from('player_assignments')
+        .select(`
+          player_id,
+          character_sheets (role)
+        `)
+        .eq('session_id', session.sessionId)
+        .eq('mystery_id', gameSession.current_mystery_id);
+
+      const guiltyPlayer = guiltyAssignment?.find((a: any) => 
+        a.character_sheets?.role === 'guilty'
+      );
+
+      if (guiltyPlayer) {
+        scoreUpdates.push({ id: guiltyPlayer.player_id, increment: 2 });
+      }
+    }
+
+    // Apply score updates
+    for (const update of scoreUpdates) {
+      const { error: scoreError } = await supabase.rpc('increment_player_score', {
+        player_id: update.id,
+        score_increment: update.increment
+      });
+
+      // If RPC doesn't exist, use direct update
+      if (scoreError) {
+        const { data: player } = await supabase
+          .from('players')
+          .select('score')
+          .eq('id', update.id)
+          .single();
+
+        await supabase
+          .from('players')
+          .update({ score: (player?.score || 0) + update.increment })
+          .eq('id', update.id);
+      }
+    }
+
+    // Check if all active players have been investigator
+    const { data: activePlayers } = await supabase
+      .from('players')
+      .select('id, has_been_investigator')
+      .eq('session_id', session.sessionId)
+      .eq('status', 'active');
+
+    const allHaveBeenInvestigator = activePlayers?.every(p => p.has_been_investigator) || false;
+
+    if (allHaveBeenInvestigator) {
+      // Game is complete!
+      await supabase
+        .from('game_sessions')
+        .update({ status: 'completed' })
+        .eq('id', session.sessionId);
+    }
+
     // Update accused player status
     const { error: updateError } = await supabase
       .from('players')
@@ -124,17 +205,40 @@ export async function POST(request: NextRequest) {
       log('error', 'Failed to update player status', { error: updateError.message });
     }
 
+    // Generate role-specific messages in French
+    const investigatorMessage = wasCorrect 
+      ? 'Bravo ! Vous avez trouvé le coupable ! +2 points'
+      : 'Erreur ! Vous avez accusé une personne innocente.';
+    
+    const guiltyMessage = wasCorrect
+      ? 'Vous avez été découvert par l\'enquêteur.'
+      : 'Le coupable n\'a pas été attrapé ! +2 points';
+    
+    const innocentMessage = wasCorrect
+      ? 'L\'enquêteur a trouvé le coupable.'
+      : (accusedSheet.role === 'innocent' && accusedPlayerId === accusedPlayerId
+          ? 'Vous êtes innocent et avez été accusé à tort ! +1 point'
+          : 'L\'enquêteur s\'est trompé.');
+
     log('info', 'Accusation submitted', {
       sessionId: session.sessionId,
       investigatorId: session.playerId,
       accusedId: accusedPlayerId,
       wasCorrect,
+      gameComplete: allHaveBeenInvestigator,
+      roundNumber,
     });
 
     return NextResponse.json({
       roundId: round.id,
       wasCorrect,
       accusedRole: accusedSheet.role,
+      gameComplete: allHaveBeenInvestigator,
+      messages: {
+        investigator: investigatorMessage,
+        guilty: guiltyMessage,
+        innocent: innocentMessage,
+      },
     });
   } catch (error) {
     log('error', 'Unexpected error submitting accusation', { error });

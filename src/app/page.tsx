@@ -17,7 +17,7 @@ export default function Home() {
           🔍 Whodunit Party
         </Typography>
         <Typography variant="h5" textAlign="center" color="text.secondary">
-          Murder Mystery Party Game
+          Jeu de mystère et de meurtre
         </Typography>
         
         <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
@@ -27,7 +27,7 @@ export default function Home() {
             href="/create-room"
             data-testid="create-room-button"
           >
-            Create Room
+            Créer une salle
           </Button>
           <Button
             variant="outlined"
@@ -35,7 +35,7 @@ export default function Home() {
             href="/join"
             data-testid="join-game-button"
           >
-            Join Game
+            Rejoindre une partie
           </Button>
         </Box>
       </Box>

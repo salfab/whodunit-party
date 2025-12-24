@@ -120,6 +120,16 @@ const theme = createTheme({
         },
       },
     },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          '&.Mui-focused': {
+            color: '#ffd700', // Gold when focused instead of red
+          },
+        },
+      },
+    },
   },
 });
 

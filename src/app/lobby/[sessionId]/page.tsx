@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   Container,
@@ -15,10 +15,12 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
+import { CheckCircle } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
 import type { Database } from '@/types/database';
+import { MIN_PLAYERS } from '@/lib/constants';
 
 type Player = Database['public']['Tables']['players']['Row'];
 type GameSession = Database['public']['Tables']['game_sessions']['Row'];
@@ -32,6 +34,8 @@ export default function LobbyPage() {
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [readyCount, setReadyCount] = useState(0);
+  const [readyStates, setReadyStates] = useState<Map<string, boolean>>(new Map());
+  const [mysteryCount, setMysteryCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -56,6 +60,18 @@ export default function LobbyPage() {
     }
   }, [currentPlayerId]);
 
+  // Calculate if game can start
+  const activePlayers = players.filter((p) => p.status === 'active');
+  const canStart = activePlayers.length >= MIN_PLAYERS && readyCount === activePlayers.length;
+
+  // Auto-redirect when game status changes to 'playing'
+  useEffect(() => {
+    if (session?.status === 'playing') {
+      console.log('Session status changed to playing, redirecting...');
+      router.push(`/play/${sessionId}`);
+    }
+  }, [session?.status, sessionId, router]);
+
   async function loadSessionData() {
     try {
       // Load session
@@ -76,6 +92,17 @@ export default function LobbyPage() {
       if (response.ok) {
         const data = await response.json();
         setCurrentPlayerId(data.playerId);
+      } else {
+        // User is not authenticated, redirect to join page
+        router.push(`/join?code=${sessionData.join_code}`);
+        return;
+      }
+
+      // Fetch mystery count for validation
+      const mysteriesResponse = await fetch('/api/mysteries');
+      if (mysteriesResponse.ok) {
+        const mysteries = await mysteriesResponse.json();
+        setMysteryCount(mysteries?.length || 0);
       }
 
       setLoading(false);
@@ -106,7 +133,12 @@ export default function LobbyPage() {
     
     // Subscribe to players changes - realtime updates when players join/leave
     const playersChannel = supabase
-      .channel(`session-${sessionId}-players`)
+      .channel(`session-${sessionId}-players`, {
+        config: {
+          broadcast: { self: false },
+          presence: { key: '' },
+        },
+      })
       .on(
         'postgres_changes',
         {
@@ -155,13 +187,25 @@ export default function LobbyPage() {
           setPlayers((prev) => prev.filter((p) => p.id !== (payload.old as Player).id));
         }
       )
-      .subscribe((status) => {
-        console.log('Players channel status:', status);
+      .subscribe((status, err) => {
+        console.log('Players channel status:', status, err);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Successfully subscribed to players channel');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Players channel error:', err);
+        } else if (status === 'TIMED_OUT') {
+          console.error('❌ Players channel timed out');
+        }
       });
 
     // Subscribe to ready states
     const readyChannel = supabase
-      .channel(`session-${sessionId}-ready`)
+      .channel(`session-${sessionId}-ready`, {
+        config: {
+          broadcast: { self: false },
+          presence: { key: '' },
+        },
+      })
       .on(
         'postgres_changes',
         {
@@ -176,29 +220,76 @@ export default function LobbyPage() {
           checkReadyStates();
         }
       )
-      .subscribe((status) => {
-        console.log('Ready channel status:', status);
+      .subscribe((status, err) => {
+        console.log('Ready channel status:', status, err);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Successfully subscribed to ready states channel');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Ready states channel error:', err);
+        } else if (status === 'TIMED_OUT') {
+          console.error('❌ Ready states channel timed out');
+        }
+      });
+
+    // Subscribe to game_sessions status changes
+    const sessionChannel = supabase
+      .channel(`session-${sessionId}-status`, {
+        config: {
+          broadcast: { self: false },
+          presence: { key: '' },
+        },
+      })
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'game_sessions',
+          filter: `id=eq.${sessionId}`,
+        },
+        (payload) => {
+          console.log('Game session updated:', payload.new);
+          setSession(payload.new as GameSession);
+        }
+      )
+      .subscribe((status, err) => {
+        console.log('Session channel status:', status, err);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Successfully subscribed to session status channel');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Session channel error:', err);
+        } else if (status === 'TIMED_OUT') {
+          console.error('❌ Session channel timed out');
+        }
       });
 
     return () => {
       console.log('Cleaning up realtime subscriptions');
       supabase.removeChannel(playersChannel);
       supabase.removeChannel(readyChannel);
+      supabase.removeChannel(sessionChannel);
     };
   }
 
   async function checkReadyStates() {
-    const { data: readyStates } = await supabase
+    const { data: readyStatesData } = await supabase
       .from('player_ready_states')
       .select('*')
       .eq('session_id', sessionId);
 
-    const readyPlayers = readyStates?.filter((s) => s.is_ready) || [];
+    const readyPlayers = readyStatesData?.filter((s) => s.is_ready) || [];
     setReadyCount(readyPlayers.length);
+
+    // Build ready states map for display
+    const statesMap = new Map<string, boolean>();
+    readyStatesData?.forEach((state) => {
+      statesMap.set(state.player_id, state.is_ready);
+    });
+    setReadyStates(statesMap);
 
     // Check if current player is ready
     if (currentPlayerId) {
-      const myReadyState = readyStates?.find((s) => s.player_id === currentPlayerId);
+      const myReadyState = readyStatesData?.find((s) => s.player_id === currentPlayerId);
       setIsReady(myReadyState?.is_ready || false);
     }
   }
@@ -216,27 +307,28 @@ export default function LobbyPage() {
       // Optimistically update UI
       setIsReady(newReadyState);
       
-      const { error } = await supabase
-        .from('player_ready_states')
-        .upsert(
-          {
-            session_id: sessionId,
-            player_id: currentPlayerId,
-            is_ready: newReadyState,
-          },
-          {
-            onConflict: 'session_id,player_id',
-          }
-        );
+      const response = await fetch(`/api/sessions/${sessionId}/mark-ready`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isReady: newReadyState }),
+      });
 
-      if (error) {
-        console.error('Error updating ready state:', error);
+      if (!response.ok) {
+        console.error('Error updating ready state');
         // Revert optimistic update on error
         setIsReady(!newReadyState);
         setError('Failed to update ready state. Please try again.');
         setTimeout(() => setError(''), 3000);
-      } else {
-        console.log('Ready state updated successfully');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Ready state updated successfully', data);
+
+      // If game started, redirect to play page
+      if (data.gameStarted) {
+        console.log('Game started! Redirecting to play page...');
+        router.push(`/play/${sessionId}`);
       }
     } catch (err) {
       console.error('Error updating ready state:', err);
@@ -282,74 +374,18 @@ export default function LobbyPage() {
     );
   }
 
-  const activePlayers = players.filter((p) => p.status === 'active');
-  const minPlayers = 5;
-  const canStart = activePlayers.length >= minPlayers && readyCount === activePlayers.length;
-
-  // Start game when all players are ready
-  useEffect(() => {
-    if (canStart && session?.status === 'lobby') {
-      startGame();
-    }
-  }, [canStart, session?.status]);
-
-  async function startGame() {
-    try {
-      console.log('Starting game...');
-      
-      // First, get a random mystery
-      const mysteriesResponse = await fetch('/api/mysteries');
-      if (!mysteriesResponse.ok) {
-        throw new Error('Failed to fetch mysteries');
-      }
-      
-      const mysteries = await mysteriesResponse.json();
-      if (!mysteries || mysteries.length === 0) {
-        throw new Error('No mysteries available');
-      }
-      
-      // Pick a random mystery
-      const randomMystery = mysteries[Math.floor(Math.random() * mysteries.length)];
-      
-      // Call API to distribute roles and start the game
-      const response = await fetch(`/api/sessions/${sessionId}/distribute-roles`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mysteryId: randomMystery.id,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to start game');
-      }
-
-      const data = await response.json();
-      console.log('Game started, redirecting to play page...');
-      
-      // Redirect to play page
-      window.location.href = `/play/${sessionId}`;
-    } catch (err: any) {
-      console.error('Error starting game:', err);
-      setError(err.message || 'Failed to start game');
-    }
-  }
-
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4, minHeight: '100vh' }}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h3" component="h1" gutterBottom textAlign="center">
-            Game Lobby
+            Salle d'attente
           </Typography>
 
           {session && (
             <Box sx={{ textAlign: 'center', mb: 4 }}>
               <Typography variant="h6" color="text.secondary" gutterBottom>
-                Join Code
+                Code d'accès
               </Typography>
               <Typography
                 variant="h3"
@@ -365,7 +401,7 @@ export default function LobbyPage() {
           )}
 
           <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-            Players ({activePlayers.length}/{minPlayers} minimum)
+            Joueurs ({activePlayers.length}/{MIN_PLAYERS} minimum)
           </Typography>
 
           <List sx={{ mb: 3 }}>
@@ -377,10 +413,16 @@ export default function LobbyPage() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                 >
-                  <ListItem>
+                  <ListItem
+                    secondaryAction={
+                      readyStates.get(player.id) ? (
+                        <CheckCircle color="success" />
+                      ) : null
+                    }
+                  >
                     <ListItemText primary={player.name} />
                     {player.id === currentPlayerId && (
-                      <Chip label="You" color="primary" size="small" />
+                      <Chip label="Vous" color="primary" size="small" sx={{ mr: 1 }} />
                     )}
                   </ListItem>
                 </motion.div>
@@ -388,15 +430,27 @@ export default function LobbyPage() {
             </AnimatePresence>
           </List>
 
-          {activePlayers.length < minPlayers && (
+          {activePlayers.length < MIN_PLAYERS && (
             <Alert severity="info" sx={{ mb: 3 }}>
-              Waiting for at least {minPlayers} players to join...
+              En attente d'au moins {MIN_PLAYERS} joueurs...
+            </Alert>
+          )}
+
+          {mysteryCount > 0 && mysteryCount < activePlayers.length && (
+            <Alert severity="warning" sx={{ mb: 3 }}>
+              ⚠️ Attention : Seulement {mysteryCount} mystère{mysteryCount > 1 ? 's' : ''} disponible{mysteryCount > 1 ? 's' : ''} pour {activePlayers.length} joueurs. La partie se terminera après {mysteryCount} manche{mysteryCount > 1 ? 's' : ''}.
+            </Alert>
+          )}
+
+          {mysteryCount === 0 && activePlayers.length >= MIN_PLAYERS && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              ⚠️ Aucun mystère disponible ! Impossible de démarrer la partie.
             </Alert>
           )}
 
           <Box sx={{ textAlign: 'center', mb: 3 }}>
             <Typography variant="h6" color={canStart ? 'success.main' : 'text.secondary'}>
-              Ready: {readyCount} / {activePlayers.length}
+              Prêts : {readyCount} / {activePlayers.length}
             </Typography>
           </Box>
 
@@ -405,13 +459,13 @@ export default function LobbyPage() {
               variant={isReady ? 'outlined' : 'contained'}
               size="large"
               onClick={handleReadyToggle}
-              disabled={activePlayers.length < minPlayers}
+              disabled={activePlayers.length < MIN_PLAYERS || mysteryCount === 0}
             >
-              {isReady ? 'Not Ready' : 'Ready to Start'}
+              {isReady ? 'Pas prêt' : 'Prêt'}
             </Button>
 
             <Button variant="outlined" size="large" color="error" onClick={handleQuit}>
-              Quit Game
+              Quitter
             </Button>
           </Box>
 
@@ -421,7 +475,7 @@ export default function LobbyPage() {
               animate={{ opacity: 1, scale: 1 }}
             >
               <Alert severity="success" sx={{ mt: 3 }}>
-                All players are ready! Starting game...
+                Tous les joueurs sont prêts ! Démarrage automatique...
               </Alert>
             </motion.div>
           )}

@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 import { createClient } from '@/lib/supabase/client';
 import type { Database } from '@/types/database';
+import { MIN_PLAYERS } from '@/lib/constants';
 
 type Mystery = Database['public']['Tables']['mysteries']['Row'];
 type GameSession = Database['public']['Tables']['game_sessions']['Row'];
@@ -151,7 +152,7 @@ export default function AdminSessionPage() {
       <Box sx={{ py: 4 }}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h3" component="h1" gutterBottom>
-            Admin Dashboard
+            Tableau de bord administrateur
           </Typography>
 
           {error && (
@@ -163,7 +164,7 @@ export default function AdminSessionPage() {
           {session && (
             <Box sx={{ mb: 4 }}>
               <Typography variant="h6" gutterBottom>
-                Join Code
+                Code d'accès
               </Typography>
               <Typography
                 variant="h3"
@@ -177,7 +178,7 @@ export default function AdminSessionPage() {
                 {session.join_code}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Status: {session.status}
+                Statut : {session.status}
               </Typography>
             </Box>
           )}
@@ -185,19 +186,19 @@ export default function AdminSessionPage() {
           <Divider sx={{ my: 3 }} />
 
           <Typography variant="h5" gutterBottom>
-            Players ({activePlayers.length})
+            Joueurs ({activePlayers.length})
           </Typography>
           <List sx={{ mb: 3 }}>
             {activePlayers.map((player) => (
               <ListItem key={player.id}>
-                <ListItemText primary={player.name} secondary={`Status: ${player.status}`} />
+                <ListItemText primary={player.name} secondary={`Statut : ${player.status}`} />
               </ListItem>
             ))}
           </List>
 
-          {activePlayers.length < 5 && (
+          {activePlayers.length < MIN_PLAYERS && (
             <Alert severity="info" sx={{ mb: 3 }}>
-              Waiting for at least 5 players to join...
+              En attente d'au moins {MIN_PLAYERS} joueurs...
             </Alert>
           )}
 
@@ -206,15 +207,15 @@ export default function AdminSessionPage() {
           {session?.status === 'lobby' && (
             <Box>
               <Typography variant="h5" gutterBottom>
-                Start Game
+                Démarrer la partie
               </Typography>
 
               <FormControl fullWidth sx={{ mb: 3 }}>
-                <InputLabel>Select Mystery</InputLabel>
+                <InputLabel>Sélectionner un mystère</InputLabel>
                 <Select
                   value={selectedMystery}
                   onChange={(e) => setSelectedMystery(e.target.value)}
-                  label="Select Mystery"
+                  label="Sélectionner un mystère"
                 >
                   {mysteries.map((mystery) => (
                     <MenuItem key={mystery.id} value={mystery.id}>
@@ -228,15 +229,15 @@ export default function AdminSessionPage() {
                 variant="contained"
                 size="large"
                 onClick={handleStartGame}
-                disabled={!selectedMystery || activePlayers.length < 5 || starting}
+                disabled={!selectedMystery || activePlayers.length < MIN_PLAYERS || starting}
                 fullWidth
               >
-                {starting ? <CircularProgress size={24} /> : 'Start Game'}
+                {starting ? <CircularProgress size={24} /> : 'Démarrer la partie'}
               </Button>
 
               {mysteries.length === 0 && (
                 <Alert severity="warning" sx={{ mt: 2 }}>
-                  No mysteries available. Please upload some mysteries first.
+                  Aucun mystère disponible. Veuillez d'abord télécharger des mystères.
                 </Alert>
               )}
             </Box>
@@ -247,7 +248,7 @@ export default function AdminSessionPage() {
               variant="outlined"
               onClick={() => router.push('/admin/mysteries/upload')}
             >
-              Upload Mysteries
+              Télécharger des mystères
             </Button>
           </Box>
         </Paper>

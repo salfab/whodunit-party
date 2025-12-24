@@ -22,13 +22,43 @@ export default function JoinPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Pre-fill code from URL parameter
+  // Pre-fill code from URL parameter and check for existing session
   useEffect(() => {
     const codeFromUrl = searchParams.get('code');
     if (codeFromUrl) {
       setJoinCode(codeFromUrl.toUpperCase());
+      checkExistingSession(codeFromUrl.toUpperCase());
     }
   }, [searchParams]);
+
+  // Check if user already has an active session in this room
+  async function checkExistingSession(code: string) {
+    try {
+      // Get current session
+      const sessionResponse = await fetch('/api/session/me');
+      if (!sessionResponse.ok) {
+        return; // No session, continue with join flow
+      }
+
+      const sessionData = await sessionResponse.json();
+      
+      // Get the session ID for this join code
+      const joinCodeResponse = await fetch(`/api/sessions/by-code/${code}`);
+      if (!joinCodeResponse.ok) {
+        return; // Invalid code, let user proceed to see the error
+      }
+
+      const { sessionId } = await joinCodeResponse.json();
+      
+      // If user's session matches this room, redirect to lobby
+      if (sessionData.sessionId === sessionId) {
+        router.push(`/lobby/${sessionId}`);
+      }
+    } catch (err) {
+      // Silently fail - let user proceed with join flow
+      console.error('Error checking existing session:', err);
+    }
+  }
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +111,7 @@ export default function JoinPage() {
           data-testid="join-form-container"
         >
           <Typography variant="h4" component="h1" gutterBottom textAlign="center" data-testid="join-page-title">
-            🔍 Join Game
+            🔍 Rejoindre une partie
           </Typography>
 
           {error && (
@@ -101,7 +131,7 @@ export default function JoinPage() {
                   fontWeight: 500,
                 }}
               >
-                Game Code
+                Code d'accès
               </FormLabel>
               <OtpInput
                 length={6}
@@ -114,10 +144,10 @@ export default function JoinPage() {
 
             <TextField
               fullWidth
-              label="Your Name"
+              label="Votre nom"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              placeholder="Enter your name"
+              placeholder="Entrez votre nom"
               required
               sx={{ mb: 3 }}
               inputProps={{
@@ -134,7 +164,7 @@ export default function JoinPage() {
               disabled={loading || !joinCode || !playerName}
               data-testid="submit-join-button"
             >
-              {loading ? 'Joining...' : 'Join Game'}
+              {loading ? 'Connexion...' : 'Rejoindre la partie'}
             </Button>
           </Box>
         </Paper>

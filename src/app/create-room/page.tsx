@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -15,11 +15,16 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
 
 export default function CreateRoomPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [gameCode, setGameCode] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const router = useRouter();
+
+  // Auto-create room on page load
+  useEffect(() => {
+    createRoom();
+  }, []);
 
   const createRoom = async () => {
     setLoading(true);
@@ -68,7 +73,7 @@ export default function CreateRoomPage() {
         }}
       >
         <Typography variant="h2" component="h1" textAlign="center" data-testid="create-room-title">
-          🔪 Create Game Room
+          🔪 Créer une salle de jeu
         </Typography>
 
         {error && (
@@ -77,34 +82,27 @@ export default function CreateRoomPage() {
           </Alert>
         )}
 
-        {!gameCode ? (
+        {loading ? (
           <Card sx={{ width: '100%', p: 2 }}>
             <CardContent>
-              <Typography variant="body1" gutterBottom textAlign="center" sx={{ mb: 3 }}>
-                Create a new game room and share the code with your friends
-              </Typography>
-              <Button
-                variant="contained"
-                fullWidth
-                size="large"
-                onClick={createRoom}
-                disabled={loading}
-                data-testid="generate-code-button"
-              >
-                {loading ? <CircularProgress size={24} /> : 'Generate Room Code'}
-              </Button>
+              <Box sx={{ textAlign: 'center', py: 4 }}>
+                <CircularProgress size={60} />
+                <Typography variant="body1" sx={{ mt: 3 }}>
+                  Création de la salle...
+                </Typography>
+              </Box>
             </CardContent>
           </Card>
-        ) : (
+        ) : gameCode ? (
           <Card sx={{ width: '100%', p: 2 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom textAlign="center">
-                Room Created Successfully! 🎉
+                Salle créée avec succès ! 🎉
               </Typography>
 
               <Box sx={{ my: 4, textAlign: 'center' }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Your Game Code:
+                  Votre code d'accès :
                 </Typography>
                 <Typography
                   variant="h3"
@@ -136,7 +134,7 @@ export default function CreateRoomPage() {
               </Box>
 
               <Typography variant="body2" textAlign="center" sx={{ mb: 3 }}>
-                Share this code or scan the QR code to join
+                Partagez ce code ou scannez le QR code pour rejoindre
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
@@ -147,7 +145,7 @@ export default function CreateRoomPage() {
                   onClick={joinRoom}
                   data-testid="join-room-button"
                 >
-                  Join This Room
+                  Rejoindre cette salle
                 </Button>
                 <Button
                   variant="outlined"
@@ -156,12 +154,12 @@ export default function CreateRoomPage() {
                   href="/"
                   data-testid="back-home-button"
                 >
-                  Back to Home
+                  Retour à l'accueil
                 </Button>
               </Box>
             </CardContent>
           </Card>
-        )}
+        ) : null}
       </Box>
     </Container>
   );
