@@ -21,6 +21,7 @@ import {
   ListItemButton,
   ListItemText,
   Radio,
+  Snackbar,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,6 +44,17 @@ interface CharacterWithWords extends CharacterSheet {
   wordsToPlace: string[];
 }
 
+interface PlayerScore {
+  id: string;
+  name: string;
+  score: number;
+}
+
+interface AvailableMystery {
+  id: string;
+  title: string;
+}
+
 export default function PlayPage() {
   const params = useParams();
   const sessionId = params.sessionId as string;
@@ -57,8 +69,15 @@ export default function PlayPage() {
   const [accuseDialogOpen, setAccuseDialogOpen] = useState(false);
   const [players, setPlayers] = useState<PlayerOption[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
-  const [accusationResult, setAccusationResult] = useState<{ wasCorrect: boolean; role: string } | null>(null);
+  const [accusationResult, setAccusationResult] = useState<{ wasCorrect: boolean; role: string; gameComplete: boolean; message: string } | null>(null);
   const [submittingAccusation, setSubmittingAccusation] = useState(false);
+  const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
+  const [availableMysteries, setAvailableMysteries] = useState<AvailableMystery[]>([]);
+  const [selectedMystery, setSelectedMystery] = useState<string>('');
+  const [voteCounts, setVoteCounts] = useState<Record<string, number>>({});
+  const [hasVoted, setHasVoted] = useState(false);
+  const [startingNextRound, setStartingNextRound] = useState(false);
+  const [errorSnackbar, setErrorSnackbar] = useState<{ open: boolean; message: string }>({ open: false, message: '' });
 
   const supabase = createClient();
 
@@ -70,27 +89,83 @@ export default function PlayPage() {
     setupRealtimeSubscription();
   }, [sessionId]);
 
+  useEffect(() => {
+    if (accusationResult && !accusationResult.gameComplete) {
+      // Load scoreboard and available mysteries for voting
+      loadScoreboard();
+      loadAvailableMysteries();
+      setupVoteSubscription();
+    }
+  }, [accusationResult]);
+
   async function loadCharacterSheet() {
     try {
       // Get current player
       const response = await fetch('/api/session/me');
       if (!response.ok) {
+        // User is not authenticated, fetch session to get join code and redirect
+        const { data: sessionData } = await supabase
+          .from('game_sessions')
+          .select('join_code')
+          .eq('id', sessionId)
+          .single();
+        
+        if (sessionData?.join_code) {
+          window.location.href = `/join?code=${sessionData.join_code}`;
+          return;
+        }
         throw new Error('Not authenticated');
       }
       const playerData = await response.json();
       setCurrentPlayer(playerData);
 
-      // Get player assignment
-      const { data: assignment, error: assignmentError } = await supabase
-        .from('player_assignments')
-        .select(`
-          *,
-          character_sheets (*)
-        `)
-        .eq('session_id', sessionId)
-        .eq('player_id', playerData.playerId)
-        .single();
-Load all active players (for accusation list)
+      // Get player assignment (with retry in case assignments are still being created)
+      let assignment = null;
+      let assignmentError = null;
+      let attempts = 0;
+      const maxAttempts = 3;
+
+      while (!assignment && attempts < maxAttempts) {
+        const result = await supabase
+          .from('player_assignments')
+          .select(`
+            *,
+            character_sheets (
+              *,
+              mysteries (*)
+            )
+          `)
+          .eq('session_id', sessionId)
+          .eq('player_id', playerData.playerId)
+          .single();
+
+        assignment = result.data;
+        assignmentError = result.error;
+
+        if (!assignment && attempts < maxAttempts - 1) {
+          // Wait a bit before retrying
+          await new Promise(resolve => setTimeout(resolve, 500));
+          attempts++;
+          console.log(`Retrying assignment fetch (attempt ${attempts + 1}/${maxAttempts})...`);
+        } else {
+          break;
+        }
+      }
+
+      if (assignmentError || !assignment) {
+        throw new Error('No character sheet assigned yet');
+      }
+
+      const sheet = assignment.character_sheets;
+      const mystery = sheet.mysteries;
+      
+      // Add the words to place based on role (only for guilty/innocent)
+      const wordsToPlace = sheet.role === 'investigator' ? [] : 
+        (sheet.role === 'guilty' ? mystery.guilty_words : mystery.innocent_words);
+      
+      setCharacterSheet({ ...sheet, wordsToPlace, mystery });
+
+      // Load all active players (for accusation list)
       const { data: allPlayers } = await supabase
         .from('players')
         .select('id, name, status')
@@ -110,24 +185,19 @@ Load all active players (for accusation list)
 
       setIsAccused(playerStatus?.status === 'accused');
 
-      // Check if there's already an accusation
-      const { data: existingRound } = await supabase
+      // Check if there's already an accusation (ignore errors if table doesn't exist or no data)
+      const { data: existingRound, error: roundError } = await supabase
         .from('rounds')
         .select('*')
         .eq('session_id', sessionId)
-        .single();
+        .maybeSingle();
 
-      if (existingRound) {
+      if (!roundError && existingRound) {
         setAccusationResult({
           wasCorrect: existingRound.was_correct,
           role: existingRound.was_correct ? 'guilty' : 'innocent',
         });
       }
-        .select('status')
-        .eq('id', playerData.playerId)
-        .single();
-
-      setIsAccused(playerStatus?.status === 'accused');
 
       setLoading(false);
     } catch (err: any) {
@@ -136,11 +206,170 @@ Load all active players (for accusation list)
       setLoading(false);
     }
   }
+  async function loadScoreboard() {
+    try {
+      const { data: allPlayers, error } = await supabase
+        .from('players')
+        .select('id, name, score')
+        .eq('session_id', sessionId)
+        .in('status', ['active', 'accused'])
+        .order('score', { ascending: false });
 
+      if (error) {
+        console.error('Error loading scoreboard:', error);
+        return;
+      }
+
+      setPlayerScores(allPlayers || []);
+    } catch (err) {
+      console.error('Error loading scoreboard:', err);
+    }
+  }
+
+  async function loadAvailableMysteries() {
+    try {
+      // Get all mysteries
+      const mysteriesResponse = await fetch('/api/mysteries');
+      if (!mysteriesResponse.ok) {
+        throw new Error('Failed to fetch mysteries');
+      }
+      const allMysteries = await mysteriesResponse.json();
+
+      // Get played mysteries
+      const { data: rounds, error } = await supabase
+        .from('rounds')
+        .select('mystery_id')
+        .eq('session_id', sessionId);
+
+      if (error) {
+        console.error('Error fetching played mysteries:', error);
+        setAvailableMysteries(allMysteries);
+        return;
+      }
+
+      const playedIds = new Set(rounds?.map((r) => r.mystery_id) || []);
+      const available = allMysteries.filter((m: any) => !playedIds.has(m.id));
+
+      setAvailableMysteries(available);
+
+      // Load current vote counts
+      const tallyResponse = await fetch(`/api/sessions/${sessionId}/tally-votes`);
+      if (tallyResponse.ok) {
+        const { voteCounts: currentVotes } = await tallyResponse.json();
+        setVoteCounts(currentVotes || {});
+      }
+    } catch (err) {
+      console.error('Error loading available mysteries:', err);
+    }
+  }
+
+  async function handleVoteForMystery(mysteryId: string) {
+    try {
+      const response = await fetch(`/api/sessions/${sessionId}/vote-mystery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mysteryId }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to vote');
+      }
+
+      setSelectedMystery(mysteryId);
+      setHasVoted(true);
+
+      // Check if all players have voted
+      checkIfAllVotedAndStartNextRound();
+    } catch (err: any) {
+      console.error('Error voting:', err);
+      setErrorSnackbar({ open: true, message: err.message || 'Erreur lors du vote' });
+    }
+  }
+
+  async function checkIfAllVotedAndStartNextRound() {
+    try {
+      // Get all active players
+      const { data: activePlayers, error: playersError } = await supabase
+        .from('players')
+        .select('id')
+        .eq('session_id', sessionId)
+        .eq('status', 'active');
+
+      if (playersError) {
+        console.error('Error fetching active players:', playersError);
+        return;
+      }
+
+      // Get current vote count
+      const tallyResponse = await fetch(`/api/sessions/${sessionId}/tally-votes`);
+      if (!tallyResponse.ok) return;
+
+      const { totalVotes } = await tallyResponse.json();
+
+      // If all active players have voted, start next round
+      if (totalVotes === activePlayers?.length) {
+        setStartingNextRound(true);
+        
+        const nextRoundResponse = await fetch(`/api/sessions/${sessionId}/next-round`, {
+          method: 'POST',
+        });
+
+        if (nextRoundResponse.ok) {
+          // Reload the page to show new character sheet
+          window.location.reload();
+        } else {
+          setStartingNextRound(false);
+          const errorData = await nextRoundResponse.json();
+          setErrorSnackbar({ open: true, message: errorData.error || 'Erreur lors du démarrage du prochain tour' });
+        }
+      }
+    } catch (err) {
+      console.error('Error checking votes:', err);
+      setStartingNextRound(false);
+    }
+  }
+
+  function setupVoteSubscription() {
+    const channel = supabase
+      .channel(`session-${sessionId}-votes`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'mystery_votes',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        async () => {
+          // Recalculate vote counts
+          const tallyResponse = await fetch(`/api/sessions/${sessionId}/tally-votes`);
+          if (tallyResponse.ok) {
+            const { voteCounts } = await tallyResponse.json();
+            setVoteCounts(voteCounts);
+            
+            // Check if all voted
+            checkIfAllVotedAndStartNextRound();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }
   function setupRealtimeSubscription() {
+    console.log('Setting up realtime subscription for session:', sessionId);
+    
     // Subscribe to player status changes
     const channel = supabase
-      .channel(`session-${sessionId}-players`)
+      .channel(`session-${sessionId}-players`, {
+        config: {
+          broadcast: { self: false },
+          presence: { key: '' },
+        },
+      })
       .on(
         'postgres_changes',
         {
@@ -150,15 +379,26 @@ Load all active players (for accusation list)
           filter: `session_id=eq.${sessionId}`,
         },
         async (payload) => {
+          console.log('Player updated in play page:', payload.new);
           const updatedPlayer = payload.new as Player;
           if (updatedPlayer.id === currentPlayer?.id && updatedPlayer.status === 'accused') {
             setIsAccused(true);
           }
         }
       )
-      .subscribe();
+      .subscribe((status, err) => {
+        console.log('Play page channel status:', status, err);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Successfully subscribed to players channel in play page');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Play page channel error:', err);
+        } else if (status === 'TIMED_OUT') {
+          console.error('❌ Play page channel timed out');
+        }
+      });
 
     return () => {
+      console.log('Cleaning up play page realtime subscription');
       supabase.removeChannel(channel);
     };
   }
@@ -185,8 +425,13 @@ Load all active players (for accusation list)
 
   if (!characterSheet) {
     return (
-      <Container maxWidth="md">svg`;
-  };
+      <Container maxWidth="md">
+        <Box sx={{ py: 8 }}>
+          <Alert severity="info">Loading character sheet...</Alert>
+        </Box>
+      </Container>
+    );
+  }
 
   async function handleAccuse() {
     if (!selectedPlayer) return;
@@ -206,23 +451,30 @@ Load all active players (for accusation list)
         throw new Error(data.error || 'Failed to submit accusation');
       }
 
+      // Determine the message based on the player's role
+      let message = '';
+      if (characterSheet.role === 'investigator') {
+        message = data.messages.investigator;
+      } else if (characterSheet.role === 'guilty') {
+        message = data.messages.guilty;
+      } else {
+        message = data.messages.innocent;
+      }
+
       setAccusationResult({
         wasCorrect: data.wasCorrect,
         role: data.accusedRole,
+        gameComplete: data.gameComplete,
+        message,
       });
 
       setAccuseDialogOpen(false);
     } catch (err: any) {
       console.error('Error submitting accusation:', err);
-      alert(err.message || 'Failed to submit accusation');
+      setErrorSnackbar({ open: true, message: err.message || 'Erreur lors de l\'accusation' });
     } finally {
       setSubmittingAccusation(false);
     }
-  }    <Box sx={{ py: 8 }}>
-          <Alert severity="info">Waiting for game to start...</Alert>
-        </Box>
-      </Container>
-    );
   }
 
   const getRoleColor = (role: string) => {
@@ -279,43 +531,65 @@ Load all active players (for accusation list)
                   animation: 'drip 3s ease-in',
                 }}
               >
-                ACCUSED!
+                ACCUSÉ !
               </Box>
             </motion.div>
           )}
         </AnimatePresence>
 
         <Paper elevation={3} sx={{ p: 4 }}>
+          {/* Mystery Title */}
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Typography variant="h5" color="primary" gutterBottom>
+              {characterSheet.mystery.title}
+            </Typography>
+          </Box>
+
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Typography variant="h4" gutterBottom>
-              Your Character Sheet
+              Votre fiche de personnage
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-              <Chip
-                label={characterSheet.role.toUpperCase()}
-                color={getRoleColor(characterSheet.role) as any}
-                sx={{ fontSize: '1rem', px: 2, py: 3 }}
-              />
-              <IconButton 
-                onClick={() => setRoleRevealed(!roleRevealed)}
-                color={roleRevealed ? 'primary' : 'default'}
-                sx={{ fontSize: '2rem' }}
-              >
-                {roleRevealed ? (
-                  characterSheet.role === 'guilty' ? '😈' : '😇'
-                ) : '❓'}
-              </IconButton>
-            </Box>
-            {roleRevealed && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                  {characterSheet.role === 'guilty' ? 'You are GUILTY' : 'You are INNOCENT'}
-                </Typography>
-              </motion.div>
+            
+            {/* Always show Investigator or Suspect */}
+            <Chip
+              label={characterSheet.role === 'investigator' ? 'ENQUÊTEUR' : 'SUSPECT'}
+              color={characterSheet.role === 'investigator' ? 'info' : 'default'}
+              sx={{ fontSize: '1rem', px: 2, py: 1.5, mb: 2 }}
+            />
+            
+            {/* For suspects only: show guilty/innocent reveal */}
+            {characterSheet.role !== 'investigator' && (
+              <Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mt: 2 }}>
+                  {roleRevealed && (
+                    <Chip
+                      label={characterSheet.role.toUpperCase()}
+                      color={getRoleColor(characterSheet.role) as any}
+                      sx={{ fontSize: '1rem', px: 2, py: 3 }}
+                    />
+                  )}
+                  <IconButton 
+                    onClick={() => setRoleRevealed(!roleRevealed)}
+                    color={roleRevealed ? 'primary' : 'default'}
+                    sx={{ fontSize: '2rem' }}
+                  >
+                    {roleRevealed ? (
+                      characterSheet.role === 'guilty' ? '😈' : '😇'
+                    ) : '❓'}
+                  </IconButton>
+                </Box>
+                {roleRevealed && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                      {characterSheet.role === 'guilty' ? 'Vous êtes COUPABLE' : 'Vous êtes INNOCENT'}
+                    </Typography>
+                  </motion.div>
+                )}
+              </Box>
             )}
           </Box>
 
@@ -332,70 +606,94 @@ Load all active players (for accusation list)
             />
           </Box>
 
-          {/* Dark Secret */}
-          <Box sx={{ mb: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-              <Typography variant="h6">🤫 Dark Secret</Typography>
-              <IconButton onClick={() => setSecretVisible(!secretVisible)} size="small">
-                {secretVisible ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
+          {/* Investigator sees Mystery Description */}
+          {characterSheet.role === 'investigator' && (
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h6" gutterBottom>📖 Description du mystère</Typography>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 2,
+                  bgcolor: 'background.default',
+                }}
+              >
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {characterSheet.mystery.description}
+                </ReactMarkdown>
+              </Paper>
             </Box>
-            <Paper
-              elevation={1}
-              sx={{
-                p: 2,
-                bgcolor: 'background.default',
-                minHeight: '80px',
-                filter: secretVisible ? 'none' : 'blur(8px)',
-                transition: 'filter 0.3s ease',
-              }}
-            >
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {characterSheet.dark_secret}
-              </ReactMarkdown>
-            </Paper>
-          </Box>
+          )}
 
-          {/* Words to Place */}
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              💬 Three Words to Place in Conversation
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-              {characterSheet.wordsToPlace.map((word, index) => (
-                <Chip
-                  key={index}
-                  label={word}
-                  variant="outlined"
-                  sx={{ fontSize: '1rem', px: 2, py: 3 }}
-                />
-              ))}
+          {/* Dark Secret - Only for guilty/innocent */}
+          {characterSheet.role !== 'investigator' && (
+            <Box sx={{ mb: 4 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="h6">🤫 Sombre Secret </Typography>
+                <IconButton onClick={() => setSecretVisible(!secretVisible)} size="small">
+                  {secretVisible ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </Box>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 2,
+                  bgcolor: 'background.default',
+                  minHeight: '80px',
+                  filter: secretVisible ? 'none' : 'blur(8px)',
+                  transition: 'filter 0.3s ease',
+                }}
+              >
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {characterSheet.dark_secret}
+                </ReactMarkdown>
+              </Paper>
             </Box>
-          </Box>
+          )}
 
-          {/* Alibi */}
-          <Box sx={{ mb: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-              <Typography variant="h6">🕵️ Your Alibi</Typography>
-              <IconButton onClick={() => setAlibiVisible(!alibiVisible)} size="small">
-                {alibiVisible ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
+          {/* Words to Place - Only for guilty/innocent */}
+          {characterSheet.role !== 'investigator' && characterSheet.wordsToPlace.length > 0 && (
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h6" gutterBottom>
+                💬 Trois mots à placer dans la conversation
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {characterSheet.wordsToPlace.map((word, index) => (
+                  <Chip
+                    key={index}
+                    label={word}
+                    variant="outlined"
+                    sx={{ fontSize: '1rem', px: 2, py: 3 }}
+                  />
+                ))}
+              </Box>
             </Box>
-            <Paper
-              elevation={1}
-              sx={{
-                p: 2,
-                bgcolor: 'background.default',
-                minHeight: '80px',
-                filter: alibiVisible ? 'none' : 'blur(8px)',
-                transition: 'filter 0.3s ease',
-              }}
-            >
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {characterSheet.alibi}
-              </ReactMarkdown>
-            </Paper>
-          </Box>
+          )}
+
+          {/* Alibi - Only for guilty/innocent */}
+          {characterSheet.role !== 'investigator' && (
+            <Box sx={{ mb: 4 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="h6">🕵️ Votre alibi</Typography>
+                <IconButton onClick={() => setAlibiVisible(!alibiVisible)} size="small">
+                  {alibiVisible ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </Box>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 2,
+                  bgcolor: 'background.default',
+                  minHeight: '80px',
+                  filter: alibiVisible ? 'none' : 'blur(8px)',
+                  transition: 'filter 0.3s ease',
+                }}
+              >
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {characterSheet.alibi}
+                </ReactMarkdown>
+              </Paper>
+            </Box>
+          )}
 
           {characterSheet.role === 'investigator' && !accusationResult && (
             <Box sx={{ textAlign: 'center', mt: 4 }}>
@@ -404,9 +702,18 @@ Load all active players (for accusation list)
                 size="large"
                 color="error"
                 onClick={() => setAccuseDialogOpen(true)}
-                sx={{ fontSize: '1.2rem', px: 4, py: 2 }}
+                sx={{ 
+                  fontSize: '1.2rem', 
+                  px: 4, 
+                  py: 2,
+                  fontWeight: 'bold',
+                  boxShadow: 3,
+                  '&:hover': {
+                    boxShadow: 6,
+                  }
+                }}
               >
-                J&apos;Accuse!
+                🔍 J&apos;Accuse!
               </Button>
             </Box>
           )}
@@ -416,14 +723,144 @@ Load all active players (for accusation list)
               severity={accusationResult.wasCorrect ? 'success' : 'error'}
               sx={{ mt: 4 }}
             >
-              {accusationResult.wasCorrect
-                ? '🎉 Correct! You found the guilty party!'
-                : '❌ Wrong! You accused an innocent person.'}
+              {accusationResult.message}
             </Alert>
           )}
 
+          {/* Scoreboard and Mystery Voting - shown after accusation unless game is complete */}
+          {accusationResult && !accusationResult.gameComplete && (
+            <>
+              {/* Scoreboard */}
+              <Box sx={{ mt: 4 }}>
+                <Typography variant="h5" gutterBottom align="center">
+                  🏆 Scores
+                </Typography>
+                <Paper elevation={2} sx={{ p: 3 }}>
+                  <List>
+                    {playerScores.map((player, index) => (
+                      <ListItem
+                        key={player.id}
+                        sx={{
+                          borderBottom: index < playerScores.length - 1 ? '1px solid #eee' : 'none',
+                        }}
+                      >
+                        <ListItemText
+                          primary={
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              <Typography variant="h6" sx={{ minWidth: '30px' }}>
+                                {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`}
+                              </Typography>
+                              <Typography variant="body1" sx={{ flex: 1 }}>
+                                {player.name} {player.id === currentPlayer?.id ? '(Vous)' : ''}
+                              </Typography>
+                              <Chip label={`${player.score} pts`} color="primary" />
+                            </Box>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              </Box>
+
+              {/* Mystery Voting */}
+              {availableMysteries.length > 0 && (
+                <Box sx={{ mt: 4 }}>
+                  <Typography variant="h5" gutterBottom align="center">
+                    🎭 Votez pour le prochain mystère
+                  </Typography>
+                  <Paper elevation={2} sx={{ p: 3 }}>
+                    {!hasVoted ? (
+                      <List>
+                        {availableMysteries.map((mystery) => (
+                          <ListItem key={mystery.id} disablePadding>
+                            <ListItemButton
+                              selected={selectedMystery === mystery.id}
+                              onClick={() => handleVoteForMystery(mystery.id)}
+                            >
+                              <Radio checked={selectedMystery === mystery.id} />
+                              <ListItemText
+                                primary={mystery.title}
+                                secondary={
+                                  voteCounts[mystery.id]
+                                    ? `${voteCounts[mystery.id]} vote(s)`
+                                    : '0 vote'
+                                }
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        ))}
+                      </List>
+                    ) : (
+                      <Box sx={{ textAlign: 'center' }}>
+                        <Typography variant="body1" gutterBottom>
+                          ✅ Vote enregistré !
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          En attente des autres joueurs...
+                        </Typography>
+                        {startingNextRound && (
+                          <Box sx={{ mt: 3 }}>
+                            <CircularProgress />
+                            <Typography variant="body2" sx={{ mt: 2 }}>
+                              Démarrage du prochain tour...
+                            </Typography>
+                          </Box>
+                        )}
+                      </Box>
+                    )}
+                  </Paper>
+                </Box>
+              )}
+
+              {availableMysteries.length === 0 && (
+                <Alert severity="info" sx={{ mt: 4 }}>
+                  Aucun mystère disponible pour continuer. La partie est terminée !
+                </Alert>
+              )}
+            </>
+          )}
+
+          {/* Game Complete */}
+          {accusationResult && accusationResult.gameComplete && (
+            <Box sx={{ mt: 4, textAlign: 'center' }}>
+              <Typography variant="h4" gutterBottom>
+                🎉 Partie terminée !
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                Scores finaux :
+              </Typography>
+              <Paper elevation={2} sx={{ p: 3, mt: 2 }}>
+                <List>
+                  {playerScores.map((player, index) => (
+                    <ListItem
+                      key={player.id}
+                      sx={{
+                        borderBottom: index < playerScores.length - 1 ? '1px solid #eee' : 'none',
+                      }}
+                    >
+                      <ListItemText
+                        primary={
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Typography variant="h6" sx={{ minWidth: '30px' }}>
+                              {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`}
+                            </Typography>
+                            <Typography variant="body1" sx={{ flex: 1 }}>
+                              {player.name} {player.id === currentPlayer?.id ? '(Vous)' : ''}
+                            </Typography>
+                            <Chip label={`${player.score} pts`} color="primary" />
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            </Box>
+          )}
+
           <Alert severity="warning" sx={{ mt: 4 }}>
-            ⚠️ Keep your character sheet secret from other players!
+            ⚠️ Gardez votre fiche de personnage secrète des autres joueurs !
           </Alert>
         </Paper>
 
@@ -434,7 +871,7 @@ Load all active players (for accusation list)
           maxWidth="sm"
           fullWidth
         >
-          <DialogTitle>Select the Guilty Party</DialogTitle>
+          <DialogTitle>Sélectionnez le coupable</DialogTitle>
           <DialogContent>
             <List>
               {players.map((player) => (
@@ -452,7 +889,7 @@ Load all active players (for accusation list)
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setAccuseDialogOpen(false)} disabled={submittingAccusation}>
-              Cancel
+              Annuler
             </Button>
             <Button
               onClick={handleAccuse}
@@ -460,42 +897,10 @@ Load all active players (for accusation list)
               color="error"
               disabled={!selectedPlayer || submittingAccusation}
             >
-              {submittingAccusation ? 'Accusing...' : 'Accuse'}
+              {submittingAccusation ? 'Accusation en cours...' : 'Accuser'}
             </Button>
           </DialogActions>
-        </Dialogper
-              elevation={1}
-              sx={{
-                p: 2,
-                bgcolor: 'background.default',
-                minHeight: '80px',
-                filter: alibiVisible ? 'none' : 'blur(8px)',
-                transition: 'filter 0.3s ease',
-              }}
-            >
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {characterSheet.alibi}
-              </ReactMarkdown>
-            </Paper>
-          </Box>
-
-          {characterSheet.role === 'investigator' && (
-            <Box sx={{ textAlign: 'center', mt: 4 }}>
-              <Button
-                variant="contained"
-                size="large"
-                color="error"
-                sx={{ fontSize: '1.2rem', px: 4, py: 2 }}
-              >
-                J&apos;Accuse!
-              </Button>
-            </Box>
-          )}
-
-          <Alert severity="warning" sx={{ mt: 4 }}>
-            ⚠️ Keep your character sheet secret from other players!
-          </Alert>
-        </Paper>
+        </Dialog>
       </Box>
 
       <style jsx global>{`
@@ -513,6 +918,15 @@ Load all active players (for accusation list)
           }
         }
       `}</style>
+
+      {/* Error Snackbar */}
+      <Snackbar
+        open={errorSnackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setErrorSnackbar({ open: false, message: '' })}
+        message={errorSnackbar.message}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
     </Container>
   );
 }

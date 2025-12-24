@@ -86,3 +86,8 @@ enabled = false
 [analytics]
 enabled = true
 port = 54427
+
+[realtime]
+enabled = true
+# Bind realtime via either IPv4 or IPv6. (default: IPv4)
+# ip_version = "IPv6"
