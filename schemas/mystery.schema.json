@@ -46,12 +46,18 @@
       "description": "Array of character sheets (must include at least investigator, guilty, and one innocent)",
       "items": {
         "type": "object",
-        "required": ["role", "dark_secret", "alibi"],
+        "required": ["role", "character_name", "dark_secret", "alibi"],
         "properties": {
           "role": {
             "type": "string",
             "enum": ["investigator", "guilty", "innocent"],
             "description": "The role of this character"
+          },
+          "character_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "The name of this character (e.g., 'Le Majordome', 'La Comtesse')"
           },
           "dark_secret": {
             "type": "string",

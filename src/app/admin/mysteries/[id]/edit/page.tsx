@@ -18,6 +18,7 @@ import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 
 interface CharacterSheet {
   role: 'investigator' | 'guilty' | 'innocent';
+  character_name: string;
   dark_secret: string;
   alibi: string;
   image_path?: string;
@@ -49,9 +50,9 @@ export default function EditMysteryPage() {
     innocent_words: ['', '', ''],
     guilty_words: ['', '', ''],
     character_sheets: [
-      { role: 'investigator', dark_secret: '', alibi: '' },
-      { role: 'guilty', dark_secret: '', alibi: '' },
-      { role: 'innocent', dark_secret: '', alibi: '' },
+      { role: 'investigator', character_name: 'L\'Enquêteur', dark_secret: '', alibi: '' },
+      { role: 'guilty', character_name: 'Le Coupable', dark_secret: '', alibi: '' },
+      { role: 'innocent', character_name: 'Un Innocent', dark_secret: '', alibi: '' },
     ],
   });
 
@@ -113,8 +114,8 @@ export default function EditMysteryPage() {
         throw new Error('Must have a guilty role');
       }
       for (const sheet of formData.character_sheets) {
-        if (!sheet.dark_secret.trim() || !sheet.alibi.trim()) {
-          throw new Error('All character sheets must have dark_secret and alibi');
+        if (!sheet.character_name.trim() || !sheet.dark_secret.trim() || !sheet.alibi.trim()) {
+          throw new Error('All character sheets must have character_name, dark_secret and alibi');
         }
       }
 
@@ -157,7 +158,7 @@ export default function EditMysteryPage() {
       ...formData,
       character_sheets: [
         ...formData.character_sheets,
-        { role: 'innocent', dark_secret: '', alibi: '' },
+        { role: 'innocent', character_name: 'Un Innocent', dark_secret: '', alibi: '' },
       ],
     });
   };
@@ -294,6 +295,14 @@ export default function EditMysteryPage() {
                   <MenuItem value="guilty">Guilty</MenuItem>
                   <MenuItem value="innocent">Innocent</MenuItem>
                 </TextField>
+
+                <TextField
+                  label="Character Name"
+                  value={sheet.character_name}
+                  onChange={(e) => updateCharacterSheet(index, 'character_name', e.target.value)}
+                  required
+                  helperText="The name of this character (e.g., 'Le Majordome', 'La Comtesse')"
+                />
 
                 <TextField
                   multiline
