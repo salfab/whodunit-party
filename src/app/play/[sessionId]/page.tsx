@@ -31,6 +31,7 @@ import { createClient } from '@/lib/supabase/client';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
 import LoadingScreen from '@/components/LoadingScreen';
 import TransitionScreen from '@/components/TransitionScreen';
+import MysteryCard from '@/components/shared/MysteryCard';
 import type { Database } from '@/types/database';
 
 type CharacterSheet = Database['public']['Tables']['character_sheets']['Row'];
@@ -224,14 +225,15 @@ export default function PlayPage() {
       })) || [];
       setPlayers(otherPlayers);
 
-      // Get round number by counting completed rounds for this session
-      const { data: allRounds } = await supabase
-        .from('rounds')
-        .select('id')
+      // Get round number by counting player's assignments in this session
+      // Each round = one assignment, so count of assignments = current round number
+      const { data: allAssignments } = await supabase
+        .from('player_assignments')
+        .select('mystery_id')
         .eq('session_id', sessionId)
-        .order('created_at', { ascending: true });
+        .eq('player_id', playerData.playerId);
       
-      const roundNumber = (allRounds?.length || 0) + 1;
+      const roundNumber = allAssignments?.length || 1;
 
       // Track mystery changes for transitions
       if (sheet.mystery_id && previousMysteryIdRef.current && previousMysteryIdRef.current !== sheet.mystery_id) {
@@ -318,10 +320,26 @@ export default function PlayPage() {
 
   async function loadAvailableMysteries() {
     try {
-      setHasVoted(false);
+      // Get session info for language filtering
+      const { data: sessionData } = await supabase
+        .from('game_sessions')
+        .select('language')
+        .eq('id', sessionId)
+        .single();
+      
+      const language = sessionData?.language || 'fr';
 
-      // Get all mysteries
-      const mysteriesResponse = await fetch('/api/mysteries');
+      // Get active player count for filtering by character_count
+      const { data: activePlayers } = await supabase
+        .from('players')
+        .select('id')
+        .eq('session_id', sessionId)
+        .eq('status', 'active');
+      
+      const playerCount = activePlayers?.length || 0;
+
+      // Get mysteries filtered by language and including character count
+      const mysteriesResponse = await fetch(`/api/mysteries?language=${language}&includeCharacterCount=true`);
       if (!mysteriesResponse.ok) {
         throw new Error('Failed to fetch mysteries');
       }
@@ -341,16 +359,41 @@ export default function PlayPage() {
       }
 
       const playedIds = new Set(rounds?.map((r) => r.mystery_id) || []);
-      const available = allMysteries.filter((m: any) => !playedIds.has(m.id));
+      
+      // Filter: not played AND has enough characters for current player count
+      const available = allMysteries.filter((m: any) => 
+        !playedIds.has(m.id) && m.character_count >= playerCount
+      );
 
       setAvailableMysteries(available);
 
       // Load current vote counts
       const tallyResponse = await fetch(`/api/sessions/${sessionId}/tally-votes`);
       if (tallyResponse.ok) {
-        const { voteCounts: currentVotes } = await tallyResponse.json();
+        const { voteCounts: currentVotes, roundNumber } = await tallyResponse.json();
         setVoteCounts(currentVotes || {});
 
+        // Check if current player has already voted for this round
+        if (currentPlayer?.id && roundNumber) {
+          const { data: existingVote } = await supabase
+            .from('mystery_votes')
+            .select('mystery_id')
+            .eq('session_id', sessionId)
+            .eq('player_id', currentPlayer.id)
+            .eq('round_number', roundNumber)
+            .maybeSingle();
+
+          if (existingVote?.mystery_id) {
+            setSelectedMystery(existingVote.mystery_id);
+            setHasVoted(true);
+          } else {
+            setSelectedMystery('');
+            setHasVoted(false);
+          }
+        } else {
+          setSelectedMystery('');
+          setHasVoted(false);
+        }
       }
     } catch (err) {
       console.error('Error loading available mysteries:', err);
@@ -853,22 +896,14 @@ export default function PlayPage() {
                     {!hasVoted ? (
                       <List>
                         {availableMysteries.map((mystery) => (
-                          <ListItem key={mystery.id} disablePadding>
-                            <ListItemButton
-                              selected={selectedMystery === mystery.id}
-                              onClick={() => handleVoteForMystery(mystery.id)}
-                            >
-                              <Radio checked={selectedMystery === mystery.id} />
-                              <ListItemText
-                                primary={mystery.title}
-                                secondary={
-                                  voteCounts[mystery.id]
-                                    ? `${voteCounts[mystery.id]} vote(s)`
-                                    : '0 vote'
-                                }
-                              />
-                            </ListItemButton>
-                          </ListItem>
+                          <MysteryCard
+                            key={mystery.id}
+                            mystery={mystery}
+                            selected={selectedMystery === mystery.id}
+                            voteCount={voteCounts[mystery.id] || 0}
+                            showRadio={true}
+                            onClick={() => handleVoteForMystery(mystery.id)}
+                          />
                         ))}
                       </List>
                     ) : (

@@ -26,6 +26,7 @@ import { createClient } from '@/lib/supabase/client';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
 import LoadingScreen from '@/components/LoadingScreen';
 import TransitionScreen from '@/components/TransitionScreen';
+import MysteryCard from '@/components/shared/MysteryCard';
 import type { Database } from '@/types/database';
 import { MIN_PLAYERS } from '@/lib/constants';
 
@@ -635,44 +636,14 @@ export default function LobbyPage() {
                   const voteCount = Array.from(votes.values()).filter(v => v === mystery.id).length;
                   const isSelected = myVote === mystery.id;
                   
-                  const getLanguageFlag = (lang: string) => {
-                    const flags: Record<string, string> = {
-                      'fr': '🇫🇷',
-                      'en': '🇬🇧',
-                      'es': '🇪🇸',
-                      'de': '🇩🇪',
-                      'it': '🇮🇹'
-                    };
-                    return flags[lang] || '🌍';
-                  };
-                  
                   return (
-                    <ListItem
+                    <MysteryCard
                       key={mystery.id}
-                      disablePadding
-                      sx={{ mb: 1 }}
-                    >
-                      <ListItemButton
-                        onClick={() => handleVote(mystery.id)}
-                        selected={isSelected}
-                        sx={{
-                          border: isSelected ? '2px solid' : '1px solid',
-                          borderColor: isSelected ? 'primary.main' : 'divider',
-                          borderRadius: 1,
-                        }}
-                      >
-                        <ListItemText
-                          primary={mystery.title}
-                          secondary={`${mystery.character_count} joueurs ${getLanguageFlag(mystery.language)} par ${mystery.author}`}
-                        />
-                        <Chip 
-                          label={`${voteCount} votes`} 
-                          color={voteCount > 0 ? "primary" : "default"} 
-                          size="small" 
-                          variant={voteCount > 0 ? "filled" : "outlined"}
-                        />
-                      </ListItemButton>
-                    </ListItem>
+                      mystery={mystery}
+                      selected={isSelected}
+                      voteCount={voteCount}
+                      onClick={() => handleVote(mystery.id)}
+                    />
                   );
                 })}
               </List>
