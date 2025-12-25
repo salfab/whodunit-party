@@ -53,9 +53,9 @@ Then('the game code field should contain {string}', (expectedCode: string) => {
 });
 
 Then('the game code field should be pre-filled', () => {
-  // For OTP input, check if any box has a value
+  // For OTP input, check if the first box has a value (not empty)
   cy.get('[data-testid="game-code-input-container"]', { timeout: 10000 }).within(() => {
-    cy.get('input').first().should('have.value').and('not.be.empty');
+    cy.get('input').first().invoke('val').should('not.be.empty');
   });
 });
 

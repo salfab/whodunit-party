@@ -7,23 +7,21 @@ Feature: Create Game Room
     Given I am on the homepage
 
   Scenario: Successfully create a game room
-    When I click the "Create Room" button
+    When I click the "Créer une salle" button
     Then I should be on the create room page
-    When I click the "Generate Room Code" button
-    Then I should see a 6-character game code
+    And I should see a 6-character game code
     And I should see a QR code
-    And I should see a "Join This Room" button
+    And I should see a "Rejoindre cette salle" button
 
   Scenario: Join my own created room
-    When I click the "Create Room" button
-    And I click the "Generate Room Code" button
+    When I click the "Créer une salle" button
     And I wait for the game code to be displayed
-    When I click the "Join This Room" button
+    When I click the "Rejoindre cette salle" button
     Then I should be on the join page
     And the game code field should be pre-filled
 
   Scenario: Navigate back from room creation
-    When I click the "Create Room" button
-    And I click the "Generate Room Code" button
-    When I click the "Back to Home" button
+    When I click the "Créer une salle" button
+    And I wait for the game code to be displayed
+    When I click the "Retour à l'accueil" button
     Then I should be on the homepage
