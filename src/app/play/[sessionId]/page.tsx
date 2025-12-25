@@ -280,6 +280,8 @@ export default function PlayPage() {
 
   async function loadAvailableMysteries() {
     try {
+      setHasVoted(false);
+
       // Get all mysteries
       const mysteriesResponse = await fetch('/api/mysteries');
       if (!mysteriesResponse.ok) {
@@ -310,6 +312,7 @@ export default function PlayPage() {
       if (tallyResponse.ok) {
         const { voteCounts: currentVotes } = await tallyResponse.json();
         setVoteCounts(currentVotes || {});
+
       }
     } catch (err) {
       console.error('Error loading available mysteries:', err);
@@ -366,14 +369,8 @@ export default function PlayPage() {
   function setupRealtimeSubscription() {
     console.log('Setting up realtime subscription for session:', sessionId);
     
-    // Subscribe to player status changes
-    const playersChannel = supabase
-      .channel(`session-${sessionId}-players`, {
-        config: {
-          broadcast: { self: false },
-          presence: { key: '' },
-        },
-      })
+    const channel = supabase
+      .channel(`room-${sessionId}`)
       .on(
         'postgres_changes',
         {
@@ -384,24 +381,9 @@ export default function PlayPage() {
         },
         async (payload) => {
           console.log('Player updated in play page:', payload.new);
-          // Reload to ensure we have the latest state
           loadCharacterSheet();
         }
       )
-      .subscribe((status, err) => {
-        console.log('Play page channel status:', status, err);
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Successfully subscribed to players channel in play page');
-        } else if (status === 'CHANNEL_ERROR') {
-          console.error('❌ Play page channel error:', err);
-        } else if (status === 'TIMED_OUT') {
-          console.error('❌ Play page channel timed out');
-        }
-      });
-
-    // Subscribe to rounds changes to show accusation results
-    const roundsChannel = supabase
-      .channel(`session-${sessionId}-rounds`)
       .on(
         'postgres_changes',
         {
@@ -415,33 +397,24 @@ export default function PlayPage() {
           loadCharacterSheet();
         }
       )
-      .subscribe();
-
-    // Subscribe to player assignments to detect new mystery/role
-    const assignmentsChannel = supabase
-      .channel(`session-${sessionId}-assignments`)
       .on(
         'postgres_changes',
         {
-          event: '*', // Listen to INSERT and UPDATE
+          event: '*',
           schema: 'public',
           table: 'player_assignments',
           filter: `session_id=eq.${sessionId}`,
         },
         async (payload) => {
-          console.log('Assignment changed:', payload.new);
-          // If the assignment is for me, reload
-          if ((payload.new as any).player_id === currentPlayerRef.current?.id) {
-             console.log('Received new assignment via broadcast. Reloading character sheet...');
-             loadCharacterSheet();
+          console.log('Assignment changed:', payload.eventType, payload.new);
+          if (payload.eventType === 'DELETE') {
+            console.log('Assignment deleted, skipping reload to avoid race condition');
+            return; // Don't reload on DELETE to avoid race condition
           }
+          // Only reload on INSERT or UPDATE
+          loadCharacterSheet();
         }
       )
-      .subscribe();
-
-    // Subscribe to game_sessions to detect round changes (backup trigger)
-    const sessionsChannel = supabase
-      .channel(`session-${sessionId}-meta`)
       .on(
         'postgres_changes',
         {
@@ -452,19 +425,23 @@ export default function PlayPage() {
         },
         async (payload) => {
           console.log('Session updated via broadcast:', payload.new);
-          console.log('Checking if mystery changed...');
-          // Reload to check if mystery changed
           loadCharacterSheet();
         }
       )
-      .subscribe();
+      .subscribe((status, err) => {
+        console.log('Realtime connection status:', status);
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Connected to game updates');
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('❌ Realtime channel error:', err);
+        } else if (status === 'TIMED_OUT') {
+          console.error('❌ Realtime connection timed out');
+        }
+      });
 
     return () => {
       console.log('Cleaning up play page realtime subscription');
-      supabase.removeChannel(playersChannel);
-      supabase.removeChannel(roundsChannel);
-      supabase.removeChannel(assignmentsChannel);
-      supabase.removeChannel(sessionsChannel);
+      supabase.removeChannel(channel);
     };
   }
 
