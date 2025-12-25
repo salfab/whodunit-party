@@ -32,6 +32,22 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createServiceClient();
 
+    // Get current mystery ID first
+    const { data: gameSessionData } = await (supabase
+      .from('game_sessions') as any)
+      .select('current_mystery_id')
+      .eq('id', session.sessionId)
+      .single();
+    
+    const gameSession = gameSessionData as any;
+
+    if (!gameSession?.current_mystery_id) {
+      return NextResponse.json(
+        { error: 'No active mystery' },
+        { status: 400 }
+      );
+    }
+
     // Verify the current player is the investigator for this session
     const { data: assignmentData, error: assignmentError } = await (supabase
       .from('player_assignments') as any)
@@ -41,6 +57,7 @@ export async function POST(request: NextRequest) {
       `)
       .eq('session_id', session.sessionId)
       .eq('player_id', session.playerId)
+      .eq('mystery_id', gameSession.current_mystery_id)
       .single();
     
     const assignment = assignmentData as any;
@@ -69,6 +86,7 @@ export async function POST(request: NextRequest) {
       `)
       .eq('session_id', session.sessionId)
       .eq('player_id', accusedPlayerId)
+      .eq('mystery_id', gameSession.current_mystery_id)
       .single();
     
     const accusedAssignment = accusedAssignmentData as any;
@@ -82,22 +100,6 @@ export async function POST(request: NextRequest) {
 
     const accusedSheet = accusedAssignment.character_sheets as any;
     const wasCorrect = accusedSheet.role === 'guilty';
-
-    // Get current mystery ID and round count
-    const { data: gameSessionData } = await (supabase
-      .from('game_sessions') as any)
-      .select('current_mystery_id')
-      .eq('id', session.sessionId)
-      .single();
-    
-    const gameSession = gameSessionData as any;
-
-    if (!gameSession?.current_mystery_id) {
-      return NextResponse.json(
-        { error: 'No active mystery' },
-        { status: 400 }
-      );
-    }
 
     // Get current round number for this session
     const { data: existingRoundsData } = await (supabase

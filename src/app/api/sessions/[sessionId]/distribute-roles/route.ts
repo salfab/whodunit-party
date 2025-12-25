@@ -26,72 +26,29 @@ export async function POST(
 
     const supabase = await createServiceClient();
 
-    // Check if session is already in 'playing' status with this mystery
-    // This prevents race conditions when multiple players call this API simultaneously
-    const { data: currentSessionData, error: sessionCheckError } = await (supabase
-      .from('game_sessions') as any)
-      .select('status, current_mystery_id')
-      .eq('id', sessionId)
-      .single();
-    
-    const currentSession = currentSessionData as any;
-
-    if (sessionCheckError) {
-      log('error', 'Failed to check session status', { error: sessionCheckError.message });
-      return NextResponse.json(
-        { error: 'Failed to check session status' },
-        { status: 500 }
-      );
-    }
-
-    // If already playing with this mystery, assignments must exist - return success
-    if (currentSession.status === 'playing' && currentSession.current_mystery_id === mysteryId) {
-      log('info', 'Game already started with this mystery, returning success', { sessionId, mysteryId });
-      
-      const { count } = await supabase
-        .from('player_assignments')
-        .select('*', { count: 'exact', head: true })
-        .eq('session_id', sessionId)
-        .eq('mystery_id', mysteryId);
-      
-      return NextResponse.json({
-        success: true,
-        assignmentCount: count || 0,
-        alreadyDistributed: true,
-      });
-    }
-
     // Try to atomically update session to 'playing' status
     // This acts as a distributed lock - only one API call will succeed
-    // We update if:
-    // 1. Status is 'lobby' (first round)
-    // 2. Status is 'playing' but current_mystery_id is different (next round)
+    // We update if current_mystery_id is different (null in lobby or different mystery)
+    // Force updated_at to change to trigger Realtime event
     const { data: updatedSession, error: lockError } = await (supabase
       .from('game_sessions') as any)
-      .update({ status: 'playing', current_mystery_id: mysteryId })
+      .update({ 
+        status: 'playing', 
+        current_mystery_id: mysteryId,
+        updated_at: new Date().toISOString() // Force update to trigger Realtime
+      })
       .eq('id', sessionId)
-      .or(`status.eq.lobby,current_mystery_id.neq.${mysteryId}`)
+      .neq('current_mystery_id', mysteryId) // Only update if mystery is changing
       .select()
       .single();
 
-    // If update failed because status was already 'playing', another API call won
+    // If update failed, another API call already started this mystery
     if (lockError || !updatedSession) {
-      log('info', 'Another request already started the game, checking assignments', { sessionId, mysteryId });
-      
-      // Wait a bit for the winning request to create assignments
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const { count } = await supabase
-        .from('player_assignments')
-        .select('*', { count: 'exact', head: true })
-        .eq('session_id', sessionId)
-        .eq('mystery_id', mysteryId);
-      
-      return NextResponse.json({
-        success: true,
-        assignmentCount: count || 0,
-        alreadyDistributed: true,
-      });
+      log('info', 'Lock conflict - another request already processing this mystery', { sessionId, mysteryId, lockError: lockError?.message });
+      return NextResponse.json(
+        { success: true, note: 'Already processing' },
+        { status: 200 }
+      );
     }
 
     log('info', 'Acquired lock to distribute roles', { sessionId, mysteryId });
@@ -158,6 +115,8 @@ export async function POST(
     const guiltySheet = sheets.find((s: any) => s.role === 'guilty');
     const innocentSheets = sheets.filter((s: any) => s.role === 'innocent');
 
+    log('info', `Found sheets for mystery ${mysteryId}: 1 investigator, 1 guilty, ${innocentSheets.length} innocent`);
+
     if (!investigatorSheet || !guiltySheet) {
       log('error', 'Mystery missing required roles', { mysteryId });
       return NextResponse.json(
@@ -174,10 +133,14 @@ export async function POST(
     const investigatorCandidates = neverInvestigators.length > 0 ? neverInvestigators : hasBeenInvestigators;
     const investigatorPlayer = investigatorCandidates[Math.floor(Math.random() * investigatorCandidates.length)];
     
+    log('info', `Selected investigator: ${investigatorPlayer.id}`);
+
     // Shuffle remaining players for guilty/innocent assignment
     const remainingPlayersForRoles = players
       .filter((p: any) => p.id !== investigatorPlayer.id)
       .sort(() => Math.random() - 0.5);
+
+    log('info', `Assigning roles to ${remainingPlayersForRoles.length} remaining players`);
 
     // Assign investigator and guilty (always distributed)
     const assignments = [
@@ -218,19 +181,9 @@ export async function POST(
       });
     }
 
-    // Delete any existing assignments for this session and mystery (in case of retry/restart)
-    // Delete for the specific mystery to avoid conflicts with multi-round games
-    const { error: deleteError } = await supabase
-      .from('player_assignments')
-      .delete()
-      .eq('session_id', sessionId)
-      .eq('mystery_id', mysteryId);
+    // Insert assignments with upsert to handle race conditions
+    log('info', `Inserting ${assignments.length} assignments`, { assignments });
 
-    if (deleteError) {
-      log('warn', 'Failed to clear old assignments', { error: deleteError.message });
-    }
-
-    // Insert assignments with upsert to handle any remaining edge cases
     const { error: assignError } = await (supabase
       .from('player_assignments') as any)
       .upsert(assignments, {
