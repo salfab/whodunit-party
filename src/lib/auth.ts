@@ -25,7 +25,7 @@ function getJWTSecret(): Uint8Array {
  * Create a JWT session token
  */
 export async function createSession(data: SessionData): Promise<string> {
-  const token = await new SignJWT(data)
+  const token = await new SignJWT(data as any)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DURATION}s`)

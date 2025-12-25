@@ -28,11 +28,13 @@ export async function POST(
 
     // Check if session is already in 'playing' status with this mystery
     // This prevents race conditions when multiple players call this API simultaneously
-    const { data: currentSession, error: sessionCheckError } = await supabase
-      .from('game_sessions')
+    const { data: currentSessionData, error: sessionCheckError } = await (supabase
+      .from('game_sessions') as any)
       .select('status, current_mystery_id')
       .eq('id', sessionId)
       .single();
+    
+    const currentSession = currentSessionData as any;
 
     if (sessionCheckError) {
       log('error', 'Failed to check session status', { error: sessionCheckError.message });
@@ -61,11 +63,14 @@ export async function POST(
 
     // Try to atomically update session to 'playing' status
     // This acts as a distributed lock - only one API call will succeed
-    const { data: updatedSession, error: lockError } = await supabase
-      .from('game_sessions')
+    // We update if:
+    // 1. Status is 'lobby' (first round)
+    // 2. Status is 'playing' but current_mystery_id is different (next round)
+    const { data: updatedSession, error: lockError } = await (supabase
+      .from('game_sessions') as any)
       .update({ status: 'playing', current_mystery_id: mysteryId })
       .eq('id', sessionId)
-      .eq('status', 'lobby') // Only update if still in lobby status
+      .or(`status.eq.lobby,current_mystery_id.neq.${mysteryId}`)
       .select()
       .single();
 
@@ -91,13 +96,15 @@ export async function POST(
 
     log('info', 'Acquired lock to distribute roles', { sessionId, mysteryId });
 
-    // Get active players
-    const { data: players, error: playersError } = await supabase
-      .from('players')
-      .select('id, has_been_investigator')
+    // Get active and accused players (accused players rejoin as active for next round)
+    const { data: playersData, error: playersError } = await (supabase
+      .from('players') as any)
+      .select('id, has_been_investigator, status')
       .eq('session_id', sessionId)
-      .eq('status', 'active')
+      .in('status', ['active', 'accused'])
       .order('created_at', { ascending: true });
+    
+    const players = playersData as any;
 
     if (playersError || !players) {
       log('error', 'Failed to fetch players', { error: playersError?.message });
@@ -107,7 +114,23 @@ export async function POST(
       );
     }
 
+    // Reset accused players to active status for the new round
+    const accusedPlayers = players.filter((p: any) => p.status === 'accused');
+    if (accusedPlayers.length > 0) {
+      const { error: updateError } = await (supabase
+        .from('players') as any)
+        .update({ status: 'active' })
+        .in('id', accusedPlayers.map((p: any) => p.id));
+      
+      if (updateError) {
+        log('warn', 'Failed to reset accused players status', { error: updateError.message });
+      } else {
+        log('info', `Reset ${accusedPlayers.length} accused players to active`);
+      }
+    }
+
     if (players.length < MIN_PLAYERS) {
+      log('warn', `Not enough players to distribute roles: ${players.length}/${MIN_PLAYERS}`);
       return NextResponse.json(
         { error: `At least ${MIN_PLAYERS} players required` },
         { status: 400 }
@@ -115,10 +138,12 @@ export async function POST(
     }
 
     // Get character sheets for the mystery
-    const { data: sheets, error: sheetsError } = await supabase
-      .from('character_sheets')
+    const { data: sheetsData, error: sheetsError } = await (supabase
+      .from('character_sheets') as any)
       .select('*')
       .eq('mystery_id', mysteryId);
+    
+    const sheets = sheetsData as any;
 
     if (sheetsError || !sheets) {
       log('error', 'Failed to fetch character sheets', { error: sheetsError?.message });
@@ -129,9 +154,9 @@ export async function POST(
     }
 
     // Separate sheets by role
-    const investigatorSheet = sheets.find((s) => s.role === 'investigator');
-    const guiltySheet = sheets.find((s) => s.role === 'guilty');
-    const innocentSheets = sheets.filter((s) => s.role === 'innocent');
+    const investigatorSheet = sheets.find((s: any) => s.role === 'investigator');
+    const guiltySheet = sheets.find((s: any) => s.role === 'guilty');
+    const innocentSheets = sheets.filter((s: any) => s.role === 'innocent');
 
     if (!investigatorSheet || !guiltySheet) {
       log('error', 'Mystery missing required roles', { mysteryId });
@@ -142,8 +167,8 @@ export async function POST(
     }
 
     // Separate players - prioritize those who haven't been investigator
-    const neverInvestigators = players.filter(p => !p.has_been_investigator);
-    const hasBeenInvestigators = players.filter(p => p.has_been_investigator);
+    const neverInvestigators = players.filter((p: any) => !p.has_been_investigator);
+    const hasBeenInvestigators = players.filter((p: any) => p.has_been_investigator);
     
     // Select investigator: prioritize never-been-investigator, then pick randomly from rest
     const investigatorCandidates = neverInvestigators.length > 0 ? neverInvestigators : hasBeenInvestigators;
@@ -151,7 +176,7 @@ export async function POST(
     
     // Shuffle remaining players for guilty/innocent assignment
     const remainingPlayersForRoles = players
-      .filter(p => p.id !== investigatorPlayer.id)
+      .filter((p: any) => p.id !== investigatorPlayer.id)
       .sort(() => Math.random() - 0.5);
 
     // Assign investigator and guilty (always distributed)
@@ -171,8 +196,8 @@ export async function POST(
     ];
 
     // Mark investigator as having been investigator
-    const { error: updateInvestigatorError } = await supabase
-      .from('players')
+    const { error: updateInvestigatorError } = await (supabase
+      .from('players') as any)
       .update({ has_been_investigator: true })
       .eq('id', investigatorPlayer.id);
 
@@ -206,8 +231,8 @@ export async function POST(
     }
 
     // Insert assignments with upsert to handle any remaining edge cases
-    const { error: assignError } = await supabase
-      .from('player_assignments')
+    const { error: assignError } = await (supabase
+      .from('player_assignments') as any)
       .upsert(assignments, {
         onConflict: 'session_id,player_id,mystery_id',
         ignoreDuplicates: false

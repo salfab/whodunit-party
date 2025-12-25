@@ -22,8 +22,8 @@ export async function POST(
     const supabase = await createServiceClient();
 
     // Update last_heartbeat timestamp
-    const { error } = await supabase
-      .from('players')
+    const { error } = await (supabase
+      .from('players') as any)
       .update({ last_heartbeat: new Date().toISOString() })
       .eq('id', playerId);
 

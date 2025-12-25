@@ -35,12 +35,14 @@ export async function GET(
     const supabase = await createServiceClient();
 
     // Get current round number
-    const { data: rounds, error: roundsError } = await supabase
-      .from('rounds')
+    const { data: roundsData, error: roundsError } = await (supabase
+      .from('rounds') as any)
       .select('round_number')
       .eq('session_id', sessionId)
       .order('round_number', { ascending: false })
       .limit(1);
+    
+    const rounds = roundsData as any;
 
     if (roundsError) {
       logger('error', 'Error fetching current round', { error: roundsError });
@@ -54,10 +56,12 @@ export async function GET(
     const nextRoundNumber = rounds?.[0]?.round_number ? rounds[0].round_number + 1 : 1;
 
     // Get all mysteries already played in this session
-    const { data: playedRounds, error: playedError } = await supabase
-      .from('rounds')
+    const { data: playedRoundsData, error: playedError } = await (supabase
+      .from('rounds') as any)
       .select('mystery_id')
       .eq('session_id', sessionId);
+    
+    const playedRounds = playedRoundsData as any;
 
     if (playedError) {
       logger('error', 'Error fetching played mysteries', { error: playedError });
@@ -67,14 +71,16 @@ export async function GET(
       );
     }
 
-    const playedMysteryIds = new Set(playedRounds?.map((r) => r.mystery_id) || []);
+    const playedMysteryIds = new Set(playedRounds?.map((r: any) => r.mystery_id) || []);
 
     // Get all votes for the next round
-    const { data: votes, error: votesError } = await supabase
-      .from('mystery_votes')
+    const { data: votesData, error: votesError } = await (supabase
+      .from('mystery_votes') as any)
       .select('mystery_id')
       .eq('session_id', sessionId)
       .eq('round_number', nextRoundNumber);
+    
+    const votes = votesData as any;
 
     if (votesError) {
       logger('error', 'Error fetching votes', { error: votesError });
@@ -94,11 +100,11 @@ export async function GET(
     }
 
     // Filter out votes for already-played mysteries
-    const validVotes = votes.filter((vote) => !playedMysteryIds.has(vote.mystery_id));
+    const validVotes = votes.filter((vote: any) => !playedMysteryIds.has(vote.mystery_id));
 
     // Count votes per mystery
     const voteCounts: Record<string, number> = {};
-    validVotes.forEach((vote) => {
+    validVotes.forEach((vote: any) => {
       voteCounts[vote.mystery_id] = (voteCounts[vote.mystery_id] || 0) + 1;
     });
 

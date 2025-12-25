@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import {
   Container,
@@ -79,6 +79,8 @@ export default function PlayPage() {
   const [hasVoted, setHasVoted] = useState(false);
   const [startingNextRound, setStartingNextRound] = useState(false);
   const [errorSnackbar, setErrorSnackbar] = useState<{ open: boolean; message: string }>({ open: false, message: '' });
+  
+  const currentPlayerRef = useRef(currentPlayer);
 
   const supabase = createClient();
 
@@ -86,17 +88,27 @@ export default function PlayPage() {
   usePlayerHeartbeat(currentPlayer?.id || null, true);
 
   useEffect(() => {
+    currentPlayerRef.current = currentPlayer;
+  }, [currentPlayer]);
+
+  useEffect(() => {
     loadCharacterSheet();
     setupRealtimeSubscription();
   }, [sessionId]);
 
   useEffect(() => {
+    let cleanupVotes: (() => void) | undefined;
+
     if (accusationResult && !accusationResult.gameComplete) {
       // Load scoreboard and available mysteries for voting
       loadScoreboard();
       loadAvailableMysteries();
-      setupVoteSubscription();
+      cleanupVotes = setupVoteSubscription();
     }
+
+    return () => {
+      if (cleanupVotes) cleanupVotes();
+    };
   }, [accusationResult]);
 
   async function loadCharacterSheet() {
@@ -120,6 +132,20 @@ export default function PlayPage() {
       const playerData = await response.json();
       setCurrentPlayer(playerData);
 
+      // Get current session to know the current mystery
+      const { data: sessionData, error: sessionError } = await supabase
+        .from('game_sessions')
+        .select('current_mystery_id')
+        .eq('id', sessionId)
+        .single();
+
+      if (sessionError || !sessionData?.current_mystery_id) {
+         console.error('Could not determine current mystery', sessionError);
+         // Fallback or retry? For now let's throw to trigger error state
+         throw new Error('Could not determine current mystery');
+      }
+      const currentMysteryId = sessionData.current_mystery_id;
+
       // Get player assignment (with retry in case assignments are still being created)
       let assignment = null;
       let assignmentError = null;
@@ -138,7 +164,8 @@ export default function PlayPage() {
           `)
           .eq('session_id', sessionId)
           .eq('player_id', playerData.playerId)
-          .single();
+          .eq('mystery_id', currentMysteryId)
+          .maybeSingle();
 
         assignment = result.data;
         assignmentError = result.error;
@@ -177,29 +204,51 @@ export default function PlayPage() {
       const otherPlayers = allPlayers?.filter((p) => p.id !== playerData.playerId) || [];
       setPlayers(otherPlayers);
 
-      // Check if player is accused
-      const { data: playerStatus } = await supabase
-        .from('players')
-        .select('status')
-        .eq('id', playerData.playerId)
-        .single();
-
-      setIsAccused(playerStatus?.status === 'accused');
-
-      // Check if there's already an accusation (ignore errors if table doesn't exist or no data)
+      // Check if there's already an accusation for THIS mystery
       const { data: existingRound, error: roundError } = await supabase
         .from('rounds')
         .select('*')
         .eq('session_id', sessionId)
+        .eq('mystery_id', mystery.id)
         .maybeSingle();
 
       if (!roundError && existingRound) {
+        // Check if I am the accused player in this round
+        if (existingRound.accused_player_id === playerData.playerId) {
+          setIsAccused(true);
+        }
+
+        let message = '';
+        const wasCorrect = existingRound.was_correct;
+        const isMe = existingRound.accused_player_id === playerData.playerId;
+        
+        if (sheet.role === 'investigator') {
+          message = wasCorrect 
+            ? 'Bravo ! Vous avez trouvé le coupable ! +2 points'
+            : 'Erreur ! Vous avez accusé une personne innocente.';
+        } else if (sheet.role === 'guilty') {
+          message = wasCorrect
+            ? 'Vous avez été découvert par l\'enquêteur.'
+            : 'Le coupable n\'a pas été attrapé ! +2 points';
+        } else {
+          // Innocent
+          message = wasCorrect
+            ? 'L\'enquêteur a trouvé le coupable.'
+            : (isMe
+                ? 'Vous êtes innocent et avez été accusé à tort ! +1 point'
+                : 'L\'enquêteur s\'est trompé.');
+        }
+
         setAccusationResult({
           wasCorrect: existingRound.was_correct,
           role: existingRound.was_correct ? 'guilty' : 'innocent',
           gameComplete: false,
-          message: ''
+          message
         });
+      } else {
+        // No round for this mystery, ensure accusation result is cleared
+        setAccusationResult(null);
+        setIsAccused(false);
       }
 
       setLoading(false);
@@ -215,7 +264,7 @@ export default function PlayPage() {
         .from('players')
         .select('id, name, score')
         .eq('session_id', sessionId)
-        .in('status', ['active', 'accused'])
+        .eq('status', 'active')
         .order('score', { ascending: false });
 
       if (error) {
@@ -236,7 +285,8 @@ export default function PlayPage() {
       if (!mysteriesResponse.ok) {
         throw new Error('Failed to fetch mysteries');
       }
-      const allMysteries = await mysteriesResponse.json();
+      const data = await mysteriesResponse.json();
+      const allMysteries = data.mysteries || [];
 
       // Get played mysteries
       const { data: rounds, error } = await supabase
@@ -281,55 +331,9 @@ export default function PlayPage() {
 
       setSelectedMystery(mysteryId);
       setHasVoted(true);
-
-      // Check if all players have voted
-      checkIfAllVotedAndStartNextRound();
     } catch (err: any) {
       console.error('Error voting:', err);
       setErrorSnackbar({ open: true, message: err.message || 'Erreur lors du vote' });
-    }
-  }
-
-  async function checkIfAllVotedAndStartNextRound() {
-    try {
-      // Get all active players
-      const { data: activePlayers, error: playersError } = await supabase
-        .from('players')
-        .select('id')
-        .eq('session_id', sessionId)
-        .eq('status', 'active');
-
-      if (playersError) {
-        console.error('Error fetching active players:', playersError);
-        return;
-      }
-
-      // Get current vote count
-      const tallyResponse = await fetch(`/api/sessions/${sessionId}/tally-votes`);
-      if (!tallyResponse.ok) return;
-
-      const { totalVotes } = await tallyResponse.json();
-
-      // If all active players have voted, start next round
-      if (totalVotes === activePlayers?.length) {
-        setStartingNextRound(true);
-        
-        const nextRoundResponse = await fetch(`/api/sessions/${sessionId}/next-round`, {
-          method: 'POST',
-        });
-
-        if (nextRoundResponse.ok) {
-          // Reload the page to show new character sheet
-          window.location.reload();
-        } else {
-          setStartingNextRound(false);
-          const errorData = await nextRoundResponse.json();
-          setErrorSnackbar({ open: true, message: errorData.error || 'Erreur lors du démarrage du prochain tour' });
-        }
-      }
-    } catch (err) {
-      console.error('Error checking votes:', err);
-      setStartingNextRound(false);
     }
   }
 
@@ -350,9 +354,6 @@ export default function PlayPage() {
           if (tallyResponse.ok) {
             const { voteCounts } = await tallyResponse.json();
             setVoteCounts(voteCounts);
-            
-            // Check if all voted
-            checkIfAllVotedAndStartNextRound();
           }
         }
       )
@@ -366,7 +367,7 @@ export default function PlayPage() {
     console.log('Setting up realtime subscription for session:', sessionId);
     
     // Subscribe to player status changes
-    const channel = supabase
+    const playersChannel = supabase
       .channel(`session-${sessionId}-players`, {
         config: {
           broadcast: { self: false },
@@ -383,10 +384,8 @@ export default function PlayPage() {
         },
         async (payload) => {
           console.log('Player updated in play page:', payload.new);
-          const updatedPlayer = payload.new as Player;
-          if (updatedPlayer.id === currentPlayer?.id && updatedPlayer.status === 'accused') {
-            setIsAccused(true);
-          }
+          // Reload to ensure we have the latest state
+          loadCharacterSheet();
         }
       )
       .subscribe((status, err) => {
@@ -400,9 +399,72 @@ export default function PlayPage() {
         }
       });
 
+    // Subscribe to rounds changes to show accusation results
+    const roundsChannel = supabase
+      .channel(`session-${sessionId}-rounds`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'rounds',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        async (payload) => {
+          console.log('Round created:', payload.new);
+          loadCharacterSheet();
+        }
+      )
+      .subscribe();
+
+    // Subscribe to player assignments to detect new mystery/role
+    const assignmentsChannel = supabase
+      .channel(`session-${sessionId}-assignments`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to INSERT and UPDATE
+          schema: 'public',
+          table: 'player_assignments',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        async (payload) => {
+          console.log('Assignment changed:', payload.new);
+          // If the assignment is for me, reload
+          if ((payload.new as any).player_id === currentPlayerRef.current?.id) {
+             console.log('Received new assignment via broadcast. Reloading character sheet...');
+             loadCharacterSheet();
+          }
+        }
+      )
+      .subscribe();
+
+    // Subscribe to game_sessions to detect round changes (backup trigger)
+    const sessionsChannel = supabase
+      .channel(`session-${sessionId}-meta`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'game_sessions',
+          filter: `id=eq.${sessionId}`,
+        },
+        async (payload) => {
+          console.log('Session updated via broadcast:', payload.new);
+          console.log('Checking if mystery changed...');
+          // Reload to check if mystery changed
+          loadCharacterSheet();
+        }
+      )
+      .subscribe();
+
     return () => {
       console.log('Cleaning up play page realtime subscription');
-      supabase.removeChannel(channel);
+      supabase.removeChannel(playersChannel);
+      supabase.removeChannel(roundsChannel);
+      supabase.removeChannel(assignmentsChannel);
+      supabase.removeChannel(sessionsChannel);
     };
   }
 

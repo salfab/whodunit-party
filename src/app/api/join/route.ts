@@ -36,11 +36,13 @@ export async function POST(request: NextRequest) {
     const supabase = await createServiceClient();
 
     // Find the session by join code
-    const { data: session, error: sessionError } = await supabase
+    const { data: sessionData, error: sessionError } = await supabase
       .from('game_sessions')
-      .select('id, status')
+      .select('*')
       .eq('join_code', joinCode.toUpperCase())
       .single();
+    
+    const session = sessionData as any;
 
     if (sessionError || !session) {
       log('warn', 'Invalid join code', { joinCode });
@@ -59,8 +61,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the player
-    const { data: player, error: playerError } = await supabase
-      .from('players')
+    const { data: playerData, error: playerError } = await (supabase
+      .from('players') as any)
       .insert({
         session_id: session.id,
         name: playerName.trim(),
@@ -68,6 +70,8 @@ export async function POST(request: NextRequest) {
       })
       .select()
       .single();
+    
+    const player = playerData as any;
 
     if (playerError) {
       log('error', 'Failed to create player', { error: playerError.message });

@@ -10,7 +10,9 @@ A real-time multiplayer murder mystery party game built with Next.js, Supabase, 
 - **Consensus System**: Players must all be ready to proceed
 - **Dramatic Accusation**: Investigator makes accusations with animated reveals
 - **Heartbeat System**: Automatic detection of disconnected players
-- **Mystery Management**: Upload and manage multiple mysteries via JSON
+- **Mystery Management**: Create, edit, delete, and upload mysteries via admin console
+- **JSON Schema Validation**: Mysteries validated against strict schema
+- **Base64 Support**: Upload base64-encoded mystery data
 - **Responsive UI**: Built with Material-UI and Framer Motion animations
 
 ## Quick Start
@@ -36,7 +38,10 @@ A real-time multiplayer murder mystery party game built with Next.js, Supabase, 
    npm run dev
    ```
 
-5. **Upload mysteries** at `/admin/mysteries/upload`
+5. **Manage mysteries**
+   - Browse mysteries at `/admin/mysteries`
+   - Create new mystery at `/admin/mysteries/new/edit`
+   - Upload JSON mysteries at `/admin/mysteries/upload`
 
 6. **Create a game** at `/admin/session/create`
 
@@ -70,18 +75,90 @@ See [SETUP.md](SETUP.md) for detailed setup instructions.
 whodunit-party/
 ├── src/
 │   ├── app/              # Next.js app router
-│   │   ├── admin/        # Admin dashboard and mystery upload
-│   │   ├── api/          # API routes (sessions, join, accusations)
+│   │   ├── admin/        # Admin dashboard and mystery management
+│   │   ├── api/          # API routes (sessions, join, accusations, mysteries)
 │   │   ├── join/         # Player join flow
 │   │   ├── lobby/        # Game lobby with ready system
 │   │   └── play/         # Character sheets and gameplay
 │   ├── hooks/            # Custom hooks (heartbeat)
 │   ├── lib/              # Utilities (auth, logging, supabase)
 │   └── types/            # TypeScript definitions
+├── schemas/
+│   └── mystery.schema.json  # JSON schema for mystery validation
 ├── supabase/
 │   └── migrations/       # Database schema
 └── public/
     └── characters/       # Role placeholder images
+```
+
+## Mystery Management
+
+### Admin Console
+
+Access the mysteries admin console at `/admin/mysteries` to:
+- View all mysteries in a table
+- Create new mysteries with the form editor
+- Edit existing mysteries
+- Delete mysteries
+- Upload mysteries via JSON
+
+### Mystery JSON Schema
+
+Mysteries must conform to the schema defined in [`schemas/mystery.schema.json`](schemas/mystery.schema.json).
+
+**Required fields:**
+- `title` (string, 1-200 chars)
+- `description` (string, min 10 chars, supports markdown)
+- `innocent_words` (array of exactly 3 strings)
+- `guilty_words` (array of exactly 3 strings)
+- `character_sheets` (array, min 3 items, must include investigator + guilty)
+
+**Character sheet fields:**
+- `role`: "investigator" | "guilty" | "innocent"
+- `dark_secret` (string, min 10 chars)
+- `alibi` (string, min 10 chars)
+- `image_path` (optional string)
+
+### Uploading Mysteries
+
+**Via Form Editor**: `/admin/mysteries/new/edit`
+- Fill out the form with mystery details
+- Add character sheets dynamically
+- Validate on save
+
+**Via JSON Upload**: `/admin/mysteries/upload`
+- Paste JSON array of mysteries
+- Optional: Check "Base64 encoded" box for base64 input
+- Schema validation runs automatically
+- Detailed error messages for validation failures
+
+**Example Mystery JSON**:
+```json
+[
+  {
+    "title": "Murder at the Manor",
+    "description": "## The Crime\\n\\nLord Blackwood was found dead...",
+    "innocent_words": ["manuscript", "inheritance", "betrayal"],
+    "guilty_words": ["ledger", "poison", "desperate"],
+    "character_sheets": [
+      {
+        "role": "investigator",
+        "dark_secret": "You secretly gambled away your family fortune.",
+        "alibi": "I was in the conservatory reading all evening."
+      },
+      {
+        "role": "guilty",
+        "dark_secret": "You poisoned the victim to prevent exposure.",
+        "alibi": "I was in my room writing letters."
+      },
+      {
+        "role": "innocent",
+        "dark_secret": "You're having an affair with the victim's spouse.",
+        "alibi": "I was walking in the garden."
+      }
+    ]
+  }
+]
 ```
 
 ## Key Features

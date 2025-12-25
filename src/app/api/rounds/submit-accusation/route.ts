@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
     const supabase = await createServiceClient();
 
     // Verify the current player is the investigator for this session
-    const { data: assignment, error: assignmentError } = await supabase
-      .from('player_assignments')
+    const { data: assignmentData, error: assignmentError } = await (supabase
+      .from('player_assignments') as any)
       .select(`
         *,
         character_sheets (role)
@@ -42,6 +42,8 @@ export async function POST(request: NextRequest) {
       .eq('session_id', session.sessionId)
       .eq('player_id', session.playerId)
       .single();
+    
+    const assignment = assignmentData as any;
 
     if (assignmentError || !assignment) {
       return NextResponse.json(
@@ -59,8 +61,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get the accused player's assignment to check their role
-    const { data: accusedAssignment, error: accusedError } = await supabase
-      .from('player_assignments')
+    const { data: accusedAssignmentData, error: accusedError } = await (supabase
+      .from('player_assignments') as any)
       .select(`
         *,
         character_sheets (role)
@@ -68,6 +70,8 @@ export async function POST(request: NextRequest) {
       .eq('session_id', session.sessionId)
       .eq('player_id', accusedPlayerId)
       .single();
+    
+    const accusedAssignment = accusedAssignmentData as any;
 
     if (accusedError || !accusedAssignment) {
       return NextResponse.json(
@@ -80,11 +84,13 @@ export async function POST(request: NextRequest) {
     const wasCorrect = accusedSheet.role === 'guilty';
 
     // Get current mystery ID and round count
-    const { data: gameSession } = await supabase
-      .from('game_sessions')
+    const { data: gameSessionData } = await (supabase
+      .from('game_sessions') as any)
       .select('current_mystery_id')
       .eq('id', session.sessionId)
       .single();
+    
+    const gameSession = gameSessionData as any;
 
     if (!gameSession?.current_mystery_id) {
       return NextResponse.json(
@@ -94,20 +100,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current round number for this session
-    const { data: existingRounds } = await supabase
-      .from('rounds')
+    const { data: existingRoundsData } = await (supabase
+      .from('rounds') as any)
       .select('round_number')
       .eq('session_id', session.sessionId)
       .order('round_number', { ascending: false })
       .limit(1);
+    
+    const existingRounds = existingRoundsData as any;
 
     const roundNumber = existingRounds && existingRounds.length > 0 
       ? (existingRounds[0].round_number || 0) + 1 
       : 1;
 
     // Create the round record
-    const { data: round, error: roundError } = await supabase
-      .from('rounds')
+    const { data: roundData, error: roundError } = await (supabase
+      .from('rounds') as any)
       .insert({
         session_id: session.sessionId,
         mystery_id: gameSession.current_mystery_id,
@@ -118,6 +126,8 @@ export async function POST(request: NextRequest) {
       })
       .select()
       .single();
+    
+    const round = roundData as any;
 
     if (roundError) {
       log('error', 'Failed to create round', { error: roundError.message });
@@ -138,14 +148,16 @@ export async function POST(request: NextRequest) {
       scoreUpdates.push({ id: accusedPlayerId, increment: 1 });
       
       // Find the guilty player and give them +2 points for escaping
-      const { data: guiltyAssignment } = await supabase
-        .from('player_assignments')
+      const { data: guiltyAssignmentData } = await (supabase
+        .from('player_assignments') as any)
         .select(`
           player_id,
           character_sheets (role)
         `)
         .eq('session_id', session.sessionId)
         .eq('mystery_id', gameSession.current_mystery_id);
+      
+      const guiltyAssignment = guiltyAssignmentData as any;
 
       const guiltyPlayer = guiltyAssignment?.find((a: any) => 
         a.character_sheets?.role === 'guilty'
@@ -161,48 +173,42 @@ export async function POST(request: NextRequest) {
       const { error: scoreError } = await supabase.rpc('increment_player_score', {
         player_id: update.id,
         score_increment: update.increment
-      });
+      } as any);
 
       // If RPC doesn't exist, use direct update
       if (scoreError) {
-        const { data: player } = await supabase
-          .from('players')
+        const { data: playerData } = await (supabase
+          .from('players') as any)
           .select('score')
           .eq('id', update.id)
           .single();
+        
+        const player = playerData as any;
 
-        await supabase
-          .from('players')
+        await (supabase
+          .from('players') as any)
           .update({ score: (player?.score || 0) + update.increment })
           .eq('id', update.id);
       }
     }
 
     // Check if all active players have been investigator
-    const { data: activePlayers } = await supabase
-      .from('players')
+    const { data: activePlayersData } = await (supabase
+      .from('players') as any)
       .select('id, has_been_investigator')
       .eq('session_id', session.sessionId)
       .eq('status', 'active');
+    
+    const activePlayers = activePlayersData as any;
 
-    const allHaveBeenInvestigator = activePlayers?.every(p => p.has_been_investigator) || false;
+    const allHaveBeenInvestigator = activePlayers?.every((p: any) => p.has_been_investigator) || false;
 
     if (allHaveBeenInvestigator) {
       // Game is complete!
-      await supabase
-        .from('game_sessions')
+      await (supabase
+        .from('game_sessions') as any)
         .update({ status: 'completed' })
         .eq('id', session.sessionId);
-    }
-
-    // Update accused player status
-    const { error: updateError } = await supabase
-      .from('players')
-      .update({ status: 'accused' })
-      .eq('id', accusedPlayerId);
-
-    if (updateError) {
-      log('error', 'Failed to update player status', { error: updateError.message });
     }
 
     // Generate role-specific messages in French

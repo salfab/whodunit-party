@@ -1,8 +1,29 @@
-import { Box, Container, Typography, Button } from '@mui/material';
+'use client';
+
+import { Box, Container, Typography, Button, IconButton } from '@mui/material';
+import { Settings as SettingsIcon } from '@mui/icons-material';
+import Link from 'next/link';
 
 export default function Home() {
   return (
     <Container maxWidth="sm">
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 16,
+          right: 16,
+        }}
+      >
+        <IconButton
+          component={Link}
+          href="/admin/mysteries"
+          color="primary"
+          size="large"
+          aria-label="Admin console"
+        >
+          <SettingsIcon />
+        </IconButton>
+      </Box>
       <Box
         sx={{
           minHeight: '100vh',

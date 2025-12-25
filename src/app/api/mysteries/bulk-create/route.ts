@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
+import { Database } from '@/types/database';
 
 const log = createLogger('api.mysteries.bulk-create');
 
@@ -13,6 +14,7 @@ interface MysteryInput {
   character_sheets: Array<{
     role: 'investigator' | 'guilty' | 'innocent';
     dark_secret: string;
+    words_to_place: string[];
     alibi: string;
     image_path?: string;
   }>;
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createServiceClient();
-    const createdMysteries = [];
+    const createdMysteries: Database['public']['Tables']['mysteries']['Row'][] = [];
 
     for (const mysteryInput of mysteries) {
       // Validate word counts
@@ -57,8 +59,8 @@ export async function POST(request: NextRequest) {
       }
 
       // Insert mystery
-      const { data: mystery, error: mysteryError } = await supabase
-        .from('mysteries')
+      const { data: mysteryData, error: mysteryError } = await (supabase
+        .from('mysteries') as any)
         .insert({
           title: mysteryInput.title,
           description: mysteryInput.description,
@@ -67,9 +69,11 @@ export async function POST(request: NextRequest) {
           guilty_words: mysteryInput.guilty_words,
         })
         .single();
+      
+      const mystery = mysteryData as any;
 
-      if (mysteryError) {
-        log('error', 'Failed to create mystery', { error: mysteryError.message });
+      if (mysteryError || !mystery) {
+        log('error', 'Failed to create mystery', { error: mysteryError?.message });
         return NextResponse.json(
           { error: `Failed to create mystery: ${mysteryInput.title}` },
           { status: 500 }
@@ -86,8 +90,8 @@ export async function POST(request: NextRequest) {
         image_path: sheet.image_path || null,
       }));
 
-      const { error: sheetsError } = await supabase
-        .from('character_sheets')
+      const { error: sheetsError } = await (supabase
+        .from('character_sheets') as any)
         .insert(characterSheets);
 
       if (sheetsError) {
