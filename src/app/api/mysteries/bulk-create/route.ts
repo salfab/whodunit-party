@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
+import { validateMysteryFull } from '@/lib/mystery-validation';
 import { Database } from '@/types/database';
 
 const log = createLogger('api.mysteries.bulk-create');
@@ -49,44 +50,36 @@ export async function POST(request: NextRequest) {
     }
 
     log('info', 'Processing mysteries', { count: mysteries.length });
+
+    // Validate all mysteries against JSON schema and business rules
+    for (let i = 0; i < mysteries.length; i++) {
+      const mysteryInput = mysteries[i];
+      const validation = validateMysteryFull(mysteryInput);
+      
+      if (!validation.valid) {
+        log('error', 'Mystery validation failed', {
+          index: i,
+          title: mysteryInput.title,
+          errors: validation.errors,
+        });
+        return NextResponse.json(
+          {
+            error: `Validation failed for mystery "${mysteryInput.title || `at index ${i}`}"`,
+            details: validation.errors?.join('; '),
+            mystery: mysteryInput.title,
+            index: i,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    log('info', 'All mysteries validated successfully');
+
     const supabase = await createServiceClient();
     const createdMysteries: Database['public']['Tables']['mysteries']['Row'][] = [];
 
     for (const mysteryInput of mysteries) {
-      log('info', 'Validating mystery', { title: mysteryInput.title });
-      
-      // Validate word counts
-      if (!mysteryInput.innocent_words || mysteryInput.innocent_words.length !== 3) {
-        log('error', 'Invalid innocent_words count', { 
-          title: mysteryInput.title,
-          count: mysteryInput.innocent_words?.length,
-          words: mysteryInput.innocent_words
-        });
-        return NextResponse.json(
-          { 
-            error: `Mystery "${mysteryInput.title}" must have exactly 3 innocent_words`,
-            details: `Found ${mysteryInput.innocent_words?.length || 0} innocent words, expected 3`,
-            mystery: mysteryInput.title
-          },
-          { status: 400 }
-        );
-      }
-      if (!mysteryInput.guilty_words || mysteryInput.guilty_words.length !== 3) {
-        log('error', 'Invalid guilty_words count', { 
-          title: mysteryInput.title,
-          count: mysteryInput.guilty_words?.length,
-          words: mysteryInput.guilty_words
-        });
-        return NextResponse.json(
-          { 
-            error: `Mystery "${mysteryInput.title}" must have exactly 3 guilty_words`,
-            details: `Found ${mysteryInput.guilty_words?.length || 0} guilty words, expected 3`,
-            mystery: mysteryInput.title
-          },
-          { status: 400 }
-        );
-      }
-
       // Insert mystery
       log('info', 'Inserting mystery', { title: mysteryInput.title });
       const { data: mysteryData, error: mysteryError } = await (supabase
@@ -96,7 +89,9 @@ export async function POST(request: NextRequest) {
           description: mysteryInput.description,
           image_path: mysteryInput.image_path || null,
           language: mysteryInput.language,
-          author: mysteryInput.author || 'Built-in',        theme: mysteryInput.theme || 'SERIOUS_MURDER',          innocent_words: mysteryInput.innocent_words,
+          author: mysteryInput.author || 'Built-in',
+          theme: mysteryInput.theme || 'SERIOUS_MURDER',
+          innocent_words: mysteryInput.innocent_words,
           guilty_words: mysteryInput.guilty_words,
         })
         .select()
