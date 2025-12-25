@@ -10,7 +10,7 @@ When('I click the {string} button', (buttonText: string) => {
 });
 
 When('I click the submit button', () => {
-  cy.getByTestId('submit-join-button').click();
+  cy.get('[data-testid="submit-join-button"]').click();
 });
 
 Then('I should be on the homepage', () => {

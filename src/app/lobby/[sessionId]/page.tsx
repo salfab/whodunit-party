@@ -10,6 +10,7 @@ import {
   Paper,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Chip,
   CircularProgress,
@@ -35,6 +36,9 @@ export default function LobbyPage() {
   const [isReady, setIsReady] = useState(false);
   const [readyCount, setReadyCount] = useState(0);
   const [readyStates, setReadyStates] = useState<Map<string, boolean>>(new Map());
+  const [mysteries, setMysteries] = useState<any[]>([]);
+  const [votes, setVotes] = useState<Map<string, string>>(new Map());
+  const [myVote, setMyVote] = useState<string | null>(null);
   const [mysteryCount, setMysteryCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -53,12 +57,15 @@ export default function LobbyPage() {
     };
   }, [sessionId]);
 
-  // Load ready state when currentPlayerId is available
+  // Load ready state and vote when currentPlayerId is available
   useEffect(() => {
     if (currentPlayerId) {
       checkReadyStates();
+      if (votes.has(currentPlayerId)) {
+        setMyVote(votes.get(currentPlayerId) || null);
+      }
     }
-  }, [currentPlayerId]);
+  }, [currentPlayerId, votes]);
 
   // Calculate if game can start
   const activePlayers = players.filter((p) => p.status === 'active');
@@ -98,11 +105,25 @@ export default function LobbyPage() {
         return;
       }
 
-      // Fetch mystery count for validation
+      // Fetch mysteries
       const mysteriesResponse = await fetch('/api/mysteries');
       if (mysteriesResponse.ok) {
-        const mysteries = await mysteriesResponse.json();
-        setMysteryCount(mysteries?.length || 0);
+        const data = await mysteriesResponse.json();
+        const loadedMysteries = data.mysteries || [];
+        setMysteries(loadedMysteries);
+        setMysteryCount(loadedMysteries.length);
+      }
+
+      // Fetch votes
+      const { data: votesData } = await (supabase
+        .from('mystery_votes') as any)
+        .select('*')
+        .eq('session_id', sessionId);
+      
+      if (votesData) {
+        const newVotes = new Map<string, string>();
+        votesData.forEach((v: any) => newVotes.set(v.player_id, v.mystery_id));
+        setVotes(newVotes);
       }
 
       setLoading(false);
@@ -263,12 +284,49 @@ export default function LobbyPage() {
         }
       });
 
+    // Subscribe to mystery_votes
+    const votesChannel = supabase
+      .channel(`session-${sessionId}-votes`, {
+        config: {
+          broadcast: { self: false },
+          presence: { key: '' },
+        },
+      })
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'mystery_votes',
+          filter: `session_id=eq.${sessionId}`,
+        },
+        (payload) => {
+          console.log('Vote changed:', payload);
+          refreshVotes();
+        }
+      )
+      .subscribe();
+
     return () => {
       console.log('Cleaning up realtime subscriptions');
       supabase.removeChannel(playersChannel);
       supabase.removeChannel(readyChannel);
       supabase.removeChannel(sessionChannel);
+      supabase.removeChannel(votesChannel);
     };
+  }
+
+  async function refreshVotes() {
+    const { data: votesData } = await (supabase
+      .from('mystery_votes') as any)
+      .select('*')
+      .eq('session_id', sessionId);
+    
+    if (votesData) {
+      const newVotes = new Map<string, string>();
+      votesData.forEach((v: any) => newVotes.set(v.player_id, v.mystery_id));
+      setVotes(newVotes);
+    }
   }
 
   async function checkReadyStates() {
@@ -291,6 +349,32 @@ export default function LobbyPage() {
     if (currentPlayerId) {
       const myReadyState = readyStatesData?.find((s) => s.player_id === currentPlayerId);
       setIsReady(myReadyState?.is_ready || false);
+    }
+  }
+
+  async function handleVote(mysteryId: string) {
+    if (!currentPlayerId) return;
+
+    try {
+      // Optimistic update
+      setMyVote(mysteryId);
+      const newVotes = new Map(votes);
+      newVotes.set(currentPlayerId, mysteryId);
+      setVotes(newVotes);
+
+      const response = await fetch(`/api/sessions/${sessionId}/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mysteryId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to vote');
+      }
+    } catch (err) {
+      console.error('Error voting:', err);
+      setError('Failed to submit vote');
+      refreshVotes();
     }
   }
 
@@ -429,6 +513,50 @@ export default function LobbyPage() {
               ))}
             </AnimatePresence>
           </List>
+
+          {mysteries.length > 0 && (
+            <>
+              <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
+                Votez pour le mystère
+              </Typography>
+              
+              <List sx={{ mb: 3 }}>
+                {mysteries.map((mystery) => {
+                  const voteCount = Array.from(votes.values()).filter(v => v === mystery.id).length;
+                  const isSelected = myVote === mystery.id;
+                  
+                  return (
+                    <ListItem
+                      key={mystery.id}
+                      disablePadding
+                      sx={{ mb: 1 }}
+                    >
+                      <ListItemButton
+                        onClick={() => handleVote(mystery.id)}
+                        selected={isSelected}
+                        sx={{
+                          border: isSelected ? '2px solid' : '1px solid',
+                          borderColor: isSelected ? 'primary.main' : 'divider',
+                          borderRadius: 1,
+                        }}
+                      >
+                        <ListItemText
+                          primary={mystery.title}
+                          secondary={mystery.description}
+                        />
+                        <Chip 
+                          label={`${voteCount} votes`} 
+                          color={voteCount > 0 ? "primary" : "default"} 
+                          size="small" 
+                          variant={voteCount > 0 ? "filled" : "outlined"}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </>
+          )}
 
           {activePlayers.length < MIN_PLAYERS && (
             <Alert severity="info" sx={{ mb: 3 }}>

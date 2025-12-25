@@ -33,8 +33,8 @@ export async function POST(
     const supabase = await createServiceClient();
 
     // Update player ready state
-    const { error: updateError } = await supabase
-      .from('player_ready_states')
+    const { error: updateError } = await (supabase
+      .from('player_ready_states') as any)
       .upsert(
         {
           session_id: sessionId,
@@ -100,11 +100,13 @@ export async function POST(
     log('info', 'All players ready, starting game', { sessionId });
 
     // Check if game already started (race condition check)
-    const { data: gameSession, error: sessionError } = await supabase
-      .from('game_sessions')
+    const { data: gameSessionData, error: sessionError } = await (supabase
+      .from('game_sessions') as any)
       .select('status')
       .eq('id', sessionId)
       .single();
+    
+    const gameSession = gameSessionData as any;
 
     if (sessionError) {
       log('error', 'Failed to check session status', { error: sessionError.message });
@@ -116,22 +118,54 @@ export async function POST(
       return NextResponse.json({ success: true, gameStarted: true });
     }
 
-    // Get a random mystery
-    const { data: mysteries, error: mysteriesError } = await supabase
-      .from('mysteries')
-      .select('id');
+    // Get votes to determine mystery
+    const { data: votesData } = await (supabase
+      .from('mystery_votes') as any)
+      .select('mystery_id')
+      .eq('session_id', sessionId);
+    
+    let mysteryId: string;
 
-    if (mysteriesError || !mysteries || mysteries.length === 0) {
-      log('error', 'Failed to fetch mysteries', { error: mysteriesError?.message });
-      return NextResponse.json({ success: true, gameStarted: false });
+    if (votesData && votesData.length > 0) {
+      // Count votes
+      const voteCounts: Record<string, number> = {};
+      votesData.forEach((v: any) => {
+        voteCounts[v.mystery_id] = (voteCounts[v.mystery_id] || 0) + 1;
+      });
+
+      // Find winner
+      let maxVotes = 0;
+      let winners: string[] = [];
+      
+      Object.entries(voteCounts).forEach(([id, count]) => {
+        if (count > maxVotes) {
+          maxVotes = count;
+          winners = [id];
+        } else if (count === maxVotes) {
+          winners.push(id);
+        }
+      });
+
+      // Pick random winner if tie
+      mysteryId = winners[Math.floor(Math.random() * winners.length)];
+    } else {
+      // Fallback to random if no votes
+      const { data: mysteriesData, error: mysteriesError } = await (supabase
+        .from('mysteries') as any)
+        .select('id');
+      
+      if (mysteriesError || !mysteriesData || mysteriesData.length === 0) {
+        log('error', 'Failed to fetch mysteries', { error: mysteriesError?.message });
+        return NextResponse.json({ success: true, gameStarted: false });
+      }
+
+      const randomMystery = mysteriesData[Math.floor(Math.random() * mysteriesData.length)];
+      mysteryId = randomMystery.id;
     }
 
-    const randomMystery = mysteries[Math.floor(Math.random() * mysteries.length)];
-    const mysteryId = randomMystery.id;
-
     // Atomically update session to 'playing' - acts as a distributed lock
-    const { data: updatedSession, error: lockError } = await supabase
-      .from('game_sessions')
+    const { data: updatedSession, error: lockError } = await (supabase
+      .from('game_sessions') as any)
       .update({ status: 'playing', current_mystery_id: mysteryId })
       .eq('id', sessionId)
       .eq('status', 'lobby')
@@ -148,10 +182,12 @@ export async function POST(
     log('info', 'Acquired lock, distributing roles', { sessionId, mysteryId });
 
     // Get character sheets for the mystery
-    const { data: sheets, error: sheetsError } = await supabase
-      .from('character_sheets')
+    const { data: sheetsData, error: sheetsError } = await (supabase
+      .from('character_sheets') as any)
       .select('*')
       .eq('mystery_id', mysteryId);
+    
+    const sheets = sheetsData as any;
 
     if (sheetsError || !sheets) {
       log('error', 'Failed to fetch character sheets', { error: sheetsError?.message });
@@ -162,12 +198,14 @@ export async function POST(
     }
 
     // Get players with investigator tracking
-    const { data: playersWithTracking, error: trackingError } = await supabase
-      .from('players')
+    const { data: playersWithTrackingData, error: trackingError } = await (supabase
+      .from('players') as any)
       .select('id, has_been_investigator')
       .eq('session_id', sessionId)
       .eq('status', 'active')
       .order('created_at', { ascending: true });
+    
+    const playersWithTracking = playersWithTrackingData as any;
 
     if (trackingError || !playersWithTracking) {
       log('error', 'Failed to fetch players', { error: trackingError?.message });
@@ -178,9 +216,9 @@ export async function POST(
     }
 
     // Separate sheets by role
-    const investigatorSheet = sheets.find((s) => s.role === 'investigator');
-    const guiltySheet = sheets.find((s) => s.role === 'guilty');
-    const innocentSheets = sheets.filter((s) => s.role === 'innocent');
+    const investigatorSheet = sheets.find((s: any) => s.role === 'investigator');
+    const guiltySheet = sheets.find((s: any) => s.role === 'guilty');
+    const innocentSheets = sheets.filter((s: any) => s.role === 'innocent');
 
     if (!investigatorSheet || !guiltySheet) {
       log('error', 'Mystery missing required roles', { mysteryId });
@@ -191,14 +229,14 @@ export async function POST(
     }
 
     // Select investigator (prioritize never-been-investigator)
-    const neverInvestigators = playersWithTracking.filter(p => !p.has_been_investigator);
-    const hasBeenInvestigators = playersWithTracking.filter(p => p.has_been_investigator);
+    const neverInvestigators = playersWithTracking.filter((p: any) => !p.has_been_investigator);
+    const hasBeenInvestigators = playersWithTracking.filter((p: any) => p.has_been_investigator);
     const investigatorCandidates = neverInvestigators.length > 0 ? neverInvestigators : hasBeenInvestigators;
     const investigatorPlayer = investigatorCandidates[Math.floor(Math.random() * investigatorCandidates.length)];
     
     // Shuffle remaining players
     const remainingPlayersForRoles = playersWithTracking
-      .filter(p => p.id !== investigatorPlayer.id)
+      .filter((p: any) => p.id !== investigatorPlayer.id)
       .sort(() => Math.random() - 0.5);
 
     // Build assignments
@@ -218,8 +256,8 @@ export async function POST(
     ];
 
     // Mark investigator
-    await supabase
-      .from('players')
+    await (supabase
+      .from('players') as any)
       .update({ has_been_investigator: true })
       .eq('id', investigatorPlayer.id);
 
@@ -237,8 +275,8 @@ export async function POST(
     }
 
     // Insert assignments
-    const { error: assignError } = await supabase
-      .from('player_assignments')
+    const { error: assignError } = await (supabase
+      .from('player_assignments') as any)
       .insert(assignments);
 
     if (assignError) {

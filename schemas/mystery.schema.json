@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mystery",
+  "description": "Schema for a Whodunit Party mystery",
+  "type": "object",
+  "required": ["title", "description", "innocent_words", "guilty_words", "character_sheets"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "The title of the mystery"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "The description/backstory of the mystery (supports markdown)"
+    },
+    "image_path": {
+      "type": "string",
+      "description": "Optional path to mystery image"
+    },
+    "innocent_words": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 3,
+      "maxItems": 3,
+      "description": "Exactly 3 words that innocent players receive"
+    },
+    "guilty_words": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 3,
+      "maxItems": 3,
+      "description": "Exactly 3 words that the guilty player receives"
+    },
+    "character_sheets": {
+      "type": "array",
+      "minItems": 3,
+      "description": "Array of character sheets (must include at least investigator, guilty, and one innocent)",
+      "items": {
+        "type": "object",
+        "required": ["role", "dark_secret", "alibi"],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": ["investigator", "guilty", "innocent"],
+            "description": "The role of this character"
+          },
+          "dark_secret": {
+            "type": "string",
+            "minLength": 10,
+            "description": "The character's dark secret"
+          },
+          "alibi": {
+            "type": "string",
+            "minLength": 10,
+            "description": "The character's alibi"
+          },
+          "image_path": {
+            "type": "string",
+            "description": "Optional path to character image"
+          }
+        }
+      }
+    }
+  }
+}

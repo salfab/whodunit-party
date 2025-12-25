@@ -159,7 +159,7 @@ export default function OtpInput({
       {Array.from({ length }).map((_, index) => (
         <InputBox
           key={index}
-          ref={(el) => (inputRefs.current[index] = el)}
+          ref={(el) => { inputRefs.current[index] = el; }}
           type="text"
           inputMode="text"
           maxLength={1}

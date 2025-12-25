@@ -18,6 +18,8 @@ export async function POST(
     const { sessionId } = await params;
     const session = await validateSession();
 
+    logger('info', `Received next-round request for session ${sessionId}`);
+
     if (!session) {
       return NextResponse.json(
         { error: 'Not authenticated' },
@@ -57,21 +59,6 @@ export async function POST(
       );
     }
 
-    // Reset all players to active status (clear 'accused' status from previous round)
-    const { error: resetError } = await supabase
-      .from('players')
-      .update({ status: 'active' })
-      .eq('session_id', sessionId)
-      .in('status', ['active', 'accused']);
-
-    if (resetError) {
-      logger('error', 'Error resetting player statuses', { error: resetError });
-      return NextResponse.json(
-        { error: 'Erreur lors de la réinitialisation des statuts' },
-        { status: 500 }
-      );
-    }
-
     // Distribute roles for the new mystery
     const distributeResponse = await fetch(
       `${request.nextUrl.origin}/api/sessions/${sessionId}/distribute-roles`,
@@ -86,21 +73,28 @@ export async function POST(
     );
 
     if (!distributeResponse.ok) {
-      const errorData = await distributeResponse.json();
-      throw new Error(errorData.error || 'Erreur lors de la distribution des rôles');
+      const errorText = await distributeResponse.text();
+      logger('error', 'Failed to distribute roles', { status: distributeResponse.status, body: errorText });
+      throw new Error(`Erreur lors de la distribution des rôles: ${errorText}`);
     }
 
-    // Clear votes for the current round (they've been tallied and used)
-    const { error: clearVotesError } = await supabase
-      .from('mystery_votes')
+    // We do NOT clear votes here anymore.
+    // 1. We have round_number in mystery_votes, so old votes don't interfere with new rounds.
+    // 2. Clearing votes triggers a realtime event that causes the client to fetch tally-votes and see 0 votes,
+    //    which is confusing if the client hasn't transitioned to the next screen yet.
+    // 3. Keeping history is generally good.
+    
+    /* 
+    const { error: clearVotesError } = await (supabase
+      .from('mystery_votes') as any)
       .delete()
       .eq('session_id', sessionId)
       .eq('round_number', roundNumber);
 
     if (clearVotesError) {
       logger('warn', 'Error clearing votes (non-critical)', { error: clearVotesError });
-      // Don't fail the request if vote clearing fails
     }
+    */
 
     logger('info', `Started next round for session ${sessionId} with mystery ${winningMysteryId}`);
 

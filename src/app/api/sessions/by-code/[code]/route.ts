@@ -19,11 +19,13 @@ export async function GET(
     const supabase = await createServiceClient();
 
     // Look up session by join code
-    const { data: session, error } = await supabase
-      .from('game_sessions')
+    const { data: sessionData, error } = await (supabase
+      .from('game_sessions') as any)
       .select('id')
       .eq('join_code', code.toUpperCase())
       .single();
+    
+    const session = sessionData as any;
 
     if (error || !session) {
       return NextResponse.json({ error: 'Invalid join code' }, { status: 404 });

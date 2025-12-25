@@ -11,7 +11,11 @@ import {
   TextField,
   CircularProgress,
   Alert,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
+import Ajv from 'ajv';
+import mysterySchema from '../../../../../schemas/mystery.schema.json';
 
 interface MysteryData {
   title: string;
@@ -33,6 +37,10 @@ export default function UploadMysteriesPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [isBase64, setIsBase64] = useState(false);
+
+  const ajv = new Ajv();
+  const validateMystery = ajv.compile(mysterySchema);
 
   const handleUpload = async () => {
     setLoading(true);
@@ -40,42 +48,42 @@ export default function UploadMysteriesPage() {
     setSuccess(false);
 
     try {
+      let jsonString = jsonInput;
+
+      // Decode base64 if checkbox is checked
+      if (isBase64) {
+        try {
+          jsonString = atob(jsonInput.trim());
+        } catch (e) {
+          throw new Error('Invalid base64 encoding');
+        }
+      }
+
       // Parse JSON
-      const mysteriesData: MysteryData[] = JSON.parse(jsonInput);
+      const mysteriesData: MysteryData[] = JSON.parse(jsonString);
 
       if (!Array.isArray(mysteriesData)) {
         throw new Error('Input must be an array of mysteries');
       }
 
-      // Validate structure
+      // Validate each mystery against JSON schema
       for (const mystery of mysteriesData) {
-        if (!mystery.title || !mystery.description) {
-          throw new Error('Each mystery must have title and description');
+        const valid = validateMystery(mystery);
+        if (!valid) {
+          const errors = validateMystery.errors
+            ?.map((e: any) => `${e.instancePath} ${e.message}`)
+            .join(', ');
+          throw new Error(`Schema validation failed for "${mystery.title || 'unknown'}": ${errors}`);
         }
+      }
 
-        if (!mystery.character_sheets || !Array.isArray(mystery.character_sheets)) {
-          throw new Error('Each mystery must have character_sheets array');
-        }
-
+      // Additional validation
+      for (const mystery of mysteriesData) {
         const investigator = mystery.character_sheets.find((s) => s.role === 'investigator');
         const guilty = mystery.character_sheets.find((s) => s.role === 'guilty');
 
         if (!investigator || !guilty) {
           throw new Error(`Mystery "${mystery.title}" is missing investigator or guilty role`);
-        }
-
-        for (const sheet of mystery.character_sheets) {
-          if (!sheet.role || !sheet.dark_secret || !sheet.alibi) {
-            throw new Error('Each character sheet must have role, dark_secret, and alibi');
-          }
-        }
-
-        if (!mystery.innocent_words || !Array.isArray(mystery.innocent_words) || mystery.innocent_words.length !== 3) {
-          throw new Error(`Mystery "${mystery.title}" must have exactly 3 innocent_words`);
-        }
-
-        if (!mystery.guilty_words || !Array.isArray(mystery.guilty_words) || mystery.guilty_words.length !== 3) {
-          throw new Error(`Mystery "${mystery.title}" must have exactly 3 guilty_words`);
         }
       }
 
@@ -95,7 +103,7 @@ export default function UploadMysteriesPage() {
       setSuccess(true);
       setJsonInput('');
       setTimeout(() => {
-        router.push('/admin/session/create');
+        router.push('/admin/mysteries');
       }, 2000);
     } catch (err: any) {
       setError(err.message || 'Failed to upload mysteries');
@@ -142,6 +150,7 @@ export default function UploadMysteriesPage() {
             Paste a JSON array of mystery objects below. Each mystery should include a title,
             description, innocent_words (3 words for all innocent players), guilty_words (3 words for the guilty player),
             and an array of character sheets with roles (investigator, guilty, innocent).
+            Optionally check the box below if your JSON is base64-encoded.
           </Typography>
 
           {error && (
@@ -155,6 +164,17 @@ export default function UploadMysteriesPage() {
               Mysteries uploaded successfully! Redirecting...
             </Alert>
           )}
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isBase64}
+                onChange={(e) => setIsBase64(e.target.checked)}
+              />
+            }
+            label="Input is Base64 encoded"
+            sx={{ mb: 2 }}
+          />
 
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6" gutterBottom>

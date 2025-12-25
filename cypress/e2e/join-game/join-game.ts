@@ -23,29 +23,29 @@ Given('a game room exists with code {string}', (code: string) => {
 // Join page steps
 Then('I should be on the join page', () => {
   cy.url().should('include', '/join');
-  cy.getByTestId('join-page-title').should('be.visible');
+  cy.get('[data-testid="join-page-title"]').should('be.visible');
 });
 
 When('I enter {string} in the game code field', (code: string) => {
   // For OTP input, we need to type into the first box and it will auto-distribute
-  cy.getByTestId('game-code-input').clear().type(code);
+  cy.get('[data-testid="game-code-input"]').clear().type(code);
 });
 
 When('I enter {string} in the player name field', (name: string) => {
-  cy.getByTestId('player-name-input').clear().type(name);
+  cy.get('[data-testid="player-name-input"]').clear().type(name);
 });
 
 When('I type {string} in the game code field', (code: string) => {
   // For OTP input, focus first box and type
-  cy.getByTestId('game-code-input').type(code);
+  cy.get('[data-testid="game-code-input"]').type(code);
 });
 
 Then('the game code field should contain {string}', (expectedCode: string) => {
   // For OTP input, we need to check the parent container's combined value
-  cy.getByTestId('game-code-input-container', { timeout: 10000 }).should('be.visible');
+  cy.get('[data-testid="game-code-input-container"]', { timeout: 10000 }).should('be.visible');
   
   // Check each character individually with retries
-  cy.getByTestId('game-code-input-container').within(() => {
+  cy.get('[data-testid="game-code-input-container"]').within(() => {
     expectedCode.split('').forEach((char, index) => {
       cy.get('input').eq(index).should('have.value', char);
     });
@@ -54,7 +54,7 @@ Then('the game code field should contain {string}', (expectedCode: string) => {
 
 Then('the game code field should be pre-filled', () => {
   // For OTP input, check if any box has a value
-  cy.getByTestId('game-code-input-container', { timeout: 10000 }).within(() => {
+  cy.get('[data-testid="game-code-input-container"]', { timeout: 10000 }).within(() => {
     cy.get('input').first().should('have.value').and('not.be.empty');
   });
 });
@@ -64,7 +64,7 @@ Then('I should be redirected to the lobby', () => {
 });
 
 Then('I should see an error message', () => {
-  cy.getByTestId('join-error-message').should('be.visible');
+  cy.get('[data-testid="join-error-message"]').should('be.visible');
 });
 
 Then('I should still be on the join page', () => {
@@ -72,11 +72,11 @@ Then('I should still be on the join page', () => {
 });
 
 Then('the submit button should be disabled', () => {
-  cy.getByTestId('submit-join-button').should('be.disabled');
+  cy.get('[data-testid="submit-join-button"]').should('be.disabled');
 });
 
 Then('the submit button should be enabled', () => {
-  cy.getByTestId('submit-join-button').should('not.be.disabled');
+  cy.get('[data-testid="submit-join-button"]').should('not.be.disabled');
 });
 
 When('I visit the join page with code {string}', (code: string) => {

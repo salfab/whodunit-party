@@ -66,14 +66,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Create the session
-    const { data: session, error } = await supabase
-      .from('game_sessions')
+    const { data: sessionData, error } = await (supabase
+      .from('game_sessions') as any)
       .insert({
         join_code: joinCode,
         status: 'lobby',
       })
       .select()
       .single();
+    
+    const session = sessionData as any;
 
     if (error) {
       log('error', 'Failed to create session', { error: error.message });

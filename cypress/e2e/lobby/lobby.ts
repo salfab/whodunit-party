@@ -13,11 +13,11 @@ When('I click on {string}', (buttonText: string) => {
 });
 
 When('I click on "Generate Room Code"', () => {
-  cy.getByTestId('generate-code-button').click();
+  cy.get('[data-testid="generate-code-button"]').click();
 });
 
 Then('I should see a room code displayed', () => {
-  cy.getByTestId('room-code-display')
+  cy.get('[data-testid="room-code-display"]')
     .invoke('text')
     .then((code) => {
       roomCode = code;
@@ -27,15 +27,15 @@ Then('I should see a room code displayed', () => {
 
 // Scenario 1: Player name displays correctly
 When('I click on "Join This Room"', () => {
-  cy.getByTestId('join-room-button').click();
+  cy.get('[data-testid="join-room-button"]').click();
 });
 
 When('I enter {string} in the player name field', (name: string) => {
-  cy.getByTestId('player-name-input').clear().type(name);
+  cy.get('[data-testid="player-name-input"]').clear().type(name);
 });
 
 When('I click on "Join Game"', () => {
-  cy.getByTestId('submit-join-button').click();
+  cy.get('[data-testid="submit-join-button"]').click();
   cy.url().should('include', '/lobby/');
   // Extract session ID from URL
   cy.url().then((url) => {
@@ -63,15 +63,15 @@ Then('I should see the "You" indicator next to {string}', (playerName: string) =
 Given('I have joined the room as {string}', (name: string) => {
   cy.visit('/');
   cy.contains('button', 'Create Room').click();
-  cy.getByTestId('generate-code-button').click();
-  cy.getByTestId('room-code-display')
+  cy.get('[data-testid="generate-code-button"]').click();
+  cy.get('[data-testid="room-code-display"]')
     .invoke('text')
     .then((code) => {
       roomCode = code;
     });
-  cy.getByTestId('join-room-button').click();
-  cy.getByTestId('player-name-input').type(name);
-  cy.getByTestId('submit-join-button').click();
+  cy.get('[data-testid="join-room-button"]').click();
+  cy.get('[data-testid="player-name-input"]').type(name);
+  cy.get('[data-testid="submit-join-button"]').click();
   cy.url().should('include', '/lobby/');
   cy.url().then((url) => {
     const match = url.match(/\/lobby\/([a-f0-9-]+)/);
@@ -163,6 +163,8 @@ Then('the game should be able to start', () => {
   // Check that all players are ready
   cy.contains('Ready: 5 / 5', { timeout: 10000 }).should('be.visible');
 });
+
+Given('I am in the lobby as {string}', (playerName: string) => {
   // Mock the login flow
   cy.intercept('POST', '/api/sessions', {
     statusCode: 200,
@@ -196,8 +198,8 @@ Then('the game should be able to start', () => {
   });
 
   cy.visit('/join?code=TEST12');
-  cy.getByTestId('player-name-input').type(playerName);
-  cy.getByTestId('submit-join-button').click();
+  cy.get('[data-testid="player-name-input"]').type(playerName);
+  cy.get('[data-testid="submit-join-button"]').click();
 });
 
 Given('there are {int} other players in the lobby', (count: number) => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Container,
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import OtpInput from '@/components/OtpInput';
 
-export default function JoinPage() {
+function JoinContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [joinCode, setJoinCode] = useState('');
@@ -170,5 +170,13 @@ export default function JoinPage() {
         </Paper>
       </Box>
     </Container>
+  );
+}
+
+export default function JoinPage() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <JoinContent />
+    </Suspense>
   );
 }
