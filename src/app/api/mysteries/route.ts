@@ -32,18 +32,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let mysteriesWithCounts = mysteries || [];
+    let mysteriesWithCounts: any[] = mysteries || [];
 
     // Optionally include character sheet counts
     if (includeCharacterCount && mysteries) {
       mysteriesWithCounts = await Promise.all(
-        mysteries.map(async (mystery) => {
-          const { count } = await supabase
+        mysteries.map(async (mystery: any) => {
+          const { count, error: countError } = await supabase
             .from('character_sheets')
             .select('*', { count: 'exact', head: true })
             .eq('mystery_id', mystery.id);
           
-          return { ...mystery, character_count: count || 0 };
+          return { ...mystery, character_count: countError ? 0 : (count ?? 0) };
         })
       );
     }

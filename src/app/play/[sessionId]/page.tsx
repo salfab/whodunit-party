@@ -40,6 +40,7 @@ type Mystery = Database['public']['Tables']['mysteries']['Row'];
 interface PlayerOption {
   id: string;
   name: string;
+  characterName?: string;
 }
 
 interface CharacterWithWords extends CharacterSheet {
@@ -199,15 +200,28 @@ export default function PlayPage() {
       
       setCharacterSheet({ ...sheet, wordsToPlace, mystery });
 
-      // Load all active players (for accusation list)
+      // Load all active players with their character names (for accusation list)
       const { data: allPlayers } = await supabase
         .from('players')
-        .select('id, name, status')
+        .select(`
+          id, 
+          name, 
+          status,
+          player_assignments!inner(
+            character_sheets!inner(
+              character_name
+            )
+          )
+        `)
         .eq('session_id', sessionId)
         .eq('status', 'active');
 
-      // Filter out the current player (investigator can't accuse themselves)
-      const otherPlayers = allPlayers?.filter((p) => p.id !== playerData.playerId) || [];
+      // Filter out the current player (investigator can't accuse themselves) and format data
+      const otherPlayers = allPlayers?.filter((p) => p.id !== playerData.playerId).map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        characterName: p.player_assignments?.[0]?.character_sheets?.character_name
+      })) || [];
       setPlayers(otherPlayers);
 
       // Get round number by counting completed rounds for this session
@@ -274,15 +288,6 @@ export default function PlayPage() {
         setAccusationResult(null);
         setIsAccused(false);
       }
-
-      // Track mystery changes for transitions
-      if (sheet.mystery_id && previousMysteryIdRef.current && previousMysteryIdRef.current !== sheet.mystery_id) {
-        // Mystery changed - show transition
-        setTransitionTitle(mystery.title);
-        setTransitionSubtitle(`Manche ${roundNumber}`);
-        setShowTransition(true);
-      }
-      previousMysteryIdRef.current = sheet.mystery_id;
 
       setLoading(false);
     } catch (err: any) {
@@ -770,16 +775,21 @@ export default function PlayPage() {
               <Button
                 variant="contained"
                 size="large"
-                color="error"
-                onClick={() => setAccuseDialogOpen(true)}
+                onClick={() => {
+                  setSelectedPlayer('');
+                  setAccuseDialogOpen(true);
+                }}
                 sx={{ 
                   fontSize: '1.2rem', 
                   px: 4, 
                   py: 2,
                   fontWeight: 'bold',
-                  boxShadow: 3,
+                  bgcolor: '#d32f2f',
+                  color: 'white',
+                  boxShadow: '0 4px 14px 0 rgba(211, 47, 47, 0.39)',
                   '&:hover': {
-                    boxShadow: 6,
+                    bgcolor: '#b71c1c',
+                    boxShadow: '0 6px 20px rgba(211, 47, 47, 0.5)',
                   }
                 }}
               >
@@ -940,32 +950,98 @@ export default function PlayPage() {
           onClose={() => !submittingAccusation && setAccuseDialogOpen(false)}
           maxWidth="sm"
           fullWidth
+          PaperProps={{
+            sx: {
+              bgcolor: 'background.paper',
+              backgroundImage: 'none',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+            }
+          }}
+          BackdropProps={{
+            sx: {
+              bgcolor: 'rgba(0, 0, 0, 0.7)',
+              backdropFilter: 'blur(4px)',
+            }
+          }}
         >
-          <DialogTitle>Sélectionnez le coupable</DialogTitle>
-          <DialogContent>
-            <List>
+          <DialogTitle sx={{ 
+            fontSize: '1.5rem', 
+            fontWeight: 'bold',
+            pb: 1,
+            borderBottom: '2px solid',
+            borderColor: 'divider'
+          }}>
+            🎯 Sélectionnez le coupable
+          </DialogTitle>
+          <DialogContent sx={{ pt: 3 }}>
+            <List sx={{ py: 0 }}>
               {players.map((player) => (
-                <ListItem key={player.id} disablePadding>
+                <ListItem key={player.id} disablePadding sx={{ mb: 1 }}>
                   <ListItemButton
                     selected={selectedPlayer === player.id}
                     onClick={() => setSelectedPlayer(player.id)}
+                    sx={{
+                      borderRadius: 1,
+                      border: '2px solid',
+                      borderColor: selectedPlayer === player.id ? 'error.main' : 'divider',
+                      '&:hover': {
+                        borderColor: 'error.light',
+                        bgcolor: 'action.hover',
+                      },
+                      '&.Mui-selected': {
+                        bgcolor: 'error.light',
+                        color: 'error.contrastText',
+                        '&:hover': {
+                          bgcolor: 'error.main',
+                        }
+                      }
+                    }}
                   >
-                    <Radio checked={selectedPlayer === player.id} />
-                    <ListItemText primary={player.name} />
+                    <Radio 
+                      checked={selectedPlayer === player.id}
+                      sx={{
+                        color: selectedPlayer === player.id ? 'error.contrastText' : 'inherit',
+                        '&.Mui-checked': {
+                          color: 'error.contrastText',
+                        }
+                      }}
+                    />
+                    <ListItemText 
+                      primary={player.name}
+                      secondary={player.characterName}
+                      primaryTypographyProps={{
+                        fontWeight: selectedPlayer === player.id ? 'bold' : 'normal',
+                      }}
+                      secondaryTypographyProps={{
+                        sx: {
+                          color: selectedPlayer === player.id ? 'error.contrastText' : 'text.secondary',
+                          opacity: selectedPlayer === player.id ? 0.9 : 0.7,
+                        }
+                      }}
+                    />
                   </ListItemButton>
                 </ListItem>
               ))}
             </List>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setAccuseDialogOpen(false)} disabled={submittingAccusation}>
+          <DialogActions sx={{ px: 3, pb: 3, pt: 2 }}>
+            <Button 
+              onClick={() => setAccuseDialogOpen(false)} 
+              disabled={submittingAccusation}
+              variant="outlined"
+            >
               Annuler
             </Button>
             <Button
               onClick={handleAccuse}
               variant="contained"
-              color="error"
               disabled={!selectedPlayer || submittingAccusation}
+              sx={{
+                bgcolor: '#d32f2f',
+                '&:hover': {
+                  bgcolor: '#b71c1c',
+                }
+              }}
             >
               {submittingAccusation ? 'Accusation en cours...' : 'Accuser'}
             </Button>
