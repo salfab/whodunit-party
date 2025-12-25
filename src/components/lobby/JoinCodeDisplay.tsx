@@ -8,7 +8,7 @@ interface JoinCodeDisplayProps {
 
 export function JoinCodeDisplay({ code }: JoinCodeDisplayProps) {
   return (
-    <Box sx={{ textAlign: 'center', mb: 4 }}>
+    <Box sx={{ textAlign: 'center', mb: 4 }} data-testid="lobby-join-code-section">
       <Typography variant="h6" color="text.secondary" gutterBottom>
         Code d'accès
       </Typography>
@@ -19,6 +19,7 @@ export function JoinCodeDisplay({ code }: JoinCodeDisplayProps) {
           letterSpacing: 4,
           color: 'primary.main',
         }}
+        data-testid="lobby-join-code"
       >
         {code}
       </Typography>

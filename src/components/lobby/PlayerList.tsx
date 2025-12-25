@@ -19,11 +19,11 @@ interface PlayerListProps {
 export function PlayerList({ players, currentPlayerId, readyStates, minPlayers }: PlayerListProps) {
   return (
     <>
-      <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
+      <Typography variant="h5" gutterBottom sx={{ mt: 4 }} data-testid="lobby-player-count">
         Joueurs ({players.length}/{minPlayers} minimum)
       </Typography>
 
-      <List sx={{ mb: 3 }}>
+      <List sx={{ mb: 3 }} data-testid="lobby-player-list">
         <AnimatePresence>
           {players.map((player) => (
             <motion.div
@@ -31,17 +31,18 @@ export function PlayerList({ players, currentPlayerId, readyStates, minPlayers }
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
+              data-testid={`lobby-player-${player.name.toLowerCase().replace(/\s+/g, '-')}`}
             >
               <ListItem
                 secondaryAction={
                   readyStates.get(player.id) ? (
-                    <CheckCircle color="success" />
+                    <CheckCircle color="success" data-testid={`lobby-player-ready-${player.name.toLowerCase().replace(/\s+/g, '-')}`} />
                   ) : null
                 }
               >
                 <ListItemText primary={player.name} />
                 {player.id === currentPlayerId && (
-                  <Chip label="Vous" color="primary" size="small" sx={{ mr: 1 }} />
+                  <Chip label="Vous" color="primary" size="small" sx={{ mr: 1 }} data-testid="lobby-player-you-badge" />
                 )}
               </ListItem>
             </motion.div>
