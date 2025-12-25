@@ -20,6 +20,7 @@ import {
   Divider,
 } from '@mui/material';
 import { createClient } from '@/lib/supabase/client';
+import LoadingScreen from '@/components/LoadingScreen';
 import type { Database } from '@/types/database';
 import { MIN_PLAYERS } from '@/lib/constants';
 

@@ -616,7 +616,7 @@ export default function LobbyPage() {
               <InputLabel id="language-select-label">Langue</InputLabel>
               <Select
                 labelId="language-select-label"
-                value={session.language || 'fr'}
+                value={session?.language || 'fr'}
                 label="Langue"
                 onChange={(e) => handleLanguageChange(e.target.value)}
               >
