@@ -24,6 +24,7 @@ import {
   Alert,
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Upload as UploadIcon } from '@mui/icons-material';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface Mystery {
   id: string;
@@ -100,6 +101,10 @@ export default function MysteriesPage() {
     return description.substring(0, maxLength) + '...';
   };
 
+  if (loading) {
+    return <LoadingScreen message="Chargement des mystères" />;
+  }
+
   return (
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
@@ -131,11 +136,7 @@ export default function MysteriesPage() {
           </Alert>
         )}
 
-        {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-            <CircularProgress />
-          </Box>
-        ) : mysteries.length === 0 ? (
+        {mysteries.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
               No mysteries found

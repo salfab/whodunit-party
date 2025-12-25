@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
       .insert({
         join_code: joinCode,
         status: 'lobby',
+        language: 'fr', // Default language
       })
       .select()
       .single();

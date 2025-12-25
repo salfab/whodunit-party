@@ -136,13 +136,7 @@ export default function AdminSessionPage() {
   }
 
   if (loading) {
-    return (
-      <Container maxWidth="md">
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-          <CircularProgress />
-        </Box>
-      </Container>
-    );
+    return <LoadingScreen message="Chargement de la session" />;
   }
 
   const activePlayers = players.filter((p) => p.status === 'active');

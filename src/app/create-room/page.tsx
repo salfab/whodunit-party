@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import { QRCodeSVG } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function CreateRoomPage() {
   const [loading, setLoading] = useState(true);
@@ -60,6 +62,10 @@ export default function CreateRoomPage() {
     ? `${window.location.origin}/join?code=${gameCode}`
     : '';
 
+  if (loading) {
+    return <LoadingScreen message="Création de la salle" />;
+  }
+
   return (
     <Container maxWidth="sm">
       <Box
@@ -82,20 +88,14 @@ export default function CreateRoomPage() {
           </Alert>
         )}
 
-        {loading ? (
-          <Card sx={{ width: '100%', p: 2 }}>
-            <CardContent>
-              <Box sx={{ textAlign: 'center', py: 4 }}>
-                <CircularProgress size={60} />
-                <Typography variant="body1" sx={{ mt: 3 }}>
-                  Création de la salle...
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        ) : gameCode ? (
-          <Card sx={{ width: '100%', p: 2 }}>
-            <CardContent>
+        {gameCode ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card sx={{ width: '100%', p: 2 }}>
+              <CardContent>
               <Typography variant="h6" gutterBottom textAlign="center">
                 Salle créée avec succès ! 🎉
               </Typography>
@@ -159,6 +159,7 @@ export default function CreateRoomPage() {
               </Box>
             </CardContent>
           </Card>
+          </motion.div>
         ) : null}
       </Box>
     </Container>

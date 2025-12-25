@@ -13,8 +13,14 @@ import {
   IconButton,
   Alert,
   CircularProgress,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon, Visibility as VisibilityIcon, Edit as EditIcon } from '@mui/icons-material';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import LoadingScreen from '@/components/LoadingScreen';
 
 interface CharacterSheet {
   role: 'investigator' | 'guilty' | 'innocent';
@@ -28,6 +34,9 @@ interface MysteryFormData {
   title: string;
   description: string;
   image_path: string;
+  language: string;
+  author: string;
+  theme: string;
   innocent_words: [string, string, string];
   guilty_words: [string, string, string];
   character_sheets: CharacterSheet[];
@@ -42,11 +51,17 @@ export default function EditMysteryPage() {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  
+  const [descriptionPreview, setDescriptionPreview] = useState(false);
+  const [characterPreview, setCharacterPreview] = useState<Map<number, { darkSecret: boolean; alibi: boolean }>>(new Map());
 
   const [formData, setFormData] = useState<MysteryFormData>({
     title: '',
     description: '',
     image_path: '',
+    language: 'fr',
+    author: 'Built-in',
+    theme: 'SERIOUS_MURDER',
     innocent_words: ['', '', ''],
     guilty_words: ['', '', ''],
     character_sheets: [
@@ -75,6 +90,9 @@ export default function EditMysteryPage() {
         title: data.title || '',
         description: data.description || '',
         image_path: data.image_path || '',
+        language: data.language || 'fr',
+        author: data.author || 'Built-in',
+        theme: data.theme || 'SERIOUS_MURDER',
         innocent_words: data.innocent_words || ['', '', ''],
         guilty_words: data.guilty_words || ['', '', ''],
         character_sheets: data.character_sheets || [],
@@ -177,13 +195,7 @@ export default function EditMysteryPage() {
   };
 
   if (loading) {
-    return (
-      <Container maxWidth="lg">
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-          <CircularProgress />
-        </Box>
-      </Container>
-    );
+    return <LoadingScreen message="Chargement du mystère" />;
   }
 
   return (
@@ -211,15 +223,46 @@ export default function EditMysteryPage() {
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <TextField
-              fullWidth
-              multiline
-              rows={6}
-              label="Description (Markdown supported)"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              required
-            />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Description (Markdown supported)
+              </Typography>
+              <IconButton
+                size="small"
+                onClick={() => setDescriptionPreview(!descriptionPreview)}
+                title={descriptionPreview ? 'Edit' : 'Preview'}
+              >
+                {descriptionPreview ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+              </IconButton>
+            </Box>
+            {descriptionPreview ? (
+              <Box
+                sx={{
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderRadius: 1,
+                  p: 2,
+                  minHeight: 150,
+                  '& h1, & h2, & h3': { mt: 2, mb: 1 },
+                  '& p': { mb: 1 },
+                  '& ul, & ol': { pl: 3 },
+                }}
+              >
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {formData.description || '*No description*'}
+                </ReactMarkdown>
+              </Box>
+            ) : (
+              <TextField
+                fullWidth
+                multiline
+                rows={6}
+                label="Description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                required
+              />
+            )}
           </Box>
 
           <Box sx={{ mb: 3 }}>
@@ -229,6 +272,52 @@ export default function EditMysteryPage() {
               value={formData.image_path}
               onChange={(e) => setFormData({ ...formData, image_path: e.target.value })}
             />
+          </Box>
+
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              label="Author"
+              value={formData.author}
+              onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+              required
+              helperText="Author of the mystery"
+            />
+          </Box>
+
+          <Box sx={{ mb: 3 }}>
+            <FormControl fullWidth required>
+              <InputLabel id="language-label">Language</InputLabel>
+              <Select
+                labelId="language-label"
+                label="Language"
+                value={formData.language}
+                onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+              >
+                <MenuItem value="fr">Français</MenuItem>
+                <MenuItem value="en">English</MenuItem>
+                <MenuItem value="es">Español</MenuItem>
+                <MenuItem value="de">Deutsch</MenuItem>
+                <MenuItem value="it">Italiano</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ mb: 3 }}>
+            <FormControl fullWidth required>
+              <InputLabel id="theme-label">Theme</InputLabel>
+              <Select
+                labelId="theme-label"
+                label="Theme"
+                value={formData.theme}
+                onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
+              >
+                <MenuItem value="PETTY_CRIME">Petty Crime</MenuItem>
+                <MenuItem value="MACABRE">Macabre</MenuItem>
+                <MenuItem value="SERIOUS_MURDER">Serious Murder</MenuItem>
+                <MenuItem value="FUNNY_CRIME">Funny Crime</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
 
           <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
@@ -304,23 +393,101 @@ export default function EditMysteryPage() {
                   helperText="The name of this character (e.g., 'Le Majordome', 'La Comtesse')"
                 />
 
-                <TextField
-                  multiline
-                  rows={3}
-                  label="Dark Secret"
-                  value={sheet.dark_secret}
-                  onChange={(e) => updateCharacterSheet(index, 'dark_secret', e.target.value)}
-                  required
-                />
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Dark Secret
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        const newMap = new Map(characterPreview);
+                        const current = newMap.get(index) || { darkSecret: false, alibi: false };
+                        newMap.set(index, { ...current, darkSecret: !current.darkSecret });
+                        setCharacterPreview(newMap);
+                      }}
+                      title={characterPreview.get(index)?.darkSecret ? 'Edit' : 'Preview'}
+                    >
+                      {characterPreview.get(index)?.darkSecret ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                    </IconButton>
+                  </Box>
+                  {characterPreview.get(index)?.darkSecret ? (
+                    <Box
+                      sx={{
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderRadius: 1,
+                        p: 2,
+                        minHeight: 80,
+                        '& h1, & h2, & h3': { mt: 1, mb: 0.5, fontSize: '1rem' },
+                        '& p': { mb: 0.5 },
+                        '& ul, & ol': { pl: 2 },
+                      }}
+                    >
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {sheet.dark_secret || '*No dark secret*'}
+                      </ReactMarkdown>
+                    </Box>
+                  ) : (
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      label="Dark Secret"
+                      value={sheet.dark_secret}
+                      onChange={(e) => updateCharacterSheet(index, 'dark_secret', e.target.value)}
+                      required
+                    />
+                  )}
+                </Box>
 
-                <TextField
-                  multiline
-                  rows={3}
-                  label="Alibi"
-                  value={sheet.alibi}
-                  onChange={(e) => updateCharacterSheet(index, 'alibi', e.target.value)}
-                  required
-                />
+                <Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Alibi
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        const newMap = new Map(characterPreview);
+                        const current = newMap.get(index) || { darkSecret: false, alibi: false };
+                        newMap.set(index, { ...current, alibi: !current.alibi });
+                        setCharacterPreview(newMap);
+                      }}
+                      title={characterPreview.get(index)?.alibi ? 'Edit' : 'Preview'}
+                    >
+                      {characterPreview.get(index)?.alibi ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                    </IconButton>
+                  </Box>
+                  {characterPreview.get(index)?.alibi ? (
+                    <Box
+                      sx={{
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderRadius: 1,
+                        p: 2,
+                        minHeight: 80,
+                        '& h1, & h2, & h3': { mt: 1, mb: 0.5, fontSize: '1rem' },
+                        '& p': { mb: 0.5 },
+                        '& ul, & ol': { pl: 2 },
+                      }}
+                    >
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {sheet.alibi || '*No alibi*'}
+                      </ReactMarkdown>
+                    </Box>
+                  ) : (
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      label="Alibi"
+                      value={sheet.alibi}
+                      onChange={(e) => updateCharacterSheet(index, 'alibi', e.target.value)}
+                      required
+                    />
+                  )}
+                </Box>
 
                 <TextField
                   label="Image Path (optional)"

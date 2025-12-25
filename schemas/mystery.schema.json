@@ -3,7 +3,7 @@
   "title": "Mystery",
   "description": "Schema for a Whodunit Party mystery",
   "type": "object",
-  "required": ["title", "description", "innocent_words", "guilty_words", "character_sheets"],
+  "required": ["title", "description", "language", "author", "theme", "innocent_words", "guilty_words", "character_sheets"],
   "properties": {
     "title": {
       "type": "string",
@@ -19,6 +19,22 @@
     "image_path": {
       "type": "string",
       "description": "Optional path to mystery image"
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}$",
+      "description": "Two-character language/culture code (e.g., 'en', 'fr', 'es')"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "The author of the mystery"
+    },
+    "theme": {
+      "type": "string",
+      "enum": ["PETTY_CRIME", "MACABRE", "SERIOUS_MURDER", "FUNNY_CRIME"],
+      "description": "The theme category of the mystery"
     },
     "innocent_words": {
       "type": "array",

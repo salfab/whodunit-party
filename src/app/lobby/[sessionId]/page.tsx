@@ -15,11 +15,17 @@ import {
   Chip,
   CircularProgress,
   Alert,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
+import LoadingScreen from '@/components/LoadingScreen';
+import TransitionScreen from '@/components/TransitionScreen';
 import type { Database } from '@/types/database';
 import { MIN_PLAYERS } from '@/lib/constants';
 
@@ -42,6 +48,7 @@ export default function LobbyPage() {
   const [mysteryCount, setMysteryCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showTransition, setShowTransition] = useState(false);
 
   const supabase = createClient();
 
@@ -67,17 +74,48 @@ export default function LobbyPage() {
     }
   }, [currentPlayerId, votes]);
 
+  // Reload mysteries when session language changes
+  useEffect(() => {
+    if (session?.language) {
+      loadMysteriesByLanguage(session.language);
+    }
+  }, [session?.language]);
+
+  async function loadMysteriesByLanguage(language: string) {
+    try {
+      const mysteriesResponse = await fetch(`/api/mysteries?language=${language}&includeCharacterCount=true`);
+      if (mysteriesResponse.ok) {
+        const data = await mysteriesResponse.json();
+        const loadedMysteries = data.mysteries || [];
+        setMysteries(loadedMysteries);
+        setMysteryCount(loadedMysteries.length);
+      }
+    } catch (err) {
+      console.error('Error loading mysteries:', err);
+    }
+  }
+
   // Calculate if game can start
   const activePlayers = players.filter((p) => p.status === 'active');
-  const canStart = activePlayers.length >= MIN_PLAYERS && readyCount === activePlayers.length;
+  
+  // Filter mysteries that can accommodate the current player count
+  const availableMysteries = mysteries.filter(
+    (mystery) => mystery.character_count >= activePlayers.length
+  );
+  
+  const canStart = activePlayers.length >= MIN_PLAYERS && readyCount === activePlayers.length && availableMysteries.length > 0;
 
   // Auto-redirect when game status changes to 'playing'
   useEffect(() => {
-    if (session?.status === 'playing') {
-      console.log('Session status changed to playing, redirecting...');
-      router.push(`/play/${sessionId}`);
+    if (session?.status === 'playing' && !showTransition) {
+      console.log('Session status changed to playing, showing transition...');
+      setShowTransition(true);
+      // Redirect after transition completes
+      setTimeout(() => {
+        router.push(`/play/${sessionId}`);
+      }, 2500);
     }
-  }, [session?.status, sessionId, router]);
+  }, [session?.status, sessionId, router, showTransition]);
 
   async function loadSessionData() {
     try {
@@ -105,8 +143,8 @@ export default function LobbyPage() {
         return;
       }
 
-      // Fetch mysteries
-      const mysteriesResponse = await fetch('/api/mysteries');
+      // Fetch mysteries filtered by session language
+      const mysteriesResponse = await fetch(`/api/mysteries?language=${sessionData.language || 'fr'}&includeCharacterCount=true`);
       if (mysteriesResponse.ok) {
         const data = await mysteriesResponse.json();
         const loadedMysteries = data.mysteries || [];
@@ -114,11 +152,22 @@ export default function LobbyPage() {
         setMysteryCount(loadedMysteries.length);
       }
 
-      // Fetch votes
+      // Get next round number
+      const { data: rounds } = await (supabase
+        .from('rounds') as any)
+        .select('round_number')
+        .eq('session_id', sessionId)
+        .order('round_number', { ascending: false })
+        .limit(1);
+      
+      const nextRoundNumber = (rounds && rounds.length > 0) ? rounds[0].round_number + 1 : 1;
+
+      // Fetch votes for next round only
       const { data: votesData } = await (supabase
         .from('mystery_votes') as any)
         .select('*')
-        .eq('session_id', sessionId);
+        .eq('session_id', sessionId)
+        .eq('round_number', nextRoundNumber);
       
       if (votesData) {
         const newVotes = new Map<string, string>();
@@ -317,10 +366,21 @@ export default function LobbyPage() {
   }
 
   async function refreshVotes() {
+    // Get next round number
+    const { data: rounds } = await (supabase
+      .from('rounds') as any)
+      .select('round_number')
+      .eq('session_id', sessionId)
+      .order('round_number', { ascending: false })
+      .limit(1);
+    
+    const nextRoundNumber = (rounds && rounds.length > 0) ? rounds[0].round_number + 1 : 1;
+
     const { data: votesData } = await (supabase
       .from('mystery_votes') as any)
       .select('*')
-      .eq('session_id', sessionId);
+      .eq('session_id', sessionId)
+      .eq('round_number', nextRoundNumber);
     
     if (votesData) {
       const newVotes = new Map<string, string>();
@@ -370,6 +430,19 @@ export default function LobbyPage() {
 
       if (!response.ok) {
         throw new Error('Failed to vote');
+      }
+
+      // Automatically mark player as ready after voting
+      if (!isReady) {
+        const readyResponse = await fetch(`/api/sessions/${sessionId}/mark-ready`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isReady: true }),
+        });
+
+        if (readyResponse.ok) {
+          setIsReady(true);
+        }
       }
     } catch (err) {
       console.error('Error voting:', err);
@@ -438,14 +511,34 @@ export default function LobbyPage() {
     }
   }
 
+  async function handleLanguageChange(newLanguage: string) {
+    if (!session) return;
+
+    try {
+      const response = await fetch(`/api/sessions/${sessionId}/update-language`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language: newLanguage }),
+      });
+
+      if (!response.ok) {
+        console.error('Error updating language');
+        setError('Failed to update language. Please try again.');
+        setTimeout(() => setError(''), 3000);
+        return;
+      }
+
+      // Language will be updated via Realtime subscription
+      console.log('Language updated successfully');
+    } catch (err) {
+      console.error('Error updating language:', err);
+      setError('Failed to update language. Please try again.');
+      setTimeout(() => setError(''), 3000);
+    }
+  }
+
   if (loading) {
-    return (
-      <Container maxWidth="md">
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-          <CircularProgress />
-        </Box>
-      </Container>
-    );
+    return <LoadingScreen message="Chargement de la salle d'attente" />;
   }
 
   if (error) {
@@ -514,16 +607,44 @@ export default function LobbyPage() {
             </AnimatePresence>
           </List>
 
-          {mysteries.length > 0 && (
-            <>
-              <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-                Votez pour le mystère
-              </Typography>
-              
+          <Box sx={{ mt: 4, mb: 2, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+            <Typography variant="h5">
+              Votez pour le mystère
+            </Typography>
+            
+            <FormControl size="small" sx={{ minWidth: 160 }}>
+              <InputLabel id="language-select-label">Langue</InputLabel>
+              <Select
+                labelId="language-select-label"
+                value={session.language || 'fr'}
+                label="Langue"
+                onChange={(e) => handleLanguageChange(e.target.value)}
+              >
+                <MenuItem value="fr">Français</MenuItem>
+                <MenuItem value="en">English</MenuItem>
+                <MenuItem value="es">Español</MenuItem>
+                <MenuItem value="de">Deutsch</MenuItem>
+                <MenuItem value="it">Italiano</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          {availableMysteries.length > 0 && (
               <List sx={{ mb: 3 }}>
-                {mysteries.map((mystery) => {
+                {availableMysteries.map((mystery) => {
                   const voteCount = Array.from(votes.values()).filter(v => v === mystery.id).length;
                   const isSelected = myVote === mystery.id;
+                  
+                  const getLanguageFlag = (lang: string) => {
+                    const flags: Record<string, string> = {
+                      'fr': '🇫🇷',
+                      'en': '🇬🇧',
+                      'es': '🇪🇸',
+                      'de': '🇩🇪',
+                      'it': '🇮🇹'
+                    };
+                    return flags[lang] || '🌍';
+                  };
                   
                   return (
                     <ListItem
@@ -542,7 +663,7 @@ export default function LobbyPage() {
                       >
                         <ListItemText
                           primary={mystery.title}
-                          secondary={mystery.description}
+                          secondary={`${mystery.character_count} joueurs ${getLanguageFlag(mystery.language)} par ${mystery.author}`}
                         />
                         <Chip 
                           label={`${voteCount} votes`} 
@@ -555,7 +676,31 @@ export default function LobbyPage() {
                   );
                 })}
               </List>
-            </>
+          )}
+
+          {mysteries.length === 0 && session?.language && (
+            <Box 
+              sx={{ 
+                textAlign: 'center', 
+                py: 6, 
+                px: 3, 
+                mb: 3,
+                border: '1px dashed',
+                borderColor: 'divider',
+                borderRadius: 2,
+                bgcolor: 'background.paper'
+              }}
+            >
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Aucun mystère disponible
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Aucun mystère n'a été trouvé pour la langue sélectionnée.
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                Essayez de changer la langue.
+              </Typography>
+            </Box>
           )}
 
           {activePlayers.length < MIN_PLAYERS && (
@@ -564,15 +709,9 @@ export default function LobbyPage() {
             </Alert>
           )}
 
-          {mysteryCount > 0 && mysteryCount < activePlayers.length && (
+          {availableMysteries.length > 0 && availableMysteries.length < activePlayers.length && (
             <Alert severity="warning" sx={{ mb: 3 }}>
-              ⚠️ Attention : Seulement {mysteryCount} mystère{mysteryCount > 1 ? 's' : ''} disponible{mysteryCount > 1 ? 's' : ''} pour {activePlayers.length} joueurs. La partie se terminera après {mysteryCount} manche{mysteryCount > 1 ? 's' : ''}.
-            </Alert>
-          )}
-
-          {mysteryCount === 0 && activePlayers.length >= MIN_PLAYERS && (
-            <Alert severity="error" sx={{ mb: 3 }}>
-              ⚠️ Aucun mystère disponible ! Impossible de démarrer la partie.
+              ⚠️ Attention : Seulement {availableMysteries.length} mystère{availableMysteries.length > 1 ? 's' : ''} disponible{availableMysteries.length > 1 ? 's' : ''} pour {activePlayers.length} joueurs. La partie se terminera après {availableMysteries.length} manche{availableMysteries.length > 1 ? 's' : ''}.
             </Alert>
           )}
 
@@ -587,7 +726,7 @@ export default function LobbyPage() {
               variant={isReady ? 'outlined' : 'contained'}
               size="large"
               onClick={handleReadyToggle}
-              disabled={activePlayers.length < MIN_PLAYERS || mysteryCount === 0}
+              disabled={activePlayers.length < MIN_PLAYERS || availableMysteries.length === 0}
             >
               {isReady ? 'Pas prêt' : 'Prêt'}
             </Button>
@@ -609,6 +748,14 @@ export default function LobbyPage() {
           )}
         </Paper>
       </Box>
+
+      {/* Game Start Transition */}
+      <TransitionScreen
+        isVisible={showTransition}
+        title="La partie commence"
+        subtitle="Préparez-vous à résoudre le mystère"
+        duration={2500}
+      />
     </Container>
   );
 }

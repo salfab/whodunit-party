@@ -2,6 +2,8 @@
   {
     "title": "Murder at the Manor",
     "description": "## The Crime\n\nLord Blackwood was found dead in his study at midnight, poisoned by arsenic in his evening brandy. The doors were locked from the inside, and only five guests had access to the study that evening.\n\n## Your Mission\n\nAs the investigator, you must question each guest, listen for their alibis, and determine who among them is guilty. Each person has secrets to hide, but only one is the murderer.",
+    "language": "en",
+    "author": "Built-in",
     "innocent_words": ["manuscript", "inheritance", "betrayal"],
     "guilty_words": ["ledger", "poison", "desperate"],
     "character_sheets": [
@@ -40,6 +42,8 @@
   {
     "title": "Death at the Opera House",
     "description": "## The Crime\n\nDiva Valentina Rose collapsed on stage during the final act of *La Traviata*. The autopsy revealed **cyanide poisoning** in her makeup.\n\n## The Setting\n\nBackstage at the Grand Opera House. Five people had access to her dressing room in the hour before her death.",
+    "language": "en",
+    "author": "Built-in",
     "innocent_words": ["reputation", "expose", "truth"],
     "guilty_words": ["composition", "revenge", "justice"],
     "character_sheets": [
