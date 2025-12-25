@@ -35,6 +35,7 @@ export type Database = {
           id: string;
           mystery_id: string;
           role: 'investigator' | 'guilty' | 'innocent';
+          character_name: string;
           dark_secret: string;
           alibi: string;
           image_path: string | null;
@@ -44,6 +45,7 @@ export type Database = {
           id?: string;
           mystery_id: string;
           role: 'investigator' | 'guilty' | 'innocent';
+          character_name: string;
           dark_secret: string;
           alibi: string;
           image_path?: string | null;
@@ -53,6 +55,7 @@ export type Database = {
           id?: string;
           mystery_id?: string;
           role?: 'investigator' | 'guilty' | 'innocent';
+          character_name?: string;
           dark_secret?: string;
           alibi?: string;
           image_path?: string | null;

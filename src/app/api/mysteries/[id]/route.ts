@@ -89,6 +89,7 @@ export async function PUT(
       const sheetsToInsert = character_sheets.map((sheet: any) => ({
         mystery_id: id,
         role: sheet.role,
+        character_name: sheet.character_name,
         dark_secret: sheet.dark_secret,
         alibi: sheet.alibi,
         image_path: sheet.image_path || null,

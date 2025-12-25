@@ -13,6 +13,7 @@ interface MysteryInput {
   guilty_words: string[];
   character_sheets: Array<{
     role: 'investigator' | 'guilty' | 'innocent';
+    character_name: string;
     dark_secret: string;
     words_to_place: string[];
     alibi: string;
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
       const characterSheets = mysteryInput.character_sheets.map((sheet) => ({
         mystery_id: mystery.id,
         role: sheet.role,
+        character_name: sheet.character_name,
         dark_secret: sheet.dark_secret,
         words_to_place: sheet.words_to_place,
         alibi: sheet.alibi,
