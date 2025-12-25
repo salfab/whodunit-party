@@ -44,6 +44,7 @@ export default function AccusationDialog({
       onClose={() => !submitting && onClose()}
       maxWidth="sm"
       fullWidth
+      data-testid="accusation-dialog"
       PaperProps={{
         sx: {
           bgcolor: 'background.paper',
@@ -68,9 +69,9 @@ export default function AccusationDialog({
         🎯 Sélectionnez le coupable
       </DialogTitle>
       <DialogContent sx={{ pt: 3 }}>
-        <List sx={{ py: 0 }}>
+        <List sx={{ py: 0 }} data-testid="accusation-player-list">
           {players.map((player) => (
-            <ListItem key={player.id} disablePadding sx={{ mb: 1 }}>
+            <ListItem key={player.id} disablePadding sx={{ mb: 1 }} data-testid={`accusation-player-${player.id}`}>
               <ListItemButton
                 selected={selectedPlayer === player.id}
                 onClick={() => onSelectPlayer(player.id)}
@@ -123,6 +124,7 @@ export default function AccusationDialog({
           onClick={onClose} 
           disabled={submitting}
           variant="outlined"
+          data-testid="accusation-cancel-button"
         >
           Annuler
         </Button>
@@ -130,6 +132,7 @@ export default function AccusationDialog({
           onClick={onConfirm}
           variant="contained"
           disabled={!selectedPlayer || submitting}
+          data-testid="accusation-confirm-button"
           sx={{
             bgcolor: '#d32f2f',
             '&:hover': {

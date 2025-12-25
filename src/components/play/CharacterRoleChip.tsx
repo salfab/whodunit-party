@@ -20,12 +20,13 @@ export default function CharacterRoleChip({ role, roleRevealed, onToggleReveal }
   };
 
   return (
-    <Box sx={{ textAlign: 'center', mb: 4 }}>
+    <Box sx={{ textAlign: 'center', mb: 4 }} data-testid="play-role-section">
       {/* Always show Investigator or Suspect */}
       <Chip
         label={role === 'investigator' ? 'ENQUÊTEUR' : 'SUSPECT'}
         color={role === 'investigator' ? 'info' : 'default'}
         sx={{ fontSize: '1rem', px: 2, py: 1.5, mb: 2 }}
+        data-testid="play-role-type"
       />
       
       {/* For suspects only: show guilty/innocent reveal */}
@@ -37,12 +38,14 @@ export default function CharacterRoleChip({ role, roleRevealed, onToggleReveal }
                 label={role.toUpperCase()}
                 color={getRoleColor(role) as any}
                 sx={{ fontSize: '1rem', px: 2, py: 3 }}
+                data-testid="play-role-revealed"
               />
             )}
             <IconButton 
               onClick={onToggleReveal}
               color={roleRevealed ? 'primary' : 'default'}
               sx={{ fontSize: '2rem' }}
+              data-testid="play-role-reveal-button"
             >
               {roleRevealed ? (role === 'guilty' ? '😈' : '😇') : '❓'}
             </IconButton>
@@ -53,7 +56,7 @@ export default function CharacterRoleChip({ role, roleRevealed, onToggleReveal }
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
             >
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }} data-testid="play-role-description">
                 {role === 'guilty' ? 'Vous êtes COUPABLE' : 'Vous êtes INNOCENT'}
               </Typography>
             </motion.div>

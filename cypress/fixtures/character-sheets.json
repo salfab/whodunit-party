@@ -1,0 +1,33 @@
+{
+  "investigator": {
+    "id": "test-sheet-001",
+    "mystery_id": "test-mystery-001",
+    "role": "investigator",
+    "character_name": "Detective Holmes",
+    "dark_secret": "You secretly gambled away your family fortune at the races last month.",
+    "alibi": "I was in the conservatory reading detective novels all evening.",
+    "image_path": null
+  },
+  "guilty": {
+    "id": "test-sheet-002",
+    "mystery_id": "test-mystery-001",
+    "role": "guilty",
+    "character_name": "Lord Blackwood Jr.",
+    "dark_secret": "You poisoned the victim to prevent him from changing the will.",
+    "alibi": "I was in my room writing letters to my solicitor.",
+    "image_path": null
+  },
+  "innocent": {
+    "id": "test-sheet-003",
+    "mystery_id": "test-mystery-001",
+    "role": "innocent",
+    "character_name": "Lady Sinclair",
+    "dark_secret": "You're having an affair with the gardener and were meeting him secretly.",
+    "alibi": "I was walking in the garden admiring the roses.",
+    "image_path": null
+  },
+  "words": {
+    "innocent": ["manuscript", "inheritance", "betrayal"],
+    "guilty": ["ledger", "poison", "desperate"]
+  }
+}

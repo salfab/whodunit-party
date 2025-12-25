@@ -1,0 +1,37 @@
+{
+  "mysteries": [
+    {
+      "id": "test-mystery-001",
+      "title": "Murder at the Manor",
+      "description": "## The Crime\n\nLord Blackwood was found dead in his study...",
+      "language": "en",
+      "author": "Test Author",
+      "theme": "SERIOUS_MURDER",
+      "created_at": "2025-01-01T00:00:00Z",
+      "min_players": 3,
+      "max_players": 8
+    },
+    {
+      "id": "test-mystery-002",
+      "title": "The Missing Heirloom",
+      "description": "## The Theft\n\nGrandmother's diamond necklace has vanished...",
+      "language": "en",
+      "author": "Test Author",
+      "theme": "PETTY_CRIME",
+      "created_at": "2025-01-02T00:00:00Z",
+      "min_players": 4,
+      "max_players": 6
+    },
+    {
+      "id": "test-mystery-003",
+      "title": "Le Mystère du Château",
+      "description": "## Le Crime\n\nLe comte a été retrouvé sans vie...",
+      "language": "fr",
+      "author": "Auteur Test",
+      "theme": "MACABRE",
+      "created_at": "2025-01-03T00:00:00Z",
+      "min_players": 3,
+      "max_players": 10
+    }
+  ]
+}

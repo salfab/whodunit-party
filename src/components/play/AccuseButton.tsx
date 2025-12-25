@@ -13,6 +13,7 @@ export default function AccuseButton({ onClick }: AccuseButtonProps) {
         variant="contained"
         size="large"
         onClick={onClick}
+        data-testid="play-accuse-button"
         sx={{ 
           fontSize: '1.2rem', 
           px: 4, 

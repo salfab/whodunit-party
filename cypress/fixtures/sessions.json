@@ -1,0 +1,18 @@
+{
+  "lobbySession": {
+    "id": "test-session-lobby",
+    "join_code": "TEST01",
+    "status": "lobby",
+    "current_mystery_id": null,
+    "language": "en",
+    "created_at": "2025-01-01T12:00:00Z"
+  },
+  "playingSession": {
+    "id": "test-session-playing",
+    "join_code": "PLAY01",
+    "status": "playing",
+    "current_mystery_id": "test-mystery-001",
+    "language": "en",
+    "created_at": "2025-01-01T12:00:00Z"
+  }
+}

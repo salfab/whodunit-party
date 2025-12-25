@@ -41,7 +41,7 @@ export function ReadyStatusBar({
       )}
 
       <Box sx={{ textAlign: 'center', mb: 3 }}>
-        <Typography variant="h6" color={canStart ? 'success.main' : 'text.secondary'}>
+        <Typography variant="h6" color={canStart ? 'success.main' : 'text.secondary'} data-testid="lobby-ready-count">
           Prêts : {readyCount} / {totalPlayers}
         </Typography>
       </Box>
@@ -52,11 +52,12 @@ export function ReadyStatusBar({
           size="large"
           onClick={onReadyToggle}
           disabled={!canToggleReady}
+          data-testid="lobby-ready-button"
         >
           {isReady ? 'Pas prêt' : 'Prêt'}
         </Button>
 
-        <Button variant="outlined" size="large" color="error" onClick={onQuit}>
+        <Button variant="outlined" size="large" color="error" onClick={onQuit} data-testid="lobby-quit-button">
           Quitter
         </Button>
       </Box>

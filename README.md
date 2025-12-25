@@ -209,12 +209,34 @@ Deploy to Vercel:
 1. Push code to GitHub
 2. Import project in Vercel
 3. Set root directory to `whodunit-party`
-4. Add environment variables (from Supabase Dashboard → Settings → API):
-   - `NEXT_PUBLIC_SUPABASE_URL` - Project URL
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - `anon` `public` key (or `sb_publishable_...`)
-   - `SUPABASE_SERVICE_ROLE_KEY` - `service_role` `secret` key (or `sb_secret_...`)
-   - `JWT_SECRET` - Random 32+ character string
+4. Add environment variables (see below)
 5. Deploy
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase Project URL (from Dashboard → Settings → API) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase `anon` public key |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase `service_role` secret key (server-side only) |
+| `JWT_SECRET` | ✅ | Secret key for signing player session JWTs |
+
+### JWT_SECRET
+
+Used to sign and verify player session tokens. Without this, players cannot join games.
+
+**Generate a secure secret:**
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+**Example output:** `pFcxARPGuJXn9kZhwtr+qEw714KGF5yS/QPd9odbBDI=`
+
+Add to:
+- **Local development:** `.env.local` file
+- **Vercel:** Project Settings → Environment Variables (all environments)
+
+⚠️ **Never commit secrets to git.** The `.env.local` file is gitignored.
 
 ## Contributing
 

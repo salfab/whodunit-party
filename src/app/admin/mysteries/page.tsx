@@ -109,7 +109,7 @@ export default function MysteriesPage() {
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h3" component="h1">
+          <Typography variant="h3" component="h1" data-testid="admin-mysteries-title">
             Mysteries
           </Typography>
           <Box sx={{ display: 'flex', gap: 2 }}>
@@ -117,6 +117,7 @@ export default function MysteriesPage() {
               variant="outlined"
               startIcon={<UploadIcon />}
               onClick={() => router.push('/admin/mysteries/upload')}
+              data-testid="admin-upload-button"
             >
               Upload JSON
             </Button>
@@ -124,6 +125,7 @@ export default function MysteriesPage() {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => router.push('/admin/mysteries/new/edit')}
+              data-testid="admin-new-mystery-button"
             >
               New Mystery
             </Button>
@@ -153,7 +155,7 @@ export default function MysteriesPage() {
             </Button>
           </Paper>
         ) : (
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} data-testid="admin-mysteries-table">
             <Table>
               <TableHead>
                 <TableRow>
@@ -163,9 +165,9 @@ export default function MysteriesPage() {
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody data-testid="admin-mysteries-list">
                 {mysteries.map((mystery) => (
-                  <TableRow key={mystery.id} hover>
+                  <TableRow key={mystery.id} hover data-testid={`admin-mystery-row-${mystery.id}`}>
                     <TableCell>
                       <Typography variant="body1" fontWeight="medium">
                         {mystery.title}
@@ -186,6 +188,7 @@ export default function MysteriesPage() {
                         color="primary"
                         onClick={() => router.push(`/admin/mysteries/${mystery.id}/edit`)}
                         title="Edit"
+                        data-testid={`admin-edit-mystery-${mystery.id}`}
                       >
                         <EditIcon />
                       </IconButton>
@@ -193,6 +196,7 @@ export default function MysteriesPage() {
                         color="error"
                         onClick={() => handleDeleteClick(mystery)}
                         title="Delete"
+                        data-testid={`admin-delete-mystery-${mystery.id}`}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -205,7 +209,7 @@ export default function MysteriesPage() {
         )}
       </Box>
 
-      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel} data-testid="admin-delete-dialog">
         <DialogTitle>Delete Mystery</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -213,10 +217,10 @@ export default function MysteriesPage() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel} disabled={deleting}>
+          <Button onClick={handleDeleteCancel} disabled={deleting} data-testid="admin-delete-cancel">
             Cancel
           </Button>
-          <Button onClick={handleDeleteConfirm} color="error" disabled={deleting}>
+          <Button onClick={handleDeleteConfirm} color="error" disabled={deleting} data-testid="admin-delete-confirm">
             {deleting ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>

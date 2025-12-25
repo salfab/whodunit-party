@@ -1,0 +1,55 @@
+{
+  "singlePlayer": {
+    "id": "test-player-001",
+    "name": "Alice",
+    "status": "active",
+    "score": 0,
+    "has_been_investigator": false
+  },
+  "lobbyPlayers": [
+    {
+      "id": "test-player-001",
+      "name": "Alice",
+      "status": "active",
+      "score": 0,
+      "has_been_investigator": false
+    },
+    {
+      "id": "test-player-002",
+      "name": "Bob",
+      "status": "active",
+      "score": 0,
+      "has_been_investigator": false
+    },
+    {
+      "id": "test-player-003",
+      "name": "Charlie",
+      "status": "active",
+      "score": 0,
+      "has_been_investigator": false
+    }
+  ],
+  "gamePlayers": [
+    {
+      "id": "test-player-001",
+      "name": "Alice",
+      "status": "active",
+      "score": 0,
+      "role": "investigator"
+    },
+    {
+      "id": "test-player-002",
+      "name": "Bob",
+      "status": "active",
+      "score": 0,
+      "role": "guilty"
+    },
+    {
+      "id": "test-player-003",
+      "name": "Charlie",
+      "status": "active",
+      "score": 0,
+      "role": "innocent"
+    }
+  ]
+}

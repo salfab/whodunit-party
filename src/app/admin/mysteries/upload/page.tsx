@@ -164,24 +164,24 @@ export default function UploadMysteriesPage() {
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
         <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h3" component="h1" gutterBottom>
+          <Typography variant="h3" component="h1" gutterBottom data-testid="upload-page-title">
             Upload Mysteries
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
+            <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')} data-testid="upload-error">
               {error}
             </Alert>
           )}
 
           {success && (
-            <Alert severity="success" sx={{ mb: 3 }}>
+            <Alert severity="success" sx={{ mb: 3 }} data-testid="upload-success">
               {success}
             </Alert>
           )}
 
           {/* ZIP UPLOAD SECTION */}
-          <Paper sx={{ p: 3, mb: 4, bgcolor: 'background.default' }}>
+          <Paper sx={{ p: 3, mb: 4, bgcolor: 'background.default' }} data-testid="upload-zip-section">
             <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <CloudUpload color="primary" /> Zip Package Upload
             </Typography>
@@ -206,19 +206,21 @@ export default function UploadMysteriesPage() {
                 ref={fileInputRef}
                 style={{ display: 'none' }}
                 id="zip-upload"
+                data-testid="upload-zip-input"
               />
               <label htmlFor="zip-upload">
                 <Button
                   component="span"
                   variant="outlined"
                   startIcon={<CloudUpload />}
+                  data-testid="upload-zip-select-button"
                 >
                   Select Zip File
                 </Button>
               </label>
 
               {selectedFile && (
-                <Typography sx={{ mt: 1 }} color="success.main" variant="body2">
+                <Typography sx={{ mt: 1 }} color="success.main" variant="body2" data-testid="upload-zip-selected-file">
                   ✓ {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                 </Typography>
               )}
@@ -233,6 +235,7 @@ export default function UploadMysteriesPage() {
               onClick={handleZipUpload}
               disabled={loading || !selectedFile}
               startIcon={loading ? <CircularProgress size={18} /> : <CloudUpload />}
+              data-testid="upload-zip-button"
             >
               {loading ? 'Uploading...' : 'Upload Zip'}
             </Button>
@@ -243,7 +246,7 @@ export default function UploadMysteriesPage() {
           </Divider>
 
           {/* JSON INPUT SECTION */}
-          <Paper sx={{ p: 3, bgcolor: 'background.default' }}>
+          <Paper sx={{ p: 3, bgcolor: 'background.default' }} data-testid="upload-json-section">
             <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Code color="primary" /> JSON Input
             </Typography>
@@ -272,6 +275,7 @@ export default function UploadMysteriesPage() {
               onChange={(e) => setJsonInput(e.target.value)}
               placeholder='[{ "title": "...", "description": "...", ... }]'
               sx={{ mb: 2, fontFamily: 'monospace', fontSize: '0.85rem' }}
+              data-testid="upload-json-input"
             />
 
             <Button
@@ -279,6 +283,7 @@ export default function UploadMysteriesPage() {
               onClick={handleJsonUpload}
               disabled={loading || !jsonInput.trim()}
               startIcon={loading ? <CircularProgress size={18} /> : <Code />}
+              data-testid="upload-json-button"
             >
               {loading ? 'Uploading...' : 'Upload JSON'}
             </Button>

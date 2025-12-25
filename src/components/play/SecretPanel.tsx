@@ -15,10 +15,10 @@ interface SecretPanelProps {
 
 export default function SecretPanel({ title, emoji, content, visible, onToggleVisibility }: SecretPanelProps) {
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4 }} data-testid={`play-secret-panel-${title.toLowerCase().replace(/\s+/g, '-')}`}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
         <Typography variant="h6">{emoji} {title}</Typography>
-        <IconButton onClick={onToggleVisibility} size="small">
+        <IconButton onClick={onToggleVisibility} size="small" data-testid={`play-secret-toggle-${title.toLowerCase().replace(/\s+/g, '-')}`}>
           {visible ? <VisibilityOff /> : <Visibility />}
         </IconButton>
       </Box>
@@ -31,6 +31,7 @@ export default function SecretPanel({ title, emoji, content, visible, onToggleVi
           filter: visible ? 'none' : 'blur(8px)',
           transition: 'filter 0.3s ease',
         }}
+        data-testid={`play-secret-content-${title.toLowerCase().replace(/\s+/g, '-')}`}
       >
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {content}
