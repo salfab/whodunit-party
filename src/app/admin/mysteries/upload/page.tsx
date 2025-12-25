@@ -14,17 +14,20 @@ import {
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
-import Ajv from 'ajv';
-import mysterySchema from '../../../../../schemas/mystery.schema.json';
+import { validateMysteryFull } from '@/lib/mystery-validation';
 
 interface MysteryData {
   title: string;
   description: string;
   image_path?: string;
+  language: string;
+  author?: string;
+  theme?: string;
   innocent_words: string[];
   guilty_words: string[];
   character_sheets: Array<{
     role: 'investigator' | 'guilty' | 'innocent';
+    character_name: string;
     dark_secret: string;
     alibi: string;
     image_path?: string;
@@ -38,9 +41,6 @@ export default function UploadMysteriesPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isBase64, setIsBase64] = useState(false);
-
-  const ajv = new Ajv();
-  const validateMystery = ajv.compile(mysterySchema);
 
   const handleUpload = async () => {
     setLoading(true);
@@ -66,24 +66,13 @@ export default function UploadMysteriesPage() {
         throw new Error('Input must be an array of mysteries');
       }
 
-      // Validate each mystery against JSON schema
+      // Validate each mystery against JSON schema and business rules
       for (const mystery of mysteriesData) {
-        const valid = validateMystery(mystery);
-        if (!valid) {
-          const errors = validateMystery.errors
-            ?.map((e: any) => `${e.instancePath} ${e.message}`)
-            .join(', ');
-          throw new Error(`Schema validation failed for "${mystery.title || 'unknown'}": ${errors}`);
-        }
-      }
-
-      // Additional validation
-      for (const mystery of mysteriesData) {
-        const investigator = mystery.character_sheets.find((s) => s.role === 'investigator');
-        const guilty = mystery.character_sheets.find((s) => s.role === 'guilty');
-
-        if (!investigator || !guilty) {
-          throw new Error(`Mystery "${mystery.title}" is missing investigator or guilty role`);
+        const validation = validateMysteryFull(mystery);
+        if (!validation.valid) {
+          throw new Error(
+            `Validation failed for "${mystery.title || 'unknown'}": ${validation.errors?.join('; ')}`
+          );
         }
       }
 
