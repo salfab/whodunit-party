@@ -1,0 +1,10 @@
+{
+  "filterSpecs": true,
+  "omitFiltered": true,
+  "json": {
+    "enabled": false
+  },
+  "messages": {
+    "enabled": false
+  }
+}
