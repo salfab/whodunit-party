@@ -1,23 +1,17 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+// Common steps like "I am on the homepage" are in common/common-steps.ts
 
 let roomCode: string;
 let sessionId: string;
 
-// Background steps
-Given('I am on the homepage', () => {
-  cy.visit('/');
-});
-
+// MUI Button with href renders as <a>, so we need to match both button and a
 When('I click on {string}', (buttonText: string) => {
-  cy.contains('button', buttonText).click();
+  cy.contains('button, a', buttonText).click();
 });
 
-When('I click on "Generate Room Code"', () => {
-  cy.get('[data-testid="generate-code-button"]').click();
-});
-
+// Room is auto-created now, so we wait for the code to appear
 Then('I should see a room code displayed', () => {
-  cy.get('[data-testid="room-code-display"]')
+  cy.get('[data-testid="game-code-display"]', { timeout: 10000 })
     .invoke('text')
     .then((code) => {
       roomCode = code;
@@ -30,9 +24,8 @@ When('I click on "Join This Room"', () => {
   cy.get('[data-testid="join-room-button"]').click();
 });
 
-When('I enter {string} in the player name field', (name: string) => {
-  cy.get('[data-testid="player-name-input"]').clear().type(name);
-});
+// Note: 'I enter {string} in the player name field' is defined in join-game.ts
+// and is shared across feature files
 
 When('I click on "Join Game"', () => {
   cy.get('[data-testid="submit-join-button"]').click();
@@ -62,9 +55,9 @@ Then('I should see the "You" indicator next to {string}', (playerName: string) =
 // Scenario 2: Real-time player updates
 Given('I have joined the room as {string}', (name: string) => {
   cy.visit('/');
-  cy.contains('button', 'Create Room').click();
-  cy.get('[data-testid="generate-code-button"]').click();
-  cy.get('[data-testid="room-code-display"]')
+  cy.contains('button, a', 'Créer une salle').click();
+  // Room auto-creates on page load, wait for code
+  cy.get('[data-testid="game-code-display"]', { timeout: 10000 })
     .invoke('text')
     .then((code) => {
       roomCode = code;

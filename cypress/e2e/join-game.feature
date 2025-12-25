@@ -8,7 +8,7 @@ Feature: Join Game Room
 
   Scenario: Join a game with valid code
     Given a game room exists with code "TEST12"
-    When I click the "Join Game" button
+    When I click the "Rejoindre une partie" button
     Then I should be on the join page
     When I enter "TEST12" in the game code field
     And I enter "John Doe" in the player name field
@@ -16,7 +16,7 @@ Feature: Join Game Room
     Then I should be redirected to the lobby
 
   Scenario: Cannot join with invalid code
-    When I click the "Join Game" button
+    When I click the "Rejoindre une partie" button
     And I enter "WRONG1" in the game code field
     And I enter "Jane Doe" in the player name field
     And I click the submit button
@@ -24,7 +24,7 @@ Feature: Join Game Room
     And I should still be on the join page
 
   Scenario: Join button disabled without required fields
-    When I click the "Join Game" button
+    When I click the "Rejoindre une partie" button
     Then the submit button should be disabled
     When I enter "ABC123" in the game code field
     Then the submit button should be disabled
@@ -40,6 +40,6 @@ Feature: Join Game Room
     Then I should be redirected to the lobby
 
   Scenario: Game code is automatically uppercased
-    When I click the "Join Game" button
+    When I click the "Rejoindre une partie" button
     When I type "abc123" in the game code field
     Then the game code field should contain "ABC123"
