@@ -128,24 +128,8 @@ Given('I am assigned the innocent role', () => {
 
 // ==================== Navigation ====================
 
-When('I visit the play page', () => {
-  // Mock session details
-  cy.intercept('GET', '**/game_sessions*', {
-    statusCode: 200,
-    body: {
-      id: 'test-session-playing',
-      join_code: 'PLAY01',
-      status: 'playing',
-      current_mystery_id: 'test-mystery-001',
-      language: 'en',
-    },
-  }).as('getSession');
-
-  cy.visit('/play/test-session-playing');
-  cy.wait('@sessionMe');
-});
-
 Given('I visit the play page', () => {
+  // Mock session details
   cy.intercept('GET', '**/game_sessions*', {
     statusCode: 200,
     body: {

@@ -40,11 +40,6 @@ Given('I mock the delete mystery API', () => {
 
 // ==================== Navigation ====================
 
-When('I visit the admin mysteries page', () => {
-  cy.visit('/admin/mysteries');
-  cy.wait('@getMysteries');
-});
-
 Given('I visit the admin mysteries page', () => {
   cy.visit('/admin/mysteries');
   cy.wait('@getMysteries');

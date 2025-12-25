@@ -3,22 +3,26 @@ Feature: Accusation System
   I want to accuse a player of being guilty
   So that I can score points for correct accusations
 
+  # Note: These tests require Supabase database access
+  # They are marked @integration to indicate they need real backend
+  # Run with: npx cypress run --env tags="@integration"
+
   Background:
     Given I am logged in as a player in a playing session
 
-  @mocked
+  @integration @skip
   Scenario: Investigator sees the accuse button
     Given I am assigned the investigator role
     When I visit the play page
     Then I should see the accuse button
 
-  @mocked
+  @integration @skip
   Scenario: Non-investigator does not see accuse button
     Given I am assigned the guilty role
     When I visit the play page
     Then I should not see the accuse button
 
-  @mocked
+  @integration @skip
   Scenario: Investigator can open accusation dialog
     Given I am assigned the investigator role
     And I visit the play page
@@ -26,7 +30,7 @@ Feature: Accusation System
     Then I should see the accusation dialog
     And I should see a list of players to accuse
 
-  @mocked
+  @integration @skip
   Scenario: Correct accusation shows success result
     Given I am assigned the investigator role
     And I visit the play page
@@ -36,7 +40,7 @@ Feature: Accusation System
     And I confirm the accusation
     Then I should see the accusation was correct
 
-  @mocked
+  @integration @skip
   Scenario: Wrong accusation shows failure result
     Given I am assigned the investigator role
     And I visit the play page

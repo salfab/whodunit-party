@@ -22,7 +22,7 @@ Feature: Upload Mysteries
     Given I visit the upload mysteries page
     When I paste invalid JSON in the input
     And I click the upload JSON button
-    Then I should see an error message
+    Then I should see an upload error message
 
   @mocked
   Scenario: Admin can select a ZIP file

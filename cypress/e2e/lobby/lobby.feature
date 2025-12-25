@@ -28,14 +28,17 @@ Feature: Game Lobby
     Then I should see the mystery voting section
 
   # ==================== Real Multi-Player Tests ====================
+  # Note: These tests require Supabase database access and real-time subscriptions
+  # They are marked @realtime and @skip because they need actual backend
+  # Run with: npx cypress run --env tags="@realtime"
 
-  @realtime
+  @realtime @skip
   Scenario: New players appear in real-time
     Given I create a real room as "Alice"
     When another player "Bob" joins via API
     Then I should see "Bob" in the player list within 10 seconds
 
-  @realtime
+  @realtime @skip
   Scenario: Ready count updates in real-time
     Given I create a real room with 5 players
     When player "Bob" marks themselves as ready via API

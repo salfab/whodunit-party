@@ -2,10 +2,6 @@ import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 // ==================== Navigation ====================
 
-When('I visit the upload mysteries page', () => {
-  cy.visit('/admin/mysteries/upload');
-});
-
 Given('I visit the upload mysteries page', () => {
   cy.visit('/admin/mysteries/upload');
 });
@@ -64,11 +60,11 @@ When('I paste valid mystery JSON in the input', () => {
     },
   ]);
 
-  cy.getByTestId('upload-json-input').find('textarea').first().type(validMystery, { delay: 0 });
+  cy.getByTestId('upload-json-input').find('textarea').first().type(validMystery, { delay: 0, parseSpecialCharSequences: false });
 });
 
 When('I paste invalid JSON in the input', () => {
-  cy.getByTestId('upload-json-input').find('textarea').first().type('{ invalid json }', { delay: 0 });
+  cy.getByTestId('upload-json-input').find('textarea').first().type('{ invalid json }', { delay: 0, parseSpecialCharSequences: false });
 });
 
 When('I click the upload JSON button', () => {
@@ -80,7 +76,7 @@ Then('I should see a success message', () => {
   cy.getByTestId('upload-success').should('be.visible');
 });
 
-Then('I should see an error message', () => {
+Then('I should see an upload error message', () => {
   cy.getByTestId('upload-error').should('be.visible');
 });
 
