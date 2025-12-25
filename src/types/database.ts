@@ -7,6 +7,9 @@ export type Database = {
           title: string;
           description: string;
           image_path: string | null;
+          language: string;
+          author: string;
+          theme: string;
           innocent_words: string[];
           guilty_words: string[];
           created_at: string;
@@ -16,6 +19,9 @@ export type Database = {
           title: string;
           description: string;
           image_path?: string | null;
+          language: string;
+          author?: string;
+          theme?: string;
           innocent_words: string[];
           guilty_words: string[];
           created_at?: string;
@@ -25,6 +31,9 @@ export type Database = {
           title?: string;
           description?: string;
           image_path?: string | null;
+          language?: string;
+          author?: string;
+          theme?: string;
           innocent_words?: string[];
           guilty_words?: string[];
           created_at?: string;
@@ -68,6 +77,7 @@ export type Database = {
           status: 'lobby' | 'playing' | 'completed';
           join_code: string;
           current_mystery_id: string | null;
+          language: string;
           created_at: string;
           updated_at: string;
         };
@@ -76,6 +86,7 @@ export type Database = {
           status?: 'lobby' | 'playing' | 'completed';
           join_code: string;
           current_mystery_id?: string | null;
+          language: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -84,6 +95,7 @@ export type Database = {
           status?: 'lobby' | 'playing' | 'completed';
           join_code?: string;
           current_mystery_id?: string | null;
+          language?: string;
           created_at?: string;
           updated_at?: string;
         };

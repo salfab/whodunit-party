@@ -9,6 +9,9 @@ interface MysteryInput {
   title: string;
   description: string;
   image_path?: string;
+  language: string;
+  author?: string;
+  theme?: string;
   innocent_words: string[];
   guilty_words: string[];
   character_sheets: Array<{
@@ -92,7 +95,8 @@ export async function POST(request: NextRequest) {
           title: mysteryInput.title,
           description: mysteryInput.description,
           image_path: mysteryInput.image_path || null,
-          innocent_words: mysteryInput.innocent_words,
+          language: mysteryInput.language,
+          author: mysteryInput.author || 'Built-in',        theme: mysteryInput.theme || 'SERIOUS_MURDER',          innocent_words: mysteryInput.innocent_words,
           guilty_words: mysteryInput.guilty_words,
         })
         .select()

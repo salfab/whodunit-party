@@ -12,7 +12,9 @@ import {
   Alert,
   FormLabel,
 } from '@mui/material';
+import { motion } from 'framer-motion';
 import OtpInput from '@/components/OtpInput';
+import LoadingScreen from '@/components/LoadingScreen';
 
 function JoinContent() {
   const router = useRouter();
@@ -102,14 +104,19 @@ function JoinContent() {
           py: 4,
         }}
       >
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            borderRadius: 2,
-          }}
-          data-testid="join-form-container"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
+          <Paper
+            elevation={3}
+            sx={{
+              p: 4,
+              borderRadius: 2,
+            }}
+            data-testid="join-form-container"
+          >
           <Typography variant="h4" component="h1" gutterBottom textAlign="center" data-testid="join-page-title">
             🔍 Rejoindre une partie
           </Typography>
@@ -168,6 +175,7 @@ function JoinContent() {
             </Button>
           </Box>
         </Paper>
+        </motion.div>
       </Box>
     </Container>
   );

@@ -3,16 +3,26 @@ import { createServiceClient } from '@/lib/supabase/server';
 
 /**
  * GET /api/mysteries
- * Fetches all available mysteries
+ * Fetches all available mysteries, optionally filtered by language
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const supabase = await createServiceClient();
+    const { searchParams } = new URL(request.url);
+    const language = searchParams.get('language');
+    const includeCharacterCount = searchParams.get('includeCharacterCount') === 'true';
 
-    const { data: mysteries, error } = await supabase
+    let query = supabase
       .from('mysteries')
-      .select('id, title, description, created_at')
+      .select('id, title, description, language, author, theme, created_at')
       .order('created_at', { ascending: false });
+
+    // Filter by language if provided
+    if (language) {
+      query = query.eq('language', language);
+    }
+
+    const { data: mysteries, error } = await query;
 
     if (error) {
       console.error('Failed to fetch mysteries:', error);
@@ -22,7 +32,23 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({ mysteries: mysteries || [] });
+    let mysteriesWithCounts = mysteries || [];
+
+    // Optionally include character sheet counts
+    if (includeCharacterCount && mysteries) {
+      mysteriesWithCounts = await Promise.all(
+        mysteries.map(async (mystery) => {
+          const { count } = await supabase
+            .from('character_sheets')
+            .select('*', { count: 'exact', head: true })
+            .eq('mystery_id', mystery.id);
+          
+          return { ...mystery, character_count: count || 0 };
+        })
+      );
+    }
+
+    return NextResponse.json({ mysteries: mysteriesWithCounts });
   } catch (error) {
     console.error('Unexpected error fetching mysteries:', error);
     return NextResponse.json(
@@ -45,6 +71,9 @@ export async function POST(request: NextRequest) {
       title,
       description,
       image_path,
+      language,
+      author,
+      theme,
       innocent_words,
       guilty_words,
       character_sheets,
@@ -57,6 +86,9 @@ export async function POST(request: NextRequest) {
         title,
         description,
         image_path: image_path || null,
+        language,
+        author: author || 'Built-in',
+        theme: theme || 'SERIOUS_MURDER',
         innocent_words,
         guilty_words,
       })

@@ -29,6 +29,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createClient } from '@/lib/supabase/client';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
+import LoadingScreen from '@/components/LoadingScreen';
+import TransitionScreen from '@/components/TransitionScreen';
 import type { Database } from '@/types/database';
 
 type CharacterSheet = Database['public']['Tables']['character_sheets']['Row'];
@@ -79,8 +81,12 @@ export default function PlayPage() {
   const [hasVoted, setHasVoted] = useState(false);
   const [startingNextRound, setStartingNextRound] = useState(false);
   const [errorSnackbar, setErrorSnackbar] = useState<{ open: boolean; message: string }>({ open: false, message: '' });
+  const [showTransition, setShowTransition] = useState(false);
+  const [transitionTitle, setTransitionTitle] = useState('');
+  const [transitionSubtitle, setTransitionSubtitle] = useState('');
   
   const currentPlayerRef = useRef(currentPlayer);
+  const previousMysteryIdRef = useRef<string | null>(null);
 
   const supabase = createClient();
 
@@ -204,6 +210,24 @@ export default function PlayPage() {
       const otherPlayers = allPlayers?.filter((p) => p.id !== playerData.playerId) || [];
       setPlayers(otherPlayers);
 
+      // Get round number by counting completed rounds for this session
+      const { data: allRounds } = await supabase
+        .from('rounds')
+        .select('id')
+        .eq('session_id', sessionId)
+        .order('created_at', { ascending: true });
+      
+      const roundNumber = (allRounds?.length || 0) + 1;
+
+      // Track mystery changes for transitions
+      if (sheet.mystery_id && previousMysteryIdRef.current && previousMysteryIdRef.current !== sheet.mystery_id) {
+        // Mystery changed - show transition
+        setTransitionTitle(mystery.title);
+        setTransitionSubtitle(`Manche ${roundNumber}`);
+        setShowTransition(true);
+      }
+      previousMysteryIdRef.current = sheet.mystery_id;
+
       // Check if there's already an accusation for THIS mystery
       const { data: existingRound, error: roundError } = await supabase
         .from('rounds')
@@ -250,6 +274,15 @@ export default function PlayPage() {
         setAccusationResult(null);
         setIsAccused(false);
       }
+
+      // Track mystery changes for transitions
+      if (sheet.mystery_id && previousMysteryIdRef.current && previousMysteryIdRef.current !== sheet.mystery_id) {
+        // Mystery changed - show transition
+        setTransitionTitle(mystery.title);
+        setTransitionSubtitle(`Manche ${roundNumber}`);
+        setShowTransition(true);
+      }
+      previousMysteryIdRef.current = sheet.mystery_id;
 
       setLoading(false);
     } catch (err: any) {
@@ -446,13 +479,7 @@ export default function PlayPage() {
   }
 
   if (loading) {
-    return (
-      <Container maxWidth="md">
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-          <CircularProgress />
-        </Box>
-      </Container>
-    );
+    return <LoadingScreen message="Chargement de votre personnage" />;
   }
 
   if (error) {
@@ -969,6 +996,15 @@ export default function PlayPage() {
         onClose={() => setErrorSnackbar({ open: false, message: '' })}
         message={errorSnackbar.message}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
+
+      {/* Mystery Transition Screen */}
+      <TransitionScreen
+        isVisible={showTransition}
+        title={transitionTitle}
+        subtitle={transitionSubtitle}
+        onComplete={() => setShowTransition(false)}
+        duration={2500}
       />
     </Container>
   );

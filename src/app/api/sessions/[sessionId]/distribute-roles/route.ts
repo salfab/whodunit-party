@@ -97,8 +97,9 @@ export async function POST(
     // Get character sheets for the mystery
     const { data: sheetsData, error: sheetsError } = await (supabase
       .from('character_sheets') as any)
-      .select('*')
-      .eq('mystery_id', mysteryId);
+      .select('*, mysteries!inner(language)')
+      .eq('mystery_id', mysteryId)
+      .eq('mysteries.language', updatedSession.language);
     
     const sheets = sheetsData as any;
 
