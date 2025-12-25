@@ -1,32 +1,26 @@
 'use client';
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   Container,
   Box,
   Typography,
-  Button,
   Paper,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Chip,
-  CircularProgress,
   Alert,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
 } from '@mui/material';
-import { CheckCircle } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
 import LoadingScreen from '@/components/LoadingScreen';
 import TransitionScreen from '@/components/TransitionScreen';
-import MysteryCard from '@/components/shared/MysteryCard';
+import {
+  JoinCodeDisplay,
+  PlayerList,
+  LanguageSelector,
+  MysteryVotingList,
+  ReadyStatusBar,
+} from '@/components/lobby';
 import type { Database } from '@/types/database';
 import { MIN_PLAYERS } from '@/lib/constants';
 
@@ -560,163 +554,45 @@ export default function LobbyPage() {
             Salle d'attente
           </Typography>
 
-          {session && (
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                Code d'accès
-              </Typography>
-              <Typography
-                variant="h3"
-                sx={{
-                  fontFamily: 'monospace',
-                  letterSpacing: 4,
-                  color: 'primary.main',
-                }}
-              >
-                {session.join_code}
-              </Typography>
-            </Box>
-          )}
+          {session && <JoinCodeDisplay code={session.join_code} />}
 
-          <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-            Joueurs ({activePlayers.length}/{MIN_PLAYERS} minimum)
-          </Typography>
-
-          <List sx={{ mb: 3 }}>
-            <AnimatePresence>
-              {activePlayers.map((player) => (
-                <motion.div
-                  key={player.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                >
-                  <ListItem
-                    secondaryAction={
-                      readyStates.get(player.id) ? (
-                        <CheckCircle color="success" />
-                      ) : null
-                    }
-                  >
-                    <ListItemText primary={player.name} />
-                    {player.id === currentPlayerId && (
-                      <Chip label="Vous" color="primary" size="small" sx={{ mr: 1 }} />
-                    )}
-                  </ListItem>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </List>
+          <PlayerList
+            players={activePlayers}
+            currentPlayerId={currentPlayerId}
+            readyStates={readyStates}
+            minPlayers={MIN_PLAYERS}
+          />
 
           <Box sx={{ mt: 4, mb: 2, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
             <Typography variant="h5">
               Votez pour le mystère
             </Typography>
             
-            <FormControl size="small" sx={{ minWidth: 160 }}>
-              <InputLabel id="language-select-label">Langue</InputLabel>
-              <Select
-                labelId="language-select-label"
-                value={session?.language || 'fr'}
-                label="Langue"
-                onChange={(e) => handleLanguageChange(e.target.value)}
-              >
-                <MenuItem value="fr">Français</MenuItem>
-                <MenuItem value="en">English</MenuItem>
-                <MenuItem value="es">Español</MenuItem>
-                <MenuItem value="de">Deutsch</MenuItem>
-                <MenuItem value="it">Italiano</MenuItem>
-              </Select>
-            </FormControl>
+            <LanguageSelector
+              value={session?.language || 'fr'}
+              onChange={handleLanguageChange}
+            />
           </Box>
 
-          {availableMysteries.length > 0 && (
-              <List sx={{ mb: 3 }}>
-                {availableMysteries.map((mystery) => {
-                  const voteCount = Array.from(votes.values()).filter(v => v === mystery.id).length;
-                  const isSelected = myVote === mystery.id;
-                  
-                  return (
-                    <MysteryCard
-                      key={mystery.id}
-                      mystery={mystery}
-                      selected={isSelected}
-                      voteCount={voteCount}
-                      onClick={() => handleVote(mystery.id)}
-                    />
-                  );
-                })}
-              </List>
-          )}
+          <MysteryVotingList
+            mysteries={mysteries}
+            availableMysteries={availableMysteries}
+            votes={votes}
+            myVote={myVote}
+            onVote={handleVote}
+            hasLanguage={!!session?.language}
+          />
 
-          {mysteries.length === 0 && session?.language && (
-            <Box 
-              sx={{ 
-                textAlign: 'center', 
-                py: 6, 
-                px: 3, 
-                mb: 3,
-                border: '1px dashed',
-                borderColor: 'divider',
-                borderRadius: 2,
-                bgcolor: 'background.paper'
-              }}
-            >
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                Aucun mystère disponible
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Aucun mystère n'a été trouvé pour la langue sélectionnée.
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                Essayez de changer la langue.
-              </Typography>
-            </Box>
-          )}
-
-          {activePlayers.length < MIN_PLAYERS && (
-            <Alert severity="info" sx={{ mb: 3 }}>
-              En attente d'au moins {MIN_PLAYERS} joueurs...
-            </Alert>
-          )}
-
-          {availableMysteries.length > 0 && availableMysteries.length < activePlayers.length && (
-            <Alert severity="warning" sx={{ mb: 3 }}>
-              ⚠️ Attention : Seulement {availableMysteries.length} mystère{availableMysteries.length > 1 ? 's' : ''} disponible{availableMysteries.length > 1 ? 's' : ''} pour {activePlayers.length} joueurs. La partie se terminera après {availableMysteries.length} manche{availableMysteries.length > 1 ? 's' : ''}.
-            </Alert>
-          )}
-
-          <Box sx={{ textAlign: 'center', mb: 3 }}>
-            <Typography variant="h6" color={canStart ? 'success.main' : 'text.secondary'}>
-              Prêts : {readyCount} / {activePlayers.length}
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-            <Button
-              variant={isReady ? 'outlined' : 'contained'}
-              size="large"
-              onClick={handleReadyToggle}
-              disabled={activePlayers.length < MIN_PLAYERS || availableMysteries.length === 0}
-            >
-              {isReady ? 'Pas prêt' : 'Prêt'}
-            </Button>
-
-            <Button variant="outlined" size="large" color="error" onClick={handleQuit}>
-              Quitter
-            </Button>
-          </Box>
-
-          {canStart && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-            >
-              <Alert severity="success" sx={{ mt: 3 }}>
-                Tous les joueurs sont prêts ! Démarrage automatique...
-              </Alert>
-            </motion.div>
-          )}
+          <ReadyStatusBar
+            readyCount={readyCount}
+            totalPlayers={activePlayers.length}
+            isReady={isReady}
+            canStart={canStart}
+            minPlayers={MIN_PLAYERS}
+            availableMysteriesCount={availableMysteries.length}
+            onReadyToggle={handleReadyToggle}
+            onQuit={handleQuit}
+          />
         </Paper>
       </Box>
 
