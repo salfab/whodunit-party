@@ -13,8 +13,6 @@ import {
   Alert,
   Checkbox,
   FormControlLabel,
-  Tabs,
-  Tab,
   Divider,
 } from '@mui/material';
 import { CloudUpload, Code } from '@mui/icons-material';
@@ -38,26 +36,9 @@ interface MysteryData {
   }>;
 }
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel({ children, value, index }: TabPanelProps) {
-  return (
-    <div role="tabpanel" hidden={value !== index}>
-      {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
 export default function UploadMysteriesPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  // Tab state
-  const [tabValue, setTabValue] = useState(0);
   
   // JSON upload state
   const [jsonInput, setJsonInput] = useState('');
@@ -179,38 +160,6 @@ export default function UploadMysteriesPage() {
     }
   };
 
-  const exampleJson = `[
-  {
-    "title": "Murder at the Manor",
-    "description": "## The Crime\\n\\nLord Blackwood was found dead...",
-    "language": "en",
-    "author": "Mystery Author",
-    "theme": "SERIOUS_MURDER",
-    "innocent_words": ["manuscript", "inheritance", "betrayal"],
-    "guilty_words": ["ledger", "poison", "desperate"],
-    "character_sheets": [
-      {
-        "role": "investigator",
-        "character_name": "Detective Holmes",
-        "dark_secret": "You secretly gambled away your family fortune.",
-        "alibi": "I was in the conservatory reading all evening."
-      },
-      {
-        "role": "guilty",
-        "character_name": "Lord Blackwood Jr.",
-        "dark_secret": "You poisoned the victim to prevent...",
-        "alibi": "I was in my room writing letters."
-      },
-      {
-        "role": "innocent",
-        "character_name": "Lady Sinclair",
-        "dark_secret": "You're having an affair with...",
-        "alibi": "I was walking in the garden."
-      }
-    ]
-  }
-]`;
-
   return (
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
@@ -231,27 +180,22 @@ export default function UploadMysteriesPage() {
             </Alert>
           )}
 
-          <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)} sx={{ mb: 2 }}>
-            <Tab icon={<CloudUpload />} label="Zip Package" iconPosition="start" />
-            <Tab icon={<Code />} label="JSON Input" iconPosition="start" />
-          </Tabs>
-
-          <Divider />
-
-          {/* ZIP UPLOAD TAB */}
-          <TabPanel value={tabValue} index={0}>
-            <Typography variant="body1" paragraph color="text.secondary">
-              Upload a .zip file containing a <code>mystery.json</code> and optional images.
-              Images should be in an <code>images/</code> folder and referenced in the JSON.
+          {/* ZIP UPLOAD SECTION */}
+          <Paper sx={{ p: 3, mb: 4, bgcolor: 'background.default' }}>
+            <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CloudUpload color="primary" /> Zip Package Upload
+            </Typography>
+            <Typography variant="body2" paragraph color="text.secondary">
+              Upload a .zip file containing <code>mystery.json</code> + images folder. Best for mysteries with character portraits.
             </Typography>
 
-            <Paper
+            <Box
               sx={{
                 p: 3,
-                mb: 3,
-                bgcolor: 'background.default',
+                mb: 2,
                 border: '2px dashed',
                 borderColor: selectedFile ? 'success.main' : 'divider',
+                borderRadius: 1,
                 textAlign: 'center',
               }}
             >
@@ -268,47 +212,43 @@ export default function UploadMysteriesPage() {
                   component="span"
                   variant="outlined"
                   startIcon={<CloudUpload />}
-                  size="large"
                 >
                   Select Zip File
                 </Button>
               </label>
 
               {selectedFile && (
-                <Typography sx={{ mt: 2 }} color="success.main">
-                  Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
+                <Typography sx={{ mt: 1 }} color="success.main" variant="body2">
+                  ✓ {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                 </Typography>
               )}
-            </Paper>
+            </Box>
 
-            <Typography variant="subtitle2" gutterBottom>
-              Expected zip structure:
+            <Typography variant="caption" color="text.secondary" component="div" sx={{ mb: 2, fontFamily: 'monospace' }}>
+              Expected: mystery.json + images/*.jpg
             </Typography>
-            <Paper sx={{ p: 2, mb: 3, bgcolor: 'background.default', fontFamily: 'monospace', fontSize: '0.85rem' }}>
-              <pre style={{ margin: 0 }}>{`mystery-pack.zip
-├── mystery.json
-└── images/
-    ├── cover.jpg
-    ├── character1.jpg
-    └── character2.jpg`}</pre>
-            </Paper>
 
             <Button
               variant="contained"
-              size="large"
               onClick={handleZipUpload}
               disabled={loading || !selectedFile}
-              startIcon={loading ? <CircularProgress size={20} /> : <CloudUpload />}
+              startIcon={loading ? <CircularProgress size={18} /> : <CloudUpload />}
             >
-              {loading ? 'Uploading...' : 'Upload Mystery Pack'}
+              {loading ? 'Uploading...' : 'Upload Zip'}
             </Button>
-          </TabPanel>
+          </Paper>
 
-          {/* JSON INPUT TAB */}
-          <TabPanel value={tabValue} index={1}>
-            <Typography variant="body1" paragraph color="text.secondary">
-              Paste a JSON array of mystery objects. Each mystery should include title, description,
-              language, author, theme, words, and character sheets. Images are not supported in this mode.
+          <Divider sx={{ my: 3 }}>
+            <Typography variant="body2" color="text.secondary">OR</Typography>
+          </Divider>
+
+          {/* JSON INPUT SECTION */}
+          <Paper sx={{ p: 3, bgcolor: 'background.default' }}>
+            <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Code color="primary" /> JSON Input
+            </Typography>
+            <Typography variant="body2" paragraph color="text.secondary">
+              Paste JSON array of mysteries. No image support in this mode.
             </Typography>
 
             <FormControlLabel
@@ -316,51 +256,33 @@ export default function UploadMysteriesPage() {
                 <Checkbox
                   checked={isBase64}
                   onChange={(e) => setIsBase64(e.target.checked)}
+                  size="small"
                 />
               }
-              label="Input is Base64 encoded"
+              label="Base64 encoded"
               sx={{ mb: 2 }}
             />
-
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle2" gutterBottom>
-                Example Format:
-              </Typography>
-              <Paper
-                sx={{
-                  p: 2,
-                  bgcolor: 'background.default',
-                  fontFamily: 'monospace',
-                  fontSize: '0.75rem',
-                  overflow: 'auto',
-                  maxHeight: '200px',
-                }}
-              >
-                <pre style={{ margin: 0 }}>{exampleJson}</pre>
-              </Paper>
-            </Box>
 
             <TextField
               fullWidth
               multiline
-              rows={12}
-              label="JSON Input"
+              rows={10}
+              label="JSON Array"
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
-              placeholder="Paste your JSON here..."
-              sx={{ mb: 3, fontFamily: 'monospace' }}
+              placeholder='[{ "title": "...", "description": "...", ... }]'
+              sx={{ mb: 2, fontFamily: 'monospace', fontSize: '0.85rem' }}
             />
 
             <Button
               variant="contained"
-              size="large"
               onClick={handleJsonUpload}
               disabled={loading || !jsonInput.trim()}
-              startIcon={loading ? <CircularProgress size={20} /> : <Code />}
+              startIcon={loading ? <CircularProgress size={18} /> : <Code />}
             >
               {loading ? 'Uploading...' : 'Upload JSON'}
             </Button>
-          </TabPanel>
+          </Paper>
 
           <Box sx={{ mt: 4, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
             <Button variant="outlined" onClick={() => router.back()}>
