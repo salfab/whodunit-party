@@ -209,7 +209,11 @@ Deploy to Vercel:
 1. Push code to GitHub
 2. Import project in Vercel
 3. Set root directory to `whodunit-party`
-4. Add environment variables
+4. Add environment variables (from Supabase Dashboard → Settings → API):
+   - `NEXT_PUBLIC_SUPABASE_URL` - Project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - `anon` `public` key (or `sb_publishable_...`)
+   - `SUPABASE_SERVICE_ROLE_KEY` - `service_role` `secret` key (or `sb_secret_...`)
+   - `JWT_SECRET` - Random 32+ character string
 5. Deploy
 
 ## Contributing

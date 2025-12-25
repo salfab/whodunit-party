@@ -17,13 +17,16 @@ npm install
 ### 2. Set Up Supabase
 
 1. Create a new project at [https://supabase.com](https://supabase.com)
-2. Copy your project URL and API keys (Settings > API)
+2. Copy your project credentials from the Supabase Dashboard:
+   - **Project URL**: Settings → API → Project URL
+   - **Publishable Key**: Settings → API → `anon` `public` key (or `sb_publishable_...`)
+   - **Service Secret Key**: Settings → API Keys → `service_role` `secret` key (or `sb_secret_...`)
 3. Copy `.env.local.example` to `.env.local`
 4. Fill in your Supabase credentials:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_or_publishable_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_or_secret_key
    JWT_SECRET=generate_a_random_32_character_string
    ```
 
