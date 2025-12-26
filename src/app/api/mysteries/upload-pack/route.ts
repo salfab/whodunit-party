@@ -110,17 +110,52 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
     const imageFolder = `${mysterySlug}-${timestamp}`;
 
+    // Collect all image paths referenced in the JSON
+    const referencedImages = new Set<string>();
+    if (mysteryData.image_path) {
+      referencedImages.add(mysteryData.image_path);
+    }
+    for (const sheet of mysteryData.character_sheets) {
+      if (sheet.image_path) {
+        referencedImages.add(sheet.image_path);
+      }
+    }
+
+    log('info', 'Found referenced images in JSON', { 
+      count: referencedImages.size, 
+      paths: Array.from(referencedImages) 
+    });
+
     // Upload images and build path mapping
     const pathMapping = new Map<string, string>();
-    const imageFiles = Object.keys(zip.files).filter(
-      (name) => name.startsWith('images/') && !zip.files[name].dir
-    );
 
-    log('info', 'Found images in zip', { count: imageFiles.length, files: imageFiles });
+    for (const imagePath of referencedImages) {
+      // Try to find the file in the zip (try exact path and with/without leading slash)
+      const possiblePaths = [
+        imagePath,
+        imagePath.replace(/^\/+/, ''), // Remove leading slashes
+        `images/${imagePath}`, // Try in images folder
+        `images/${imagePath.replace(/^\/+/, '')}`, // Try in images folder without leading slash
+      ];
 
-    for (const imagePath of imageFiles) {
-      const imageFile = zip.file(imagePath);
-      if (!imageFile) continue;
+      let imageFile = null;
+      let foundPath = '';
+      
+      for (const path of possiblePaths) {
+        imageFile = zip.file(path);
+        if (imageFile) {
+          foundPath = path;
+          break;
+        }
+      }
+
+      if (!imageFile) {
+        log('warn', 'Image file not found in zip', { 
+          referencedPath: imagePath, 
+          triedPaths: possiblePaths 
+        });
+        continue;
+      }
 
       const imageData = await imageFile.async('arraybuffer');
       const fileName = imagePath.split('/').pop() || imagePath;
@@ -132,7 +167,7 @@ export async function POST(request: NextRequest) {
         : ext === 'webp' ? 'image/webp' 
         : 'image/jpeg';
 
-      log('info', 'Uploading image', { from: imagePath, to: storagePath });
+      log('info', 'Uploading image', { from: foundPath, to: storagePath });
 
       const { error: uploadError } = await supabase.storage
         .from(MYSTERY_IMAGES_BUCKET)
@@ -149,8 +184,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Map original path to storage path
-      pathMapping.set(imagePath, storagePath);
+      // Get public URL for the uploaded image
+      const { data: urlData } = supabase.storage
+        .from(MYSTERY_IMAGES_BUCKET)
+        .getPublicUrl(storagePath);
+
+      // Map original path to public URL
+      pathMapping.set(imagePath, urlData.publicUrl);
     }
 
     // Update mystery data with new image paths
@@ -232,7 +272,7 @@ export async function POST(request: NextRequest) {
     log('info', 'Mystery pack uploaded successfully', {
       mysteryId: mystery.id,
       title: mystery.title,
-      imagesUploaded: imageFiles.length,
+      imagesUploaded: pathMapping.size,
     });
 
     return NextResponse.json({
@@ -241,7 +281,7 @@ export async function POST(request: NextRequest) {
         id: mystery.id,
         title: mystery.title,
       },
-      imagesUploaded: imageFiles.length,
+      imagesUploaded: pathMapping.size,
     });
   } catch (error: any) {
     log('error', 'Error processing mystery pack', { error: error.message });

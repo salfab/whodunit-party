@@ -604,17 +604,73 @@ export default function PlayPage() {
         <AccusedOverlay isAccused={isAccused} />
 
         <Paper elevation={3} sx={{ p: 4 }}>
-          {/* Mystery Title */}
-          <Box sx={{ textAlign: 'center', mb: 3 }}>
-            <Typography variant="h5" color="primary" gutterBottom>
-              {characterSheet.mystery.title}
-            </Typography>
-          </Box>
+          {/* Character Header with Name and Image */}
+          <Box sx={{ 
+            mb: 4,
+            pb: 3,
+            borderBottom: '2px solid',
+            borderColor: 'primary.main'
+          }}>
+            {/* Mystery Title */}
+            <Box sx={{ mb: 3, textAlign: 'center' }}>
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  color: 'secondary.main', // Gold color for better contrast
+                  fontStyle: 'italic',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                }}
+              >
+                {characterSheet.mystery.title}
+              </Typography>
+            </Box>
 
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography variant="h4" gutterBottom>
-              Votre fiche de personnage
-            </Typography>
+            {characterSheet.image_path ? (
+              // If image exists, show image with name below
+              <>
+                <Box
+                  component="img"
+                  src={characterSheet.image_path}
+                  alt={characterSheet.character_name}
+                  sx={{ 
+                    width: '100%',
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    mb: 2
+                  }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+                <Typography 
+                  variant="body2"
+                  sx={{ 
+                    textAlign: 'center',
+                    fontStyle: 'italic',
+                    color: 'text.secondary',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  {characterSheet.character_name}
+                </Typography>
+              </>
+            ) : (
+              // If no image, show large character name
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography 
+                  variant="h3" 
+                  component="h1"
+                  sx={{ 
+                    fontWeight: 700,
+                    color: 'text.primary',
+                    textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  {characterSheet.character_name}
+                </Typography>
+              </Box>
+            )}
           </Box>
 
           {/* Role Display */}
@@ -624,29 +680,29 @@ export default function PlayPage() {
             onToggleReveal={() => setRoleRevealed(!roleRevealed)}
           />
 
-          {/* Character Image */}
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Box
-              component="img"
-              src={getRoleImage(characterSheet.role)}
-              alt={characterSheet.role}
-              sx={{ maxWidth: '200px', borderRadius: '8px' }}
-              onError={(e) => {
-                // Fallback if image doesn't exist
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          </Box>
-
           {/* Investigator sees Mystery Description */}
           {characterSheet.role === 'investigator' && (
             <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" gutterBottom>📖 Description du mystère</Typography>
+              <Typography 
+                variant="h5" 
+                gutterBottom
+                sx={{ 
+                  color: 'text.primary',
+                  fontWeight: 600,
+                  textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+                }}
+              >
+                📖 Description du mystère
+              </Typography>
               <Paper
                 elevation={1}
                 sx={{
                   p: 2,
-                  bgcolor: 'background.default',
+                  bgcolor: 'rgba(45, 16, 16, 0.8)',
+                  '& p, & li, & span': {
+                    color: 'text.primary',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                  }
                 }}
               >
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>

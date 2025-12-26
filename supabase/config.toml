@@ -87,6 +87,9 @@ enabled = false
 enabled = true
 port = 54427
 
+[edge_runtime]
+enabled = false
+
 [realtime]
 enabled = true
 # Bind realtime via either IPv4 or IPv6. (default: IPv4)
