@@ -102,8 +102,10 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(45, 16, 16, 0.9)',
+          backgroundColor: 'rgba(45, 16, 16, 0.4)',
           backgroundImage: 'none',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255, 215, 0, 0.2)',
         },
       },
     },
