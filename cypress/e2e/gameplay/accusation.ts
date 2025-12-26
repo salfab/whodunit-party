@@ -64,9 +64,9 @@ When('I confirm the accusation', () => {
 // ==================== Result Assertions ====================
 
 Then('I should see the accusation was correct', () => {
-  cy.getByTestId('accusation-result').should('contain', 'correct').or('contain', 'Bravo');
+  cy.getByTestId('accusation-result').invoke('text').should('match', /correct|Bravo/);
 });
 
 Then('I should see the accusation was incorrect', () => {
-  cy.getByTestId('accusation-result').should('contain', 'incorrect').or('contain', 'Raté');
+  cy.getByTestId('accusation-result').invoke('text').should('match', /incorrect|Raté/);
 });
