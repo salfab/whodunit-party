@@ -8,7 +8,7 @@ declare global {
        * Custom command to select DOM element by data-testid attribute.
        * @example cy.getByTestId('game-code-input')
        */
-      getByTestId(dataTestId: string): Chainable<JQuery<HTMLElement>>;
+      getByTestId(dataTestId: string, options?: Partial<Cypress.Loggable & Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow>): Chainable<JQuery<HTMLElement>>;
 
       /**
        * Mock an API endpoint with a fixture or inline response.
@@ -81,8 +81,8 @@ declare global {
 
 // ==================== Basic Commands ====================
 
-Cypress.Commands.add('getByTestId', (dataTestId: string) => {
-  return cy.get(`[data-testid="${dataTestId}"]`);
+Cypress.Commands.add('getByTestId', (dataTestId: string, options?: any) => {
+  return cy.get(`[data-testid="${dataTestId}"]`, options);
 });
 
 // ==================== Mock API Commands ====================
