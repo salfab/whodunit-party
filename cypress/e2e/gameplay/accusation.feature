@@ -6,32 +6,33 @@ Feature: Accusation System
   # Note: These tests require Supabase database access
   # They are marked @integration to indicate they need real backend
   # Run with: npx cypress run --env tags="@integration"
+  # Run mobile tests with: npx cypress run --env tags="@mobile"
 
   Background:
     Given I am logged in as a player in a playing session
 
-  @integration @skip
-  Scenario: Investigator sees the accuse button
+  @mobile @skip
+  Scenario: Mobile - Investigator sees the accuse button
     Given I am assigned the investigator role
     When I visit the play page
     Then I should see the accuse button
 
-  @integration @skip
-  Scenario: Non-investigator does not see accuse button
+  @mobile @skip
+  Scenario: Mobile - Non-investigator does not see accuse button
     Given I am assigned the guilty role
     When I visit the play page
     Then I should not see the accuse button
 
-  @integration @skip
-  Scenario: Investigator can open accusation dialog
+  @mobile @skip
+  Scenario: Mobile - Investigator can open accusation dialog
     Given I am assigned the investigator role
     And I visit the play page
     When I click the accuse button
     Then I should see the accusation dialog
     And I should see a list of players to accuse
 
-  @integration @skip
-  Scenario: Correct accusation shows success result
+  @mobile @skip
+  Scenario: Mobile - Correct accusation shows success result
     Given I am assigned the investigator role
     And I visit the play page
     And I mock the accusation API to return a correct result
@@ -40,8 +41,8 @@ Feature: Accusation System
     And I confirm the accusation
     Then I should see the accusation was correct
 
-  @integration @skip
-  Scenario: Wrong accusation shows failure result
+  @mobile @skip
+  Scenario: Mobile - Wrong accusation shows failure result
     Given I am assigned the investigator role
     And I visit the play page
     And I mock the accusation API to return an incorrect result

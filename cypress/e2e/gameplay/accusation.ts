@@ -1,4 +1,11 @@
-import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, When, Then, Before } from '@badeball/cypress-cucumber-preprocessor';
+
+// ==================== Mobile Viewport Configuration ====================
+
+Before({ tags: '@mobile' }, () => {
+  // iPhone 12 Pro dimensions
+  cy.viewport(390, 844);
+});
 
 // Re-export shared steps from character-sheet.ts
 // The steps are shared via the Cucumber preprocessor
