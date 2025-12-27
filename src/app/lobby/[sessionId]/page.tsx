@@ -10,6 +10,7 @@ import {
   Alert,
 } from '@mui/material';
 import { motion } from 'framer-motion';
+import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@/lib/supabase/client';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
 import LoadingScreen from '@/components/LoadingScreen';
@@ -549,12 +550,38 @@ export default function LobbyPage() {
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4, minHeight: '100vh' }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
+        <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 } }}>
           <Typography variant="h3" component="h1" gutterBottom textAlign="center">
             Salle d'attente
           </Typography>
 
           {session && <JoinCodeDisplay code={session.join_code} />}
+
+          {/* QR Code */}
+          {session && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    bgcolor: 'white',
+                    borderRadius: 2,
+                    display: 'inline-block',
+                    mb: 1,
+                  }}
+                >
+                  <QRCodeSVG
+                    value={`${typeof window !== 'undefined' ? window.location.origin : ''}/join?code=${session.join_code}`}
+                    size={200}
+                    level="H"
+                  />
+                </Box>
+                <Typography variant="caption" color="text.secondary" display="block">
+                  Scannez pour rejoindre
+                </Typography>
+              </Box>
+            </Box>
+          )}
 
           <PlayerList
             players={activePlayers}

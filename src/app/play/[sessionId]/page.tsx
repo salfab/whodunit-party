@@ -10,7 +10,9 @@ import {
   Alert,
   Chip,
   Snackbar,
+  IconButton,
 } from '@mui/material';
+import { QrCode2 as QrCodeIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createClient } from '@/lib/supabase/client';
@@ -18,6 +20,7 @@ import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
 import LoadingScreen from '@/components/LoadingScreen';
 import TransitionScreen from '@/components/TransitionScreen';
 import MysteryCard from '@/components/shared/MysteryCard';
+import RoomQRCodeDialog from '@/components/shared/RoomQRCodeDialog';
 import {
   CharacterRoleChip,
   SecretPanel,
@@ -54,6 +57,7 @@ interface PlayerScore {
 interface AvailableMystery {
   id: string;
   title: string;
+  cover_image_url?: string;
 }
 
 export default function PlayPage() {
@@ -82,6 +86,8 @@ export default function PlayPage() {
   const [showTransition, setShowTransition] = useState(false);
   const [transitionTitle, setTransitionTitle] = useState('');
   const [transitionSubtitle, setTransitionSubtitle] = useState('');
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const [joinCode, setJoinCode] = useState('');
   
   const currentPlayerRef = useRef(currentPlayer);
   const previousMysteryIdRef = useRef<string | null>(null);
@@ -359,7 +365,11 @@ export default function PlayPage() {
       // Filter: not played AND has enough characters for current player count
       const available = allMysteries.filter((m: any) => 
         !playedIds.has(m.id) && m.character_count >= playerCount
-      );
+      ).map((m: any) => ({
+        id: m.id,
+        title: m.title,
+        cover_image_url: m.image_path
+      }));
 
       setAvailableMysteries(available);
 
@@ -612,7 +622,7 @@ export default function PlayPage() {
             borderColor: 'primary.main'
           }}>
             {/* Mystery Title */}
-            <Box sx={{ mb: 3, textAlign: 'center' }}>
+            <Box sx={{ mb: 3, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
               <Typography 
                 variant="h6" 
                 sx={{ 
@@ -623,6 +633,16 @@ export default function PlayPage() {
               >
                 {characterSheet.mystery.title}
               </Typography>
+              {joinCode && (
+                <IconButton
+                  size="small"
+                  onClick={() => setQrDialogOpen(true)}
+                  sx={{ color: 'secondary.main' }}
+                  title="Afficher le QR code"
+                >
+                  <QrCodeIcon fontSize="small" />
+                </IconButton>
+              )}
             </Box>
 
             {characterSheet.image_path ? (
@@ -682,33 +702,62 @@ export default function PlayPage() {
 
           {/* Investigator sees Mystery Description */}
           {characterSheet.role === 'investigator' && (
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ 
+              mb: 4,
+              '& h1, & h2, & h3, & h4, & h5, & h6': {
+                color: 'secondary.main',
+                fontWeight: 600,
+                mt: 3,
+                mb: 2,
+                textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+              },
+              '& p': {
+                color: 'text.primary',
+                fontSize: '1.1rem',
+                lineHeight: 1.8,
+                mb: 2,
+                textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+              },
+              '& ul, & ol': {
+                color: 'text.primary',
+                fontSize: '1.1rem',
+                lineHeight: 1.8,
+                pl: 3,
+                mb: 2
+              },
+              '& li': {
+                mb: 1,
+                textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+              },
+              '& strong': {
+                color: 'secondary.main',
+                fontWeight: 700
+              },
+              '& em': {
+                color: 'secondary.light'
+              },
+              '& code': {
+                backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                color: 'secondary.main',
+                padding: '2px 6px',
+                borderRadius: '4px'
+              }
+            }}>
               <Typography 
                 variant="h5" 
                 gutterBottom
                 sx={{ 
                   color: 'text.primary',
                   fontWeight: 600,
-                  textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+                  textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                  mb: 3
                 }}
               >
                 📖 Description du mystère
               </Typography>
-              <Paper
-                elevation={1}
-                sx={{
-                  p: 2,
-                  bgcolor: 'rgba(45, 16, 16, 0.8)',
-                  '& p, & li, & span': {
-                    color: 'text.primary',
-                    textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-                  }
-                }}
-              >
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {characterSheet.mystery.description}
-                </ReactMarkdown>
-              </Paper>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {characterSheet.mystery.description}
+              </ReactMarkdown>
             </Box>
           )}
 
@@ -836,6 +885,13 @@ export default function PlayPage() {
         subtitle={transitionSubtitle}
         onComplete={() => setShowTransition(false)}
         duration={2500}
+      />
+
+      {/* QR Code Dialog */}
+      <RoomQRCodeDialog
+        open={qrDialogOpen}
+        onClose={() => setQrDialogOpen(false)}
+        joinCode={joinCode}
       />
     </Container>
   );
