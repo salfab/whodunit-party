@@ -6,6 +6,7 @@ import MysteryCard from '@/components/shared/MysteryCard';
 interface AvailableMystery {
   id: string;
   title: string;
+  cover_image_url?: string;
 }
 
 interface MysteryVotingProps {
@@ -27,12 +28,13 @@ export default function MysteryVoting({
 }: MysteryVotingProps) {
   if (availableMysteries.length === 0) return null;
 
+  const votedMystery = availableMysteries.find(m => m.id === selectedMystery);
+
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom align="center">
         🎭 Votez pour le prochain mystère
       </Typography>
-      <Paper elevation={2} sx={{ p: 3 }}>
         {!hasVoted ? (
           <List>
             {availableMysteries.map((mystery) => (
@@ -47,10 +49,27 @@ export default function MysteryVoting({
             ))}
           </List>
         ) : (
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="body1" gutterBottom>
-              ✅ Vote enregistré !
-            </Typography>
+          <>
+            {votedMystery?.cover_image_url && (
+              <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
+                <Box
+                  component="img"
+                  src={votedMystery.cover_image_url}
+                  alt={votedMystery.title}
+                  sx={{
+                    maxWidth: '100%',
+                    maxHeight: '300px',
+                    borderRadius: 2,
+                    objectFit: 'contain',
+                  }}
+                />
+              </Box>
+            )}
+            <Paper elevation={2} sx={{ p: 3 }}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="body1" gutterBottom>
+                  ✅ Vote enregistré !
+                </Typography>
             <Typography variant="body2" color="text.secondary">
               En attente des autres joueurs...
             </Typography>
@@ -63,8 +82,9 @@ export default function MysteryVoting({
               </Box>
             )}
           </Box>
+            </Paper>
+          </>
         )}
-      </Paper>
     </Box>
   );
 }

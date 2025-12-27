@@ -3,10 +3,10 @@
 import {
   ListItem,
   ListItemButton,
-  ListItemText,
-  Chip,
-  Radio,
   Box,
+  Typography,
+  Chip,
+  Tooltip,
 } from '@mui/material';
 
 interface MysteryCardProps {
@@ -39,8 +39,23 @@ export default function MysteryCard({
   onClick,
 }: MysteryCardProps) {
   const flag = mystery.language ? languageFlags[mystery.language] || '🌍' : '';
-  
-  const secondaryText = [
+
+  const titleDisplay = (
+    <Typography 
+      variant="body1" 
+      fontWeight="medium"
+      sx={{
+        fontSize: { xs: '0.95rem', sm: '1rem' },
+        overflow: { xs: 'visible', sm: 'hidden' },
+        textOverflow: { xs: 'clip', sm: 'ellipsis' },
+        whiteSpace: { xs: 'normal', sm: 'nowrap' },
+      }}
+    >
+      {mystery.title}
+    </Typography>
+  );
+
+  const secondaryInfo = [
     mystery.character_count && `${mystery.character_count} joueurs`,
     flag,
     mystery.author && `par ${mystery.author}`,
@@ -49,7 +64,7 @@ export default function MysteryCard({
     .join(' ');
 
   return (
-    <ListItem disablePadding sx={{ mb: 1 }}>
+    <ListItem disablePadding sx={{ mb: { xs: 0.5, sm: 1 } }}>
       <ListItemButton
         onClick={onClick}
         selected={selected}
@@ -57,20 +72,48 @@ export default function MysteryCard({
           border: selected ? '2px solid' : '1px solid',
           borderColor: selected ? 'primary.main' : 'divider',
           borderRadius: 1,
+          px: { xs: 1.5, sm: 2 },
+          py: { xs: 1, sm: 1.5 },
+          '&:hover': {
+            borderColor: 'primary.light',
+          },
         }}
       >
-        {showRadio && <Radio checked={selected} sx={{ mr: 1 }} />}
-        <ListItemText
-          primary={mystery.title}
-          secondary={secondaryText || (voteCount > 0 ? `${voteCount} vote(s)` : '0 vote')}
-        />
-        <Chip
-          label={`${voteCount} vote${voteCount !== 1 ? 's' : ''}`}
-          color={voteCount > 0 ? 'primary' : 'default'}
-          size="small"
-          variant={voteCount > 0 ? 'filled' : 'outlined'}
-        />
+        <Box sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { xs: 'stretch', sm: 'center' },
+          width: '100%', 
+          gap: { xs: 0.5, sm: 2 },
+        }}>
+          <Box sx={{ flex: 1 }}>
+            {mystery.title.length > 30 ? (
+              <Tooltip title={mystery.title} placement="top">
+                {titleDisplay}
+              </Tooltip>
+            ) : (
+              titleDisplay
+            )}
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+            >
+              {secondaryInfo}
+            </Typography>
+          </Box>
+          <Chip
+            label={`${voteCount} vote${voteCount !== 1 ? 's' : ''}`}
+            color={voteCount > 0 ? 'primary' : 'default'}
+            size="small"
+            variant={voteCount > 0 ? 'filled' : 'outlined'}
+            sx={{ 
+              alignSelf: { xs: 'flex-end', sm: 'center' },
+            }}
+          />
+        </Box>
       </ListItemButton>
     </ListItem>
   );
 }
+

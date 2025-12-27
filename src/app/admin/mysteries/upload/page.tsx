@@ -45,7 +45,10 @@ export default function UploadMysteriesPage() {
   const [isBase64, setIsBase64] = useState(false);
   
   // Zip upload state
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadQueue, setUploadQueue] = useState<File[]>([]);
+  const [currentUpload, setCurrentUpload] = useState<{ file: File; progress: string } | null>(null);
+  const [completedUploads, setCompletedUploads] = useState<Array<{ file: string; success: boolean; message: string }>>([]);
   
   // Shared state
   const [loading, setLoading] = useState(false);
@@ -112,52 +115,97 @@ export default function UploadMysteriesPage() {
   };
 
   const handleZipUpload = async () => {
-    if (!selectedFile) return;
+    if (selectedFiles.length === 0) return;
 
     setLoading(true);
     setError('');
     setSuccess('');
+    setCompletedUploads([]);
+    setUploadQueue([...selectedFiles]);
 
-    try {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
+    const results: Array<{ file: string; success: boolean; message: string }> = [];
 
-      const response = await fetch('/api/mysteries/upload-pack', {
-        method: 'POST',
-        body: formData,
-      });
+    // Process files one by one
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+      setCurrentUpload({ file, progress: `${i + 1}/${selectedFiles.length}` });
 
-      const data = await response.json();
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
 
-      if (!response.ok) {
-        throw new Error(data.details || data.error || 'Failed to upload mystery pack');
+        const response = await fetch('/api/mysteries/upload-pack', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.details || data.error || 'Failed to upload mystery pack');
+        }
+
+        const totalImages = data.mysteries.reduce((sum: number, m: any) => sum + (m.imagesUploaded || 0), 0);
+        
+        let message = '';
+        if (data.count === 1) {
+          message = `"${data.mysteries[0].title}" - ${data.mysteries[0].imagesUploaded} images`;
+        } else {
+          message = `${data.count} mysteries - ${totalImages} images`;
+        }
+
+        results.push({ file: file.name, success: true, message });
+        setCompletedUploads([...results]);
+      } catch (err: any) {
+        results.push({ 
+          file: file.name, 
+          success: false, 
+          message: err.message || 'Upload failed' 
+        });
+        setCompletedUploads([...results]);
       }
 
-      setSuccess(`Successfully uploaded "${data.mystery.title}" with ${data.imagesUploaded} images!`);
-      setSelectedFile(null);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      // Remove from queue
+      setUploadQueue(prev => prev.slice(1));
+    }
+
+    setCurrentUpload(null);
+    setLoading(false);
+    
+    // Check if all succeeded
+    const allSucceeded = results.every(u => u.success);
+    if (allSucceeded) {
+      setSuccess(`Successfully uploaded all ${selectedFiles.length} file(s)!`);
       setTimeout(() => {
         router.push('/admin/mysteries');
       }, 2000);
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload mystery pack');
-    } finally {
-      setLoading(false);
+    } else {
+      setError('Some uploads failed. Check the results below.');
+    }
+    
+    setSelectedFiles([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (!file.name.endsWith('.zip')) {
-        setError('Please select a .zip file');
-        return;
-      }
-      setSelectedFile(file);
-      setError('');
+    const files = Array.from(e.target.files || []);
+    const zipFiles = files.filter(f => f.name.endsWith('.zip'));
+    
+    if (zipFiles.length === 0) {
+      setError('Please select at least one .zip file');
+      return;
     }
+
+    if (zipFiles.length !== files.length) {
+      setError('All files must be .zip files');
+      return;
+    }
+
+    setSelectedFiles(zipFiles);
+    setError('');
+    setCompletedUploads([]);
   };
 
   return (
@@ -186,7 +234,7 @@ export default function UploadMysteriesPage() {
               <CloudUpload color="primary" /> Zip Package Upload
             </Typography>
             <Typography variant="body2" paragraph color="text.secondary">
-              Upload a .zip file containing <code>mystery.json</code> + images folder. Best for mysteries with character portraits.
+              Upload .zip file(s) containing <code>mystery.json</code> + images folder. Best for mysteries with character portraits.
             </Typography>
 
             <Box
@@ -194,7 +242,7 @@ export default function UploadMysteriesPage() {
                 p: 3,
                 mb: 2,
                 border: '2px dashed',
-                borderColor: selectedFile ? 'success.main' : 'divider',
+                borderColor: selectedFiles.length > 0 ? 'success.main' : 'divider',
                 borderRadius: 1,
                 textAlign: 'center',
               }}
@@ -206,6 +254,7 @@ export default function UploadMysteriesPage() {
                 ref={fileInputRef}
                 style={{ display: 'none' }}
                 id="zip-upload"
+                multiple
                 data-testid="upload-zip-input"
               />
               <label htmlFor="zip-upload">
@@ -215,16 +264,43 @@ export default function UploadMysteriesPage() {
                   startIcon={<CloudUpload />}
                   data-testid="upload-zip-select-button"
                 >
-                  Select Zip File
+                  Select Zip File(s)
                 </Button>
               </label>
 
-              {selectedFile && (
-                <Typography sx={{ mt: 1 }} color="success.main" variant="body2" data-testid="upload-zip-selected-file">
-                  ✓ {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
-                </Typography>
+              {selectedFiles.length > 0 && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography color="success.main" variant="body2" gutterBottom>
+                    ✓ {selectedFiles.length} file(s) selected
+                  </Typography>
+                  <Box sx={{ maxHeight: '150px', overflow: 'auto', textAlign: 'left', px: 2 }}>
+                    {selectedFiles.map((file, idx) => (
+                      <Typography key={idx} variant="caption" component="div" sx={{ fontFamily: 'monospace' }}>
+                        {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                      </Typography>
+                    ))}
+                  </Box>
+                </Box>
               )}
             </Box>
+
+            {currentUpload && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                Uploading: {currentUpload.file.name} ({currentUpload.progress})
+              </Alert>
+            )}
+
+            {completedUploads.length > 0 && (
+              <Box sx={{ mb: 2, maxHeight: '200px', overflow: 'auto' }}>
+                {completedUploads.map((upload, idx) => (
+                  <Alert key={idx} severity={upload.success ? 'success' : 'error'} sx={{ mb: 1 }}>
+                    <Typography variant="body2">
+                      <strong>{upload.file}:</strong> {upload.message}
+                    </Typography>
+                  </Alert>
+                ))}
+              </Box>
+            )}
 
             <Typography variant="caption" color="text.secondary" component="div" sx={{ mb: 2, fontFamily: 'monospace' }}>
               Expected: mystery.json + images/*.jpg
@@ -233,11 +309,11 @@ export default function UploadMysteriesPage() {
             <Button
               variant="contained"
               onClick={handleZipUpload}
-              disabled={loading || !selectedFile}
+              disabled={loading || selectedFiles.length === 0}
               startIcon={loading ? <CircularProgress size={18} /> : <CloudUpload />}
               data-testid="upload-zip-button"
             >
-              {loading ? 'Uploading...' : 'Upload Zip'}
+              {loading ? `Uploading... (${uploadQueue.length} remaining)` : `Upload ${selectedFiles.length || 0} File(s)`}
             </Button>
           </Paper>
 

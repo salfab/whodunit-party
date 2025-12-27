@@ -75,9 +75,11 @@ export async function POST(request: NextRequest) {
 
     // Parse mystery.json
     const mysteryJsonContent = await mysteryJsonFile.async('string');
-    let mysteryData: MysteryJson;
+    let mysteriesData: MysteryJson[];
     try {
-      mysteryData = JSON.parse(mysteryJsonContent);
+      const parsed = JSON.parse(mysteryJsonContent);
+      // Support both single mystery object and array of mysteries
+      mysteriesData = Array.isArray(parsed) ? parsed : [parsed];
     } catch (e) {
       return NextResponse.json(
         { error: 'Invalid JSON', details: 'mystery.json is not valid JSON' },
@@ -85,51 +87,72 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate against schema
-    const validation = validateMysteryFull(mysteryData);
-    if (!validation.valid) {
+    if (mysteriesData.length === 0) {
       return NextResponse.json(
-        {
-          error: 'Validation failed',
-          details: validation.errors?.join('; '),
-        },
+        { error: 'No mysteries found', details: 'mystery.json must contain at least one mystery' },
         { status: 400 }
       );
     }
 
-    log('info', 'Mystery validated successfully', { title: mysteryData.title });
+    // Check for null/undefined elements
+    const invalidIndex = mysteriesData.findIndex(m => !m || typeof m !== 'object');
+    if (invalidIndex !== -1) {
+      return NextResponse.json(
+        { error: 'Invalid mystery data', details: `Mystery at index ${invalidIndex} is null, undefined, or not an object` },
+        { status: 400 }
+      );
+    }
 
     const supabase = await createServiceClient();
-    
-    // Generate unique folder for this mystery's images
-    const mysterySlug = mysteryData.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '')
-      .substring(0, 50);
-    const timestamp = Date.now();
-    const imageFolder = `${mysterySlug}-${timestamp}`;
+    const uploadedMysteries = [];
 
-    // Collect all image paths referenced in the JSON
-    const referencedImages = new Set<string>();
-    if (mysteryData.image_path) {
-      referencedImages.add(mysteryData.image_path);
-    }
-    for (const sheet of mysteryData.character_sheets) {
-      if (sheet.image_path) {
-        referencedImages.add(sheet.image_path);
+    // Process each mystery
+    for (let i = 0; i < mysteriesData.length; i++) {
+      const mysteryData = mysteriesData[i];
+      
+      // Validate against schema
+      const validation = validateMysteryFull(mysteryData);
+      if (!validation.valid) {
+        return NextResponse.json(
+          {
+            error: 'Validation failed',
+            details: `Mystery ${i + 1} "${mysteryData?.title || 'unknown'}": ${validation.errors?.join('; ')}`,
+          },
+          { status: 400 }
+        );
       }
-    }
 
-    log('info', 'Found referenced images in JSON', { 
-      count: referencedImages.size, 
-      paths: Array.from(referencedImages) 
-    });
+      log('info', 'Mystery validated successfully', { title: mysteryData.title });
+      
+      // Generate unique folder for this mystery's images
+      const mysterySlug = mysteryData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .substring(0, 50);
+      const timestamp = Date.now();
+      const imageFolder = `${mysterySlug}-${timestamp}`;
 
-    // Upload images and build path mapping
-    const pathMapping = new Map<string, string>();
+      // Collect all image paths referenced in the JSON
+      const referencedImages = new Set<string>();
+      if (mysteryData.image_path) {
+        referencedImages.add(mysteryData.image_path);
+      }
+      for (const sheet of mysteryData.character_sheets) {
+        if (sheet.image_path) {
+          referencedImages.add(sheet.image_path);
+        }
+      }
 
-    for (const imagePath of referencedImages) {
+      log('info', 'Found referenced images in JSON', { 
+        count: referencedImages.size, 
+        paths: Array.from(referencedImages) 
+      });
+
+      // Upload images and build path mapping
+      const pathMapping = new Map<string, string>();
+
+      for (const imagePath of referencedImages) {
       // Try to find the file in the zip (try exact path and with/without leading slash)
       const possiblePaths = [
         imagePath,
@@ -189,99 +212,105 @@ export async function POST(request: NextRequest) {
         .from(MYSTERY_IMAGES_BUCKET)
         .getPublicUrl(storagePath);
 
-      // Map original path to public URL
-      pathMapping.set(imagePath, urlData.publicUrl);
-    }
-
-    // Update mystery data with new image paths
-    if (mysteryData.image_path && pathMapping.has(mysteryData.image_path)) {
-      mysteryData.image_path = pathMapping.get(mysteryData.image_path);
-    } else if (mysteryData.image_path) {
-      // Try with 'images/' prefix
-      const withPrefix = `images/${mysteryData.image_path.replace(/^images\//, '')}`;
-      if (pathMapping.has(withPrefix)) {
-        mysteryData.image_path = pathMapping.get(withPrefix);
+        // Map original path to public URL
+        pathMapping.set(imagePath, urlData.publicUrl);
       }
-    }
 
-    for (const sheet of mysteryData.character_sheets) {
-      if (sheet.image_path) {
-        const originalPath = sheet.image_path;
-        if (pathMapping.has(originalPath)) {
-          sheet.image_path = pathMapping.get(originalPath);
-        } else {
-          // Try with 'images/' prefix
-          const withPrefix = `images/${originalPath.replace(/^images\//, '')}`;
-          if (pathMapping.has(withPrefix)) {
-            sheet.image_path = pathMapping.get(withPrefix);
+      // Update mystery data with new image paths
+      if (mysteryData.image_path && pathMapping.has(mysteryData.image_path)) {
+        mysteryData.image_path = pathMapping.get(mysteryData.image_path);
+      } else if (mysteryData.image_path) {
+        // Try with 'images/' prefix
+        const withPrefix = `images/${mysteryData.image_path.replace(/^images\//, '')}`;
+        if (pathMapping.has(withPrefix)) {
+          mysteryData.image_path = pathMapping.get(withPrefix);
+        }
+      }
+
+      for (const sheet of mysteryData.character_sheets) {
+        if (sheet.image_path) {
+          const originalPath = sheet.image_path;
+          if (pathMapping.has(originalPath)) {
+            sheet.image_path = pathMapping.get(originalPath);
+          } else {
+            // Try with 'images/' prefix
+            const withPrefix = `images/${originalPath.replace(/^images\//, '')}`;
+            if (pathMapping.has(withPrefix)) {
+              sheet.image_path = pathMapping.get(withPrefix);
+            }
           }
         }
       }
+
+      log('info', 'Image paths updated', { mapping: Object.fromEntries(pathMapping) });
+
+      // Insert mystery into database
+      const { data: mystery, error: mysteryError } = await (supabase
+        .from('mysteries') as any)
+        .insert({
+          title: mysteryData.title,
+          description: mysteryData.description,
+          image_path: mysteryData.image_path || null,
+          language: mysteryData.language,
+          author: mysteryData.author || 'Unknown',
+          theme: mysteryData.theme || 'SERIOUS_MURDER',
+          innocent_words: mysteryData.innocent_words,
+          guilty_words: mysteryData.guilty_words,
+        })
+        .select()
+        .single();
+
+      if (mysteryError || !mystery) {
+        log('error', 'Failed to create mystery', { error: mysteryError });
+        return NextResponse.json(
+          { error: 'Failed to create mystery', details: mysteryError?.message },
+          { status: 500 }
+        );
+      }
+
+      // Insert character sheets
+      const characterSheets = mysteryData.character_sheets.map((sheet) => ({
+        mystery_id: mystery.id,
+        role: sheet.role,
+        character_name: sheet.character_name,
+        dark_secret: sheet.dark_secret,
+        alibi: sheet.alibi,
+        image_path: sheet.image_path || null,
+      }));
+
+      const { error: sheetsError } = await (supabase
+        .from('character_sheets') as any)
+        .insert(characterSheets);
+
+      if (sheetsError) {
+        log('error', 'Failed to create character sheets', { error: sheetsError });
+        // Rollback: delete mystery
+        await (supabase.from('mysteries') as any).delete().eq('id', mystery.id);
+        return NextResponse.json(
+          { error: 'Failed to create character sheets', details: sheetsError.message },
+          { status: 500 }
+        );
+      }
+
+      log('info', 'Mystery uploaded successfully', {
+        mysteryId: mystery.id,
+        title: mystery.title,
+        imagesUploaded: pathMapping.size,
+      });
+
+      uploadedMysteries.push({
+        id: mystery.id,
+        title: mystery.title,
+        imagesUploaded: pathMapping.size,
+      });
     }
 
-    log('info', 'Image paths updated', { mapping: Object.fromEntries(pathMapping) });
-
-    // Insert mystery into database
-    const { data: mystery, error: mysteryError } = await (supabase
-      .from('mysteries') as any)
-      .insert({
-        title: mysteryData.title,
-        description: mysteryData.description,
-        image_path: mysteryData.image_path || null,
-        language: mysteryData.language,
-        author: mysteryData.author || 'Unknown',
-        theme: mysteryData.theme || 'SERIOUS_MURDER',
-        innocent_words: mysteryData.innocent_words,
-        guilty_words: mysteryData.guilty_words,
-      })
-      .select()
-      .single();
-
-    if (mysteryError || !mystery) {
-      log('error', 'Failed to create mystery', { error: mysteryError });
-      return NextResponse.json(
-        { error: 'Failed to create mystery', details: mysteryError?.message },
-        { status: 500 }
-      );
-    }
-
-    // Insert character sheets
-    const characterSheets = mysteryData.character_sheets.map((sheet) => ({
-      mystery_id: mystery.id,
-      role: sheet.role,
-      character_name: sheet.character_name,
-      dark_secret: sheet.dark_secret,
-      alibi: sheet.alibi,
-      image_path: sheet.image_path || null,
-    }));
-
-    const { error: sheetsError } = await (supabase
-      .from('character_sheets') as any)
-      .insert(characterSheets);
-
-    if (sheetsError) {
-      log('error', 'Failed to create character sheets', { error: sheetsError });
-      // Rollback: delete mystery
-      await (supabase.from('mysteries') as any).delete().eq('id', mystery.id);
-      return NextResponse.json(
-        { error: 'Failed to create character sheets', details: sheetsError.message },
-        { status: 500 }
-      );
-    }
-
-    log('info', 'Mystery pack uploaded successfully', {
-      mysteryId: mystery.id,
-      title: mystery.title,
-      imagesUploaded: pathMapping.size,
-    });
+    log('info', 'Mystery pack upload complete', { count: uploadedMysteries.length });
 
     return NextResponse.json({
       success: true,
-      mystery: {
-        id: mystery.id,
-        title: mystery.title,
-      },
-      imagesUploaded: pathMapping.size,
+      mysteries: uploadedMysteries,
+      count: uploadedMysteries.length,
     });
   } catch (error: any) {
     log('error', 'Error processing mystery pack', { error: error.message });
