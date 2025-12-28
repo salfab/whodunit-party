@@ -73,7 +73,13 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "The name of this character (e.g., 'Le Majordome', 'La Comtesse')"
+            "description": "The name of this character (e.g., 'Jean Dupont', 'Marie Laurent')"
+          },
+          "occupation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Optional occupation/title of the character (e.g., 'Butler', 'Detective', 'Cook')"
           },
           "dark_secret": {
             "type": "string",

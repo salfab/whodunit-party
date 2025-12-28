@@ -96,6 +96,7 @@ export async function PUT(
         mystery_id: id,
         role: sheet.role,
         character_name: sheet.character_name,
+        occupation: sheet.occupation || null,
         dark_secret: sheet.dark_secret,
         alibi: sheet.alibi,
         image_path: sheet.image_path || null,

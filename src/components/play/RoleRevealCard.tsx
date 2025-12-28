@@ -7,6 +7,7 @@ import { keyframes } from '@mui/material/styles';
 interface RoleRevealCardProps {
   imagePath: string;
   characterName: string;
+  occupation?: string;
   role: 'investigator' | 'guilty' | 'innocent';
   onImageError?: () => void;
   showNameOverlay?: boolean; // Show name elegantly at bottom of image
@@ -82,6 +83,7 @@ const getRoleLabel = (role: 'investigator' | 'guilty' | 'innocent') => {
 export default function RoleRevealCard({
   imagePath,
   characterName,
+  occupation,
   role,
   onImageError,
   showNameOverlay = false,
@@ -259,6 +261,20 @@ export default function RoleRevealCard({
               >
                 {characterName}
               </Typography>
+              {occupation && (
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    color: 'text.secondary',
+                    textAlign: 'center',
+                    fontStyle: 'italic',
+                    mt: 0.5,
+                    textShadow: '0 2px 8px rgba(0,0,0,0.9)',
+                  }}
+                >
+                  {occupation}
+                </Typography>
+              )}
             </Box>
           )}
         </Box>
@@ -355,12 +371,25 @@ export default function RoleRevealCard({
             color: cardDesign.accentColor,
             fontWeight: 600,
             textAlign: 'center',
-            mb: 2,
+            mb: 1,
             textShadow: '0 2px 4px rgba(0,0,0,0.3)',
           }}
         >
           {characterName}
         </Typography>
+        {occupation && (
+          <Typography
+            variant="subtitle1"
+            sx={{
+              color: 'text.secondary',
+              fontStyle: 'italic',
+              textAlign: 'center',
+              mb: 2,
+            }}
+          >
+            {occupation}
+          </Typography>
+        )}
 
         {/* Decorative line */}
         <Box

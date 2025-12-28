@@ -172,26 +172,19 @@ export async function POST(request: NextRequest) {
 
     // Apply score updates
     for (const update of scoreUpdates) {
-      const { error: scoreError } = await supabase.rpc('increment_player_score', {
-        player_id: update.id,
-        score_increment: update.increment
-      } as any);
+      // Use direct update since increment_player_score RPC doesn't exist
+      const { data: playerData } = await (supabase
+        .from('players') as any)
+        .select('score')
+        .eq('id', update.id)
+        .single();
+      
+      const player = playerData as any;
 
-      // If RPC doesn't exist, use direct update
-      if (scoreError) {
-        const { data: playerData } = await (supabase
-          .from('players') as any)
-          .select('score')
-          .eq('id', update.id)
-          .single();
-        
-        const player = playerData as any;
-
-        await (supabase
-          .from('players') as any)
-          .update({ score: (player?.score || 0) + update.increment })
-          .eq('id', update.id);
-      }
+      await (supabase
+        .from('players') as any)
+        .update({ score: (player?.score || 0) + update.increment })
+        .eq('id', update.id);
     }
 
     // Check if all active players have been investigator

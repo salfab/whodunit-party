@@ -66,6 +66,7 @@ Given('I am assigned the investigator role', () => {
         id: 'test-sheet-001',
         role: 'investigator',
         character_name: 'Detective Holmes',
+        occupation: 'Private Investigator',
         image_path: null, // No custom image - will use investigator.jpg placeholder
         dark_secret: 'You secretly gambled away your family fortune.',
         alibi: 'I was in the conservatory reading all evening.',
@@ -138,6 +139,7 @@ Given('I am assigned the guilty role', () => {
         id: 'test-sheet-002',
         role: 'guilty',
         character_name: 'Jean Dupont',
+        occupation: 'Butler',
         image_path: '/characters/guilty.png', // Custom image - name will not be overlayed
         dark_secret: 'You poisoned the victim to prevent exposure.',
         alibi: 'I was in my room writing letters.',
@@ -203,6 +205,7 @@ Given('I am assigned the guilty role with words', () => {
         id: 'test-sheet-002',
         role: 'guilty',
         character_name: 'Lord Blackwood Jr.',
+        occupation: 'Heir',
         image_path: null, // No custom image - will use suspect.jpg placeholder
         dark_secret: 'You poisoned the victim.',
         alibi: 'I was writing letters.',
@@ -265,6 +268,7 @@ Given('I am assigned the innocent role', () => {
         id: 'test-sheet-003',
         role: 'innocent',
         character_name: 'Lady Sinclair',
+        occupation: 'Aristocrat',
         image_path: '/characters/innocent.png', // Custom image - name will not be overlayed
         dark_secret: 'You are having an affair with the gardener.',
         alibi: 'I was walking in the garden.',

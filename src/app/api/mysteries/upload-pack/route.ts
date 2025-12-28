@@ -20,6 +20,7 @@ interface MysteryJson {
   character_sheets: Array<{
     role: 'investigator' | 'guilty' | 'innocent';
     character_name: string;
+    occupation?: string;
     dark_secret: string;
     alibi: string;
     image_path?: string;
@@ -273,6 +274,7 @@ export async function POST(request: NextRequest) {
         mystery_id: mystery.id,
         role: sheet.role,
         character_name: sheet.character_name,
+        occupation: sheet.occupation || null,
         dark_secret: sheet.dark_secret,
         alibi: sheet.alibi,
         image_path: sheet.image_path || null,

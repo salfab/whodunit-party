@@ -239,10 +239,9 @@ export default function LobbyPage() {
           console.log('Player updated:', payload.new);
           const updatedPlayer = payload.new as Player;
           
-          // Check if current player was kicked
-          if (updatedPlayer.id === currentPlayerId && 
-              (updatedPlayer.status === 'kicked' || updatedPlayer.status === 'quit')) {
-            console.log('Current player was kicked/quit, redirecting...');
+          // Check if current player was kicked or quit
+          if (updatedPlayer.id === currentPlayerId && updatedPlayer.status === 'quit') {
+            console.log('Current player quit/was removed, redirecting...');
             router.push('/join?kicked=true');
             return;
           }

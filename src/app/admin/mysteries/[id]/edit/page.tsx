@@ -25,6 +25,7 @@ import LoadingScreen from '@/components/LoadingScreen';
 interface CharacterSheet {
   role: 'investigator' | 'guilty' | 'innocent';
   character_name: string;
+  occupation?: string;
   dark_secret: string;
   alibi: string;
   image_path?: string;
@@ -390,7 +391,14 @@ export default function EditMysteryPage() {
                   value={sheet.character_name}
                   onChange={(e) => updateCharacterSheet(index, 'character_name', e.target.value)}
                   required
-                  helperText="The name of this character (e.g., 'Le Majordome', 'La Comtesse')"
+                  helperText="The name of this character (e.g., 'Jean Dupont', 'Marie Laurent')"
+                />
+
+                <TextField
+                  label="Occupation (optional)"
+                  value={sheet.occupation || ''}
+                  onChange={(e) => updateCharacterSheet(index, 'occupation', e.target.value)}
+                  helperText="e.g., Butler, Detective, Cook"
                 />
 
                 <Box>

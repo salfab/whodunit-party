@@ -17,6 +17,7 @@ interface PlayerOption {
   id: string;
   name: string;
   characterName?: string;
+  occupation?: string;
 }
 
 interface AccusationDialogProps {
@@ -103,7 +104,11 @@ export default function AccusationDialog({
                 />
                 <ListItemText 
                   primary={player.name}
-                  secondary={player.characterName}
+                  secondary={
+                    player.occupation 
+                      ? `${player.characterName} — ${player.occupation}`
+                      : player.characterName
+                  }
                   primaryTypographyProps={{
                     fontWeight: selectedPlayer === player.id ? 'bold' : 'normal',
                   }}

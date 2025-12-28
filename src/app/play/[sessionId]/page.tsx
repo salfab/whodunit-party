@@ -12,7 +12,7 @@ import {
   Snackbar,
   IconButton,
 } from '@mui/material';
-import { QrCode2 as QrCodeIcon } from '@mui/icons-material';
+import { QrCode2 as QrCodeIcon, HelpOutline as HelpIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { createClient } from '@/lib/supabase/client';
@@ -30,6 +30,7 @@ import {
   MysteryVoting,
   AccuseButton,
   RoleRevealCard,
+  RoleHelpDialog,
 } from '@/components/play';
 import type { Database } from '@/types/database';
 
@@ -41,6 +42,7 @@ interface PlayerOption {
   id: string;
   name: string;
   characterName?: string;
+  occupation?: string;
 }
 
 interface CharacterWithWords extends CharacterSheet {
@@ -59,6 +61,47 @@ interface AvailableMystery {
   title: string;
   cover_image_url?: string;
 }
+
+// Help content for each role
+const HELP_CONTENT = {
+  investigator: `# Comment jouer - Enquêteur
+
+## Votre mission
+
+**Écoutez attentivement chaque suspect** raconter son histoire
+
+Chaque suspect doit placer **3 mots obligatoires** dans son récit :
+- Les **innocents** ont des mots spécifiques
+- Le **coupable** a des mots différents
+
+**Votre objectif** : identifier qui est le coupable en repérant les mots qui sonnent faux ou qui ne collent pas au récit`,
+  
+  innocent: `# Comment jouer - Suspect Innocent
+
+## Votre mission
+
+1. **Placez vos 3 mots obligatoires** dans la conversation (vous avez 1 minute)
+
+2. **Couvrez le coupable** en essayant de deviner ses mots
+   - Dans ce jeu, les suspects n'aiment pas les forces de l'ordre !
+
+3. **Utilisez votre alibi** pour démarrer votre histoire si besoin
+
+4. **Pimentez votre récit** avec votre sombre secret si vous voulez étoffer votre personnage`,
+  
+  guilty: `# Comment jouer - Suspect Coupable
+
+## Votre mission
+
+1. **Placez vos 3 mots obligatoires** dans la conversation (vous avez 1 minute)
+
+2. **Devinez les mots des innocents** pour brouiller les pistes
+   - Essayez d'utiliser leurs mots pour détourner l'attention
+
+3. **Utilisez votre alibi** pour démarrer votre histoire si besoin
+
+4. **Pimentez votre récit** avec votre sombre secret si vous voulez étoffer votre personnage`,
+};
 
 export default function PlayPage() {
   const params = useParams();
@@ -88,6 +131,7 @@ export default function PlayPage() {
   const [transitionImageUrl, setTransitionImageUrl] = useState<string | undefined>(undefined);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
+  const [helpDialogOpen, setHelpDialogOpen] = useState(false);
   
   const currentPlayerRef = useRef(currentPlayer);
   const previousMysteryIdRef = useRef<string | null>(null);
@@ -212,7 +256,8 @@ export default function PlayPage() {
           status,
           player_assignments!inner(
             character_sheets!inner(
-              character_name
+              character_name,
+              occupation
             )
           )
         `)
@@ -223,7 +268,8 @@ export default function PlayPage() {
       const otherPlayers = allPlayers?.filter((p) => p.id !== playerData.playerId).map((p: any) => ({
         id: p.id,
         name: p.name,
-        characterName: p.player_assignments?.[0]?.character_sheets?.character_name
+        characterName: p.player_assignments?.[0]?.character_sheets?.character_name,
+        occupation: p.player_assignments?.[0]?.character_sheets?.occupation
       })) || [];
       setPlayers(otherPlayers);
 
@@ -634,6 +680,14 @@ export default function PlayPage() {
               >
                 {characterSheet.mystery.title}
               </Typography>
+              <IconButton
+                size="small"
+                onClick={() => setHelpDialogOpen(true)}
+                sx={{ color: 'primary.main' }}
+                title="Comment jouer"
+              >
+                <HelpIcon fontSize="small" />
+              </IconButton>
               {joinCode && (
                 <IconButton
                   size="small"
@@ -654,6 +708,7 @@ export default function PlayPage() {
                   : '/characters/suspect.jpg')
               }
               characterName={characterSheet.character_name}
+              occupation={characterSheet.occupation || undefined}
               role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
               showNameOverlay={!characterSheet.image_path}
             />
@@ -854,6 +909,19 @@ export default function PlayPage() {
         open={qrDialogOpen}
         onClose={() => setQrDialogOpen(false)}
         joinCode={joinCode}
+      />
+
+      {/* Role Help Dialog */}
+      <RoleHelpDialog
+        open={helpDialogOpen}
+        onClose={() => setHelpDialogOpen(false)}
+        helpContent={
+          characterSheet.role === 'investigator' 
+            ? HELP_CONTENT.investigator 
+            : characterSheet.role === 'guilty' 
+            ? HELP_CONTENT.guilty
+            : HELP_CONTENT.innocent
+        }
       />
     </Container>
   );

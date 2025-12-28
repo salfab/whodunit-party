@@ -30,6 +30,7 @@ interface MysteryData {
   character_sheets: Array<{
     role: 'investigator' | 'guilty' | 'innocent';
     character_name: string;
+    occupation?: string;
     dark_secret: string;
     alibi: string;
     image_path?: string;
