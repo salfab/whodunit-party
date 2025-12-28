@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createSession, setSessionCookie } from '@/lib/auth';
 import { createLogger } from '@/lib/logging';
+import type { Database } from '@/types/database';
 
 const log = createLogger('api.join');
+
+type Player = Database['public']['Tables']['players']['Row'];
 
 interface JoinRequestBody {
   joinCode: string;
@@ -57,6 +60,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'This game has already started' },
         { status: 400 }
+      );
+    }
+
+    // Check if a player with this name already exists in the session
+    const { data: existingPlayer, error: existingPlayerError } = await supabase
+      .from('players')
+      .select('*')
+      .eq('session_id', session.id)
+      .ilike('name', playerName.trim())
+      .maybeSingle<Player>();
+
+    if (existingPlayer && !existingPlayerError) {
+      log('info', 'Name already taken, offering takeover', { 
+        joinCode, 
+        playerName, 
+        existingPlayerId: existingPlayer.id 
+      });
+      return NextResponse.json(
+        {
+          error: 'NAME_TAKEN',
+          message: 'Ce nom est déjà utilisé dans cette partie',
+          existingPlayerId: existingPlayer.id,
+          canTakeover: true,
+        },
+        { status: 409 }
       );
     }
 

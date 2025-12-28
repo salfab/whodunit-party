@@ -629,7 +629,7 @@ export default function PlayPage() {
               <Typography 
                 variant="h6" 
                 sx={{ 
-                  color: 'secondary.main', // Gold color for better contrast
+                  color: 'primary.main',
                   fontStyle: 'italic',
                   textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                 }}

@@ -105,7 +105,7 @@ export type Database = {
           id: string;
           session_id: string;
           name: string;
-          status: 'active' | 'quit' | 'accused';
+          status: 'active' | 'quit' | 'accused' | 'kicked';
           last_heartbeat: string;
           created_at: string;
         };
@@ -113,7 +113,7 @@ export type Database = {
           id?: string;
           session_id: string;
           name: string;
-          status?: 'active' | 'quit' | 'accused';
+          status?: 'active' | 'quit' | 'accused' | 'kicked';
           last_heartbeat?: string;
           created_at?: string;
         };
@@ -121,7 +121,7 @@ export type Database = {
           id?: string;
           session_id?: string;
           name?: string;
-          status?: 'active' | 'quit' | 'accused';
+          status?: 'active' | 'quit' | 'accused' | 'kicked';
           last_heartbeat?: string;
           created_at?: string;
         };

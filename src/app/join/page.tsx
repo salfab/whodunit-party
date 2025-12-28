@@ -15,6 +15,7 @@ import {
 import { motion } from 'framer-motion';
 import OtpInput from '@/components/OtpInput';
 import LoadingScreen from '@/components/LoadingScreen';
+import TakeoverDialog from '@/components/TakeoverDialog';
 
 function JoinContent() {
   const router = useRouter();
@@ -23,10 +24,19 @@ function JoinContent() {
   const [playerName, setPlayerName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showTakeoverDialog, setShowTakeoverDialog] = useState(false);
+  const [takeoverLoading, setTakeoverLoading] = useState(false);
+  const [wasKicked, setWasKicked] = useState(false);
 
   // Pre-fill code from URL parameter and check for existing session
   useEffect(() => {
     const codeFromUrl = searchParams.get('code');
+    const kicked = searchParams.get('kicked');
+    
+    if (kicked === 'true') {
+      setWasKicked(true);
+    }
+    
     if (codeFromUrl) {
       setJoinCode(codeFromUrl.toUpperCase());
       checkExistingSession(codeFromUrl.toUpperCase());
@@ -80,6 +90,13 @@ function JoinContent() {
       const data = await response.json();
 
       if (!response.ok) {
+        // Handle name already taken - show takeover dialog
+        if (response.status === 409 && data.error === 'NAME_TAKEN') {
+          setShowTakeoverDialog(true);
+          setLoading(false);
+          return;
+        }
+        
         setError(data.error || 'Failed to join game');
         setLoading(false);
         return;
@@ -90,6 +107,38 @@ function JoinContent() {
     } catch (err) {
       setError('Failed to connect to server');
       setLoading(false);
+    }
+  };
+
+  const handleTakeover = async () => {
+    setTakeoverLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/join/takeover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          joinCode: joinCode.trim().toUpperCase(),
+          playerName: playerName.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Failed to takeover session');
+        setShowTakeoverDialog(false);
+        setTakeoverLoading(false);
+        return;
+      }
+
+      // Redirect to lobby
+      router.push(`/lobby/${data.sessionId}`);
+    } catch (err) {
+      setError('Failed to connect to server');
+      setShowTakeoverDialog(false);
+      setTakeoverLoading(false);
     }
   };
 
@@ -120,6 +169,12 @@ function JoinContent() {
           <Typography variant="h4" component="h1" gutterBottom textAlign="center" data-testid="join-page-title">
             🔍 Rejoindre une partie
           </Typography>
+
+          {wasKicked && (
+            <Alert severity="warning" sx={{ mb: 3 }} onClose={() => setWasKicked(false)}>
+              Vous avez été retiré de la partie. Vous pouvez rejoindre à nouveau.
+            </Alert>
+          )}
 
           {error && (
             <Alert severity="error" sx={{ mb: 3 }} data-testid="join-error-message">
@@ -176,6 +231,14 @@ function JoinContent() {
           </Box>
         </Paper>
         </motion.div>
+
+        <TakeoverDialog
+          open={showTakeoverDialog}
+          playerName={playerName}
+          onConfirm={handleTakeover}
+          onCancel={() => setShowTakeoverDialog(false)}
+          loading={takeoverLoading}
+        />
       </Box>
     </Container>
   );

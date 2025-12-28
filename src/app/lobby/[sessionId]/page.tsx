@@ -21,6 +21,7 @@ import {
   LanguageSelector,
   MysteryVotingList,
   ReadyStatusBar,
+  RemovePlayerDialog,
 } from '@/components/lobby';
 import type { Database } from '@/types/database';
 import { MIN_PLAYERS } from '@/lib/constants';
@@ -45,6 +46,9 @@ export default function LobbyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showTransition, setShowTransition] = useState(false);
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
+  const [playerToRemove, setPlayerToRemove] = useState<{ id: string; name: string } | null>(null);
+  const [removeLoading, setRemoveLoading] = useState(false);
 
   const supabase = createClient();
 
@@ -233,9 +237,19 @@ export default function LobbyPage() {
         },
         (payload) => {
           console.log('Player updated:', payload.new);
+          const updatedPlayer = payload.new as Player;
+          
+          // Check if current player was kicked
+          if (updatedPlayer.id === currentPlayerId && 
+              (updatedPlayer.status === 'kicked' || updatedPlayer.status === 'quit')) {
+            console.log('Current player was kicked/quit, redirecting...');
+            router.push('/join?kicked=true');
+            return;
+          }
+          
           // Update the player in the list
           setPlayers((prev) =>
-            prev.map((p) => (p.id === (payload.new as Player).id ? (payload.new as Player) : p))
+            prev.map((p) => (p.id === updatedPlayer.id ? updatedPlayer : p))
           );
         }
       )
@@ -512,6 +526,41 @@ export default function LobbyPage() {
     }
   }
 
+  function openRemoveDialog(playerId: string, playerName: string) {
+    setPlayerToRemove({ id: playerId, name: playerName });
+    setRemoveDialogOpen(true);
+  }
+
+  function closeRemoveDialog() {
+    setRemoveDialogOpen(false);
+    setPlayerToRemove(null);
+  }
+
+  async function handleRemovePlayer() {
+    if (!playerToRemove) return;
+
+    setRemoveLoading(true);
+    try {
+      const response = await fetch(`/api/sessions/${sessionId}/players/${playerToRemove.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || 'Failed to remove player');
+        setTimeout(() => setError(''), 3000);
+      }
+      
+      closeRemoveDialog();
+    } catch (err) {
+      console.error('Error removing player:', err);
+      setError('Failed to remove player');
+      setTimeout(() => setError(''), 3000);
+    } finally {
+      setRemoveLoading(false);
+    }
+  }
+
   async function handleLanguageChange(newLanguage: string) {
     if (!session) return;
 
@@ -593,6 +642,7 @@ export default function LobbyPage() {
             currentPlayerId={currentPlayerId}
             readyStates={readyStates}
             minPlayers={MIN_PLAYERS}
+            onRemovePlayer={openRemoveDialog}
           />
 
           <Box sx={{ mt: 4, mb: 2, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
@@ -634,6 +684,15 @@ export default function LobbyPage() {
         subtitle="Préparez-vous à résoudre le mystère"
         imageUrl={myVote ? mysteries.find(m => m.id === myVote)?.image_path : undefined}
         duration={2500}
+      />
+
+      {/* Remove Player Dialog */}
+      <RemovePlayerDialog
+        open={removeDialogOpen}
+        playerName={playerToRemove?.name || ''}
+        onConfirm={handleRemovePlayer}
+        onCancel={closeRemoveDialog}
+        loading={removeLoading}
       />
     </Container>
   );

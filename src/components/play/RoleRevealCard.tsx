@@ -164,115 +164,97 @@ export default function RoleRevealCard({
 
   return (
     <Box
-      onClick={handleCardClick}
-      data-testid="role-reveal-card"
-      data-flipped={isFlipped}
       sx={{
-        width: '100%',
-        aspectRatio: '3 / 4',
-        position: 'relative',
-        cursor: 'pointer',
-        transformStyle: 'preserve-3d',
-        animation: getAnimation(),
-        transform: isFlipped && !isAnimating 
-          ? 'perspective(1000px) rotateY(180deg)' 
-          : 'perspective(1000px) rotateY(0deg)',
+        width: 'fit-content',
+        margin: '0 auto',
         mb: 2,
       }}
     >
-      {/* Hint pill - only visible during hint animation */}
-      {showHintPill && !isFlipped && (
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 8,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            fontSize: '0.7rem',
-            color: 'rgba(255,255,255,0.9)',
-            backgroundColor: 'rgba(0,0,0,0.6)',
-            padding: '4px 12px',
-            borderRadius: '12px',
-            pointerEvents: 'none',
-            zIndex: 10,
-            animation: isHinting 
-              ? `${fadeIn} 0.2s ease-out forwards`
-              : `${fadeOut} 0.3s ease-out forwards`,
-          }}
-        >
-          Touchez pour révéler
-        </Box>
-      )}
-
-      {/* Front of card - Character Image */}
+      {/* Card container for flip animation */}
       <Box
+        onClick={handleCardClick}
+        data-testid="role-reveal-card"
+        data-flipped={isFlipped}
         sx={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          backfaceVisibility: 'hidden',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          position: 'relative',
+          cursor: 'pointer',
+          transformStyle: 'preserve-3d',
+          animation: getAnimation(),
+          transform: isFlipped && !isAnimating 
+            ? 'perspective(1000px) rotateY(180deg)' 
+            : 'perspective(1000px) rotateY(0deg)',
         }}
       >
-        <Box
-          component="img"
-          src={imagePath}
-          alt={characterName}
-          onError={handleImageError}
-          sx={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-        {/* Character name overlay on front */}
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
-            padding: '40px 16px 16px',
-          }}
-        >
-          <Typography
-            variant="h6"
+        {/* Hint pill - only visible during hint animation */}
+        {showHintPill && !isFlipped && (
+          <Box
             sx={{
-              color: 'white',
-              textAlign: 'center',
-              fontWeight: 600,
-              textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+              position: 'absolute',
+              bottom: 8,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              fontSize: '0.7rem',
+              color: 'rgba(255,255,255,0.9)',
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              padding: '4px 12px',
+              borderRadius: '12px',
+              pointerEvents: 'none',
+              zIndex: 10,
+              animation: isHinting 
+                ? `${fadeIn} 0.2s ease-out forwards`
+                : `${fadeOut} 0.3s ease-out forwards`,
             }}
           >
-            {characterName}
-          </Typography>
-        </Box>
-      </Box>
+            Touchez pour révéler
+          </Box>
+        )}
 
-      {/* Back of card - Role reveal (elegant business card style) */}
-      <Box
-        data-testid="role-reveal-card-back"
-        sx={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          backfaceVisibility: 'hidden',
-          transform: 'rotateY(180deg)',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-          background: cardDesign.gradient,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: 3,
-          border: `2px solid ${cardDesign.borderColor}`,
-        }}
-      >
+        {/* Front of card - Character Image */}
+        <Box
+          sx={{
+            backfaceVisibility: 'hidden',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+            backgroundColor: '#000',
+          }}
+        >
+          <Box
+            component="img"
+            src={imagePath}
+            alt={characterName}
+            onError={handleImageError}
+            sx={{
+              display: 'block',
+              width: '100%',
+              height: 'auto',
+            }}
+          />
+          </Box>
+
+        {/* Back of card - Role reveal (elegant business card style) */}
+        <Box
+          data-testid="role-reveal-card-back"
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+            background: cardDesign.gradient,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 3,
+            border: `2px solid ${cardDesign.borderColor}`,
+          }}
+        >
         {/* Decorative top border */}
         <Box
           sx={{
@@ -398,5 +380,6 @@ export default function RoleRevealCard({
         </Typography>
       </Box>
     </Box>
+  </Box>
   );
 }
