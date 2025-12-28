@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
-import { keyframes } from '@mui/system';
+import { keyframes } from '@mui/material/styles';
 
 interface RoleRevealCardProps {
   imagePath: string;
