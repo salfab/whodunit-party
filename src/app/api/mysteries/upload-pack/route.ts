@@ -8,6 +8,19 @@ const log = createLogger('api.mysteries.upload-pack');
 
 const MYSTERY_IMAGES_BUCKET = 'mystery-images';
 
+function compareVersions(v1: string, v2: string): number {
+  const parts1 = v1.split('.').map(Number);
+  const parts2 = v2.split('.').map(Number);
+  
+  for (let i = 0; i < 3; i++) {
+    const p1 = parts1[i] || 0;
+    const p2 = parts2[i] || 0;
+    if (p1 > p2) return 1;
+    if (p1 < p2) return -1;
+  }
+  return 0;
+}
+
 interface MysteryJson {
   title: string;
   description: string;
@@ -15,6 +28,7 @@ interface MysteryJson {
   language: string;
   author?: string;
   theme?: string;
+  version?: string;
   innocent_words: string[];
   guilty_words: string[];
   character_sheets: Array<{
@@ -106,10 +120,92 @@ export async function POST(request: NextRequest) {
 
     const supabase = await createServiceClient();
     const uploadedMysteries = [];
+    const skippedMysteries = [];
 
     // Process each mystery
     for (let i = 0; i < mysteriesData.length; i++) {
       const mysteryData = mysteriesData[i];
+      
+      // Check if mystery already exists (by title and author)
+      const { data: existingMystery } = await supabase
+        .from('mysteries')
+        .select('id, title, author, version')
+        .eq('title', mysteryData.title)
+        .eq('author', mysteryData.author || '')
+        .maybeSingle();
+
+      if (existingMystery) {
+        const newVersion = mysteryData.version;
+        const existingVersion = existingMystery.version || '0.0.0';
+        
+        // No version provided - conservative mode
+        if (!newVersion) {
+          log('warn', 'Mystery skipped - no version provided', { 
+            title: mysteryData.title,
+            existingVersion 
+          });
+          skippedMysteries.push({
+            title: mysteryData.title,
+            author: mysteryData.author,
+            existingVersion,
+            reason: `No version provided (existing version: ${existingVersion})`
+          });
+          continue;
+        }
+        
+        // Compare versions
+        const comparison = compareVersions(newVersion, existingVersion);
+        
+        if (comparison < 0) {
+          log('warn', 'Mystery skipped - older version', { 
+            title: mysteryData.title,
+            newVersion,
+            existingVersion 
+          });
+          skippedMysteries.push({
+            title: mysteryData.title,
+            newVersion,
+            existingVersion,
+            reason: 'Newer version already exists'
+          });
+          continue;
+        }
+        
+        if (comparison === 0) {
+          log('warn', 'Mystery skipped - same version', { 
+            title: mysteryData.title,
+            version: newVersion
+          });
+          skippedMysteries.push({
+            title: mysteryData.title,
+            version: newVersion,
+            reason: 'Same version already exists'
+          });
+          continue;
+        }
+        
+        // Newer version - delete old and continue with upload
+        log('info', 'Upgrading mystery', { 
+          title: mysteryData.title,
+          from: existingVersion,
+          to: newVersion 
+        });
+        
+        // Delete old character sheets (foreign key constraint)
+        await supabase
+          .from('character_sheets')
+          .delete()
+          .eq('mystery_id', existingMystery.id);
+        
+        // Delete old mystery
+        await supabase
+          .from('mysteries')
+          .delete()
+          .eq('id', existingMystery.id);
+        
+        // Note: Old images remain in storage for now
+        // TODO: Add cleanup mechanism for orphaned images
+      }
       
       // Validate against schema
       const validation = validateMysteryFull(mysteryData);
@@ -255,6 +351,7 @@ export async function POST(request: NextRequest) {
           language: mysteryData.language,
           author: mysteryData.author || 'Unknown',
           theme: mysteryData.theme || 'SERIOUS_MURDER',
+          version: mysteryData.version || '1.0.0',
           innocent_words: mysteryData.innocent_words,
           guilty_words: mysteryData.guilty_words,
         })
@@ -303,16 +400,25 @@ export async function POST(request: NextRequest) {
       uploadedMysteries.push({
         id: mystery.id,
         title: mystery.title,
+        version: mysteryData.version || '1.0.0',
         imagesUploaded: pathMapping.size,
       });
     }
 
-    log('info', 'Mystery pack upload complete', { count: uploadedMysteries.length });
+    log('info', 'Mystery pack upload complete', { 
+      uploaded: uploadedMysteries.length,
+      skipped: skippedMysteries.length 
+    });
 
     return NextResponse.json({
       success: true,
-      mysteries: uploadedMysteries,
-      count: uploadedMysteries.length,
+      uploaded: uploadedMysteries,
+      skipped: skippedMysteries,
+      summary: {
+        uploaded: uploadedMysteries.length,
+        skipped: skippedMysteries.length,
+        total: mysteriesData.length,
+      },
     });
   } catch (error: any) {
     log('error', 'Error processing mystery pack', { error: error.message });
