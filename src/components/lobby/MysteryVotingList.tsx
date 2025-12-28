@@ -10,6 +10,7 @@ interface Mystery {
   character_count?: number;
   language?: string;
   cover_image_url?: string;
+  image_path?: string; // Database field name
 }
 
 interface MysteryVotingListProps {
@@ -66,14 +67,14 @@ export function MysteryVotingList({
   return (
     <Box sx={{ mb: 3 }}>
       {/* Show voted mystery image prominently */}
-      {votedMystery?.cover_image_url && (
+      {votedMystery && (votedMystery.cover_image_url || votedMystery.image_path) && (
         <Paper elevation={2} sx={{ p: 2, mb: 3, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             ✅ Vous avez voté pour :
           </Typography>
           <Box
             component="img"
-            src={votedMystery.cover_image_url}
+            src={votedMystery.cover_image_url || votedMystery.image_path}
             alt={votedMystery.title}
             sx={{
               maxWidth: '100%',
