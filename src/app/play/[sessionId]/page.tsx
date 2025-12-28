@@ -281,7 +281,7 @@ export default function PlayPage() {
             <IconButton
               size="small"
               onClick={() => setHelpDialogOpen(true)}
-              sx={{ color: 'primary.main' }}
+              sx={{ color: 'secondary.main' }}
               title="Comment jouer"
             >
               <HelpIcon fontSize="small" />
@@ -303,7 +303,8 @@ export default function PlayPage() {
             mb: 4,
             pb: 3,
             borderBottom: '2px solid',
-            borderColor: 'primary.main'
+            borderColor: 'primary.main',
+            mt: 6
           }}>
             {/* Mystery Title */}
             <Box sx={{ mb: 3, textAlign: 'center' }}>
