@@ -49,35 +49,32 @@ const hintWobble = keyframes`
   }
 `;
 
-const getRoleConfig = (role: 'investigator' | 'guilty' | 'innocent') => {
+// Fade in animation for hint pill
+const fadeIn = keyframes`
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+`;
+
+const fadeOut = keyframes`
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+`;
+
+// Unified elegant card design - same for all roles
+const cardDesign = {
+  gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+  accentColor: '#e4c98b', // Elegant gold
+  borderColor: '#3d5a80',
+};
+
+const getRoleLabel = (role: 'investigator' | 'guilty' | 'innocent') => {
   switch (role) {
     case 'investigator':
-      return {
-        label: 'ENQUÊTEUR',
-        emoji: '🔍',
-        gradient: 'linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%)',
-        accentColor: '#90caf9',
-        borderColor: '#5c6bc0',
-        description: 'Chargé de découvrir la vérité',
-      };
+      return 'ENQUÊTEUR';
     case 'guilty':
-      return {
-        label: 'COUPABLE',
-        emoji: '🎭',
-        gradient: 'linear-gradient(135deg, #b71c1c 0%, #c62828 50%, #d32f2f 100%)',
-        accentColor: '#ef9a9a',
-        borderColor: '#e53935',
-        description: 'Dissimulateur de vérité',
-      };
+      return 'COUPABLE';
     case 'innocent':
-      return {
-        label: 'INNOCENT',
-        emoji: '✨',
-        gradient: 'linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #388e3c 100%)',
-        accentColor: '#a5d6a7',
-        borderColor: '#43a047',
-        description: 'Témoin des événements',
-      };
+      return 'INNOCENT';
   }
 };
 
@@ -90,9 +87,10 @@ export default function RoleRevealCard({
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isHinting, setIsHinting] = useState(false);
+  const [showHintPill, setShowHintPill] = useState(false);
   const [imageHidden, setImageHidden] = useState(false);
 
-  const roleConfig = getRoleConfig(role);
+  const roleLabel = getRoleLabel(role);
 
   // Occasional hint animation to show the card is interactive
   useEffect(() => {
@@ -101,8 +99,13 @@ export default function RoleRevealCard({
     // Initial hint after 2 seconds
     const initialTimeout = setTimeout(() => {
       if (!isFlipped && !isAnimating) {
+        setShowHintPill(true);
         setIsHinting(true);
-        setTimeout(() => setIsHinting(false), 800);
+        setTimeout(() => {
+          setIsHinting(false);
+          // Keep pill visible a bit longer then fade out
+          setTimeout(() => setShowHintPill(false), 500);
+        }, 800);
       }
     }, 2000);
 
@@ -111,8 +114,12 @@ export default function RoleRevealCard({
       const delay = 8000 + Math.random() * 4000; // 8-12 seconds
       return setTimeout(() => {
         if (!isFlipped && !isAnimating) {
+          setShowHintPill(true);
           setIsHinting(true);
-          setTimeout(() => setIsHinting(false), 800);
+          setTimeout(() => {
+            setIsHinting(false);
+            setTimeout(() => setShowHintPill(false), 500);
+          }, 800);
         }
         intervalRef = scheduleNextHint();
       }, delay);
@@ -128,6 +135,7 @@ export default function RoleRevealCard({
 
   const handleCardClick = () => {
     if (isAnimating || isHinting) return;
+    setShowHintPill(false);
     setIsAnimating(true);
     setIsFlipped(!isFlipped);
     // Animation duration is 600ms
@@ -170,24 +178,32 @@ export default function RoleRevealCard({
           ? 'perspective(1000px) rotateY(180deg)' 
           : 'perspective(1000px) rotateY(0deg)',
         mb: 2,
-        // Subtle hint to tap
-        '&::after': !isFlipped ? {
-          content: '"Touchez pour révéler"',
-          position: 'absolute',
-          bottom: 8,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontSize: '0.7rem',
-          color: 'rgba(255,255,255,0.7)',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          padding: '4px 12px',
-          borderRadius: '12px',
-          pointerEvents: 'none',
-          opacity: 0.8,
-          zIndex: 10,
-        } : {},
       }}
     >
+      {/* Hint pill - only visible during hint animation */}
+      {showHintPill && !isFlipped && (
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 8,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '0.7rem',
+            color: 'rgba(255,255,255,0.9)',
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            padding: '4px 12px',
+            borderRadius: '12px',
+            pointerEvents: 'none',
+            zIndex: 10,
+            animation: isHinting 
+              ? `${fadeIn} 0.2s ease-out forwards`
+              : `${fadeOut} 0.3s ease-out forwards`,
+          }}
+        >
+          Touchez pour révéler
+        </Box>
+      )}
+
       {/* Front of card - Character Image */}
       <Box
         sx={{
@@ -236,7 +252,7 @@ export default function RoleRevealCard({
         </Box>
       </Box>
 
-      {/* Back of card - Role reveal (business card style) */}
+      {/* Back of card - Role reveal (elegant business card style) */}
       <Box
         data-testid="role-reveal-card-back"
         sx={{
@@ -248,13 +264,13 @@ export default function RoleRevealCard({
           borderRadius: '12px',
           overflow: 'hidden',
           boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-          background: roleConfig.gradient,
+          background: cardDesign.gradient,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           padding: 3,
-          border: `3px solid ${roleConfig.borderColor}`,
+          border: `2px solid ${cardDesign.borderColor}`,
         }}
       >
         {/* Decorative top border */}
@@ -264,8 +280,8 @@ export default function RoleRevealCard({
             top: 0,
             left: 0,
             right: 0,
-            height: '6px',
-            background: roleConfig.accentColor,
+            height: '4px',
+            background: cardDesign.accentColor,
           }}
         />
 
@@ -275,11 +291,11 @@ export default function RoleRevealCard({
             position: 'absolute',
             top: 16,
             left: 16,
-            width: 30,
-            height: 30,
-            borderTop: `2px solid ${roleConfig.accentColor}`,
-            borderLeft: `2px solid ${roleConfig.accentColor}`,
-            opacity: 0.6,
+            width: 24,
+            height: 24,
+            borderTop: `1px solid ${cardDesign.accentColor}`,
+            borderLeft: `1px solid ${cardDesign.accentColor}`,
+            opacity: 0.5,
           }}
         />
         <Box
@@ -287,11 +303,11 @@ export default function RoleRevealCard({
             position: 'absolute',
             top: 16,
             right: 16,
-            width: 30,
-            height: 30,
-            borderTop: `2px solid ${roleConfig.accentColor}`,
-            borderRight: `2px solid ${roleConfig.accentColor}`,
-            opacity: 0.6,
+            width: 24,
+            height: 24,
+            borderTop: `1px solid ${cardDesign.accentColor}`,
+            borderRight: `1px solid ${cardDesign.accentColor}`,
+            opacity: 0.5,
           }}
         />
         <Box
@@ -299,11 +315,11 @@ export default function RoleRevealCard({
             position: 'absolute',
             bottom: 16,
             left: 16,
-            width: 30,
-            height: 30,
-            borderBottom: `2px solid ${roleConfig.accentColor}`,
-            borderLeft: `2px solid ${roleConfig.accentColor}`,
-            opacity: 0.6,
+            width: 24,
+            height: 24,
+            borderBottom: `1px solid ${cardDesign.accentColor}`,
+            borderLeft: `1px solid ${cardDesign.accentColor}`,
+            opacity: 0.5,
           }}
         />
         <Box
@@ -311,73 +327,49 @@ export default function RoleRevealCard({
             position: 'absolute',
             bottom: 16,
             right: 16,
-            width: 30,
-            height: 30,
-            borderBottom: `2px solid ${roleConfig.accentColor}`,
-            borderRight: `2px solid ${roleConfig.accentColor}`,
-            opacity: 0.6,
+            width: 24,
+            height: 24,
+            borderBottom: `1px solid ${cardDesign.accentColor}`,
+            borderRight: `1px solid ${cardDesign.accentColor}`,
+            opacity: 0.5,
           }}
         />
 
-        {/* Role emoji */}
+        {/* Character name - prominent */}
         <Typography
+          variant="h5"
           sx={{
-            fontSize: '4rem',
-            mb: 2,
-            filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
-          }}
-        >
-          {roleConfig.emoji}
-        </Typography>
-
-        {/* Role label */}
-        <Typography
-          variant="h4"
-          sx={{
-            color: 'white',
-            fontWeight: 700,
-            letterSpacing: '0.15em',
-            textShadow: '0 2px 8px rgba(0,0,0,0.4)',
-            mb: 1,
-          }}
-        >
-          {roleConfig.label}
-        </Typography>
-
-        {/* Decorative line */}
-        <Box
-          sx={{
-            width: '60%',
-            height: '2px',
-            background: `linear-gradient(90deg, transparent, ${roleConfig.accentColor}, transparent)`,
-            mb: 2,
-          }}
-        />
-
-        {/* Character name */}
-        <Typography
-          variant="h6"
-          sx={{
-            color: roleConfig.accentColor,
-            fontStyle: 'italic',
+            color: cardDesign.accentColor,
+            fontWeight: 600,
             textAlign: 'center',
-            mb: 1,
+            mb: 2,
+            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
           }}
         >
           {characterName}
         </Typography>
 
-        {/* Role description */}
-        <Typography
-          variant="body2"
+        {/* Decorative line */}
+        <Box
           sx={{
-            color: 'rgba(255,255,255,0.8)',
-            textAlign: 'center',
-            fontStyle: 'italic',
-            maxWidth: '80%',
+            width: '40%',
+            height: '1px',
+            background: `linear-gradient(90deg, transparent, ${cardDesign.accentColor}, transparent)`,
+            mb: 3,
+          }}
+        />
+
+        {/* Role label - discreet, small text */}
+        <Typography
+          sx={{
+            color: 'rgba(255,255,255,0.35)',
+            fontSize: '0.7rem',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            fontWeight: 300,
           }}
         >
-          {roleConfig.description}
+          {roleLabel}
         </Typography>
 
         {/* Bottom decorative line */}
@@ -387,21 +379,22 @@ export default function RoleRevealCard({
             bottom: 0,
             left: 0,
             right: 0,
-            height: '6px',
-            background: roleConfig.accentColor,
+            height: '4px',
+            background: cardDesign.accentColor,
           }}
         />
 
-        {/* Tap hint on back */}
+        {/* Tap hint on back - also discreet */}
         <Typography
           sx={{
             position: 'absolute',
             bottom: 20,
-            fontSize: '0.65rem',
-            color: 'rgba(255,255,255,0.5)',
+            fontSize: '0.6rem',
+            color: 'rgba(255,255,255,0.3)',
+            letterSpacing: '0.05em',
           }}
         >
-          Touchez pour retourner
+          touchez pour retourner
         </Typography>
       </Box>
     </Box>
