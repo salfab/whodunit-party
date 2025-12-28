@@ -304,7 +304,7 @@ export default function PlayPage() {
             pb: 3,
             borderBottom: '2px solid',
             borderColor: 'primary.main',
-            mt: 6
+            mt: 4
           }}>
             {/* Mystery Title */}
             <Box sx={{ mb: 3, textAlign: 'center' }}>
@@ -396,17 +396,6 @@ export default function PlayPage() {
             </Box>
           )}
 
-          {/* Dark Secret - Only for guilty/innocent */}
-          {characterSheet.role !== 'investigator' && (
-            <SecretPanel
-              title="Sombre Secret"
-              emoji="🤫"
-              content={characterSheet.dark_secret}
-              visible={secretVisible}
-              onToggleVisibility={() => setSecretVisible(!secretVisible)}
-            />
-          )}
-
           {/* Words to Place - Only for guilty/innocent */}
           {characterSheet.role !== 'investigator' && (
             <WordsToPlace words={characterSheet.wordsToPlace} />
@@ -420,6 +409,17 @@ export default function PlayPage() {
               content={characterSheet.alibi}
               visible={alibiVisible}
               onToggleVisibility={() => setAlibiVisible(!alibiVisible)}
+            />
+          )}
+
+          {/* Dark Secret - Only for guilty/innocent */}
+          {characterSheet.role !== 'investigator' && (
+            <SecretPanel
+              title="Sombre Secret"
+              emoji="🤫"
+              content={characterSheet.dark_secret}
+              visible={secretVisible}
+              onToggleVisibility={() => setSecretVisible(!secretVisible)}
             />
           )}
 
