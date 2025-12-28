@@ -10,10 +10,10 @@ const theme = createTheme({
       contrastText: '#000000',
     },
     secondary: {
-      main: '#8b0000', // Dark blood red for mystery theme
-      light: '#b71c1c',
-      dark: '#5f0000',
-      contrastText: '#ffffff',
+      main: '#ff6b35', // Bright orange for better contrast
+      light: '#ff8c5a',
+      dark: '#c44000',
+      contrastText: '#000000',
     },
     error: {
       main: '#ff6b6b', // Bright red for errors/blood

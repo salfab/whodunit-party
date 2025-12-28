@@ -275,7 +275,29 @@ export default function PlayPage() {
       <Box sx={{ py: 4, minHeight: '100vh', position: 'relative' }}>
         <AccusedOverlay isAccused={isAccused} />
 
-        <Paper elevation={3} sx={{ p: 4 }}>
+        <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
+          {/* Top Right Action Icons */}
+          <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
+            <IconButton
+              size="small"
+              onClick={() => setHelpDialogOpen(true)}
+              sx={{ color: 'primary.main' }}
+              title="Comment jouer"
+            >
+              <HelpIcon fontSize="small" />
+            </IconButton>
+            {joinCode && (
+              <IconButton
+                size="small"
+                onClick={() => setQrDialogOpen(true)}
+                sx={{ color: 'secondary.main' }}
+                title="Afficher le QR code"
+              >
+                <QrCodeIcon fontSize="small" />
+              </IconButton>
+            )}
+          </Box>
+
           {/* Character Header */}
           <Box sx={{ 
             mb: 4,
@@ -284,7 +306,7 @@ export default function PlayPage() {
             borderColor: 'primary.main'
           }}>
             {/* Mystery Title */}
-            <Box sx={{ mb: 3, textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+            <Box sx={{ mb: 3, textAlign: 'center' }}>
               <Typography 
                 variant="h6" 
                 sx={{ 
@@ -295,24 +317,6 @@ export default function PlayPage() {
               >
                 {characterSheet.mystery.title}
               </Typography>
-              <IconButton
-                size="small"
-                onClick={() => setHelpDialogOpen(true)}
-                sx={{ color: 'primary.main' }}
-                title="Comment jouer"
-              >
-                <HelpIcon fontSize="small" />
-              </IconButton>
-              {joinCode && (
-                <IconButton
-                  size="small"
-                  onClick={() => setQrDialogOpen(true)}
-                  sx={{ color: 'secondary.main' }}
-                  title="Afficher le QR code"
-                >
-                  <QrCodeIcon fontSize="small" />
-                </IconButton>
-              )}
             </Box>
 
             <RoleRevealCard
