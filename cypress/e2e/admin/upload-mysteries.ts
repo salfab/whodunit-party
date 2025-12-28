@@ -95,7 +95,9 @@ When('I select a ZIP file for upload', () => {
 });
 
 Then('I should see the selected file name', () => {
-  cy.getByTestId('upload-zip-selected-file').should('contain', 'test-mystery.zip');
+  // Now shows "1 file(s) selected" and file list in separate elements
+  cy.contains('1 file(s) selected').should('be.visible');
+  cy.contains('test-mystery.zip').should('be.visible');
 });
 
 // ==================== Button States ====================

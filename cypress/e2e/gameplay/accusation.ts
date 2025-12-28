@@ -27,13 +27,15 @@ Given('I mock the accusation API to return a correct result', () => {
   cy.intercept('POST', '/api/rounds/submit-accusation', {
     statusCode: 200,
     body: {
-      correct: true,
-      accusedPlayer: {
-        id: 'test-player-002',
-        name: 'Bob',
-        role: 'guilty',
+      roundId: 'test-round-1',
+      wasCorrect: true,
+      accusedRole: 'guilty',
+      gameComplete: false,
+      messages: {
+        investigator: 'Bravo ! Vous avez trouvé le coupable ! +2 points',
+        guilty: 'Vous avez été découvert par l\'enquêteur.',
+        innocent: 'L\'enquêteur a trouvé le coupable.',
       },
-      points: 100,
     },
   }).as('submitAccusation');
 });
@@ -42,13 +44,15 @@ Given('I mock the accusation API to return an incorrect result', () => {
   cy.intercept('POST', '/api/rounds/submit-accusation', {
     statusCode: 200,
     body: {
-      correct: false,
-      accusedPlayer: {
-        id: 'test-player-003',
-        name: 'Charlie',
-        role: 'innocent',
+      roundId: 'test-round-1',
+      wasCorrect: false,
+      accusedRole: 'innocent',
+      gameComplete: false,
+      messages: {
+        investigator: 'Raté ! Vous avez accusé une personne innocente.',
+        guilty: 'Le coupable n\'a pas été attrapé ! +2 points',
+        innocent: 'Vous êtes innocent et avez été accusé à tort ! +1 point',
       },
-      points: -50,
     },
   }).as('submitAccusation');
 });

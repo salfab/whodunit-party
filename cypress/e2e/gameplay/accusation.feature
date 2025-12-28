@@ -11,19 +11,19 @@ Feature: Accusation System
   Background:
     Given I am logged in as a player in a playing session
 
-  @mobile @skip
+  @mobile @mocked
   Scenario: Mobile - Investigator sees the accuse button
     Given I am assigned the investigator role
     When I visit the play page
     Then I should see the accuse button
 
-  @mobile @skip
+  @mobile @mocked
   Scenario: Mobile - Non-investigator does not see accuse button
     Given I am assigned the guilty role
     When I visit the play page
     Then I should not see the accuse button
 
-  @mobile @skip
+  @mobile @mocked
   Scenario: Mobile - Investigator can open accusation dialog
     Given I am assigned the investigator role
     And I visit the play page
@@ -31,7 +31,7 @@ Feature: Accusation System
     Then I should see the accusation dialog
     And I should see a list of players to accuse
 
-  @mobile @skip
+  @mobile @mocked
   Scenario: Mobile - Correct accusation shows success result
     Given I am assigned the investigator role
     And I visit the play page
@@ -41,7 +41,7 @@ Feature: Accusation System
     And I confirm the accusation
     Then I should see the accusation was correct
 
-  @mobile @skip
+  @mobile @mocked
   Scenario: Mobile - Wrong accusation shows failure result
     Given I am assigned the investigator role
     And I visit the play page

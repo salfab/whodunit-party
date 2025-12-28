@@ -803,6 +803,7 @@ export default function PlayPage() {
             <Alert
               severity={accusationResult.wasCorrect ? 'success' : 'error'}
               sx={{ mt: 4 }}
+              data-testid="accusation-result"
             >
               {accusationResult.message}
             </Alert>
