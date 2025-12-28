@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     mode: 'dark',
-    primary: {
+    primary: { 
       main: '#ffd700', // Gold - main interactive color
       light: '#ffed4e',
       dark: '#c7a600',

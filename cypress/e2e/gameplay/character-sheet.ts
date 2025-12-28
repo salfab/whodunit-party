@@ -35,6 +35,19 @@ Given('I am logged in as a player in a playing session', () => {
       language: 'fr',
     },
   }).as('getSession');
+
+  // Mock placeholder images for characters without custom images
+  cy.intercept('GET', '/characters/investigator.jpg', {
+    statusCode: 200,
+    headers: { 'content-type': 'image/jpeg' },
+    fixture: 'test-image.png',
+  }).as('getInvestigatorPlaceholder');
+
+  cy.intercept('GET', '/characters/suspect.jpg', {
+    statusCode: 200,
+    headers: { 'content-type': 'image/jpeg' },
+    fixture: 'test-image.png',
+  }).as('getSuspectPlaceholder');
 });
 
 // ==================== Role Assignment Mocks ====================
@@ -53,6 +66,7 @@ Given('I am assigned the investigator role', () => {
         id: 'test-sheet-001',
         role: 'investigator',
         character_name: 'Detective Holmes',
+        image_path: null, // No custom image - will use investigator.jpg placeholder
         dark_secret: 'You secretly gambled away your family fortune.',
         alibi: 'I was in the conservatory reading all evening.',
         mystery_id: 'test-mystery-001',
@@ -124,7 +138,7 @@ Given('I am assigned the guilty role', () => {
         id: 'test-sheet-002',
         role: 'guilty',
         character_name: 'Jean Dupont',
-        image_path: '/characters/guilty.png',
+        image_path: '/characters/guilty.png', // Custom image - name will not be overlayed
         dark_secret: 'You poisoned the victim to prevent exposure.',
         alibi: 'I was in my room writing letters.',
         mystery_id: 'test-mystery-001',
@@ -189,6 +203,7 @@ Given('I am assigned the guilty role with words', () => {
         id: 'test-sheet-002',
         role: 'guilty',
         character_name: 'Lord Blackwood Jr.',
+        image_path: null, // No custom image - will use suspect.jpg placeholder
         dark_secret: 'You poisoned the victim.',
         alibi: 'I was writing letters.',
         mystery_id: 'test-mystery-001',
@@ -250,7 +265,7 @@ Given('I am assigned the innocent role', () => {
         id: 'test-sheet-003',
         role: 'innocent',
         character_name: 'Lady Sinclair',
-        image_path: '/characters/innocent.png',
+        image_path: '/characters/innocent.png', // Custom image - name will not be overlayed
         dark_secret: 'You are having an affair with the gardener.',
         alibi: 'I was walking in the garden.',
         mystery_id: 'test-mystery-001',
@@ -337,24 +352,6 @@ Then('I should see the role {string} on the card back', (role: string) => {
 
 Then('the card should flip back to show the front', () => {
   cy.getByTestId('role-reveal-card').should('have.attr', 'data-flipped', 'false');
-});
-
-// ==================== Role Assertions ====================
-
-Then('I should see the {string} role badge', (roleName: string) => {
-  cy.getByTestId('play-role-type').should('contain', roleName);
-});
-
-Then('I should see the role reveal button', () => {
-  cy.getByTestId('play-role-reveal-button').should('be.visible');
-});
-
-When('I click the role reveal button', () => {
-  cy.getByTestId('play-role-reveal-button').click();
-});
-
-Then('I should see my true role revealed as {string}', (role: string) => {
-  cy.getByTestId('play-role-revealed').should('contain', role);
 });
 
 // ==================== Words Assertions ====================

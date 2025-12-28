@@ -22,7 +22,6 @@ import TransitionScreen from '@/components/TransitionScreen';
 import MysteryCard from '@/components/shared/MysteryCard';
 import RoomQRCodeDialog from '@/components/shared/RoomQRCodeDialog';
 import {
-  CharacterRoleChip,
   SecretPanel,
   WordsToPlace,
   Scoreboard,
@@ -71,7 +70,6 @@ export default function PlayPage() {
   const [error, setError] = useState('');
   const [secretVisible, setSecretVisible] = useState(false);
   const [alibiVisible, setAlibiVisible] = useState(false);
-  const [roleRevealed, setRoleRevealed] = useState(false);
   const [accuseDialogOpen, setAccuseDialogOpen] = useState(false);
   const [players, setPlayers] = useState<PlayerOption[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
@@ -652,8 +650,8 @@ export default function PlayPage() {
               imagePath={
                 characterSheet.image_path || 
                 (characterSheet.role === 'investigator' 
-                  ? '/investigator.jpg' 
-                  : '/suspect.jpg')
+                  ? '/characters/investigator.jpg' 
+                  : '/characters/suspect.jpg')
               }
               characterName={characterSheet.character_name}
               role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
@@ -661,19 +659,12 @@ export default function PlayPage() {
             />
           </Box>
 
-          {/* Role Display */}
-          <CharacterRoleChip
-            role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
-            roleRevealed={roleRevealed}
-            onToggleReveal={() => setRoleRevealed(!roleRevealed)}
-          />
-
           {/* Investigator sees Mystery Description */}
           {characterSheet.role === 'investigator' && (
             <Box sx={{ 
               mb: 4,
               '& h1, & h2, & h3, & h4, & h5, & h6': {
-                color: 'secondary.main',
+                color: 'primary.main',
                 fontWeight: 600,
                 mt: 3,
                 mb: 2,
@@ -698,15 +689,16 @@ export default function PlayPage() {
                 textShadow: '0 1px 2px rgba(0,0,0,0.5)'
               },
               '& strong': {
-                color: 'secondary.main',
+                color: 'primary.light',
                 fontWeight: 700
               },
               '& em': {
-                color: 'secondary.light'
+                color: 'primary.main',
+                fontStyle: 'italic'
               },
               '& code': {
                 backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                color: 'secondary.main',
+                color: 'primary.main',
                 padding: '2px 6px',
                 borderRadius: '4px'
               }
@@ -715,7 +707,7 @@ export default function PlayPage() {
                 variant="h5" 
                 gutterBottom
                 sx={{ 
-                  color: 'text.primary',
+                  color: 'primary.main',
                   fontWeight: 600,
                   textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                   mb: 3

@@ -12,11 +12,10 @@ Feature: Character Sheet Display
     Given I am logged in as a player in a playing session
 
   @mobile
-  Scenario: Mobile - Investigator sees their role badge
+  Scenario: Mobile - Investigator is visible
     Given I am assigned the investigator role
     When I visit the play page
-    Then I should see the "ENQUÊTEUR" role badge
-    And I should see the accuse button
+    Then I should see the accuse button
 
   @mobile
   Scenario: Mobile - Character name and image display properly
@@ -43,21 +42,6 @@ Feature: Character Sheet Display
     Then the card should flip to show the back
     When I tap the role reveal card
     Then the card should flip back to show the front
-
-  @mobile
-  Scenario: Mobile - Suspect sees their role badge and reveal button
-    Given I am assigned the guilty role
-    When I visit the play page
-    Then I should see the "SUSPECT" role badge
-    And I should see the role reveal button
-    And I should not see the accuse button
-
-  @mobile
-  Scenario: Mobile - Suspect can reveal their true role
-    Given I am assigned the innocent role
-    And I visit the play page
-    When I click the role reveal button
-    Then I should see my true role revealed as "INNOCENT"
 
   @mobile
   Scenario: Mobile - Player sees their words to place

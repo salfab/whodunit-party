@@ -1,4 +1,3 @@
-export { default as CharacterRoleChip } from './CharacterRoleChip';
 export { default as SecretPanel } from './SecretPanel';
 export { default as WordsToPlace } from './WordsToPlace';
 export { default as Scoreboard } from './Scoreboard';
