@@ -1,30 +1,28 @@
 'use client';
 
-import { Box, Typography, Button, Alert } from '@mui/material';
+import { Box, Typography, Button, Alert, IconButton, Tooltip } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { motion } from 'framer-motion';
 
 interface ReadyStatusBarProps {
   readyCount: number;
   totalPlayers: number;
-  isReady: boolean;
   canStart: boolean;
   minPlayers: number;
   availableMysteriesCount: number;
-  onReadyToggle: () => void;
+  onRefresh: () => void;
   onQuit: () => void;
 }
 
 export function ReadyStatusBar({
   readyCount,
   totalPlayers,
-  isReady,
   canStart,
   minPlayers,
   availableMysteriesCount,
-  onReadyToggle,
+  onRefresh,
   onQuit,
 }: ReadyStatusBarProps) {
-  const canToggleReady = totalPlayers >= minPlayers && availableMysteriesCount > 0;
 
   return (
     <>
@@ -46,16 +44,25 @@ export function ReadyStatusBar({
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-        <Button
-          variant={isReady ? 'outlined' : 'contained'}
-          size="large"
-          onClick={onReadyToggle}
-          disabled={!canToggleReady}
-          data-testid="lobby-ready-button"
-        >
-          {isReady ? 'Pas prêt' : 'Prêt'}
-        </Button>
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center' }}>
+        <Tooltip title="Rafraîchir">
+          <IconButton
+            onClick={onRefresh}
+            color="primary"
+            size="large"
+            data-testid="lobby-refresh-button"
+            sx={{
+              border: '1px solid',
+              borderColor: 'primary.main',
+              '&:hover': {
+                backgroundColor: 'primary.main',
+                color: 'white',
+              },
+            }}
+          >
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
 
         <Button variant="outlined" size="large" color="error" onClick={onQuit} data-testid="lobby-quit-button">
           Quitter

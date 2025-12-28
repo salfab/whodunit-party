@@ -408,14 +408,18 @@ export default function LobbyPage() {
     }
   }
 
-  async function handleVote(mysteryId: string) {
+  async function handleVote(mysteryId: string | null) {
     if (!currentPlayerId) return;
 
     try {
       // Optimistic update
       setMyVote(mysteryId);
       const newVotes = new Map(votes);
-      newVotes.set(currentPlayerId, mysteryId);
+      if (mysteryId) {
+        newVotes.set(currentPlayerId, mysteryId);
+      } else {
+        newVotes.delete(currentPlayerId);
+      }
       setVotes(newVotes);
 
       const response = await fetch(`/api/sessions/${sessionId}/vote`, {
@@ -428,16 +432,17 @@ export default function LobbyPage() {
         throw new Error('Failed to vote');
       }
 
-      // Automatically mark player as ready after voting
-      if (!isReady) {
+      // Automatically mark player as ready after voting, or not ready if unvoting
+      const shouldBeReady = !!mysteryId;
+      if (isReady !== shouldBeReady) {
         const readyResponse = await fetch(`/api/sessions/${sessionId}/mark-ready`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ isReady: true }),
+          body: JSON.stringify({ isReady: shouldBeReady }),
         });
 
         if (readyResponse.ok) {
-          setIsReady(true);
+          setIsReady(shouldBeReady);
         }
       }
     } catch (err) {
@@ -613,11 +618,10 @@ export default function LobbyPage() {
           <ReadyStatusBar
             readyCount={readyCount}
             totalPlayers={activePlayers.length}
-            isReady={isReady}
             canStart={canStart}
             minPlayers={MIN_PLAYERS}
             availableMysteriesCount={availableMysteries.length}
-            onReadyToggle={handleReadyToggle}
+            onRefresh={() => window.location.reload()}
             onQuit={handleQuit}
           />
         </Paper>

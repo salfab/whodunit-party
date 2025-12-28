@@ -39,6 +39,26 @@ export async function POST(
     
     const nextRoundNumber = (rounds && rounds.length > 0) ? rounds[0].round_number + 1 : 1;
 
+    // If mysteryId is null, delete the vote (unvote)
+    if (mysteryId === null) {
+      const { error } = await (supabase
+        .from('mystery_votes') as any)
+        .delete()
+        .eq('session_id', sessionId)
+        .eq('player_id', session.playerId)
+        .eq('round_number', nextRoundNumber);
+
+      if (error) {
+        log('error', 'Failed to delete vote', { error: error.message });
+        return NextResponse.json(
+          { error: 'Failed to delete vote' },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({ success: true, action: 'deleted' });
+    }
+
     // Upsert vote
     const { error } = await (supabase
       .from('mystery_votes') as any)

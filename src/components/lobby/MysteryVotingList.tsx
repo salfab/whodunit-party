@@ -18,7 +18,7 @@ interface MysteryVotingListProps {
   availableMysteries: Mystery[];
   votes: Map<string, string>;
   myVote: string | null;
-  onVote: (mysteryId: string) => void;
+  onVote: (mysteryId: string | null) => void;
   hasLanguage: boolean;
 }
 
@@ -90,7 +90,7 @@ export function MysteryVotingList({
         </Paper>
       )}
 
-      {/* Mystery list - always show to allow changing vote */}
+      {/* Mystery list - toggle buttons (re-tap to unvote) */}
       <List>
         {availableMysteries.map((mystery) => {
           const voteCount = Array.from(votes.values()).filter(v => v === mystery.id).length;
@@ -102,7 +102,7 @@ export function MysteryVotingList({
               mystery={mystery}
               selected={isSelected}
               voteCount={voteCount}
-              onClick={() => onVote(mystery.id)}
+              onClick={() => onVote(isSelected ? null : mystery.id)}
             />
           );
         })}
