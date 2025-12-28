@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography, List } from '@mui/material';
+import { Box, Typography, List, Paper } from '@mui/material';
 import MysteryCard from '@/components/shared/MysteryCard';
 
 interface Mystery {
@@ -9,6 +9,7 @@ interface Mystery {
   author?: string;
   character_count?: number;
   language?: string;
+  cover_image_url?: string;
 }
 
 interface MysteryVotingListProps {
@@ -28,6 +29,8 @@ export function MysteryVotingList({
   onVote,
   hasLanguage 
 }: MysteryVotingListProps) {
+  // Find the voted mystery to show its image
+  const votedMystery = myVote ? availableMysteries.find(m => m.id === myVote) : null;
   // Show empty state when no mysteries exist for the language
   if (mysteries.length === 0 && hasLanguage) {
     return (
@@ -61,21 +64,48 @@ export function MysteryVotingList({
   }
 
   return (
-    <List sx={{ mb: 3 }}>
-      {availableMysteries.map((mystery) => {
-        const voteCount = Array.from(votes.values()).filter(v => v === mystery.id).length;
-        const isSelected = myVote === mystery.id;
-        
-        return (
-          <MysteryCard
-            key={mystery.id}
-            mystery={mystery}
-            selected={isSelected}
-            voteCount={voteCount}
-            onClick={() => onVote(mystery.id)}
+    <Box sx={{ mb: 3 }}>
+      {/* Show voted mystery image prominently */}
+      {votedMystery?.cover_image_url && (
+        <Paper elevation={2} sx={{ p: 2, mb: 3, textAlign: 'center' }}>
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            ✅ Vous avez voté pour :
+          </Typography>
+          <Box
+            component="img"
+            src={votedMystery.cover_image_url}
+            alt={votedMystery.title}
+            sx={{
+              maxWidth: '100%',
+              maxHeight: '250px',
+              borderRadius: 2,
+              objectFit: 'contain',
+              mb: 1,
+            }}
           />
-        );
-      })}
-    </List>
+          <Typography variant="subtitle1" fontWeight="bold">
+            {votedMystery.title}
+          </Typography>
+        </Paper>
+      )}
+
+      {/* Mystery list - always show to allow changing vote */}
+      <List>
+        {availableMysteries.map((mystery) => {
+          const voteCount = Array.from(votes.values()).filter(v => v === mystery.id).length;
+          const isSelected = myVote === mystery.id;
+          
+          return (
+            <MysteryCard
+              key={mystery.id}
+              mystery={mystery}
+              selected={isSelected}
+              voteCount={voteCount}
+              onClick={() => onVote(mystery.id)}
+            />
+          );
+        })}
+      </List>
+    </Box>
   );
 }
