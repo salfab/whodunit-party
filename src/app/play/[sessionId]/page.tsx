@@ -648,29 +648,17 @@ export default function PlayPage() {
               )}
             </Box>
 
-            {characterSheet.image_path ? (
-              // If image exists, show flip card with role reveal
-              <RoleRevealCard
-                imagePath={characterSheet.image_path}
-                characterName={characterSheet.character_name}
-                role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
-              />
-            ) : (
-              // If no image, show large character name
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography 
-                  variant="h3" 
-                  component="h1"
-                  sx={{ 
-                    fontWeight: 700,
-                    color: 'text.primary',
-                    textShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                  }}
-                >
-                  {characterSheet.character_name}
-                </Typography>
-              </Box>
-            )}
+            <RoleRevealCard
+              imagePath={
+                characterSheet.image_path || 
+                (characterSheet.role === 'investigator' 
+                  ? '/investigator.jpg' 
+                  : '/suspect.jpg')
+              }
+              characterName={characterSheet.character_name}
+              role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
+              showNameOverlay={!characterSheet.image_path}
+            />
           </Box>
 
           {/* Role Display */}

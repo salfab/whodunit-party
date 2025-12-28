@@ -9,6 +9,7 @@ interface RoleRevealCardProps {
   characterName: string;
   role: 'investigator' | 'guilty' | 'innocent';
   onImageError?: () => void;
+  showNameOverlay?: boolean; // Show name elegantly at bottom of image
 }
 
 // Flip animation keyframes
@@ -83,6 +84,7 @@ export default function RoleRevealCard({
   characterName,
   role,
   onImageError,
+  showNameOverlay = false,
 }: RoleRevealCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -217,6 +219,7 @@ export default function RoleRevealCard({
             overflow: 'hidden',
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
             backgroundColor: '#000',
+            position: 'relative',
           }}
         >
           <Box
@@ -230,7 +233,35 @@ export default function RoleRevealCard({
               height: 'auto',
             }}
           />
-          </Box>
+          
+          {/* Name overlay for placeholder images */}
+          {showNameOverlay && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.4) 80%, transparent 100%)',
+                padding: '60px 20px 24px',
+                backdropFilter: 'blur(4px)',
+              }}
+            >
+              <Typography
+                variant="h4"
+                sx={{
+                  color: '#ffd700',
+                  textAlign: 'center',
+                  fontWeight: 600,
+                  textShadow: '0 3px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                {characterName}
+              </Typography>
+            </Box>
+          )}
+        </Box>
 
         {/* Back of card - Role reveal (elegant business card style) */}
         <Box
