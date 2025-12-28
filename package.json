@@ -10,6 +10,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "postinstall": "node scripts/dev-setup.mjs || true",
+    "seed:mysteries": "node scripts/seed-mysteries.mjs",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "test:e2e": "start-server-and-test dev http://localhost:3000 cypress:run"
