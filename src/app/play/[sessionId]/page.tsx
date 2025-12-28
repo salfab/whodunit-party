@@ -30,6 +30,7 @@ import {
   AccusedOverlay,
   MysteryVoting,
   AccuseButton,
+  RoleRevealCard,
 } from '@/components/play';
 import type { Database } from '@/types/database';
 
@@ -646,35 +647,12 @@ export default function PlayPage() {
             </Box>
 
             {characterSheet.image_path ? (
-              // If image exists, show image with name below
-              <>
-                <Box
-                  component="img"
-                  src={characterSheet.image_path}
-                  alt={characterSheet.character_name}
-                  sx={{ 
-                    width: '100%',
-                    objectFit: 'cover',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                    mb: 2
-                  }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-                <Typography 
-                  variant="body2"
-                  sx={{ 
-                    textAlign: 'center',
-                    fontStyle: 'italic',
-                    color: 'text.secondary',
-                    textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                  }}
-                >
-                  {characterSheet.character_name}
-                </Typography>
-              </>
+              // If image exists, show flip card with role reveal
+              <RoleRevealCard
+                imagePath={characterSheet.image_path}
+                characterName={characterSheet.character_name}
+                role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
+              />
             ) : (
               // If no image, show large character name
               <Box sx={{ textAlign: 'center' }}>
