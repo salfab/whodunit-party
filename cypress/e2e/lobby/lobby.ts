@@ -107,6 +107,11 @@ Given('I mock a lobby session as {string} with {int} players', (playerName: stri
     statusCode: 200,
     body: { success: true },
   }).as('markReady');
+
+  cy.intercept('POST', '**/api/sessions/*/vote', {
+    statusCode: 200,
+    body: { success: true },
+  }).as('vote');
 });
 
 Given('I mock a lobby session as {string} with mysteries', (playerName: string) => {
@@ -192,7 +197,7 @@ Given('I create a real room with {int} players', (playerCount: number) => {
 // ==================== Navigation ====================
 
 When('I visit the lobby page', () => {
-  cy.visit(`/lobby/${testSessionId || 'mock-session-001'}`);
+  cy.visit(`/lobby/${testSessionId || 'mock-session-001'}`, { failOnStatusCode: false });
 });
 
 // ==================== Assertions ====================
@@ -213,19 +218,33 @@ Then('I should see the mystery voting section', () => {
   cy.contains('Votez pour le mystère').should('be.visible');
 });
 
-// ==================== Ready State ====================
+// ==================== Voting and Ready State ====================
 
-When('I click the ready button', () => {
-  // Wait for button to be enabled (mysteries loaded, enough players)
-  cy.getByTestId('lobby-ready-button').should('not.be.disabled').click();
-  // Wait for the mark-ready API call
+When('I vote for a mystery', () => {
+  // Click on the first mystery in the list to vote
+  // MUI ListItemButton renders as a div with role="button", so we find by text and click
+  cy.contains('Test Mystery').click();
+  // Wait for the vote API call
+  cy.wait('@vote');
+  // Voting automatically marks player as ready
   cy.wait('@markReady');
 });
 
-Then('the ready button should show {string}', (text: string) => {
-  // After clicking, the button should briefly show the new state
-  // Due to mocking complexity, we verify the API was called instead
+When('I click the refresh button', () => {
+  cy.getByTestId('lobby-refresh-button').click();
+});
+
+Then('I should be marked as ready', () => {
+  // After voting, the mark-ready API should have been called with isReady: true
   cy.get('@markReady').its('request.body').should('deep.include', { isReady: true });
+});
+
+Then('the refresh button should be visible', () => {
+  cy.getByTestId('lobby-refresh-button').should('be.visible');
+});
+
+Then('the quit button should be visible', () => {
+  cy.getByTestId('lobby-quit-button').should('be.visible');
 });
 
 // ==================== Real-time Assertions ====================

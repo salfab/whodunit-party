@@ -4,16 +4,16 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
+      main: '#ffd700', // Gold - main interactive color
+      light: '#ffed4e',
+      dark: '#c7a600',
+      contrastText: '#000000',
+    },
+    secondary: {
       main: '#8b0000', // Dark blood red for mystery theme
       light: '#b71c1c',
       dark: '#5f0000',
       contrastText: '#ffffff',
-    },
-    secondary: {
-      main: '#ffd700', // Gold accent
-      light: '#ffed4e',
-      dark: '#c7a600',
-      contrastText: '#000000',
     },
     error: {
       main: '#ff6b6b', // Bright red for errors/blood
@@ -67,6 +67,7 @@ const theme = createTheme({
         },
         contained: {
           backgroundColor: '#8b0000',
+          color: '#ffffff',
           border: '2px solid #ffd700',
           '&:hover': {
             backgroundColor: '#b71c1c',

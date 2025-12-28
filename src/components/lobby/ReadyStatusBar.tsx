@@ -48,15 +48,15 @@ export function ReadyStatusBar({
         <Tooltip title="Rafraîchir">
           <IconButton
             onClick={onRefresh}
-            color="primary"
             size="large"
             data-testid="lobby-refresh-button"
             sx={{
-              border: '1px solid',
+              border: '2px solid',
               borderColor: 'primary.main',
+              color: 'primary.main',
               '&:hover': {
-                backgroundColor: 'primary.main',
-                color: 'white',
+                backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                borderColor: 'primary.light',
               },
             }}
           >
@@ -64,7 +64,7 @@ export function ReadyStatusBar({
           </IconButton>
         </Tooltip>
 
-        <Button variant="outlined" size="large" color="error" onClick={onQuit} data-testid="lobby-quit-button">
+        <Button variant="outlined" size="large" onClick={onQuit} data-testid="lobby-quit-button">
           Quitter
         </Button>
       </Box>

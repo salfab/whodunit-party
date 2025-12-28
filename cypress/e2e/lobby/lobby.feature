@@ -1,7 +1,7 @@
 Feature: Game Lobby
   As a player
   I want to see other players join the lobby in real-time
-  And see my ready state persist when I refresh
+  And vote for a mystery to automatically mark myself as ready
   So that I can coordinate with other players to start the game
 
   # ==================== Mocked Single-Player Tests ====================
@@ -15,11 +15,18 @@ Feature: Game Lobby
     And I should see the "Vous" badge next to my name
 
   @mocked
-  Scenario: Player can toggle ready state
+  Scenario: Player voting automatically marks as ready
     Given I mock a lobby session as "Alice" with 5 players
     When I visit the lobby page
-    And I click the ready button
-    Then the ready button should show "Pas prêt"
+    And I vote for a mystery
+    Then I should be marked as ready
+
+  @mocked
+  Scenario: Lobby has refresh and quit buttons
+    Given I mock a lobby session as "Alice" with 5 players
+    When I visit the lobby page
+    Then the refresh button should be visible
+    And the quit button should be visible
 
   @mocked
   Scenario: Player sees mystery voting list
