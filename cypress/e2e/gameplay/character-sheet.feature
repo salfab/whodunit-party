@@ -25,6 +25,25 @@ Feature: Character Sheet Display
     Then I should see the character name "Jean Dupont"
     And the character image should be displayed
 
+  @mobile @mocked
+  Scenario: Mobile - Card flip reveals role on tap
+    Given I am assigned the guilty role
+    When I visit the play page
+    Then I should see the role reveal card
+    And the card should show the front side
+    When I tap the role reveal card
+    Then the card should flip to show the back
+    And I should see the role "COUPABLE" on the card back
+
+  @mobile @mocked
+  Scenario: Mobile - Card can be flipped back to front
+    Given I am assigned the innocent role
+    When I visit the play page
+    And I tap the role reveal card
+    Then the card should flip to show the back
+    When I tap the role reveal card
+    Then the card should flip back to show the front
+
   @mobile
   Scenario: Mobile - Suspect sees their role badge and reveal button
     Given I am assigned the guilty role

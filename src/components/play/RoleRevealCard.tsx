@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { keyframes } from '@mui/system';
 
@@ -27,6 +27,25 @@ const flipToFront = keyframes`
   }
   100% {
     transform: perspective(1000px) rotateY(360deg);
+  }
+`;
+
+// Hint animation - subtle wobble to indicate interactivity
+const hintWobble = keyframes`
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  25% {
+    transform: perspective(1000px) rotateY(-15deg);
+  }
+  50% {
+    transform: perspective(1000px) rotateY(10deg);
+  }
+  75% {
+    transform: perspective(1000px) rotateY(-5deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(0deg);
   }
 `;
 
@@ -70,12 +89,45 @@ export default function RoleRevealCard({
 }: RoleRevealCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isHinting, setIsHinting] = useState(false);
   const [imageHidden, setImageHidden] = useState(false);
 
   const roleConfig = getRoleConfig(role);
 
+  // Occasional hint animation to show the card is interactive
+  useEffect(() => {
+    if (isFlipped || isAnimating) return;
+
+    // Initial hint after 2 seconds
+    const initialTimeout = setTimeout(() => {
+      if (!isFlipped && !isAnimating) {
+        setIsHinting(true);
+        setTimeout(() => setIsHinting(false), 800);
+      }
+    }, 2000);
+
+    // Recurring hints every 8-12 seconds (randomized)
+    const scheduleNextHint = () => {
+      const delay = 8000 + Math.random() * 4000; // 8-12 seconds
+      return setTimeout(() => {
+        if (!isFlipped && !isAnimating) {
+          setIsHinting(true);
+          setTimeout(() => setIsHinting(false), 800);
+        }
+        intervalRef = scheduleNextHint();
+      }, delay);
+    };
+
+    let intervalRef = scheduleNextHint();
+
+    return () => {
+      clearTimeout(initialTimeout);
+      clearTimeout(intervalRef);
+    };
+  }, [isFlipped, isAnimating]);
+
   const handleCardClick = () => {
-    if (isAnimating) return;
+    if (isAnimating || isHinting) return;
     setIsAnimating(true);
     setIsFlipped(!isFlipped);
     // Animation duration is 600ms
@@ -91,18 +143,29 @@ export default function RoleRevealCard({
     return null;
   }
 
+  // Determine which animation to use
+  const getAnimation = () => {
+    if (isHinting && !isFlipped && !isAnimating) {
+      return `${hintWobble} 0.8s ease-in-out`;
+    }
+    if (isAnimating) {
+      return `${isFlipped ? flipToBack : flipToFront} 0.6s ease-in-out forwards`;
+    }
+    return undefined;
+  };
+
   return (
     <Box
       onClick={handleCardClick}
+      data-testid="role-reveal-card"
+      data-flipped={isFlipped}
       sx={{
         width: '100%',
         aspectRatio: '3 / 4',
         position: 'relative',
         cursor: 'pointer',
         transformStyle: 'preserve-3d',
-        animation: isAnimating
-          ? `${isFlipped ? flipToBack : flipToFront} 0.6s ease-in-out forwards`
-          : undefined,
+        animation: getAnimation(),
         transform: isFlipped && !isAnimating 
           ? 'perspective(1000px) rotateY(180deg)' 
           : 'perspective(1000px) rotateY(0deg)',
@@ -175,6 +238,7 @@ export default function RoleRevealCard({
 
       {/* Back of card - Role reveal (business card style) */}
       <Box
+        data-testid="role-reveal-card-back"
         sx={{
           position: 'absolute',
           width: '100%',

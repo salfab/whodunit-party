@@ -230,6 +230,13 @@ Given('I am assigned the guilty role with words', () => {
 });
 
 Given('I am assigned the innocent role', () => {
+  // Mock the character image to prevent 404 errors
+  cy.intercept('GET', '/characters/innocent.png', {
+    statusCode: 200,
+    headers: { 'content-type': 'image/png' },
+    fixture: 'test-image.png',
+  }).as('getInnocentImage');
+
   // Mock Supabase player_assignments query (.maybeSingle() returns object not array)
   cy.intercept('GET', '**/rest/v1/player_assignments?*', {
     statusCode: 200,
@@ -243,6 +250,7 @@ Given('I am assigned the innocent role', () => {
         id: 'test-sheet-003',
         role: 'innocent',
         character_name: 'Lady Sinclair',
+        image_path: '/characters/innocent.png',
         dark_secret: 'You are having an affair with the gardener.',
         alibi: 'I was walking in the garden.',
         mystery_id: 'test-mystery-001',
@@ -300,6 +308,35 @@ Then('I should see the character name {string}', (characterName: string) => {
 Then('the character image should be displayed', () => {
   // Wait for the image intercept and verify the image element is visible
   cy.get('img[alt*="Jean"]').should('be.visible');
+});
+
+// ==================== Role Reveal Card (Flip Animation) ====================
+
+Then('I should see the role reveal card', () => {
+  cy.getByTestId('role-reveal-card').should('be.visible');
+});
+
+Then('the card should show the front side', () => {
+  cy.getByTestId('role-reveal-card').should('have.attr', 'data-flipped', 'false');
+});
+
+When('I tap the role reveal card', () => {
+  cy.getByTestId('role-reveal-card').click();
+  // Wait for animation to complete
+  cy.wait(700);
+});
+
+Then('the card should flip to show the back', () => {
+  cy.getByTestId('role-reveal-card').should('have.attr', 'data-flipped', 'true');
+});
+
+Then('I should see the role {string} on the card back', (role: string) => {
+  // The role label should be visible on the back of the card
+  cy.getByTestId('role-reveal-card-back').should('contain', role);
+});
+
+Then('the card should flip back to show the front', () => {
+  cy.getByTestId('role-reveal-card').should('have.attr', 'data-flipped', 'false');
 });
 
 // ==================== Role Assertions ====================
