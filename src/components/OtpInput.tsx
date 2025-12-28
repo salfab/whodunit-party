@@ -17,6 +17,8 @@ const InputBox = styled('input')(({ theme }) => ({
   outline: 'none',
   transition: 'all 0.2s ease',
   fontFamily: 'monospace',
+  flexShrink: 1,
+  minWidth: '32px',
   
   '&:focus': {
     borderColor: theme.palette.primary.main,
@@ -150,9 +152,12 @@ export default function OtpInput({
     <Box
       sx={{
         display: 'flex',
-        gap: 1,
+        gap: { xs: 0.5, sm: 1 },
         justifyContent: 'center',
-        flexWrap: 'wrap',
+        flexWrap: 'nowrap',
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden',
       }}
       data-testid={dataTestId}
     >

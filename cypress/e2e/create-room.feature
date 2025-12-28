@@ -6,22 +6,17 @@ Feature: Create Game Room
   Background:
     Given I am on the homepage
 
-  Scenario: Successfully create a game room
+  Scenario: Successfully create a game room and go to join page
     When I click the "Créer une salle" button
-    Then I should be on the create room page
-    And I should see a 6-character game code
-    And I should see a QR code
-    And I should see a "Rejoindre cette salle" button
+    Then I should be redirected to the join page
+    And the game code field should be pre-filled with a 6-character code
 
-  Scenario: Join my own created room
+  Scenario: Create room shows loading state
     When I click the "Créer une salle" button
-    And I wait for the game code to be displayed
-    When I click the "Rejoindre cette salle" button
-    Then I should be on the join page
-    And the game code field should be pre-filled
+    Then I should briefly see the loading screen
+    And I should be redirected to the join page
 
-  Scenario: Navigate back from room creation
+  Scenario: Join page has QR code for sharing after room creation
     When I click the "Créer une salle" button
-    And I wait for the game code to be displayed
-    When I click the "Retour à l'accueil" button
-    Then I should be on the homepage
+    And I wait to be on the join page
+    Then I should be able to access the QR code from the lobby
