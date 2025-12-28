@@ -6,9 +6,10 @@ import { useState, useEffect } from 'react';
 
 interface LoadingScreenProps {
   message?: string;
+  imageUrl?: string;
 }
 
-export default function LoadingScreen({ message = 'Chargement...' }: LoadingScreenProps) {
+export default function LoadingScreen({ message = 'Chargement...', imageUrl }: LoadingScreenProps) {
   const [dots, setDots] = useState('');
 
   useEffect(() => {
@@ -57,9 +58,23 @@ export default function LoadingScreen({ message = 'Chargement...' }: LoadingScre
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <Typography variant="h3" component="div" sx={{ fontSize: 40 }}>
-                🔍
-              </Typography>
+              {imageUrl ? (
+                <Box
+                  component="img"
+                  src={imageUrl}
+                  alt="Loading"
+                  sx={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: '8px',
+                    objectFit: 'cover',
+                  }}
+                />
+              ) : (
+                <Typography variant="h3" component="div" sx={{ fontSize: 40 }}>
+                  🔍
+                </Typography>
+              )}
             </motion.div>
           </Box>
         </Box>

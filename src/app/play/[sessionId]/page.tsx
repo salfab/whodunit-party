@@ -87,6 +87,7 @@ export default function PlayPage() {
   const [showTransition, setShowTransition] = useState(false);
   const [transitionTitle, setTransitionTitle] = useState('');
   const [transitionSubtitle, setTransitionSubtitle] = useState('');
+  const [transitionImageUrl, setTransitionImageUrl] = useState<string | undefined>(undefined);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
   
@@ -243,6 +244,7 @@ export default function PlayPage() {
         // Mystery changed - show transition
         setTransitionTitle(mystery.title);
         setTransitionSubtitle(`Manche ${roundNumber}`);
+        setTransitionImageUrl(mystery.image_path || undefined);
         setShowTransition(true);
       }
       previousMysteryIdRef.current = sheet.mystery_id;
@@ -862,6 +864,7 @@ export default function PlayPage() {
         isVisible={showTransition}
         title={transitionTitle}
         subtitle={transitionSubtitle}
+        imageUrl={transitionImageUrl}
         onComplete={() => setShowTransition(false)}
         duration={2500}
       />

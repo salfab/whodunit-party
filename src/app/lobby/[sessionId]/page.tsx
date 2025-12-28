@@ -632,6 +632,7 @@ export default function LobbyPage() {
         isVisible={showTransition}
         title="La partie commence"
         subtitle="Préparez-vous à résoudre le mystère"
+        imageUrl={myVote ? mysteries.find(m => m.id === myVote)?.image_path : undefined}
         duration={2500}
       />
     </Container>

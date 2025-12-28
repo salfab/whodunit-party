@@ -8,6 +8,7 @@ interface TransitionScreenProps {
   isVisible: boolean;
   title?: string;
   subtitle?: string;
+  imageUrl?: string;
   onComplete?: () => void;
   duration?: number;
 }
@@ -16,6 +17,7 @@ export default function TransitionScreen({
   isVisible, 
   title = 'Nouveau mystère',
   subtitle,
+  imageUrl,
   onComplete,
   duration = 1200
 }: TransitionScreenProps) {
@@ -83,16 +85,33 @@ export default function TransitionScreen({
             <AnimatePresence>
               {showContent && (
                 <>
-                  {/* Mystery icon */}
+                  {/* Mystery icon or image */}
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
                     exit={{ scale: 0, rotate: 180 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                   >
-                    <Typography variant="h1" sx={{ fontSize: 80, mb: 3 }}>
-                      🎭
-                    </Typography>
+                    {imageUrl ? (
+                      <Box
+                        component="img"
+                        src={imageUrl}
+                        alt="Mystery"
+                        sx={{
+                          width: 150,
+                          height: 150,
+                          borderRadius: '16px',
+                          objectFit: 'cover',
+                          mb: 3,
+                          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                          border: '3px solid rgba(255,255,255,0.2)',
+                        }}
+                      />
+                    ) : (
+                      <Typography variant="h1" sx={{ fontSize: 80, mb: 3 }}>
+                        🎭
+                      </Typography>
+                    )}
                   </motion.div>
 
                   {/* Title */}
