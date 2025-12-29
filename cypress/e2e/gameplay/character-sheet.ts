@@ -43,7 +43,8 @@ Given('I am logged in as a player in a playing session', () => {
     fixture: 'test-image.png',
   }).as('getInvestigatorPlaceholder');
 
-  cy.intercept('GET', '/characters/suspect.jpg', {
+  // Intercept all suspect placeholder images (suspect_01.jpg through suspect_06.jpg)
+  cy.intercept('GET', '/characters/suspect_0*.jpg', {
     statusCode: 200,
     headers: { 'content-type': 'image/jpeg' },
     fixture: 'test-image.png',
@@ -206,7 +207,7 @@ Given('I am assigned the guilty role with words', () => {
         role: 'guilty',
         character_name: 'Lord Blackwood Jr.',
         occupation: 'Heir',
-        image_path: null, // No custom image - will use suspect.jpg placeholder
+        image_path: null, // No custom image - will use suspect_0X.jpg placeholder based on sheet ID
         dark_secret: 'You poisoned the victim.',
         alibi: 'I was writing letters.',
         mystery_id: 'test-mystery-001',

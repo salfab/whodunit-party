@@ -346,7 +346,7 @@ export default function PlayPage() {
                 characterSheet.image_path || 
                 (characterSheet.role === 'investigator' 
                   ? '/characters/investigator.jpg' 
-                  : '/characters/suspect.jpg')
+                  : `/characters/suspect_0${(parseInt(characterSheet.id.slice(0, 8), 16) % 6) + 1}.jpg`)
               }
               characterName={characterSheet.character_name}
               occupation={characterSheet.occupation || undefined}
