@@ -1,0 +1,202 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "create": "Crear",
+    "upload": "Subir",
+    "download": "Descargar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "home": "Inicio",
+    "preview": "Vista previa"
+  },
+  "admin": {
+    "title": "Administración",
+    "mysteries": "Misterios",
+    "session": "Sesión",
+    "goToMysteries": "Gestionar Misterios"
+  },
+  "mysteries": {
+    "title": "Misterios",
+    "noMysteries": "No hay misterios disponibles",
+    "uploadNew": "Subir nuevo misterio",
+    "createNew": "Nuevo Misterio",
+    "editMystery": "Editar Misterio",
+    "createMystery": "Crear Nuevo Misterio",
+    "deleteConfirm": "¿Estás seguro de que quieres eliminar este misterio?",
+    "deleteSuccess": "Misterio eliminado con éxito",
+    "deleteError": "Error al eliminar el misterio",
+    "upload": {
+      "title": "Subir Misterios",
+      "zipTitle": "Subir Paquete Zip",
+      "jsonTitle": "Entrada JSON",
+      "selectFiles": "Seleccionar Archivos Zip",
+      "filesSelected": "{count} archivo(s) seleccionado(s)",
+      "uploadButton": "Subir",
+      "uploading": "Subiendo...",
+      "jsonPlaceholder": "[{ \"title\": \"...\", \"description\": \"...\", ... }]",
+      "jsonLabel": "Array JSON",
+      "infoMessage": "Crea un paquete de misterio con un archivo mystery.json e imágenes de personajes",
+      "successMessage": "¡Misterios subidos con éxito!",
+      "errorMessage": "Error al subir",
+      "validationError": "Error de validación para \"{title}\": {errors}",
+      "invalidBase64": "Codificación base64 inválida para el archivo {filename}",
+      "uploadFailed": "Error al subir {filename}"
+    },
+    "form": {
+      "title": "Título",
+      "titleRequired": "El título es obligatorio",
+      "description": "Descripción",
+      "descriptionRequired": "La descripción es obligatoria",
+      "descriptionHelper": "Descripción (Markdown compatible)",
+      "imagePath": "Ruta de Imagen (opcional)",
+      "author": "Autor",
+      "authorHelper": "Autor del misterio",
+      "language": "Idioma",
+      "theme": "Tema",
+      "innocentWords": "Palabras Inocentes (3 requeridas)",
+      "guiltyWords": "Palabras Culpables (3 requeridas)",
+      "word": "Palabra {number}",
+      "allWordsRequired": "Se requieren las 3 palabras",
+      "characterSheets": "Fichas de Personajes",
+      "addCharacter": "Añadir Personaje",
+      "character": "Personaje {number}",
+      "role": "Rol",
+      "characterName": "Nombre del Personaje",
+      "characterNameHelper": "El nombre de este personaje (ej: 'Juan Pérez', 'María García')",
+      "occupation": "Ocupación (opcional)",
+      "occupationHelper": "ej: Mayordomo, Detective, Cocinero",
+      "darkSecret": "Secreto Oscuro",
+      "alibi": "Coartada",
+      "saveChanges": "Guardar Cambios",
+      "errors": {
+        "minCharacters": "Se requieren al menos 3 fichas de personajes",
+        "needInvestigator": "Debe haber un rol de investigador",
+        "needGuilty": "Debe haber un rol de culpable",
+        "allFieldsRequired": "Todas las fichas de personajes deben tener nombre, secreto y coartada",
+        "loadFailed": "Error al cargar el misterio",
+        "saveFailed": "Error al guardar el misterio"
+      }
+    },
+    "roles": {
+      "investigator": "Investigador",
+      "guilty": "Culpable",
+      "innocent": "Inocente"
+    },
+    "themes": {
+      "PETTY_CRIME": "Crimen Menor",
+      "MACABRE": "Macabro",
+      "SERIOUS_MURDER": "Asesinato Grave",
+      "FUNNY_CRIME": "Crimen Cómico"
+    },
+    "languages": {
+      "fr": "Francés",
+      "en": "Inglés",
+      "es": "Español",
+      "de": "Alemán",
+      "it": "Italiano"
+    },
+    "table": {
+      "title": "Título",
+      "description": "Descripción",
+      "createdAt": "Creado",
+      "actions": "Acciones"
+    }
+  },
+  "session": {
+    "create": {
+      "title": "Crear Nueva Partida",
+      "createButton": "Crear Sesión de Juego",
+      "creating": "Creando...",
+      "error": "Error al crear la sesión"
+    },
+    "admin": {
+      "title": "Panel de Administración",
+      "joinCode": "Código de Acceso",
+      "status": "Estado: {status}",
+      "players": "Jugadores ({count})",
+      "playerStatus": "Estado: {status}",
+      "waitingPlayers": "Esperando al menos {count} jugadores...",
+      "selectMystery": "Seleccionar un misterio",
+      "startGame": "Iniciar Partida",
+      "starting": "Iniciando...",
+      "gameStarted": "¡Partida iniciada! Los jugadores están recibiendo sus fichas de personaje.",
+      "needPlayers": "Necesitas al menos {count} jugadores y seleccionar un misterio para iniciar",
+      "loadError": "Error al cargar los datos",
+      "startError": "Error al iniciar la partida"
+    }
+  },
+  "lobby": {
+    "title": "Sala de Espera",
+    "loading": "Cargando sala de espera",
+    "scanQR": "Escanea para unirte",
+    "players": "Jugadores conectados ({count})",
+    "voteMystery": "Vota por el misterio",
+    "starting": "Iniciando partida",
+    "errors": {
+      "loadFailed": "Error al cargar la sesión",
+      "voteFailed": "Error al enviar el voto",
+      "readyFailed": "Error al actualizar el estado. Por favor, inténtalo de nuevo.",
+      "removeFailed": "Error al eliminar jugador",
+      "languageFailed": "Error al actualizar el idioma. Por favor, inténtalo de nuevo."
+    }
+  },
+  "play": {
+    "loading": "Cargando tu personaje",
+    "loadingSheet": "Cargando ficha de personaje...",
+    "loadError": "Error al cargar la ficha de personaje",
+    "helpButton": "Cómo jugar",
+    "showQR": "Mostrar código QR",
+    "yourAlibi": "Tu coartada",
+    "darkSecret": "Secreto Oscuro",
+    "accusation": {
+      "error": "Error en la acusación",
+      "voteError": "Error en el voto"
+    },
+    "messages": {
+      "investigatorCorrect": "¡Felicitaciones! ¡Encontraste al culpable! +2 puntos",
+      "investigatorWrong": "¡Error! Acusaste a una persona inocente.",
+      "guiltyAccused": "¡Te han descubierto! El investigador ganó.",
+      "guiltySafe": "¡Bien hecho! No fuiste descubierto. +2 puntos",
+      "innocentAccused": "¡Eres inocente y fuiste acusado injustamente! +1 punto",
+      "innocentSafe": "No fuiste acusado."
+    }
+  },
+  "join": {
+    "title": "Unirse a Partida",
+    "roomCode": "Código de Sala",
+    "enterCode": "Ingresa el código",
+    "yourName": "Tu nombre",
+    "enterName": "Ingresa tu nombre",
+    "joinButton": "Unirse a la partida",
+    "joining": "Conectando...",
+    "kicked": "Has sido expulsado de la sesión",
+    "errors": {
+      "joinFailed": "Error al unirse a la partida",
+      "serverFailed": "Error al conectar con el servidor",
+      "takeoverFailed": "Error al recuperar la sesión"
+    }
+  },
+  "createRoom": {
+    "title": "Creando sala...",
+    "error": "Error al crear la sala"
+  },
+  "home": {
+    "title": "Whodunit Party",
+    "subtitle": "Juego de Fiesta de Misterio y Asesinato",
+    "createRoom": "Crear Sala",
+    "joinRoom": "Unirse a Sala",
+    "admin": "Administración",
+    "selectLanguage": "Seleccionar Idioma"
+  }
+}

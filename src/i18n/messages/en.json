@@ -1,0 +1,202 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "create": "Create",
+    "upload": "Upload",
+    "download": "Download",
+    "search": "Search",
+    "filter": "Filter",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "home": "Home",
+    "preview": "Preview"
+  },
+  "admin": {
+    "title": "Administration",
+    "mysteries": "Mysteries",
+    "session": "Session",
+    "goToMysteries": "Manage Mysteries"
+  },
+  "mysteries": {
+    "title": "Mysteries",
+    "noMysteries": "No mysteries available",
+    "uploadNew": "Upload new mystery",
+    "createNew": "New Mystery",
+    "editMystery": "Edit Mystery",
+    "createMystery": "Create New Mystery",
+    "deleteConfirm": "Are you sure you want to delete this mystery?",
+    "deleteSuccess": "Mystery deleted successfully",
+    "deleteError": "Failed to delete mystery",
+    "upload": {
+      "title": "Upload Mysteries",
+      "zipTitle": "Upload Zip Package",
+      "jsonTitle": "JSON Input",
+      "selectFiles": "Select Zip Files",
+      "filesSelected": "{count} file(s) selected",
+      "uploadButton": "Upload",
+      "uploading": "Uploading...",
+      "jsonPlaceholder": "[{ \"title\": \"...\", \"description\": \"...\", ... }]",
+      "jsonLabel": "JSON Array",
+      "infoMessage": "Create a mystery package with a mystery.json file and character images",
+      "successMessage": "Mysteries uploaded successfully!",
+      "errorMessage": "Upload error",
+      "validationError": "Validation failed for \"{title}\": {errors}",
+      "invalidBase64": "Invalid base64 encoding for file {filename}",
+      "uploadFailed": "Failed to upload {filename}"
+    },
+    "form": {
+      "title": "Title",
+      "titleRequired": "Title is required",
+      "description": "Description",
+      "descriptionRequired": "Description is required",
+      "descriptionHelper": "Description (Markdown supported)",
+      "imagePath": "Image Path (optional)",
+      "author": "Author",
+      "authorHelper": "Mystery author",
+      "language": "Language",
+      "theme": "Theme",
+      "innocentWords": "Innocent Words (3 required)",
+      "guiltyWords": "Guilty Words (3 required)",
+      "word": "Word {number}",
+      "allWordsRequired": "All 3 words are required",
+      "characterSheets": "Character Sheets",
+      "addCharacter": "Add Character",
+      "character": "Character {number}",
+      "role": "Role",
+      "characterName": "Character Name",
+      "characterNameHelper": "The name of this character (e.g., 'John Doe', 'Mary Smith')",
+      "occupation": "Occupation (optional)",
+      "occupationHelper": "e.g., Butler, Detective, Cook",
+      "darkSecret": "Dark Secret",
+      "alibi": "Alibi",
+      "saveChanges": "Save Changes",
+      "errors": {
+        "minCharacters": "At least 3 character sheets are required",
+        "needInvestigator": "Must have an investigator role",
+        "needGuilty": "Must have a guilty role",
+        "allFieldsRequired": "All character sheets must have a name, secret and alibi",
+        "loadFailed": "Failed to load mystery",
+        "saveFailed": "Failed to save mystery"
+      }
+    },
+    "roles": {
+      "investigator": "Investigator",
+      "guilty": "Guilty",
+      "innocent": "Innocent"
+    },
+    "themes": {
+      "PETTY_CRIME": "Petty Crime",
+      "MACABRE": "Macabre",
+      "SERIOUS_MURDER": "Serious Murder",
+      "FUNNY_CRIME": "Funny Crime"
+    },
+    "languages": {
+      "fr": "French",
+      "en": "English",
+      "es": "Spanish",
+      "de": "German",
+      "it": "Italian"
+    },
+    "table": {
+      "title": "Title",
+      "description": "Description",
+      "createdAt": "Created",
+      "actions": "Actions"
+    }
+  },
+  "session": {
+    "create": {
+      "title": "Create New Game",
+      "createButton": "Create Game Session",
+      "creating": "Creating...",
+      "error": "Failed to create session"
+    },
+    "admin": {
+      "title": "Admin Dashboard",
+      "joinCode": "Join Code",
+      "status": "Status: {status}",
+      "players": "Players ({count})",
+      "playerStatus": "Status: {status}",
+      "waitingPlayers": "Waiting for at least {count} players...",
+      "selectMystery": "Select a mystery",
+      "startGame": "Start Game",
+      "starting": "Starting...",
+      "gameStarted": "Game started! Players are receiving their character sheets.",
+      "needPlayers": "You need at least {count} players and select a mystery to start",
+      "loadError": "Failed to load data",
+      "startError": "Failed to start game"
+    }
+  },
+  "lobby": {
+    "title": "Lobby",
+    "loading": "Loading lobby",
+    "scanQR": "Scan to join",
+    "players": "Connected players ({count})",
+    "voteMystery": "Vote for mystery",
+    "starting": "Game starting",
+    "errors": {
+      "loadFailed": "Failed to load session",
+      "voteFailed": "Failed to submit vote",
+      "readyFailed": "Failed to update ready state. Please try again.",
+      "removeFailed": "Failed to remove player",
+      "languageFailed": "Failed to update language. Please try again."
+    }
+  },
+  "play": {
+    "loading": "Loading your character",
+    "loadingSheet": "Loading character sheet...",
+    "loadError": "Failed to load character sheet",
+    "helpButton": "How to play",
+    "showQR": "Show QR code",
+    "yourAlibi": "Your alibi",
+    "darkSecret": "Dark Secret",
+    "accusation": {
+      "error": "Accusation error",
+      "voteError": "Vote error"
+    },
+    "messages": {
+      "investigatorCorrect": "Congratulations! You found the guilty party! +2 points",
+      "investigatorWrong": "Wrong! You accused an innocent person.",
+      "guiltyAccused": "You've been exposed! The investigator won.",
+      "guiltySafe": "Well done! You were not discovered. +2 points",
+      "innocentAccused": "You are innocent and were wrongly accused! +1 point",
+      "innocentSafe": "You were not accused."
+    }
+  },
+  "join": {
+    "title": "Join Game",
+    "roomCode": "Room Code",
+    "enterCode": "Enter code",
+    "yourName": "Your name",
+    "enterName": "Enter your name",
+    "joinButton": "Join game",
+    "joining": "Connecting...",
+    "kicked": "You have been removed from the session",
+    "errors": {
+      "joinFailed": "Failed to join game",
+      "serverFailed": "Failed to connect to server",
+      "takeoverFailed": "Failed to take over session"
+    }
+  },
+  "createRoom": {
+    "title": "Creating room...",
+    "error": "Failed to create room"
+  },
+  "home": {
+    "title": "Whodunit Party",
+    "subtitle": "Mystery Murder Party Game",
+    "createRoom": "Create Room",
+    "joinRoom": "Join Room",
+    "admin": "Admin",
+    "selectLanguage": "Select Language"
+  }
+}

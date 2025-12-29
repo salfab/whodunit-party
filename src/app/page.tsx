@@ -1,10 +1,48 @@
 'use client';
 
-import { Box, Container, Typography, Button, IconButton } from '@mui/material';
+import { Box, Container, Typography, Button, IconButton, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { Settings as SettingsIcon } from '@mui/icons-material';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { useState, useEffect } from 'react';
+import { type Locale } from '@/i18n/request';
 
 export default function Home() {
+  const t = useTranslations();
+  const [locale, setLocale] = useState<Locale>('fr');
+
+  // Load locale from cookie on mount
+  useEffect(() => {
+    const cookieLocale = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('NEXT_LOCALE='))
+      ?.split('=')[1] as Locale | undefined;
+    
+    if (cookieLocale) {
+      setLocale(cookieLocale);
+    }
+  }, []);
+
+  const handleLanguageChange = async (newLocale: Locale) => {
+    setLocale(newLocale);
+    
+    // Set cookie via API route
+    try {
+      await fetch('/api/set-locale', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ locale: newLocale }),
+      });
+      
+      // Reload page to apply new locale
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to set locale:', error);
+    }
+  };
+
   return (
     <Container maxWidth="sm">
       <Box
@@ -19,7 +57,7 @@ export default function Home() {
           href="/admin/mysteries"
           color="primary"
           size="large"
-          aria-label="Admin console"
+          aria-label={t('home.admin')}
         >
           <SettingsIcon />
         </IconButton>
@@ -35,11 +73,24 @@ export default function Home() {
         }}
       >
         <Typography variant="h2" component="h1" textAlign="center">
-          🔍 Whodunit Party
+          🔍 {t('home.title')}
         </Typography>
         <Typography variant="h5" textAlign="center" color="text.secondary">
-          Jeu de mystère et de meurtre
+          {t('home.subtitle')}
         </Typography>
+        
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel>{t('home.selectLanguage')}</InputLabel>
+          <Select
+            value={locale}
+            label={t('home.selectLanguage')}
+            onChange={(e) => handleLanguageChange(e.target.value as Locale)}
+          >
+            <MenuItem value="fr">🇫🇷 Français</MenuItem>
+            <MenuItem value="en">🇬🇧 English</MenuItem>
+            <MenuItem value="es">🇪🇸 Español</MenuItem>
+          </Select>
+        </FormControl>
         
         <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
           <Button
@@ -48,7 +99,7 @@ export default function Home() {
             href="/create-room"
             data-testid="create-room-button"
           >
-            Créer une salle
+            {t('home.createRoom')}
           </Button>
           <Button
             variant="outlined"
@@ -56,7 +107,7 @@ export default function Home() {
             href="/join"
             data-testid="join-game-button"
           >
-            Rejoindre une partie
+            {t('home.joinRoom')}
           </Button>
         </Box>
       </Box>

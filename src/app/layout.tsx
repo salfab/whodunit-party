@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import ThemeRegistry from "@/components/ThemeRegistry";
 import "./globals.css";
 
@@ -8,18 +10,22 @@ export const metadata: Metadata = {
   description: "Murder mystery party game",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const messages = await getMessages();
+
   return (
     <html lang="en">
       <body>
         <AppRouterCacheProvider options={{ key: 'mui' }}>
-          <ThemeRegistry>
-            {children}
-          </ThemeRegistry>
+          <NextIntlClientProvider messages={messages}>
+            <ThemeRegistry>
+              {children}
+            </ThemeRegistry>
+          </NextIntlClientProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

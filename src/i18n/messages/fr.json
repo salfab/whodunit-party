@@ -190,5 +190,13 @@
   "createRoom": {
     "title": "Création de la salle...",
     "error": "Échec de la création de la salle"
+  },
+  "home": {
+    "title": "Whodunit Party",
+    "subtitle": "Jeu de Fête de Mystère et Meurtre",
+    "createRoom": "Créer une Salle",
+    "joinRoom": "Rejoindre une Salle",
+    "admin": "Administration",
+    "selectLanguage": "Choisir la langue"
   }
 }
