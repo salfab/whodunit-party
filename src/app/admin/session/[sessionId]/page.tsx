@@ -21,6 +21,7 @@ import {
 } from '@mui/material';
 import { createClient } from '@/lib/supabase/client';
 import LoadingScreen from '@/components/LoadingScreen';
+import AdminNavBar from '@/components/admin/AdminNavBar';
 import type { Database } from '@/types/database';
 import { MIN_PLAYERS } from '@/lib/constants';
 
@@ -144,6 +145,13 @@ export default function AdminSessionPage() {
 
   return (
     <Container maxWidth="md">
+      <AdminNavBar 
+        breadcrumbs={[
+          { label: 'Accueil', href: '/' },
+          { label: 'Session Admin', href: null },
+        ]}
+      />
+      
       <Box sx={{ py: 4 }}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h3" component="h1" gutterBottom>

@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { CloudUpload, Code } from '@mui/icons-material';
 import { validateMysteryFull } from '@/lib/mystery-validation';
+import AdminNavBar from '@/components/admin/AdminNavBar';
 
 interface MysteryData {
   title: string;
@@ -69,7 +70,7 @@ export default function UploadMysteriesPage() {
         try {
           jsonString = atob(jsonInput.trim());
         } catch (e) {
-          throw new Error('Invalid base64 encoding');
+          throw new Error('Encodage base64 invalide');
         }
       }
 
@@ -77,7 +78,7 @@ export default function UploadMysteriesPage() {
       const mysteriesData: MysteryData[] = JSON.parse(jsonString);
 
       if (!Array.isArray(mysteriesData)) {
-        throw new Error('Input must be an array of mysteries');
+        throw new Error('L\'entrée doit être un tableau de mystères');
       }
 
       // Validate each mystery against JSON schema and business rules
@@ -85,7 +86,7 @@ export default function UploadMysteriesPage() {
         const validation = validateMysteryFull(mystery);
         if (!validation.valid) {
           throw new Error(
-            `Validation failed for "${mystery.title || 'unknown'}": ${validation.errors?.join('; ')}`
+            `Échec de la validation pour "${mystery.title || 'inconnu'}": ${validation.errors?.join('; ')}`
           );
         }
       }
@@ -100,16 +101,16 @@ export default function UploadMysteriesPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to upload mysteries');
+        throw new Error(data.error || 'Échec du téléchargement des mystères');
       }
 
-      setSuccess(`Successfully uploaded ${mysteriesData.length} mystery(ies)!`);
+      setSuccess(`Téléchargement réussi de ${mysteriesData.length} mystère(s) !`);
       setJsonInput('');
       setTimeout(() => {
         router.push('/admin/mysteries');
       }, 2000);
     } catch (err: any) {
-      setError(err.message || 'Failed to upload mysteries');
+      setError(err.message || 'Échec du téléchargement des mystères');
     } finally {
       setLoading(false);
     }
@@ -143,7 +144,7 @@ export default function UploadMysteriesPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.details || data.error || 'Failed to upload mystery pack');
+          throw new Error(data.details || data.error || 'Échec du téléchargement du paquet mystère');
         }
 
         const totalImages = data.mysteries.reduce((sum: number, m: any) => sum + (m.imagesUploaded || 0), 0);
@@ -152,7 +153,7 @@ export default function UploadMysteriesPage() {
         if (data.count === 1) {
           message = `"${data.mysteries[0].title}" - ${data.mysteries[0].imagesUploaded} images`;
         } else {
-          message = `${data.count} mysteries - ${totalImages} images`;
+          message = `${data.count} mystères - ${totalImages} images`;
         }
 
         results.push({ file: file.name, success: true, message });
@@ -161,7 +162,7 @@ export default function UploadMysteriesPage() {
         results.push({ 
           file: file.name, 
           success: false, 
-          message: err.message || 'Upload failed' 
+          message: err.message || 'Échec du téléchargement' 
         });
         setCompletedUploads([...results]);
       }
@@ -176,12 +177,12 @@ export default function UploadMysteriesPage() {
     // Check if all succeeded
     const allSucceeded = results.every(u => u.success);
     if (allSucceeded) {
-      setSuccess(`Successfully uploaded all ${selectedFiles.length} file(s)!`);
+      setSuccess(`Téléchargement réussi de tous les ${selectedFiles.length} fichier(s) !`);
       setTimeout(() => {
         router.push('/admin/mysteries');
       }, 2000);
     } else {
-      setError('Some uploads failed. Check the results below.');
+      setError('Certains téléchargements ont échoué. Vérifiez les résultats ci-dessous.');
     }
     
     setSelectedFiles([]);
@@ -195,12 +196,12 @@ export default function UploadMysteriesPage() {
     const zipFiles = files.filter(f => f.name.endsWith('.zip'));
     
     if (zipFiles.length === 0) {
-      setError('Please select at least one .zip file');
+      setError('Veuillez sélectionner au moins un fichier .zip');
       return;
     }
 
     if (zipFiles.length !== files.length) {
-      setError('All files must be .zip files');
+      setError('Tous les fichiers doivent être des fichiers .zip');
       return;
     }
 
@@ -211,10 +212,18 @@ export default function UploadMysteriesPage() {
 
   return (
     <Container maxWidth="lg">
+      <AdminNavBar 
+        breadcrumbs={[
+          { label: 'Accueil', href: '/' },
+          { label: 'Mystères', href: '/admin/mysteries' },
+          { label: 'Télécharger', href: null },
+        ]}
+      />
+      
       <Box sx={{ py: 4 }}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h3" component="h1" gutterBottom data-testid="upload-page-title">
-            Upload Mysteries
+            Télécharger des Mystères
           </Typography>
 
           {error && (
@@ -232,10 +241,10 @@ export default function UploadMysteriesPage() {
           {/* ZIP UPLOAD SECTION */}
           <Paper sx={{ p: 3, mb: 4, bgcolor: 'background.default' }} data-testid="upload-zip-section">
             <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CloudUpload color="primary" /> Zip Package Upload
+              <CloudUpload color="primary" /> Télécharger un Paquet Zip
             </Typography>
             <Typography variant="body2" paragraph color="text.secondary">
-              Upload .zip file(s) containing <code>mystery.json</code> + images folder. Best for mysteries with character portraits.
+              Téléchargez un ou plusieurs fichiers .zip contenant <code>mystery.json</code> + un dossier d'images. Idéal pour les mystères avec portraits de personnages.
             </Typography>
 
             <Box
@@ -265,14 +274,14 @@ export default function UploadMysteriesPage() {
                   startIcon={<CloudUpload />}
                   data-testid="upload-zip-select-button"
                 >
-                  Select Zip File(s)
+                  Sélectionner des Fichiers Zip
                 </Button>
               </label>
 
               {selectedFiles.length > 0 && (
                 <Box sx={{ mt: 2 }}>
                   <Typography color="success.main" variant="body2" gutterBottom>
-                    ✓ {selectedFiles.length} file(s) selected
+                    ✓ {selectedFiles.length} fichier(s) sélectionné(s)
                   </Typography>
                   <Box sx={{ maxHeight: '150px', overflow: 'auto', textAlign: 'left', px: 2 }}>
                     {selectedFiles.map((file, idx) => (
@@ -287,7 +296,7 @@ export default function UploadMysteriesPage() {
 
             {currentUpload && (
               <Alert severity="info" sx={{ mb: 2 }}>
-                Uploading: {currentUpload.file.name} ({currentUpload.progress})
+                Téléchargement en cours : {currentUpload.file.name} ({currentUpload.progress})
               </Alert>
             )}
 
@@ -304,7 +313,7 @@ export default function UploadMysteriesPage() {
             )}
 
             <Typography variant="caption" color="text.secondary" component="div" sx={{ mb: 2, fontFamily: 'monospace' }}>
-              Expected: mystery.json + images/*.jpg
+              Format attendu : mystery.json + images/*.jpg
             </Typography>
 
             <Button
@@ -314,21 +323,21 @@ export default function UploadMysteriesPage() {
               startIcon={loading ? <CircularProgress size={18} /> : <CloudUpload />}
               data-testid="upload-zip-button"
             >
-              {loading ? `Uploading... (${uploadQueue.length} remaining)` : `Upload ${selectedFiles.length || 0} File(s)`}
+              {loading ? `Téléchargement... (${uploadQueue.length} restant(s))` : `Télécharger ${selectedFiles.length || 0} Fichier(s)`}
             </Button>
           </Paper>
 
           <Divider sx={{ my: 3 }}>
-            <Typography variant="body2" color="text.secondary">OR</Typography>
+            <Typography variant="body2" color="text.secondary">OU</Typography>
           </Divider>
 
           {/* JSON INPUT SECTION */}
           <Paper sx={{ p: 3, bgcolor: 'background.default' }} data-testid="upload-json-section">
             <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Code color="primary" /> JSON Input
+              <Code color="primary" /> Saisie JSON
             </Typography>
             <Typography variant="body2" paragraph color="text.secondary">
-              Paste JSON array of mysteries. No image support in this mode.
+              Collez un tableau JSON de mystères. Pas de support d'images dans ce mode.
             </Typography>
 
             <FormControlLabel
@@ -339,7 +348,7 @@ export default function UploadMysteriesPage() {
                   size="small"
                 />
               }
-              label="Base64 encoded"
+              label="Encodé en Base64"
               sx={{ mb: 2 }}
             />
 
@@ -347,7 +356,7 @@ export default function UploadMysteriesPage() {
               fullWidth
               multiline
               rows={10}
-              label="JSON Array"
+              label="Tableau JSON"
               value={jsonInput}
               onChange={(e) => setJsonInput(e.target.value)}
               placeholder='[{ "title": "...", "description": "...", ... }]'
@@ -362,13 +371,13 @@ export default function UploadMysteriesPage() {
               startIcon={loading ? <CircularProgress size={18} /> : <Code />}
               data-testid="upload-json-button"
             >
-              {loading ? 'Uploading...' : 'Upload JSON'}
+              {loading ? 'Téléchargement...' : 'Télécharger JSON'}
             </Button>
           </Paper>
 
           <Box sx={{ mt: 4, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-            <Button variant="outlined" onClick={() => router.back()}>
-              Cancel
+            <Button variant="outlined" onClick={() => router.push('/admin/mysteries')}>
+              Annuler
             </Button>
           </Box>
         </Paper>

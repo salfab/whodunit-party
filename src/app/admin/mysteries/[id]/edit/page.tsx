@@ -21,6 +21,7 @@ import { Add as AddIcon, Delete as DeleteIcon, Visibility as VisibilityIcon, Edi
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import LoadingScreen from '@/components/LoadingScreen';
+import AdminNavBar from '@/components/admin/AdminNavBar';
 
 interface CharacterSheet {
   role: 'investigator' | 'guilty' | 'innocent';
@@ -201,10 +202,18 @@ export default function EditMysteryPage() {
 
   return (
     <Container maxWidth="lg">
+      <AdminNavBar 
+        breadcrumbs={[
+          { label: 'Accueil', href: '/' },
+          { label: 'Mystères', href: '/admin/mysteries' },
+          { label: isNew ? 'Nouveau' : 'Éditer', href: null },
+        ]}
+      />
+      
       <Box sx={{ py: 4 }}>
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h3" component="h1" gutterBottom>
-            {isNew ? 'Create New Mystery' : 'Edit Mystery'}
+            {isNew ? 'Créer un Nouveau Mystère' : 'Éditer le Mystère'}
           </Typography>
 
           {error && (
@@ -216,7 +225,7 @@ export default function EditMysteryPage() {
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
-              label="Title"
+              label="Titre"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
@@ -226,12 +235,12 @@ export default function EditMysteryPage() {
           <Box sx={{ mb: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
               <Typography variant="body2" color="text.secondary">
-                Description (Markdown supported)
+                Description (Markdown supporté)
               </Typography>
               <IconButton
                 size="small"
                 onClick={() => setDescriptionPreview(!descriptionPreview)}
-                title={descriptionPreview ? 'Edit' : 'Preview'}
+                title={descriptionPreview ? 'Éditer' : 'Aperçu'}
               >
                 {descriptionPreview ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
               </IconButton>

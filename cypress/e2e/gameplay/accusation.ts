@@ -81,3 +81,77 @@ Then('I should see the accusation was correct', () => {
 Then('I should see the accusation was incorrect', () => {
   cy.getByTestId('accusation-result').invoke('text').should('match', /incorrect|Raté/);
 });
+
+// ==================== Mystery Voting After Accusation ====================
+
+Given('I mock the mysteries list for voting', () => {
+  cy.intercept('GET', '/api/mysteries?*', {
+    statusCode: 200,
+    body: {
+      mysteries: [
+        {
+          id: 'mystery-1',
+          title: 'Le Manoir Hanté',
+          description: 'Un mystère au manoir',
+          language: 'fr',
+          author: 'Test Author',
+        },
+        {
+          id: 'mystery-2',
+          title: 'Crime à Paris',
+          description: 'Un crime dans la capitale',
+          language: 'fr',
+          author: 'Test Author',
+        },
+        {
+          id: 'mystery-3',
+          title: 'L\'Énigme du Château',
+          description: 'Un mystère dans un vieux château',
+          language: 'fr',
+          author: 'Test Author',
+        },
+      ],
+    },
+  }).as('getMysteries');
+});
+
+Given('I mock the mystery vote API', () => {
+  cy.intercept('POST', '/api/sessions/*/vote-mystery', {
+    statusCode: 200,
+    body: { success: true },
+  }).as('voteMystery');
+});
+
+Given('I mock real-time vote updates', () => {
+  // Mock the Supabase realtime channel subscription for mystery_votes
+  cy.window().then((win) => {
+    // Store initial vote counts
+    win.localStorage.setItem('mock_vote_counts', JSON.stringify({
+      'mystery-1': 0,
+      'mystery-2': 0,
+      'mystery-3': 0,
+    }));
+  });
+});
+
+Then('I should see the mystery voting list', () => {
+  cy.getByTestId('mystery-voting-list').should('be.visible');
+  cy.getByTestId('mystery-voting-list').find('[data-testid^="mystery-card-"]').should('have.length', 3);
+});
+
+When('I vote for a mystery', () => {
+  cy.getByTestId('mystery-card-mystery-1').click();
+  cy.wait('@voteMystery');
+});
+
+Then('I should see my vote was recorded', () => {
+  cy.getByTestId('mystery-card-mystery-1').should('have.attr', 'data-voted', 'true');
+});
+
+Then('I should not be able to vote again', () => {
+  cy.getByTestId('mystery-card-mystery-2').should('have.attr', 'aria-disabled', 'true');
+});
+
+Then('I should see the vote count increase', () => {
+  cy.getByTestId('mystery-card-mystery-1').find('[data-testid="vote-count"]').should('contain', '1');
+});

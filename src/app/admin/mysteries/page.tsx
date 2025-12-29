@@ -25,6 +25,7 @@ import {
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Upload as UploadIcon } from '@mui/icons-material';
 import LoadingScreen from '@/components/LoadingScreen';
+import AdminNavBar from '@/components/admin/AdminNavBar';
 
 interface Mystery {
   id: string;
@@ -107,29 +108,35 @@ export default function MysteriesPage() {
 
   return (
     <Container maxWidth="lg">
+      <AdminNavBar 
+        breadcrumbs={[
+          { label: 'Accueil', href: '/' },
+          { label: 'Mystères', href: null },
+        ]}
+      />
+      
       <Box sx={{ py: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h3" component="h1" data-testid="admin-mysteries-title">
-            Mysteries
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="outlined"
-              startIcon={<UploadIcon />}
-              onClick={() => router.push('/admin/mysteries/upload')}
-              data-testid="admin-upload-button"
-            >
-              Upload JSON
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => router.push('/admin/mysteries/new/edit')}
-              data-testid="admin-new-mystery-button"
-            >
-              New Mystery
-            </Button>
-          </Box>
+        <Typography variant="h3" component="h1" data-testid="admin-mysteries-title" sx={{ mb: 2 }}>
+          Mystères
+        </Typography>
+        
+        <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+          <Button
+            variant="outlined"
+            startIcon={<UploadIcon />}
+            onClick={() => router.push('/admin/mysteries/upload')}
+            data-testid="admin-upload-button"
+          >
+            Télécharger JSON
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => router.push('/admin/mysteries/new/edit')}
+            data-testid="admin-new-mystery-button"
+          >
+            Nouveau Mystère
+          </Button>
         </Box>
 
         {error && (
@@ -141,17 +148,17 @@ export default function MysteriesPage() {
         {mysteries.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              No mysteries found
+              Aucun mystère trouvé
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
-              Create your first mystery to get started
+              Créez votre premier mystère pour commencer
             </Typography>
             <Button
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => router.push('/admin/mysteries/new/edit')}
             >
-              Create Mystery
+              Créer un Mystère
             </Button>
           </Paper>
         ) : (
@@ -159,9 +166,9 @@ export default function MysteriesPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Title</TableCell>
+                  <TableCell>Titre</TableCell>
                   <TableCell>Description</TableCell>
-                  <TableCell>Created</TableCell>
+                  <TableCell>Créé le</TableCell>
                   <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
@@ -210,18 +217,18 @@ export default function MysteriesPage() {
       </Box>
 
       <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel} data-testid="admin-delete-dialog">
-        <DialogTitle>Delete Mystery</DialogTitle>
+        <DialogTitle>Supprimer le Mystère</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete "{mysteryToDelete?.title}"? This action cannot be undone.
+            Êtes-vous sûr de vouloir supprimer "{mysteryToDelete?.title}" ? Cette action ne peut pas être annulée.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel} disabled={deleting} data-testid="admin-delete-cancel">
-            Cancel
+            Annuler
           </Button>
           <Button onClick={handleDeleteConfirm} color="error" disabled={deleting} data-testid="admin-delete-confirm">
-            {deleting ? <CircularProgress size={24} /> : 'Delete'}
+            {deleting ? <CircularProgress size={24} /> : 'Supprimer'}
           </Button>
         </DialogActions>
       </Dialog>
