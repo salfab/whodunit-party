@@ -24,11 +24,11 @@ import {
   Scoreboard,
   AccusationDialog,
   AccusedOverlay,
-  MysteryVoting,
   AccuseButton,
   RoleRevealCard,
   RoleHelpDialog,
 } from '@/components/play';
+import { MysteryVotingList } from '@/components/shared/MysteryVotingList';
 
 import { HELP_CONTENT } from './constants';
 import type {
@@ -472,13 +472,15 @@ export default function PlayPage() {
                 currentPlayerId={currentPlayer?.id}
               />
 
-              <MysteryVoting
+              <MysteryVotingList
                 availableMysteries={availableMysteries}
-                selectedMystery={selectedMystery}
+                myVote={selectedMystery || null}
                 voteCounts={voteCounts}
                 hasVoted={hasVoted}
                 startingNextRound={startingNextRound}
-                onVote={handleVoteForMystery}
+                onVote={(mysteryId) => mysteryId && handleVoteForMystery(mysteryId)}
+                allowUnvote={false}
+                showTitle={true}
               />
 
               {availableMysteries.length === 0 && (
