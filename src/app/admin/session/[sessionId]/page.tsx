@@ -125,13 +125,13 @@ export default function AdminSessionPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to start game');
+        throw new Error(data.error || 'Échec du démarrage de la partie');
       }
 
-      alert('Game started! Players are receiving their character sheets.');
+      alert('Partie démarrée ! Les joueurs reçoivent leurs fiches de personnage.');
       loadData();
     } catch (err: any) {
-      setError(err.message || 'Failed to start game');
+      setError(err.message || 'Échec du démarrage de la partie');
     } finally {
       setStarting(false);
     }

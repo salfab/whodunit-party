@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
+import AdminNavBar from '@/components/admin/AdminNavBar';
 
 export default function CreateSessionPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function CreateSessionPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create session');
+        throw new Error(data.error || 'Échec de la création de la session');
       }
 
       // Redirect to admin dashboard
@@ -42,6 +43,13 @@ export default function CreateSessionPage() {
 
   return (
     <Container maxWidth="sm">
+      <AdminNavBar 
+        breadcrumbs={[
+          { label: 'Accueil', href: '/' },
+          { label: 'Créer une Session', href: null },
+        ]}
+      />
+      
       <Box
         sx={{
           minHeight: '100vh',
@@ -52,7 +60,7 @@ export default function CreateSessionPage() {
       >
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-            Create New Game
+            Créer une Nouvelle Partie
           </Typography>
 
           {error && (
@@ -69,7 +77,7 @@ export default function CreateSessionPage() {
               disabled={loading}
               sx={{ px: 6, py: 2 }}
             >
-              {loading ? <CircularProgress size={24} /> : 'Create Game Session'}
+              {loading ? <CircularProgress size={24} /> : 'Créer une Session de Jeu'}
             </Button>
           </Box>
         </Paper>

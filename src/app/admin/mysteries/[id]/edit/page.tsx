@@ -113,29 +113,29 @@ export default function EditMysteryPage() {
     try {
       // Validation
       if (!formData.title.trim()) {
-        throw new Error('Title is required');
+        throw new Error('Le titre est requis');
       }
       if (!formData.description.trim()) {
-        throw new Error('Description is required');
+        throw new Error('La description est requise');
       }
       if (formData.innocent_words.some((w) => !w.trim())) {
-        throw new Error('All 3 innocent words are required');
+        throw new Error('Les 3 mots innocents sont requis');
       }
       if (formData.guilty_words.some((w) => !w.trim())) {
-        throw new Error('All 3 guilty words are required');
+        throw new Error('Les 3 mots coupables sont requis');
       }
       if (formData.character_sheets.length < 3) {
-        throw new Error('At least 3 character sheets are required');
+        throw new Error('Au moins 3 fiches de personnages sont requises');
       }
       if (!formData.character_sheets.find((s) => s.role === 'investigator')) {
-        throw new Error('Must have an investigator role');
+        throw new Error('Un rôle d\'enquêteur est obligatoire');
       }
       if (!formData.character_sheets.find((s) => s.role === 'guilty')) {
-        throw new Error('Must have a guilty role');
+        throw new Error('Un rôle de coupable est obligatoire');
       }
       for (const sheet of formData.character_sheets) {
         if (!sheet.character_name.trim() || !sheet.dark_secret.trim() || !sheet.alibi.trim()) {
-          throw new Error('All character sheets must have character_name, dark_secret and alibi');
+          throw new Error('Toutes les fiches de personnages doivent avoir un nom, un secret et un alibi');
         }
       }
 
@@ -278,7 +278,7 @@ export default function EditMysteryPage() {
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
-              label="Image Path (optional)"
+              label="Chemin de l'Image (optionnel)"
               value={formData.image_path}
               onChange={(e) => setFormData({ ...formData, image_path: e.target.value })}
             />
@@ -287,20 +287,20 @@ export default function EditMysteryPage() {
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
-              label="Author"
+              label="Auteur"
               value={formData.author}
               onChange={(e) => setFormData({ ...formData, author: e.target.value })}
               required
-              helperText="Author of the mystery"
+              helperText="Auteur du mystère"
             />
           </Box>
 
           <Box sx={{ mb: 3 }}>
             <FormControl fullWidth required>
-              <InputLabel id="language-label">Language</InputLabel>
+              <InputLabel id="language-label">Langue</InputLabel>
               <Select
                 labelId="language-label"
-                label="Language"
+                label="Langue"
                 value={formData.language}
                 onChange={(e) => setFormData({ ...formData, language: e.target.value })}
               >
@@ -315,29 +315,29 @@ export default function EditMysteryPage() {
 
           <Box sx={{ mb: 3 }}>
             <FormControl fullWidth required>
-              <InputLabel id="theme-label">Theme</InputLabel>
+              <InputLabel id="theme-label">Thème</InputLabel>
               <Select
                 labelId="theme-label"
-                label="Theme"
+                label="Thème"
                 value={formData.theme}
                 onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
               >
-                <MenuItem value="PETTY_CRIME">Petty Crime</MenuItem>
+                <MenuItem value="PETTY_CRIME">Crime Mineur</MenuItem>
                 <MenuItem value="MACABRE">Macabre</MenuItem>
-                <MenuItem value="SERIOUS_MURDER">Serious Murder</MenuItem>
-                <MenuItem value="FUNNY_CRIME">Funny Crime</MenuItem>
+                <MenuItem value="SERIOUS_MURDER">Meurtre Grave</MenuItem>
+                <MenuItem value="FUNNY_CRIME">Crime Comique</MenuItem>
               </Select>
             </FormControl>
           </Box>
 
           <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
-            Innocent Words (3 required)
+            Mots Innocents (3 requis)
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
             {formData.innocent_words.map((word, index) => (
               <TextField
                 key={index}
-                label={`Word ${index + 1}`}
+                label={`Mot ${index + 1}`}
                 value={word}
                 onChange={(e) => updateInnocentWord(index, e.target.value)}
                 required
@@ -347,13 +347,13 @@ export default function EditMysteryPage() {
           </Box>
 
           <Typography variant="h5" gutterBottom>
-            Guilty Words (3 required)
+            Mots Coupables (3 requis)
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
             {formData.guilty_words.map((word, index) => (
               <TextField
                 key={index}
-                label={`Word ${index + 1}`}
+                label={`Mot ${index + 1}`}
                 value={word}
                 onChange={(e) => updateGuiltyWord(index, e.target.value)}
                 required
@@ -363,16 +363,16 @@ export default function EditMysteryPage() {
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, mt: 4 }}>
-            <Typography variant="h5">Character Sheets</Typography>
+            <Typography variant="h5">Fiches de Personnages</Typography>
             <Button startIcon={<AddIcon />} onClick={addCharacterSheet}>
-              Add Character
+              Ajouter un Personnage
             </Button>
           </Box>
 
           {formData.character_sheets.map((sheet, index) => (
             <Paper key={index} sx={{ p: 3, mb: 2, bgcolor: 'background.default' }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6">Character {index + 1}</Typography>
+                <Typography variant="h6">Personnage {index + 1}</Typography>
                 {formData.character_sheets.length > 3 && (
                   <IconButton color="error" onClick={() => removeCharacterSheet(index)}>
                     <DeleteIcon />
@@ -383,37 +383,37 @@ export default function EditMysteryPage() {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField
                   select
-                  label="Role"
+                  label="Rôle"
                   value={sheet.role}
                   onChange={(e) =>
                     updateCharacterSheet(index, 'role', e.target.value as CharacterSheet['role'])
                   }
                   required
                 >
-                  <MenuItem value="investigator">Investigator</MenuItem>
-                  <MenuItem value="guilty">Guilty</MenuItem>
+                  <MenuItem value="investigator">Enquêteur</MenuItem>
+                  <MenuItem value="guilty">Coupable</MenuItem>
                   <MenuItem value="innocent">Innocent</MenuItem>
                 </TextField>
 
                 <TextField
-                  label="Character Name"
+                  label="Nom du Personnage"
                   value={sheet.character_name}
                   onChange={(e) => updateCharacterSheet(index, 'character_name', e.target.value)}
                   required
-                  helperText="The name of this character (e.g., 'Jean Dupont', 'Marie Laurent')"
+                  helperText="Le nom de ce personnage (ex : 'Jean Dupont', 'Marie Laurent')"
                 />
 
                 <TextField
-                  label="Occupation (optional)"
+                  label="Occupation (optionnel)"
                   value={sheet.occupation || ''}
                   onChange={(e) => updateCharacterSheet(index, 'occupation', e.target.value)}
-                  helperText="e.g., Butler, Detective, Cook"
+                  helperText="ex : Majordome, Détective, Cuisinier"
                 />
 
                 <Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                     <Typography variant="body2" color="text.secondary">
-                      Dark Secret
+                      Sombre Secret
                     </Typography>
                     <IconButton
                       size="small"
@@ -423,7 +423,7 @@ export default function EditMysteryPage() {
                         newMap.set(index, { ...current, darkSecret: !current.darkSecret });
                         setCharacterPreview(newMap);
                       }}
-                      title={characterPreview.get(index)?.darkSecret ? 'Edit' : 'Preview'}
+                      title={characterPreview.get(index)?.darkSecret ? 'Modifier' : 'Aperçu'}
                     >
                       {characterPreview.get(index)?.darkSecret ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
                     </IconButton>
@@ -442,7 +442,7 @@ export default function EditMysteryPage() {
                       }}
                     >
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {sheet.dark_secret || '*No dark secret*'}
+                        {sheet.dark_secret || '*Pas de secret*'}
                       </ReactMarkdown>
                     </Box>
                   ) : (
@@ -450,7 +450,7 @@ export default function EditMysteryPage() {
                       fullWidth
                       multiline
                       rows={3}
-                      label="Dark Secret"
+                      label="Sombre Secret"
                       value={sheet.dark_secret}
                       onChange={(e) => updateCharacterSheet(index, 'dark_secret', e.target.value)}
                       required
@@ -471,7 +471,7 @@ export default function EditMysteryPage() {
                         newMap.set(index, { ...current, alibi: !current.alibi });
                         setCharacterPreview(newMap);
                       }}
-                      title={characterPreview.get(index)?.alibi ? 'Edit' : 'Preview'}
+                      title={characterPreview.get(index)?.alibi ? 'Modifier' : 'Aperçu'}
                     >
                       {characterPreview.get(index)?.alibi ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
                     </IconButton>
@@ -490,7 +490,7 @@ export default function EditMysteryPage() {
                       }}
                     >
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {sheet.alibi || '*No alibi*'}
+                        {sheet.alibi || '*Pas d\'alibi*'}
                       </ReactMarkdown>
                     </Box>
                   ) : (
@@ -507,7 +507,7 @@ export default function EditMysteryPage() {
                 </Box>
 
                 <TextField
-                  label="Image Path (optional)"
+                  label="Chemin de l'Image (optionnel)"
                   value={sheet.image_path || ''}
                   onChange={(e) => updateCharacterSheet(index, 'image_path', e.target.value)}
                 />
@@ -517,11 +517,11 @@ export default function EditMysteryPage() {
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
             <Button variant="contained" size="large" onClick={handleSave} disabled={saving}>
-              {saving ? <CircularProgress size={24} /> : isNew ? 'Create Mystery' : 'Save Changes'}
+              {saving ? <CircularProgress size={24} /> : isNew ? 'Créer le Mystère' : 'Enregistrer les Modifications'}
             </Button>
 
             <Button variant="outlined" size="large" onClick={() => router.push('/admin/mysteries')}>
-              Cancel
+              Annuler
             </Button>
           </Box>
         </Paper>

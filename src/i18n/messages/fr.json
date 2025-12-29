@@ -1,0 +1,194 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "create": "Créer",
+    "upload": "Télécharger",
+    "download": "Télécharger",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "home": "Accueil",
+    "preview": "Aperçu"
+  },
+  "admin": {
+    "title": "Administration",
+    "mysteries": "Mystères",
+    "session": "Session",
+    "goToMysteries": "Gérer les mystères"
+  },
+  "mysteries": {
+    "title": "Mystères",
+    "noMysteries": "Aucun mystère disponible",
+    "uploadNew": "Télécharger un nouveau mystère",
+    "createNew": "Nouveau Mystère",
+    "editMystery": "Éditer le Mystère",
+    "createMystery": "Créer un Nouveau Mystère",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce mystère ?",
+    "deleteSuccess": "Mystère supprimé avec succès",
+    "deleteError": "Échec de la suppression du mystère",
+    "upload": {
+      "title": "Télécharger des Mystères",
+      "zipTitle": "Télécharger un Paquet Zip",
+      "jsonTitle": "Saisie JSON",
+      "selectFiles": "Sélectionner des Fichiers Zip",
+      "filesSelected": "{count} fichier(s) sélectionné(s)",
+      "uploadButton": "Télécharger",
+      "uploading": "Téléchargement...",
+      "jsonPlaceholder": "[{ \"title\": \"...\", \"description\": \"...\", ... }]",
+      "jsonLabel": "Tableau JSON",
+      "infoMessage": "Créez un paquet mystère avec un fichier mystery.json et des images de personnages",
+      "successMessage": "Mystères téléchargés avec succès !",
+      "errorMessage": "Erreur lors du téléchargement",
+      "validationError": "Échec de la validation pour \"{title}\": {errors}",
+      "invalidBase64": "Encodage base64 invalide pour le fichier {filename}",
+      "uploadFailed": "Échec du téléchargement de {filename}"
+    },
+    "form": {
+      "title": "Titre",
+      "titleRequired": "Le titre est requis",
+      "description": "Description",
+      "descriptionRequired": "La description est requise",
+      "descriptionHelper": "Description (Markdown supporté)",
+      "imagePath": "Chemin de l'Image (optionnel)",
+      "author": "Auteur",
+      "authorHelper": "Auteur du mystère",
+      "language": "Langue",
+      "theme": "Thème",
+      "innocentWords": "Mots Innocents (3 requis)",
+      "guiltyWords": "Mots Coupables (3 requis)",
+      "word": "Mot {number}",
+      "allWordsRequired": "Les 3 mots sont requis",
+      "characterSheets": "Fiches de Personnages",
+      "addCharacter": "Ajouter un Personnage",
+      "character": "Personnage {number}",
+      "role": "Rôle",
+      "characterName": "Nom du Personnage",
+      "characterNameHelper": "Le nom de ce personnage (ex : 'Jean Dupont', 'Marie Laurent')",
+      "occupation": "Occupation (optionnel)",
+      "occupationHelper": "ex : Majordome, Détective, Cuisinier",
+      "darkSecret": "Sombre Secret",
+      "alibi": "Alibi",
+      "saveChanges": "Enregistrer les Modifications",
+      "errors": {
+        "minCharacters": "Au moins 3 fiches de personnages sont requises",
+        "needInvestigator": "Un rôle d'enquêteur est obligatoire",
+        "needGuilty": "Un rôle de coupable est obligatoire",
+        "allFieldsRequired": "Toutes les fiches de personnages doivent avoir un nom, un secret et un alibi",
+        "loadFailed": "Échec du chargement du mystère",
+        "saveFailed": "Échec de l'enregistrement du mystère"
+      }
+    },
+    "roles": {
+      "investigator": "Enquêteur",
+      "guilty": "Coupable",
+      "innocent": "Innocent"
+    },
+    "themes": {
+      "PETTY_CRIME": "Crime Mineur",
+      "MACABRE": "Macabre",
+      "SERIOUS_MURDER": "Meurtre Grave",
+      "FUNNY_CRIME": "Crime Comique"
+    },
+    "languages": {
+      "fr": "Français",
+      "en": "English",
+      "es": "Español",
+      "de": "Deutsch",
+      "it": "Italiano"
+    },
+    "table": {
+      "title": "Titre",
+      "description": "Description",
+      "createdAt": "Créé le",
+      "actions": "Actions"
+    }
+  },
+  "session": {
+    "create": {
+      "title": "Créer une Nouvelle Partie",
+      "createButton": "Créer une Session de Jeu",
+      "creating": "Création...",
+      "error": "Échec de la création de la session"
+    },
+    "admin": {
+      "title": "Tableau de bord administrateur",
+      "joinCode": "Code d'accès",
+      "status": "Statut : {status}",
+      "players": "Joueurs ({count})",
+      "playerStatus": "Statut : {status}",
+      "waitingPlayers": "En attente d'au moins {count} joueurs...",
+      "selectMystery": "Sélectionner un mystère",
+      "startGame": "Démarrer la partie",
+      "starting": "Démarrage...",
+      "gameStarted": "Partie démarrée ! Les joueurs reçoivent leurs fiches de personnage.",
+      "needPlayers": "Vous devez avoir au moins {count} joueurs et sélectionner un mystère pour démarrer",
+      "loadError": "Échec du chargement des données",
+      "startError": "Échec du démarrage de la partie"
+    }
+  },
+  "lobby": {
+    "title": "Salle d'attente",
+    "loading": "Chargement de la salle d'attente",
+    "scanQR": "Scannez pour rejoindre",
+    "players": "Joueurs connectés ({count})",
+    "voteMystery": "Votez pour le mystère",
+    "starting": "La partie commence",
+    "errors": {
+      "loadFailed": "Échec du chargement de la session",
+      "voteFailed": "Échec de la soumission du vote",
+      "readyFailed": "Échec de la mise à jour de l'état prêt. Veuillez réessayer.",
+      "removeFailed": "Échec de la suppression du joueur",
+      "languageFailed": "Échec de la mise à jour de la langue. Veuillez réessayer."
+    }
+  },
+  "play": {
+    "loading": "Chargement de votre personnage",
+    "loadingSheet": "Chargement de la fiche personnage...",
+    "loadError": "Échec du chargement de la fiche personnage",
+    "helpButton": "Comment jouer",
+    "showQR": "Afficher le QR code",
+    "yourAlibi": "Votre alibi",
+    "darkSecret": "Sombre Secret",
+    "accusation": {
+      "error": "Erreur lors de l'accusation",
+      "voteError": "Erreur lors du vote"
+    },
+    "messages": {
+      "investigatorCorrect": "Félicitations ! Vous avez trouvé le coupable ! +2 points",
+      "investigatorWrong": "Erreur ! Vous avez accusé une personne innocente.",
+      "guiltyAccused": "Vous avez été démasqué ! L'enquêteur a gagné.",
+      "guiltySafe": "Bravo ! Vous n'avez pas été découvert. +2 points",
+      "innocentAccused": "Vous êtes innocent et avez été accusé à tort ! +1 point",
+      "innocentSafe": "Vous n'avez pas été accusé."
+    }
+  },
+  "join": {
+    "title": "Rejoindre une Partie",
+    "roomCode": "Code d'accès",
+    "enterCode": "Entrez le code",
+    "yourName": "Votre nom",
+    "enterName": "Entrez votre nom",
+    "joinButton": "Rejoindre la partie",
+    "joining": "Connexion...",
+    "kicked": "Vous avez été exclu de la session",
+    "errors": {
+      "joinFailed": "Échec de la connexion à la partie",
+      "serverFailed": "Échec de la connexion au serveur",
+      "takeoverFailed": "Échec de la récupération de la session"
+    }
+  },
+  "createRoom": {
+    "title": "Création de la salle...",
+    "error": "Échec de la création de la salle"
+  }
+}

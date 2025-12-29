@@ -279,7 +279,7 @@ export default function PlayPage() {
     return (
       <Container maxWidth="md">
         <Box sx={{ py: 8 }}>
-          <Alert severity="info">Loading character sheet...</Alert>
+          <Alert severity="info">Chargement de la fiche personnage...</Alert>
         </Box>
       </Container>
     );
