@@ -58,10 +58,10 @@ export async function DELETE(
       );
     }
 
-    // Update player status to 'kicked'
+    // Update player status to 'quit' (kicked players are marked as quit)
     const { error: updateError } = await (supabase
       .from('players') as any)
-      .update({ status: 'kicked' })
+      .update({ status: 'quit' })
       .eq('id', playerId);
 
     if (updateError) {

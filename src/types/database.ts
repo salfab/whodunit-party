@@ -103,6 +103,7 @@ export type Database = {
           language: string
           theme: string
           title: string
+          version: string | null
         }
         Insert: {
           author: string
@@ -115,6 +116,7 @@ export type Database = {
           language: string
           theme?: string
           title: string
+          version?: string | null
         }
         Update: {
           author?: string
@@ -127,6 +129,7 @@ export type Database = {
           language?: string
           theme?: string
           title?: string
+          version?: string | null
         }
         Relationships: []
       }
@@ -380,7 +383,7 @@ export type Database = {
     }
     Enums: {
       player_role: "investigator" | "guilty" | "innocent"
-      player_status: "active" | "quit" | "accused"
+      player_status: "active" | "quit" | "accused" | "kicked"
       session_status: "lobby" | "playing" | "completed"
     }
     CompositeTypes: {
@@ -1146,7 +1149,7 @@ export const Constants = {
   public: {
     Enums: {
       player_role: ["investigator", "guilty", "innocent"],
-      player_status: ["active", "quit", "accused"],
+      player_status: ["active", "quit", "accused", "kicked"],
       session_status: ["lobby", "playing", "completed"],
     },
   },

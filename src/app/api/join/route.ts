@@ -55,15 +55,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (session.status !== 'lobby') {
-      log('warn', 'Session not in lobby state', { sessionId: session.id, status: session.status });
-      return NextResponse.json(
-        { error: 'This game has already started' },
-        { status: 400 }
-      );
-    }
-
-    // Check if a player with this name already exists in the session
+    // Check if a player with this name already exists in the session FIRST
+    // This allows takeover even if the game has already started
     const { data: existingPlayer, error: existingPlayerError } = await supabase
       .from('players')
       .select('*')
@@ -75,7 +68,8 @@ export async function POST(request: NextRequest) {
       log('info', 'Name already taken, offering takeover', { 
         joinCode, 
         playerName, 
-        existingPlayerId: existingPlayer.id 
+        existingPlayerId: existingPlayer.id,
+        sessionStatus: session.status
       });
       return NextResponse.json(
         {
@@ -85,6 +79,15 @@ export async function POST(request: NextRequest) {
           canTakeover: true,
         },
         { status: 409 }
+      );
+    }
+
+    // Only check session status if the player doesn't already exist
+    if (session.status !== 'lobby') {
+      log('warn', 'Session not in lobby state', { sessionId: session.id, status: session.status });
+      return NextResponse.json(
+        { error: 'This game has already started' },
+        { status: 400 }
       );
     }
 

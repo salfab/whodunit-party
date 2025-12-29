@@ -91,6 +91,17 @@ export async function loadCharacterSheet(
   }
 
   if (assignmentError || !assignment) {
+    // No assignment for this player - redirect to join page
+    const { data: sessionForJoin } = await supabase
+      .from('game_sessions')
+      .select('join_code')
+      .eq('id', sessionId)
+      .single();
+    
+    if (sessionForJoin?.join_code) {
+      window.location.href = `/join?code=${sessionForJoin.join_code}`;
+      throw new Error('Redirecting to join page');
+    }
     throw new Error('No character sheet assigned yet');
   }
 

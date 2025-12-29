@@ -98,10 +98,12 @@ export default function TransitionScreen({
                         src={imageUrl}
                         alt="Mystery"
                         sx={{
-                          width: 150,
-                          height: 150,
+                          maxWidth: 'calc(100vw - 64px)',
+                          maxHeight: 'calc(100vh - 300px)',
+                          width: 'auto',
+                          height: 'auto',
                           borderRadius: '16px',
-                          objectFit: 'cover',
+                          objectFit: 'contain',
                           mb: 3,
                           boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
                           border: '3px solid rgba(255,255,255,0.2)',

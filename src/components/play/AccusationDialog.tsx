@@ -63,13 +63,13 @@ export default function AccusationDialog({
       <DialogTitle sx={{ 
         fontSize: '1.5rem', 
         fontWeight: 'bold',
-        pb: 1,
+        pb: 2,
         borderBottom: '2px solid',
         borderColor: 'divider'
       }}>
         🎯 Sélectionnez le coupable
       </DialogTitle>
-      <DialogContent sx={{ pt: 3 }}>
+      <DialogContent sx={{ pt: 3, mt: 2 }}>
         <List sx={{ py: 0 }} data-testid="accusation-player-list">
           {players.map((player) => (
             <ListItem key={player.id} disablePadding sx={{ mb: 1 }} data-testid={`accusation-player-${player.id}`}>

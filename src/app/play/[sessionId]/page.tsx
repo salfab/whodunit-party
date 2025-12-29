@@ -132,6 +132,11 @@ export default function PlayPage() {
         setTransitionImageUrl(result.transitionData.imageUrl);
         setShowTransition(true);
       }
+      
+      // Check if mystery changed - if so, reset voting state
+      const mysteryChanged = previousMysteryIdRef.current !== null && 
+                            previousMysteryIdRef.current !== result.characterSheet.mystery_id;
+      
       previousMysteryIdRef.current = result.characterSheet.mystery_id;
 
       // Handle existing accusation
@@ -157,6 +162,16 @@ export default function PlayPage() {
       } else {
         setAccusationResult(null);
         setIsAccused(false);
+        
+        // If there's no accusation result and mystery changed, 
+        // it means we just started a new round, so reset voting state
+        if (mysteryChanged) {
+          console.log('New mystery detected, resetting voting state');
+          setHasVoted(false);
+          setSelectedMystery('');
+          setVoteCounts({});
+          setAvailableMysteries([]);
+        }
       }
 
       setLoading(false);
@@ -168,15 +183,21 @@ export default function PlayPage() {
   }
 
   async function loadPostAccusationData() {
-    const scores = await loadScoreboard(sessionId);
-    setPlayerScores(scores);
+    try {
+      const scores = await loadScoreboard(sessionId);
+      setPlayerScores(scores);
 
-    if (currentPlayer?.id) {
-      const result = await loadAvailableMysteries(sessionId, currentPlayer.id);
-      setAvailableMysteries(result.mysteries);
-      setVoteCounts(result.voteCounts);
-      setSelectedMystery(result.selectedMystery);
-      setHasVoted(result.hasVoted);
+      if (currentPlayer?.id) {
+        const result = await loadAvailableMysteries(sessionId, currentPlayer.id);
+        setAvailableMysteries(result.mysteries);
+        setVoteCounts(result.voteCounts);
+        setSelectedMystery(result.selectedMystery);
+        setHasVoted(result.hasVoted);
+        console.log('Loaded voting state:', { hasVoted: result.hasVoted, selectedMystery: result.selectedMystery, voteCounts: result.voteCounts });
+      }
+    } catch (err: any) {
+      console.error('Error loading post-accusation data:', err);
+      setErrorSnackbar({ open: true, message: 'Erreur lors du chargement des données' });
     }
   }
 

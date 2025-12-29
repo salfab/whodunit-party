@@ -92,19 +92,36 @@ export async function POST(
     let nextRoundStarted = false;
     
     try {
-      const { count: activePlayerCount, error: playerError } = await (supabase
+      const { data: activePlayers, count: activePlayerCount, error: playerError } = await (supabase
         .from('players') as any)
-        .select('*', { count: 'exact', head: true })
+        .select('id, name, status', { count: 'exact' })
         .eq('session_id', sessionId)
         .in('status', ['active', 'accused']);
 
-      const { count: voteCount, error: voteCountError } = await (supabase
+      const { data: voteData, count: voteCount, error: voteCountError } = await (supabase
         .from('mystery_votes') as any)
-        .select('*', { count: 'exact', head: true })
+        .select('player_id', { count: 'exact' })
         .eq('session_id', sessionId)
         .eq('round_number', nextRoundNumber);
 
       logger('info', `Vote check: ${voteCount}/${activePlayerCount} votes cast for round ${nextRoundNumber}`);
+      logger('info', `Active players: ${JSON.stringify(activePlayers)}`);
+      logger('info', `Votes: ${JSON.stringify(voteData)}`);
+      
+      // Additional debugging: check for mismatches
+      if (activePlayers && voteData) {
+        const activePlayerIds = new Set(activePlayers.map((p: any) => p.id));
+        const votedPlayerIds = new Set(voteData.map((v: any) => v.player_id));
+        const notVoted = activePlayers.filter((p: any) => !votedPlayerIds.has(p.id));
+        const extraVotes = voteData.filter((v: any) => !activePlayerIds.has(v.player_id));
+        
+        if (notVoted.length > 0) {
+          logger('warn', `Players who haven't voted yet: ${JSON.stringify(notVoted)}`);
+        }
+        if (extraVotes.length > 0) {
+          logger('warn', `Votes from non-active players: ${JSON.stringify(extraVotes)}`);
+        }
+      }
 
       if (
         !playerError && 

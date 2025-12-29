@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Reactivate the player
+    // When someone takes over, they inherit the player's points and character
     const { error: updateError } = await (supabase
       .from('players') as any)
       .update({
