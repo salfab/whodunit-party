@@ -26,9 +26,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Wait for deployment to be fully ready
-        run: sleep 30
-
       - name: Seed mysteries
         run: node scripts/seed-mysteries.mjs
         env:
