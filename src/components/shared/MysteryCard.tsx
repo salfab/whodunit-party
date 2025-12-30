@@ -16,6 +16,8 @@ interface MysteryCardProps {
     author?: string;
     character_count?: number;
     language?: string;
+    cover_image_url?: string;
+    image_path?: string;
   };
   selected?: boolean;
   voteCount?: number;
@@ -39,6 +41,7 @@ export default function MysteryCard({
   onClick,
 }: MysteryCardProps) {
   const flag = mystery.language ? languageFlags[mystery.language] || '🌍' : '';
+  const imageUrl = mystery.cover_image_url || mystery.image_path;
 
   const titleDisplay = (
     <Typography 
@@ -86,6 +89,20 @@ export default function MysteryCard({
           width: '100%', 
           gap: { xs: 0.5, sm: 2 },
         }}>
+          {imageUrl && (
+            <Box
+              component="img"
+              src={imageUrl}
+              alt={mystery.title}
+              sx={{
+                width: { xs: '100%', sm: 80 },
+                height: { xs: 'auto', sm: 60 },
+                objectFit: 'cover',
+                borderRadius: 1,
+                flexShrink: 0,
+              }}
+            />
+          )}
           <Box sx={{ flex: 1 }}>
             {mystery.title.length > 30 ? (
               <Tooltip title={mystery.title} placement="top">

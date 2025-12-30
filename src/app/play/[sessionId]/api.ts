@@ -260,7 +260,11 @@ export async function loadAvailableMysteries(
   ).map((m: any) => ({
     id: m.id,
     title: m.title,
-    cover_image_url: m.image_path
+    author: m.author,
+    character_count: m.character_count,
+    language: m.language,
+    cover_image_url: m.image_path,
+    image_path: m.image_path, // Keep both for compatibility
   }));
 
   // Load current vote counts

@@ -250,7 +250,14 @@ export default function PlayPage() {
     }
   }
 
-  async function handleVoteForMystery(mysteryId: string) {
+  async function handleVoteForMystery(mysteryId: string | null) {
+    if (!mysteryId) {
+      // Unvoting - just reset local state
+      setSelectedMystery(null);
+      setHasVoted(false);
+      return;
+    }
+
     try {
       await submitMysteryVote(sessionId, mysteryId);
       setSelectedMystery(mysteryId);
@@ -476,10 +483,10 @@ export default function PlayPage() {
                 availableMysteries={availableMysteries}
                 myVote={selectedMystery || null}
                 voteCounts={voteCounts}
-                hasVoted={hasVoted}
+                hasVoted={false}
                 startingNextRound={startingNextRound}
-                onVote={(mysteryId) => mysteryId && handleVoteForMystery(mysteryId)}
-                allowUnvote={false}
+                onVote={handleVoteForMystery}
+                allowUnvote={true}
                 showTitle={true}
               />
 

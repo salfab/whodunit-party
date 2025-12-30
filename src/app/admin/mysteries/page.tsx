@@ -8,12 +8,11 @@ import {
   Typography,
   Button,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
+  Grid,
   IconButton,
   Dialog,
   DialogTitle,
@@ -23,7 +22,7 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Upload as UploadIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Upload as UploadIcon, ImageNotSupported as NoImageIcon } from '@mui/icons-material';
 import LoadingScreen from '@/components/LoadingScreen';
 import AdminNavBar from '@/components/admin/AdminNavBar';
 
@@ -32,6 +31,7 @@ interface Mystery {
   title: string;
   description: string;
   created_at: string;
+  image_path: string | null;
 }
 
 export default function MysteriesPage() {
@@ -97,7 +97,8 @@ export default function MysteriesPage() {
     setMysteryToDelete(null);
   };
 
-  const truncateDescription = (description: string, maxLength: number = 100) => {
+  const truncateDescription = (description: string, maxLength: number = 150) => {
+    if (!description) return '';
     if (description.length <= maxLength) return description;
     return description.substring(0, maxLength) + '...';
   };
@@ -127,7 +128,7 @@ export default function MysteriesPage() {
             onClick={() => router.push('/admin/mysteries/upload')}
             data-testid="admin-upload-button"
           >
-            Télécharger JSON
+            Uploader un mystère
           </Button>
           <Button
             variant="contained"
@@ -162,57 +163,90 @@ export default function MysteriesPage() {
             </Button>
           </Paper>
         ) : (
-          <TableContainer component={Paper} data-testid="admin-mysteries-table">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Titre</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Créé le</TableCell>
-                  <TableCell align="right">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody data-testid="admin-mysteries-list">
-                {mysteries.map((mystery) => (
-                  <TableRow key={mystery.id} hover data-testid={`admin-mystery-row-${mystery.id}`}>
-                    <TableCell>
-                      <Typography variant="body1" fontWeight="medium">
+          <Grid container spacing={3} data-testid="admin-mysteries-list">
+            {mysteries.map((mystery) => (
+              <Grid item xs={12} sm={6} md={4} key={mystery.id}>
+                <Card 
+                  sx={{ 
+                    height: '100%', 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    position: 'relative'
+                  }}
+                  data-testid={`admin-mystery-row-${mystery.id}`}
+                >
+                  {mystery.image_path ? (
+                    <CardMedia
+                      component="img"
+                      image={mystery.image_path}
+                      alt={mystery.title}
+                      sx={{ 
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: 'auto',
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        height: 200,
+                        backgroundColor: 'grey.300',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'column',
+                        gap: 1,
+                        color: 'grey.600',
+                      }}
+                    >
+                      <NoImageIcon sx={{ fontSize: 60 }} />
+                      <Typography variant="caption">Pas d'image</Typography>
+                    </Box>
+                  )}
+                  
+                  <CardContent sx={{ flexGrow: 1, pb: 1 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                      <Typography variant="h6" component="div" sx={{ flexGrow: 1, pr: 1 }}>
                         {mystery.title}
                       </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
+                      <Box sx={{ display: 'flex', gap: 0.5 }}>
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={() => router.push(`/admin/mysteries/${mystery.id}/edit`)}
+                          title="Modifier"
+                          data-testid={`admin-edit-mystery-${mystery.id}`}
+                          sx={{ p: 0.5 }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleDeleteClick(mystery)}
+                          title="Supprimer"
+                          data-testid={`admin-delete-mystery-${mystery.id}`}
+                          sx={{ p: 0.5 }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </Box>
+                    
+                    {mystery.description && (
+                      <Typography variant="body2" color="text.secondary" paragraph sx={{ mb: 1 }}>
                         {truncateDescription(mystery.description)}
                       </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="text.secondary">
-                        {new Date(mystery.created_at).toLocaleDateString()}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        color="primary"
-                        onClick={() => router.push(`/admin/mysteries/${mystery.id}/edit`)}
-                        title="Edit"
-                        data-testid={`admin-edit-mystery-${mystery.id}`}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDeleteClick(mystery)}
-                        title="Delete"
-                        data-testid={`admin-delete-mystery-${mystery.id}`}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                    )}
+                    
+                    <Typography variant="caption" color="text.secondary">
+                      Créé le {new Date(mystery.created_at).toLocaleDateString()}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         )}
       </Box>
 

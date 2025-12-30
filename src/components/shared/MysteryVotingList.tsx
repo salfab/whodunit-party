@@ -113,6 +113,7 @@ export function MysteryVotingList({
               src={votedMystery.cover_image_url || votedMystery.image_path}
               alt={votedMystery.title}
               sx={{
+                width: { xs: '100%', sm: 'auto' },
                 maxWidth: '100%',
                 maxHeight: '300px',
                 borderRadius: 2,
@@ -152,23 +153,26 @@ export function MysteryVotingList({
       )}
       
       {/* Show voted mystery image prominently (lobby mode with allowUnvote) */}
-      {allowUnvote && votedMystery && (votedMystery.cover_image_url || votedMystery.image_path) && (
+      {allowUnvote && votedMystery && (
         <Paper elevation={2} sx={{ p: 2, mb: 3, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             ✅ Vous avez voté pour :
           </Typography>
-          <Box
-            component="img"
-            src={votedMystery.cover_image_url || votedMystery.image_path}
-            alt={votedMystery.title}
-            sx={{
-              maxWidth: '100%',
-              maxHeight: '250px',
-              borderRadius: 2,
-              objectFit: 'contain',
-              mb: 1,
-            }}
-          />
+          {(votedMystery.cover_image_url || votedMystery.image_path) && (
+            <Box
+              component="img"
+              src={votedMystery.cover_image_url || votedMystery.image_path}
+              alt={votedMystery.title}
+              sx={{
+                width: { xs: '100%', sm: 'auto' },
+                maxWidth: '100%',
+                maxHeight: '250px',
+                borderRadius: 2,
+                objectFit: 'contain',
+                mb: 1,
+              }}
+            />
+          )}
           <Typography variant="subtitle1" fontWeight="bold">
             {votedMystery.title}
           </Typography>

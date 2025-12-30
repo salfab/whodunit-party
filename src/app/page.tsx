@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Container, Typography, Button, IconButton, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { Box, Container, Typography, Button, IconButton, MenuItem, Select } from '@mui/material';
 import { Settings as SettingsIcon } from '@mui/icons-material';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
@@ -50,8 +50,29 @@ export default function Home() {
           position: 'absolute',
           top: 16,
           right: 16,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
         }}
       >
+        <Select
+          value={locale}
+          onChange={(e) => handleLanguageChange(e.target.value as Locale)}
+          size="small"
+          sx={{
+            minWidth: 100,
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(255, 255, 255, 0.23)',
+            },
+            '&:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(255, 255, 255, 0.4)',
+            },
+          }}
+        >
+          <MenuItem value="fr">🇫🇷 FR</MenuItem>
+          <MenuItem value="en">🇬🇧 EN</MenuItem>
+          <MenuItem value="es">🇪🇸 ES</MenuItem>
+        </Select>
         <IconButton
           component={Link}
           href="/admin/mysteries"
@@ -78,19 +99,6 @@ export default function Home() {
         <Typography variant="h5" textAlign="center" color="text.secondary">
           {t('home.subtitle')}
         </Typography>
-        
-        <FormControl sx={{ minWidth: 200 }}>
-          <InputLabel>{t('home.selectLanguage')}</InputLabel>
-          <Select
-            value={locale}
-            label={t('home.selectLanguage')}
-            onChange={(e) => handleLanguageChange(e.target.value as Locale)}
-          >
-            <MenuItem value="fr">🇫🇷 Français</MenuItem>
-            <MenuItem value="en">🇬🇧 English</MenuItem>
-            <MenuItem value="es">🇪🇸 Español</MenuItem>
-          </Select>
-        </FormControl>
         
         <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
           <Button

@@ -50,12 +50,13 @@ export default function UploadMysteriesPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadQueue, setUploadQueue] = useState<File[]>([]);
   const [currentUpload, setCurrentUpload] = useState<{ file: File; progress: string } | null>(null);
-  const [completedUploads, setCompletedUploads] = useState<Array<{ file: string; success: boolean; message: string }>>([]);
+  const [completedUploads, setCompletedUploads] = useState<Array<{ file: string; success: boolean; skipped: boolean; message: string }>>([]);
   
   // Shared state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [warning, setWarning] = useState('');
 
   const handleJsonUpload = async () => {
     setLoading(true);
@@ -122,10 +123,11 @@ export default function UploadMysteriesPage() {
     setLoading(true);
     setError('');
     setSuccess('');
+    setWarning('');
     setCompletedUploads([]);
     setUploadQueue([...selectedFiles]);
 
-    const results: Array<{ file: string; success: boolean; message: string }> = [];
+    const results: Array<{ file: string; success: boolean; skipped: boolean; message: string }> = [];
 
     // Process files one by one
     for (let i = 0; i < selectedFiles.length; i++) {
@@ -147,21 +149,43 @@ export default function UploadMysteriesPage() {
           throw new Error(data.details || data.error || 'Échec du téléchargement du paquet mystère');
         }
 
-        const totalImages = data.mysteries.reduce((sum: number, m: any) => sum + (m.imagesUploaded || 0), 0);
+        // API returns { uploaded: [...], skipped: [...], summary: {...} }
+        const uploadedMysteries = data.uploaded || [];
+        const skippedMysteries = data.skipped || [];
+        const totalImages = uploadedMysteries.reduce((sum: number, m: any) => sum + (m.imagesUploaded || 0), 0);
         
         let message = '';
-        if (data.count === 1) {
-          message = `"${data.mysteries[0].title}" - ${data.mysteries[0].imagesUploaded} images`;
+        let isSkipped = false;
+        
+        if (uploadedMysteries.length === 0 && skippedMysteries.length > 0) {
+          // All skipped
+          isSkipped = true;
+          if (skippedMysteries.length === 1) {
+            const skipped = skippedMysteries[0];
+            message = `"${skipped.title}" déjà existant (v${skipped.existingVersion})`;
+          } else {
+            message = `${skippedMysteries.length} mystères déjà existants`;
+          }
+        } else if (uploadedMysteries.length > 0 && skippedMysteries.length > 0) {
+          // Partial success
+          isSkipped = true;
+          message = `${uploadedMysteries.length} téléchargés, ${skippedMysteries.length} ignorés - ${totalImages} images`;
+        } else if (uploadedMysteries.length === 1) {
+          message = `"${uploadedMysteries[0].title}" - ${uploadedMysteries[0].imagesUploaded} images`;
+        } else if (uploadedMysteries.length > 1) {
+          message = `${uploadedMysteries.length} mystères - ${totalImages} images`;
         } else {
-          message = `${data.count} mystères - ${totalImages} images`;
+          isSkipped = true;
+          message = 'Aucun mystère téléchargé';
         }
 
-        results.push({ file: file.name, success: true, message });
+        results.push({ file: file.name, success: true, skipped: isSkipped, message });
         setCompletedUploads([...results]);
       } catch (err: any) {
         results.push({ 
           file: file.name, 
-          success: false, 
+          success: false,
+          skipped: false,
           message: err.message || 'Échec du téléchargement' 
         });
         setCompletedUploads([...results]);
@@ -174,15 +198,24 @@ export default function UploadMysteriesPage() {
     setCurrentUpload(null);
     setLoading(false);
     
-    // Check if all succeeded
-    const allSucceeded = results.every(u => u.success);
-    if (allSucceeded) {
+    // Check results
+    const allFailed = results.every(u => !u.success);
+    const someFailed = results.some(u => !u.success);
+    const someSkipped = results.some(u => u.skipped);
+    const allSucceededWithoutSkips = results.every(u => u.success && !u.skipped);
+    
+    if (allSucceededWithoutSkips) {
+      // Perfect success - redirect
       setSuccess(`Téléchargement réussi de tous les ${selectedFiles.length} fichier(s) !`);
       setTimeout(() => {
         router.push('/admin/mysteries');
       }, 2000);
-    } else {
+    } else if (someFailed) {
+      // Some errors - show error, no redirect
       setError('Certains téléchargements ont échoué. Vérifiez les résultats ci-dessous.');
+    } else if (someSkipped) {
+      // Some/all skipped - show warning, no redirect
+      setWarning('Certains mystères existent déjà et n\'ont pas été téléchargés. Vérifiez les résultats ci-dessous.');
     }
     
     setSelectedFiles([]);
@@ -229,6 +262,12 @@ export default function UploadMysteriesPage() {
           {error && (
             <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')} data-testid="upload-error">
               {error}
+            </Alert>
+          )}
+
+          {warning && (
+            <Alert severity="warning" sx={{ mb: 3 }} onClose={() => setWarning('')} data-testid="upload-warning">
+              {warning}
             </Alert>
           )}
 
@@ -303,7 +342,15 @@ export default function UploadMysteriesPage() {
             {completedUploads.length > 0 && (
               <Box sx={{ mb: 2, maxHeight: '200px', overflow: 'auto' }}>
                 {completedUploads.map((upload, idx) => (
-                  <Alert key={idx} severity={upload.success ? 'success' : 'error'} sx={{ mb: 1 }}>
+                  <Alert 
+                    key={idx} 
+                    severity={
+                      !upload.success ? 'error' : 
+                      upload.skipped ? 'warning' : 
+                      'success'
+                    } 
+                    sx={{ mb: 1 }}
+                  >
                     <Typography variant="body2">
                       <strong>{upload.file}:</strong> {upload.message}
                     </Typography>

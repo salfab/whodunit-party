@@ -9,28 +9,6 @@
 -- Insert mysteries
 INSERT INTO mysteries (id, title, description, image_path, language, author, theme, innocent_words, guilty_words, created_at) VALUES
 -- French mysteries (non-ZIP versions only)
-('818ad970-19b8-4403-bc62-960c194a6042', 'Le "nez" ocarina de Pinocchio', '*Je pousse la porte de l''atelier comme on entrouvre un secret.*
-
-Le "nez" de Pinocchio a été transformé en ocarina : une rangée de trous nets, réguliers, impossibles à confondre avec un accident. Le pire, c''est la mise en scène : l''instrument est posé sur un coussin, éclairé par une lampe d''établi, comme une œuvre à admirer. Ce soir, la troupe joue devant une salle pleine, et le "nez" est l''accessoire vedette. Sans lui, le numéro tombe à plat. Avec lui, chaque mensonge devient un sifflement ridicule.
-
-**Ce qui ne colle pas :**
-- La poussière de bois est *trop fine* et rassemblée en tas, comme si quelqu''un avait balayé pour ne laisser que le "beau" copeau.
-- Une partition est maculée de vernis, et un schéma de trous y apparaît en filigrane.
-- La boîte d''outils est refermée "trop proprement" : même les maniaques laissent une trace de précipitation.
-
-Je ne veux pas de théâtre dans le théâtre. **On dit ce qu''on sait, et on assume ce qu''on a fait.**
-
-Et je le rappelle : quand vous dites "nez", vous faites tous les guillemets avec les doigts.', NULL, 'fr', 'Built-in', 'PETTY_CRIME', ARRAY['atelier','copeaux','marionnette'], ARRAY['ocarina','mèche','vernis'], '2025-12-25 08:39:26.759163+00'),
-('b5cda1e1-db9f-4bfe-ae53-e688e3072668', 'La perruque de Kojak dans la soupe', '*La cantine est vide, mais la honte, elle, occupe toutes les tables.*
-
-La perruque de Kojak a trempé dans la soupe du midi. Pas un accident de plateau, pas un courant d''air, pas une chute "malheureuse". Trempée, insistée, laissée assez longtemps pour que la laine prenne le bouillon. Résultat : la salle a ri, puis s''est tue, puis s''est divisée. À l''Amicale des gens qui ont un cheveu sur la langue, l''humiliation n''est jamais gratuite : elle sert souvent à couvrir un autre geste, plus discret, plus rentable.
-
-**Ce qui ne colle pas :**
-- La marmite a été déplacée de vingt centimètres : juste assez pour qu''un coude "accidentel" devienne plausible.
-- Une pince de service a été rangée au mauvais crochet, comme si quelqu''un avait voulu gagner du temps.
-- Une serviette en papier porte une note griffonnée, puis froissée : trois mots, comme un mini-plan.
-
-Je ne veux pas de morale, je veux une responsabilité. **On arrête de se cacher derrière le rire.** Je veux savoir qui a trempé… et ce que cette farce camouflait.', NULL, 'fr', 'Built-in', 'FUNNY_CRIME', ARRAY['cantine','plateau','louche'], ARRAY['perruque','bouillon','pince'], '2025-12-25 08:39:26.794468+00'),
 ('3a4b688b-3a29-4d26-8d3f-2ff66c6cd6a2', 'La ballade dérobée', '*Salle du trône. Tentures lourdes. Pupitre, encre, feuilles.*
 
 Un ménestrel a plagié la ballade du royaume. Pas une "inspiration", pas un clin d''œil : des passages identiques, des images copiées, des silences au même endroit. Dans une cour, copier n''est pas seulement voler un texte : c''est voler une place, voler un prestige, voler l''oreille du roi. Et quand la cour vole, elle se rend ridicule — donc dangereuse.
