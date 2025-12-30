@@ -17,7 +17,6 @@ function getSingleMysteryValidator(): ValidateFunction {
     // Extract the single mystery definition from the schema
     const singleMysterySchema = {
       $schema: "http://json-schema.org/draft-07/schema#",
-      title: "Mystery",
       ...mysterySchema.definitions.mystery
     };
     singleMysteryValidator = getAjv().compile(singleMysterySchema);
