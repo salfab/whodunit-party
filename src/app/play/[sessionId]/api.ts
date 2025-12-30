@@ -366,6 +366,7 @@ export async function fetchGuiltyPlayer(
   characterName: string;
   occupation?: string;
   imagePath?: string;
+  playerIndex: number;
 } | undefined> {
   const response = await fetch(`/api/rounds/${sessionId}/guilty-player?mysteryId=${mysteryId}`);
   

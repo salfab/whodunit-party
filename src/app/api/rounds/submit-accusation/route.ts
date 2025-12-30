@@ -222,12 +222,18 @@ export async function POST(request: NextRequest) {
         )
       `)
       .eq('session_id', session.sessionId)
-      .eq('mystery_id', gameSession.current_mystery_id);
+      .eq('mystery_id', gameSession.current_mystery_id)
+      .order('player_id', { ascending: true });
     
     const guiltyAssignment = guiltyAssignmentData as any;
     const guiltyPlayerAssignment = guiltyAssignment?.find((a: any) => 
       a.character_sheets?.role === 'guilty'
     );
+
+    // Calculate player index for consistent placeholders
+    const guiltyPlayerIndex = guiltyAssignment?.findIndex((a: any) =>
+      a.character_sheets?.role === 'guilty'
+    ) ?? 0;
 
     const guiltyPlayerInfo = guiltyPlayerAssignment ? {
       id: guiltyPlayerAssignment.player_id,
@@ -235,6 +241,7 @@ export async function POST(request: NextRequest) {
       characterName: guiltyPlayerAssignment.character_sheets?.character_name,
       occupation: guiltyPlayerAssignment.character_sheets?.occupation,
       imagePath: guiltyPlayerAssignment.character_sheets?.image_path,
+      playerIndex: guiltyPlayerIndex,
     } : undefined;
 
     // Generate role-specific messages in French
