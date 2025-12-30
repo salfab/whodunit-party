@@ -14,6 +14,7 @@ export interface PlayerOption {
 export interface CharacterWithWords extends CharacterSheet {
   wordsToPlace: string[];
   mystery: Mystery;
+  playerIndex: number;
 }
 
 export interface PlayerScore {

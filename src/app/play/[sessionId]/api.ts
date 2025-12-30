@@ -3,6 +3,12 @@ import type { PlayerOption, PlayerScore, AvailableMystery, CharacterWithWords } 
 
 const supabase = createClient();
 
+export function getPlaceholderImage(playerIndex: number): string {
+  const totalPlaceholders = 6;
+  const placeholderNumber = (playerIndex % totalPlaceholders) + 1;
+  return `/characters/suspect_0${placeholderNumber}.jpg`;
+}
+
 interface LoadCharacterSheetResult {
   currentPlayer: { id: string; name: string };
   characterSheet: CharacterWithWords;
@@ -113,7 +119,19 @@ export async function loadCharacterSheet(
   const wordsToPlace = sheet.role === 'investigator' ? [] : 
     (sheet.role === 'guilty' ? mystery.guilty_words : mystery.innocent_words);
   
-  const characterSheet: CharacterWithWords = { ...sheet, wordsToPlace, mystery };
+  // Get player index for consistent placeholders
+  const { data: allPlayerAssignments } = await supabase
+    .from('player_assignments')
+    .select('player_id')
+    .eq('session_id', sessionId)
+    .eq('mystery_id', mystery.id)
+    .order('player_id', { ascending: true });
+  
+  const playerIndex = allPlayerAssignments?.findIndex(
+    pa => pa.player_id === playerData.playerId
+  ) ?? 0;
+
+  const characterSheet: CharacterWithWords = { ...sheet, wordsToPlace, mystery, playerIndex };
 
   // Load all active players with their character names (for accusation list)
   const { data: allPlayers } = await supabase

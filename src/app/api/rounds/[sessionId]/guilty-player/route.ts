@@ -70,7 +70,8 @@ export async function GET(
       )
     `)
     .eq('session_id', sessionId)
-    .eq('mystery_id', mysteryId);
+    .eq('mystery_id', mysteryId)
+    .order('player_id', { ascending: true });
 
   if (assignmentError) {
     console.error('Error fetching guilty player:', assignmentError);
@@ -103,6 +104,11 @@ export async function GET(
     );
   }
 
+  // Calculate player index for consistent placeholders
+  const guiltyPlayerIndex = guiltyAssignmentData?.findIndex(
+    (a: any) => a.character_sheets?.role === 'guilty'
+  ) ?? 0;
+
   // Return the guilty player information
   const guiltyPlayer = {
     id: guiltyPlayerAssignment.player_id,
@@ -110,6 +116,7 @@ export async function GET(
     characterName: guiltyPlayerAssignment.character_sheets?.character_name,
     occupation: guiltyPlayerAssignment.character_sheets?.occupation,
     imagePath: guiltyPlayerAssignment.character_sheets?.image_path,
+    playerIndex: guiltyPlayerIndex,
   };
 
   console.log('[GUILTY API] Returning guilty player:', guiltyPlayer);

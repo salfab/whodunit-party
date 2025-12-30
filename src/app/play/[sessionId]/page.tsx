@@ -48,6 +48,7 @@ import {
   submitAccusation,
   submitMysteryVote,
   fetchGuiltyPlayer,
+  getPlaceholderImage,
 } from './api';
 import { setupRealtimeSubscription, setupVoteSubscription } from './realtime';
 
@@ -393,7 +394,7 @@ export default function PlayPage() {
                 characterSheet.image_path || 
                 (characterSheet.role === 'investigator' 
                   ? '/characters/investigator.jpg' 
-                  : `/characters/suspect_0${(parseInt(characterSheet.id.slice(0, 8), 16) % 6) + 1}.jpg`)
+                  : getPlaceholderImage(characterSheet.playerIndex))
               }
               characterName={characterSheet.character_name}
               occupation={characterSheet.occupation || undefined}
@@ -513,7 +514,7 @@ export default function PlayPage() {
             <RoleRevealCard
               imagePath={
                 accusationResult.guiltyPlayer.imagePath || 
-                `/characters/suspect_0${(parseInt(accusationResult.guiltyPlayer.id.slice(0, 8), 16) % 6) + 1}.jpg`
+                getPlaceholderImage(accusationResult.guiltyPlayer.playerIndex)
               }
               characterName={accusationResult.guiltyPlayer.characterName}
               occupation={accusationResult.guiltyPlayer.occupation}
