@@ -5,11 +5,9 @@ on:
     types:
       - 'vercel.deployment.success'
   workflow_dispatch:  # Allow manual trigger
-    inputs:
-      api_url:
-        description: 'Production URL to seed'
-        required: true
-        default: 'https://whodunit-party.vercel.app'
+
+env:
+  PRODUCTION_URL: https://whodunit-party.vercel.app
 
 jobs:
   seed:
@@ -36,7 +34,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Wait for deployment to be fully ready
+        run: sleep 30
+
       - name: Seed mysteries
         run: pnpm seed:mysteries
         env:
-          API_URL: ${{ github.event.client_payload.url || github.event.inputs.api_url }}
+          API_URL: ${{ env.PRODUCTION_URL }}
