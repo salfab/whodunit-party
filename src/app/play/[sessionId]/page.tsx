@@ -537,11 +537,9 @@ export default function PlayPage() {
           </Paper>
         )}
 
-        <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-          <Alert severity="warning">
-            ⚠️ Gardez votre fiche de personnage secrète des autres joueurs !
-          </Alert>
-        </Paper>
+        <Alert severity="warning" sx={{ mt: 4 }}>
+          Gardez votre fiche de personnage secrète des autres joueurs !
+        </Alert>
 
         <AccusationDialog
           open={accuseDialogOpen}
