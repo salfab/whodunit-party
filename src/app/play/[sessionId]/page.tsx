@@ -180,6 +180,7 @@ export default function PlayPage() {
           setSelectedMystery('');
           setVoteCounts({});
           setAvailableMysteries([]);
+          setShowCharacterSheet(true); // Expand character sheet for new round
         }
       }
 
