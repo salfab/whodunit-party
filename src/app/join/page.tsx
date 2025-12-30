@@ -133,8 +133,14 @@ function JoinContent() {
         return;
       }
 
-      // Redirect to lobby
-      router.push(`/lobby/${data.sessionId}`);
+      // Check if player has an active assignment
+      if (data.hasActiveAssignment) {
+        // Redirect directly to play page
+        router.push(`/play/${data.sessionId}`);
+      } else {
+        // Redirect to lobby
+        router.push(`/lobby/${data.sessionId}`);
+      }
     } catch (err) {
       setError('Failed to connect to server');
       setShowTakeoverDialog(false);

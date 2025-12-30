@@ -47,6 +47,7 @@ import {
   loadAvailableMysteries,
   submitAccusation,
   submitMysteryVote,
+  fetchGuiltyPlayer,
 } from './api';
 import { setupRealtimeSubscription, setupVoteSubscription } from './realtime';
 
@@ -149,7 +150,7 @@ export default function PlayPage() {
 
       // Handle existing accusation
       if (result.existingAccusation) {
-        const { accusedPlayerId, wasCorrect, role, guiltyPlayer } = result.existingAccusation;
+        const { accusedPlayerId, wasCorrect, role, mysteryId } = result.existingAccusation;
         
         if (accusedPlayerId === result.currentPlayer.id) {
           setIsAccused(true);
@@ -161,12 +162,25 @@ export default function PlayPage() {
           accusedPlayerId === result.currentPlayer.id
         );
 
-        setAccusationResult({
-          wasCorrect,
-          role,
-          gameComplete: false,
-          message,
-          guiltyPlayer,
+        // Fetch guilty player from secure endpoint
+        fetchGuiltyPlayer(sessionId, mysteryId).then(guiltyPlayer => {
+          setAccusationResult({
+            wasCorrect,
+            role,
+            gameComplete: false,
+            message,
+            guiltyPlayer,
+          });
+        }).catch(err => {
+          console.error('Error fetching guilty player:', err);
+          setErrorSnackbar({ open: true, message: 'Erreur lors du chargement du coupable' });
+          // Set accusation result without guilty player
+          setAccusationResult({
+            wasCorrect,
+            role,
+            gameComplete: false,
+            message,
+          });
         });
       } else {
         setAccusationResult(null);

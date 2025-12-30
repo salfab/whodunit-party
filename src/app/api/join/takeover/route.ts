@@ -91,10 +91,21 @@ export async function POST(request: NextRequest) {
     // Set cookie
     await setSessionCookie(token);
 
+    // Check if player has an active assignment
+    const { data: assignmentData } = await supabase
+      .from('player_assignments')
+      .select('id')
+      .eq('player_id', existingPlayer.id)
+      .eq('session_id', session.id)
+      .limit(1);
+
+    const hasActiveAssignment = (assignmentData?.length ?? 0) > 0;
+
     log('info', 'Player took over session', {
       playerId: existingPlayer.id,
       sessionId: session.id,
       playerName: existingPlayer.name,
+      hasActiveAssignment,
     });
 
     return NextResponse.json({
@@ -102,6 +113,7 @@ export async function POST(request: NextRequest) {
       sessionId: session.id,
       playerName: existingPlayer.name,
       takenOver: true,
+      hasActiveAssignment,
     });
   } catch (error) {
     log('error', 'Unexpected error during takeover', { error });
