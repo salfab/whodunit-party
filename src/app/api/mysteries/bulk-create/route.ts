@@ -8,6 +8,7 @@ const log = createLogger('api.mysteries.bulk-create');
 
 interface MysteryInput {
   title: string;
+  synopsis?: string;
   description: string;
   image_path?: string;
   language: string;
@@ -87,6 +88,7 @@ export async function POST(request: NextRequest) {
         .from('mysteries') as any)
         .insert({
           title: mysteryInput.title,
+          synopsis: mysteryInput.synopsis || null,
           description: mysteryInput.description,
           image_path: mysteryInput.image_path || null,
           language: mysteryInput.language,

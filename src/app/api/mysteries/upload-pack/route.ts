@@ -23,6 +23,7 @@ function compareVersions(v1: string, v2: string): number {
 
 interface MysteryJson {
   title: string;
+  synopsis?: string;
   description: string;
   image_path?: string;
   language: string;
@@ -346,6 +347,7 @@ export async function POST(request: NextRequest) {
         .from('mysteries') as any)
         .insert({
           title: mysteryData.title,
+          synopsis: mysteryData.synopsis || null,
           description: mysteryData.description,
           image_path: mysteryData.image_path || null,
           language: mysteryData.language,

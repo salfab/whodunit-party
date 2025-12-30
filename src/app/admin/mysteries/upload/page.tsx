@@ -21,6 +21,7 @@ import AdminNavBar from '@/components/admin/AdminNavBar';
 
 interface MysteryData {
   title: string;
+  synopsis?: string;
   description: string;
   image_path?: string;
   language: string;
