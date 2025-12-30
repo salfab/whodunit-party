@@ -55,6 +55,7 @@ export async function PUT(
 
     const {
       title,
+      synopsis,
       description,
       image_path,
       language,
@@ -70,6 +71,7 @@ export async function PUT(
       .from('mysteries') as any)
       .update({
         title,
+        synopsis: synopsis || null,
         description,
         image_path: image_path || null,
         language,

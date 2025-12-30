@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
 
     const {
       title,
+      synopsis,
       description,
       image_path,
       language,
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
       .from('mysteries') as any)
       .insert({
         title,
+        synopsis: synopsis || null,
         description,
         image_path: image_path || null,
         language,

@@ -101,6 +101,7 @@ export type Database = {
           image_path: string | null
           innocent_words: string[]
           language: string
+          synopsis: string | null
           theme: string
           title: string
           version: string | null
@@ -114,6 +115,7 @@ export type Database = {
           image_path?: string | null
           innocent_words?: string[]
           language: string
+          synopsis?: string | null
           theme?: string
           title: string
           version?: string | null
@@ -127,6 +129,7 @@ export type Database = {
           image_path?: string | null
           innocent_words?: string[]
           language?: string
+          synopsis?: string | null
           theme?: string
           title?: string
           version?: string | null

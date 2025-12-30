@@ -34,6 +34,7 @@ interface CharacterSheet {
 
 interface MysteryFormData {
   title: string;
+  synopsis: string;
   description: string;
   image_path: string;
   language: string;
@@ -59,6 +60,7 @@ export default function EditMysteryPage() {
 
   const [formData, setFormData] = useState<MysteryFormData>({
     title: '',
+    synopsis: '',
     description: '',
     image_path: '',
     language: 'fr',
@@ -90,6 +92,7 @@ export default function EditMysteryPage() {
       const data = await response.json();
       setFormData({
         title: data.title || '',
+        synopsis: data.synopsis || '',
         description: data.description || '',
         image_path: data.image_path || '',
         language: data.language || 'fr',
@@ -229,6 +232,18 @@ export default function EditMysteryPage() {
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
+            />
+          </Box>
+
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              label="Synopsis"
+              value={formData.synopsis}
+              onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
+              multiline
+              rows={2}
+              helperText="Résumé en 1-2 phrases (sans spoiler). Affiché lors de la sélection du mystère."
             />
           </Box>
 
