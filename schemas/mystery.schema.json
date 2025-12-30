@@ -12,7 +12,6 @@
       "type": "object",
       "required": [
         "title",
-        "synopsis",
         "description",
         "language",
         "author",
@@ -79,7 +78,7 @@
           "description": "Array of character sheets (must include at least investigator, guilty, and one innocent)",
           "items": {
             "type": "object",
-            "required": ["role", "character_name", "occupation", "dark_secret", "alibi"],
+            "required": ["role", "character_name", "dark_secret", "alibi"],
             "properties": {
               "role": {
                 "type": "string",
