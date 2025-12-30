@@ -25,7 +25,6 @@ import {
   WordsToPlace,
   Scoreboard,
   AccusationDialog,
-  AccusedOverlay,
   AccuseButton,
   RoleRevealCard,
   RoleHelpDialog,
@@ -327,8 +326,6 @@ export default function PlayPage() {
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4, minHeight: '100vh', position: 'relative' }}>
-        <AccusedOverlay isAccused={isAccused} />
-
         {/* Toggle button for character sheet after accusation */}
         {accusationResult && (
           <Box sx={{ mb: 2 }}>
@@ -400,6 +397,7 @@ export default function PlayPage() {
               occupation={characterSheet.occupation || undefined}
               role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
               showNameOverlay={!characterSheet.image_path}
+              isAccused={isAccused}
             />
           </Box>
 

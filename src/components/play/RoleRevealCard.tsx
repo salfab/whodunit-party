@@ -11,6 +11,7 @@ interface RoleRevealCardProps {
   role: 'investigator' | 'guilty' | 'innocent';
   onImageError?: () => void;
   showNameOverlay?: boolean; // Show name elegantly at bottom of image
+  isAccused?: boolean; // Show blood smear overlay
 }
 
 // Flip animation keyframes
@@ -62,6 +63,16 @@ const fadeOut = keyframes`
   100% { opacity: 0; }
 `;
 
+// Wipe reveal animation for blood smear (diagonal from top-left)
+const wipeReveal = keyframes`
+  0% {
+    clip-path: polygon(0 0, 0 0, 0 0);
+  }
+  100% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+`;
+
 // Unified elegant card design - same for all roles
 const cardDesign = {
   gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
@@ -87,6 +98,7 @@ export default function RoleRevealCard({
   role,
   onImageError,
   showNameOverlay = false,
+  isAccused = false,
 }: RoleRevealCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -235,6 +247,28 @@ export default function RoleRevealCard({
               height: 'auto',
             }}
           />
+          
+          {/* Blood smear overlay for accused players */}
+          {isAccused && (
+            <Box
+              component="img"
+              src="/blood_smear.png"
+              alt="Blood smear"
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                objectPosition: 'top left',
+                opacity: 0.85,
+                filter: 'drop-shadow(0 0 20px rgba(139, 0, 0, 0.5))',
+                animation: `${wipeReveal} 1.5s ease-out forwards`,
+                pointerEvents: 'none',
+              }}
+            />
+          )}
           
           {/* Name overlay for placeholder images */}
           {showNameOverlay && (
