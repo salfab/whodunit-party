@@ -1,13 +1,22 @@
-name: Deploy to Vercel & Seed Mysteries
+name: Seed Mysteries After Vercel Deploy
 
 on:
-  push:
-    branches:
-      - master
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.success'
   workflow_dispatch:  # Allow manual trigger
+    inputs:
+      api_url:
+        description: 'Production URL to seed'
+        required: true
+        default: 'https://whodunit-party.vercel.app'
 
 jobs:
-  deploy:
+  seed:
+    # Only seed production deployments (not preview)
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'repository_dispatch' && github.event.client_payload.environment == 'production')
     runs-on: ubuntu-latest
     
     steps:
@@ -27,23 +36,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Vercel CLI
-        run: pnpm add -g vercel
-
-      - name: Pull Vercel Environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build with Vercel
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy to Vercel
-        id: deploy
-        run: |
-          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
-          echo "deployment_url=$URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $URL"
-
       - name: Seed mysteries
         run: pnpm seed:mysteries
         env:
-          API_URL: ${{ steps.deploy.outputs.deployment_url }}
+          API_URL: ${{ github.event.client_payload.url || github.event.inputs.api_url }}
