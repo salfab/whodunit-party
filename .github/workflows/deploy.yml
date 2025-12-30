@@ -26,18 +26,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: pnpm install
-
       - name: Wait for deployment to be fully ready
         run: sleep 30
 
       - name: Seed mysteries
-        run: pnpm seed:mysteries
+        run: node scripts/seed-mysteries.mjs
         env:
           API_URL: ${{ env.PRODUCTION_URL }}
