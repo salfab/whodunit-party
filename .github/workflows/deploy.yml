@@ -1,15 +1,13 @@
-name: Seed Mysteries After Deploy
+name: Deploy to Vercel & Seed Mysteries
 
 on:
   push:
     branches:
       - master
-    paths:
-      - 'seed-data/mysteries/**'
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
-  seed:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
@@ -29,10 +27,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Wait for Vercel deployment
-        run: sleep 60
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel
+
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build with Vercel
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "deployment_url=$URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $URL"
 
       - name: Seed mysteries
         run: pnpm seed:mysteries
         env:
-          API_URL: ${{ secrets.PRODUCTION_URL }}
+          API_URL: ${{ steps.deploy.outputs.deployment_url }}
