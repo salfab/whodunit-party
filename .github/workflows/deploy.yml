@@ -1,12 +1,15 @@
-name: Deploy Production
+name: Seed Mysteries After Deploy
 
 on:
   push:
     branches:
       - master
+    paths:
+      - 'seed-data/mysteries/**'
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
-  deploy:
+  seed:
     runs-on: ubuntu-latest
     
     steps:
@@ -26,28 +29,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build application
-        run: pnpm build
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-
-      - name: Wait for deployment
-        run: sleep 30
+      - name: Wait for Vercel deployment
+        run: sleep 60
 
       - name: Seed mysteries
         run: pnpm seed:mysteries
         env:
           API_URL: ${{ secrets.PRODUCTION_URL }}
-        continue-on-error: true
-
-      - name: Notify deployment status
-        if: always()
-        run: |
-          echo "Deployment completed"
-          echo "Mystery seeding: ${{ job.status }}"
