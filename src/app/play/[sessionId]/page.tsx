@@ -149,7 +149,7 @@ export default function PlayPage() {
 
       // Handle existing accusation
       if (result.existingAccusation) {
-        const { accusedPlayerId, wasCorrect, role } = result.existingAccusation;
+        const { accusedPlayerId, wasCorrect, role, guiltyPlayer } = result.existingAccusation;
         
         if (accusedPlayerId === result.currentPlayer.id) {
           setIsAccused(true);
@@ -166,6 +166,7 @@ export default function PlayPage() {
           role,
           gameComplete: false,
           message,
+          guiltyPlayer,
         });
       } else {
         setAccusationResult(null);

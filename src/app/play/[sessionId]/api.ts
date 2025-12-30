@@ -11,6 +11,13 @@ interface LoadCharacterSheetResult {
     accusedPlayerId: string;
     wasCorrect: boolean;
     role: string;
+    guiltyPlayer?: {
+      id: string;
+      name: string;
+      characterName: string;
+      occupation?: string;
+      imagePath?: string;
+    };
   };
   transitionData?: {
     title: string;
@@ -168,10 +175,41 @@ export async function loadCharacterSheet(
 
   let existingAccusation: LoadCharacterSheetResult['existingAccusation'];
   if (!roundError && existingRound) {
+    // Get guilty player's information
+    const { data: guiltyAssignmentData } = await supabase
+      .from('player_assignments')
+      .select(`
+        player_id,
+        character_sheets (
+          role,
+          character_name,
+          occupation,
+          image_path
+        ),
+        players (
+          name
+        )
+      `)
+      .eq('session_id', sessionId)
+      .eq('mystery_id', mystery.id);
+    
+    const guiltyPlayerAssignment = guiltyAssignmentData?.find((a: any) => 
+      a.character_sheets?.[0]?.role === 'guilty'
+    );
+
+    const guiltyPlayerInfo = guiltyPlayerAssignment ? {
+      id: guiltyPlayerAssignment.player_id,
+      name: guiltyPlayerAssignment.players?.[0]?.name,
+      characterName: guiltyPlayerAssignment.character_sheets?.[0]?.character_name,
+      occupation: guiltyPlayerAssignment.character_sheets?.[0]?.occupation,
+      imagePath: guiltyPlayerAssignment.character_sheets?.[0]?.image_path,
+    } : undefined;
+
     existingAccusation = {
       accusedPlayerId: existingRound.accused_player_id,
       wasCorrect: existingRound.was_correct,
       role: existingRound.was_correct ? 'guilty' : 'innocent',
+      guiltyPlayer: guiltyPlayerInfo,
     };
   }
 
