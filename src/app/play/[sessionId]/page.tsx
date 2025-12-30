@@ -10,8 +10,10 @@ import {
   Snackbar,
   IconButton,
   Typography,
+  Collapse,
+  Button,
 } from '@mui/material';
-import { QrCode2 as QrCodeIcon, HelpOutline as HelpIcon } from '@mui/icons-material';
+import { QrCode2 as QrCodeIcon, HelpOutline as HelpIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
@@ -27,6 +29,7 @@ import {
   AccuseButton,
   RoleRevealCard,
   RoleHelpDialog,
+  ScoreboardAndVoting,
 } from '@/components/play';
 import { MysteryVotingList } from '@/components/shared/MysteryVotingList';
 
@@ -72,7 +75,7 @@ export default function PlayPage() {
   // Voting state
   const [playerScores, setPlayerScores] = useState<PlayerScore[]>([]);
   const [availableMysteries, setAvailableMysteries] = useState<AvailableMystery[]>([]);
-  const [selectedMystery, setSelectedMystery] = useState<string>('');
+  const [selectedMystery, setSelectedMystery] = useState<string | null>(null);
   const [voteCounts, setVoteCounts] = useState<Record<string, number>>({});
   const [hasVoted, setHasVoted] = useState(false);
   const [startingNextRound, setStartingNextRound] = useState(false);
@@ -85,6 +88,9 @@ export default function PlayPage() {
   const [transitionTitle, setTransitionTitle] = useState('');
   const [transitionSubtitle, setTransitionSubtitle] = useState('');
   const [transitionImageUrl, setTransitionImageUrl] = useState<string | undefined>(undefined);
+  
+  // Character sheet visibility (hide after accusation)
+  const [showCharacterSheet, setShowCharacterSheet] = useState(true);
   
   // Dialogs
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
@@ -109,6 +115,8 @@ export default function PlayPage() {
     if (accusationResult && !accusationResult.gameComplete) {
       loadPostAccusationData();
       cleanupVotes = setupVoteSubscription(sessionId, setVoteCounts);
+      // Automatically hide character sheet after accusation
+      setShowCharacterSheet(false);
     }
 
     return () => {
@@ -303,7 +311,22 @@ export default function PlayPage() {
       <Box sx={{ py: 4, minHeight: '100vh', position: 'relative' }}>
         <AccusedOverlay isAccused={isAccused} />
 
-        <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
+        {/* Toggle button for character sheet after accusation */}
+        {accusationResult && (
+          <Box sx={{ mb: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={() => setShowCharacterSheet(!showCharacterSheet)}
+              endIcon={<ExpandMoreIcon sx={{ transform: showCharacterSheet ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }} />}
+              fullWidth
+            >
+              {showCharacterSheet ? 'Masquer la fiche personnage' : 'Afficher la fiche personnage'}
+            </Button>
+          </Box>
+        )}
+
+        <Collapse in={showCharacterSheet} timeout="auto">
+          <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
           {/* Top Right Action Icons */}
           <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
             <IconButton
@@ -470,37 +493,35 @@ export default function PlayPage() {
               {accusationResult.message}
             </Alert>
           )}
+          </Paper>
+        </Collapse>
 
-          {/* Scoreboard and Mystery Voting */}
-          {accusationResult && !accusationResult.gameComplete && (
-            <>
-              <Scoreboard
-                playerScores={playerScores}
-                currentPlayerId={currentPlayer?.id}
-              />
+        {/* Scoreboard and Mystery Voting - Separated from character sheet */}
+        {accusationResult && !accusationResult.gameComplete && (
+          <ScoreboardAndVoting
+            playerScores={playerScores}
+            currentPlayerId={currentPlayer?.id}
+            availableMysteries={availableMysteries}
+            myVote={selectedMystery || null}
+            voteCounts={voteCounts}
+            hasVoted={false}
+            startingNextRound={startingNextRound}
+            onVote={handleVoteForMystery}
+            allowUnvote={true}
+          />
+        )}
 
-              <MysteryVotingList
-                availableMysteries={availableMysteries}
-                myVote={selectedMystery || null}
-                voteCounts={voteCounts}
-                hasVoted={false}
-                startingNextRound={startingNextRound}
-                onVote={handleVoteForMystery}
-                allowUnvote={true}
-                showTitle={true}
-              />
+        {/* No mysteries available */}
+        {accusationResult && !accusationResult.gameComplete && availableMysteries.length === 0 && (
+          <Alert severity="info" sx={{ mt: 4 }}>
+            Aucun mystère disponible pour continuer. La partie est terminée !
+          </Alert>
+        )}
 
-              {availableMysteries.length === 0 && (
-                <Alert severity="info" sx={{ mt: 4 }}>
-                  Aucun mystère disponible pour continuer. La partie est terminée !
-                </Alert>
-              )}
-            </>
-          )}
-
-          {/* Game Complete */}
-          {accusationResult && accusationResult.gameComplete && (
-            <Box sx={{ mt: 4, textAlign: 'center' }}>
+        {/* Game Complete */}
+        {accusationResult && accusationResult.gameComplete && (
+          <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
+            <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" gutterBottom>
                 🎉 Partie terminée !
               </Typography>
@@ -513,9 +534,11 @@ export default function PlayPage() {
                 title=""
               />
             </Box>
-          )}
+          </Paper>
+        )}
 
-          <Alert severity="warning" sx={{ mt: 4 }}>
+        <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
+          <Alert severity="warning">
             ⚠️ Gardez votre fiche de personnage secrète des autres joueurs !
           </Alert>
         </Paper>
