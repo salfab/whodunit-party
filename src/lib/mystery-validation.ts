@@ -3,7 +3,6 @@ import mysterySchema from '../../schemas/mystery.schema.json';
 
 // Singleton AJV instance for performance
 let ajvInstance: Ajv | null = null;
-let mysteryArrayValidator: ValidateFunction | null = null;
 let singleMysteryValidator: ValidateFunction | null = null;
 
 function getAjv(): Ajv {
@@ -11,13 +10,6 @@ function getAjv(): Ajv {
     ajvInstance = new Ajv({ allErrors: true, verbose: true });
   }
   return ajvInstance;
-}
-
-function getMysteryArrayValidator(): ValidateFunction {
-  if (!mysteryArrayValidator) {
-    mysteryArrayValidator = getAjv().compile(mysterySchema);
-  }
-  return mysteryArrayValidator;
 }
 
 function getSingleMysteryValidator(): ValidateFunction {
@@ -40,9 +32,9 @@ export interface ValidationResult {
 }
 
 /**
- * Validates a single mystery object against the JSON schema
+ * Validates a mystery against JSON schema
  */
-export function validateMystery(mystery: unknown): ValidationResult {
+function validateSchema(mystery: unknown): ValidationResult {
   const validate = getSingleMysteryValidator();
   const valid = validate(mystery);
 
@@ -63,61 +55,14 @@ export function validateMystery(mystery: unknown): ValidationResult {
 }
 
 /**
- * Validates an array of mysteries against the JSON schema
+ * Validates business rules (role requirements)
  */
-export function validateMysteryArray(mysteries: unknown): ValidationResult {
-  const validate = getMysteryArrayValidator();
-  const valid = validate(mysteries);
-
-  if (valid) {
-    return { valid: true };
-  }
-
-  const errors = validate.errors?.map((e) => {
-    const path = e.instancePath || 'root';
-    return `${path}: ${e.message}`;
-  }) || [];
-
-  return {
-    valid: false,
-    errors,
-    details: validate.errors || undefined,
-  };
-}
-
-/**
- * Validates an array of mysteries and returns detailed results
- */
-export function validateMysteries(mysteries: unknown[]): {
-  valid: boolean;
-  results: Array<{ index: number; title?: string; valid: boolean; errors?: string[] }>;
-} {
-  const results = mysteries.map((mystery, index) => {
-    const result = validateMystery(mystery);
-    return {
-      index,
-      title: typeof mystery === 'object' && mystery !== null ? (mystery as any).title : undefined,
-      valid: result.valid,
-      errors: result.errors,
-    };
-  });
-
-  return {
-    valid: results.every((r) => r.valid),
-    results,
-  };
-}
-
-/**
- * Additional business logic validations beyond JSON schema
- */
-export function validateMysteryBusinessRules(mystery: {
+function validateBusinessRules(mystery: {
   title: string;
   character_sheets: Array<{ role: string }>;
 }): ValidationResult {
   const errors: string[] = [];
 
-  // Check for required roles
   const roles = mystery.character_sheets.map((c) => c.role);
   
   if (!roles.includes('investigator')) {
@@ -145,16 +90,18 @@ export function validateMysteryBusinessRules(mystery: {
 }
 
 /**
- * Full validation: schema + business rules
+ * Validates a mystery: schema + business rules
  */
-export function validateMysteryFull(mystery: unknown): ValidationResult {
+export function validateMystery(mystery: unknown): ValidationResult {
   // First validate schema
-  const schemaResult = validateMystery(mystery);
+  const schemaResult = validateSchema(mystery);
   if (!schemaResult.valid) {
     return schemaResult;
   }
 
   // Then validate business rules
-  const businessResult = validateMysteryBusinessRules(mystery as any);
-  return businessResult;
+  return validateBusinessRules(mystery as any);
 }
+
+/** @deprecated Use validateMystery instead */
+export const validateMysteryFull = validateMystery;
