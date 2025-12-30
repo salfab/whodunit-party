@@ -1,107 +1,123 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Mystery",
-  "description": "Schema for a Whodunit Party mystery",
-  "type": "object",
-  "required": ["title", "description", "language", "author", "theme", "innocent_words", "guilty_words", "character_sheets"],
-  "properties": {
-    "title": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 200,
-      "description": "The title of the mystery"
-    },
-    "description": {
-      "type": "string",
-      "minLength": 10,
-      "description": "The description/backstory of the mystery (supports markdown)"
-    },
-    "image_path": {
-      "type": "string",
-      "description": "Optional path to mystery image"
-    },
-    "language": {
-      "type": "string",
-      "pattern": "^[a-z]{2}$",
-      "description": "Two-character language/culture code (e.g., 'en', 'fr', 'es')"
-    },
-    "author": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 100,
-      "description": "The author of the mystery"
-    },
-    "theme": {
-      "type": "string",
-      "enum": ["PETTY_CRIME", "MACABRE", "SERIOUS_MURDER", "FUNNY_CRIME"],
-      "description": "The theme category of the mystery"
-    },
-    "version": {
-      "type": "string",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "description": "Semantic version number (e.g., 1.0.0)"
-    },
-    "innocent_words": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "minItems": 3,
-      "maxItems": 3,
-      "description": "Exactly 3 words that innocent players receive"
-    },
-    "guilty_words": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "minItems": 3,
-      "maxItems": 3,
-      "description": "Exactly 3 words that the guilty player receives"
-    },
-    "character_sheets": {
-      "type": "array",
-      "minItems": 3,
-      "description": "Array of character sheets (must include at least investigator, guilty, and one innocent)",
-      "items": {
-        "type": "object",
-        "required": ["role", "character_name", "dark_secret", "alibi"],
-        "properties": {
-          "role": {
-            "type": "string",
-            "enum": ["investigator", "guilty", "innocent"],
-            "description": "The role of this character"
-          },
-          "character_name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100,
-            "description": "The name of this character (e.g., 'Jean Dupont', 'Marie Laurent')"
-          },
-          "occupation": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100,
-            "description": "Optional occupation/title of the character (e.g., 'Butler', 'Detective', 'Cook')"
-          },
-          "dark_secret": {
-            "type": "string",
-            "minLength": 10,
-            "description": "The character's dark secret"
-          },
-          "alibi": {
-            "type": "string",
-            "minLength": 10,
-            "description": "The character's alibi"
-          },
-          "image_path": {
-            "type": "string",
-            "description": "Optional path to character image"
+  "title": "MysteryList",
+  "description": "Schema for a list (array) of Whodunit Party mysteries. Even a single mystery must be wrapped in an array.",
+  "type": "array",
+  "minItems": 1,
+  "items": { "$ref": "#/definitions/mystery" },
+  "definitions": {
+    "mystery": {
+      "title": "Mystery",
+      "description": "Schema for a Whodunit Party mystery",
+      "type": "object",
+      "required": [
+        "title",
+        "synopsis",
+        "description",
+        "language",
+        "author",
+        "theme",
+        "innocent_words",
+        "guilty_words",
+        "character_sheets"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "The title of the mystery"
+        },
+        "synopsis": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 400,
+          "description": "Very short summary (1 sentence), out-of-roleplay. focalization zero, no spoilers, no word-to-place leakage."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Short markdown, written in the investigator's voice (1st person, present), with blank lines between short paragraphs."
+        },
+        "image_path": {
+          "type": "string",
+          "description": "Optional path to mystery image (relative path inside ZIP for packs)"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}$",
+          "description": "Two-character language/culture code (e.g., 'en', 'fr', 'es')"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "The author of the mystery"
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["PETTY_CRIME", "MACABRE", "SERIOUS_MURDER", "FUNNY_CRIME"],
+          "description": "The theme category of the mystery"
+        },
+        "innocent_words": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Exactly 3 words that innocent players receive"
+        },
+        "guilty_words": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Exactly 3 words that the guilty player receives"
+        },
+        "character_sheets": {
+          "type": "array",
+          "minItems": 3,
+          "description": "Array of character sheets (must include at least investigator, guilty, and one innocent)",
+          "items": {
+            "type": "object",
+            "required": ["role", "character_name", "occupation", "dark_secret", "alibi"],
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": ["investigator", "guilty", "innocent"],
+                "description": "The role of this character"
+              },
+              "character_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100,
+                "description": "The character's name (keep it as a name/title only; use 'occupation' for the function/job)"
+              },
+              "occupation": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120,
+                "description": "The character's function/job (used on portraits next to the name)"
+              },
+              "dark_secret": {
+                "type": "string",
+                "minLength": 10,
+                "description": "For investigator and innocents: one sentence. For guilty: theatrical motive/confession, multiple sentences allowed."
+              },
+              "alibi": {
+                "type": "string",
+                "minLength": 10,
+                "description": "One sentence."
+              },
+              "image_path": {
+                "type": "string",
+                "description": "Optional path to character image (relative path inside ZIP for packs)"
+              }
+            },
+            "additionalProperties": false
           }
         }
-      }
+      },
+      "additionalProperties": false
     }
   }
 }

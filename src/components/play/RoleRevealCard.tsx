@@ -105,6 +105,7 @@ export default function RoleRevealCard({
   const [isHinting, setIsHinting] = useState(false);
   const [showHintPill, setShowHintPill] = useState(false);
   const [imageHidden, setImageHidden] = useState(false);
+  const [bloodSmearLoaded, setBloodSmearLoaded] = useState(false);
 
   const roleLabel = getRoleLabel(role);
 
@@ -254,6 +255,7 @@ export default function RoleRevealCard({
               component="img"
               src="/blood_smear.png"
               alt="Blood smear"
+              onLoad={() => setBloodSmearLoaded(true)}
               sx={{
                 position: 'absolute',
                 top: 0,
@@ -264,7 +266,8 @@ export default function RoleRevealCard({
                 objectPosition: 'top left',
                 opacity: 0.85,
                 filter: 'drop-shadow(0 0 20px rgba(139, 0, 0, 0.5))',
-                animation: `${wipeReveal} 1.5s ease-out forwards`,
+                animation: bloodSmearLoaded ? `${wipeReveal} 1.5s ease-out forwards` : 'none',
+                clipPath: bloodSmearLoaded ? undefined : 'polygon(0 0, 0 0, 0 0)',
                 pointerEvents: 'none',
               }}
             />

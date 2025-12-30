@@ -518,6 +518,7 @@ export default function PlayPage() {
               occupation={accusationResult.guiltyPlayer.occupation}
               role="guilty"
               showNameOverlay={!accusationResult.guiltyPlayer.imagePath}
+              isAccused={true}
             />
             
             <Alert
