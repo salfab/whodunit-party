@@ -2,14 +2,12 @@
 
 /**
  * Add short tagline synopses to mystery.json files in each zip
- * Uses yazl/yauzl for pure Node.js zip handling
+ * Uses jszip (already a project dependency)
  */
 
-import { createWriteStream, readFileSync, writeFileSync, mkdtempSync, rmSync, readdirSync, statSync, unlinkSync, renameSync, mkdirSync } from 'fs';
-import { join, relative, dirname, basename } from 'path';
-import { tmpdir } from 'os';
-import yauzl from 'yauzl';
-import yazl from 'yazl';
+import { readFileSync, writeFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+import JSZip from 'jszip';
 
 const MYSTERIES_DIR = './seed-data/mysteries';
 
@@ -34,109 +32,48 @@ const synopses = {
   'un-vin-qui-a-du-corps': "La tête dans un tonneau de vin — la fête a dérapé en une seconde.",
 };
 
-// Extract zip to temp directory
-function extractZip(zipPath, destDir) {
-  return new Promise((resolve, reject) => {
-    yauzl.open(zipPath, { lazyEntries: true }, (err, zipfile) => {
-      if (err) return reject(err);
-      
-      const files = [];
-      zipfile.readEntry();
-      
-      zipfile.on('entry', (entry) => {
-        const destPath = join(destDir, entry.fileName);
-        
-        if (/\/$/.test(entry.fileName)) {
-          // Directory
-          mkdirSync(destPath, { recursive: true });
-          zipfile.readEntry();
-        } else {
-          // File
-          mkdirSync(dirname(destPath), { recursive: true });
-          zipfile.openReadStream(entry, (err, readStream) => {
-            if (err) return reject(err);
-            const writeStream = createWriteStream(destPath);
-            readStream.pipe(writeStream);
-            writeStream.on('close', () => {
-              files.push(entry.fileName);
-              zipfile.readEntry();
-            });
-          });
-        }
-      });
-      
-      zipfile.on('end', () => resolve(files));
-      zipfile.on('error', reject);
-    });
-  });
-}
-
-// Create zip from directory
-function createZip(sourceDir, destPath, files) {
-  return new Promise((resolve, reject) => {
-    const zipfile = new yazl.ZipFile();
-    
-    for (const file of files) {
-      const fullPath = join(sourceDir, file);
-      if (statSync(fullPath).isFile()) {
-        zipfile.addFile(fullPath, file);
-      }
-    }
-    
-    zipfile.outputStream.pipe(createWriteStream(destPath))
-      .on('close', resolve)
-      .on('error', reject);
-    
-    zipfile.end();
-  });
-}
-
 async function processZip(zipPath, baseName, synopsis) {
-  const tempDir = mkdtempSync(join(tmpdir(), 'mystery-'));
+  // Read zip
+  const zipData = readFileSync(zipPath);
+  const zip = await JSZip.loadAsync(zipData);
   
-  try {
-    // Extract
-    const files = await extractZip(zipPath, tempDir);
-    
-    // Read mystery.json
-    const mysteryPath = join(tempDir, 'mystery.json');
-    const content = readFileSync(mysteryPath, 'utf-8');
-    let mystery = JSON.parse(content);
-    
-    // Handle both array and object format
-    const isArray = Array.isArray(mystery);
-    const mysteryObj = isArray ? mystery[0] : mystery;
-    
-    // Check if synopsis already exists and is the same
-    if (mysteryObj.synopsis === synopsis) {
-      console.log(`✓ ${baseName} (unchanged)`);
-      return false;
-    }
-    
-    if (mysteryObj.synopsis) {
-      console.log(`↻ ${baseName}: "${synopsis}"`);
-    } else {
-      console.log(`+ ${baseName}: "${synopsis}"`);
-    }
-    
-    mysteryObj.synopsis = synopsis;
-    
-    // Write updated mystery.json
-    const updatedContent = isArray ? [mysteryObj] : mysteryObj;
-    writeFileSync(mysteryPath, JSON.stringify(updatedContent, null, 2));
-    
-    // Create new zip
-    const tempZipPath = zipPath + '.tmp';
-    await createZip(tempDir, tempZipPath, files);
-    
-    // Replace original
-    unlinkSync(zipPath);
-    renameSync(tempZipPath, zipPath);
-    
-    return true;
-  } finally {
-    rmSync(tempDir, { recursive: true });
+  // Read mystery.json
+  const mysteryFile = zip.file('mystery.json');
+  if (!mysteryFile) {
+    console.log(`⚠️  No mystery.json in: ${baseName}`);
+    return false;
   }
+  
+  const content = await mysteryFile.async('string');
+  let mystery = JSON.parse(content);
+  
+  // Handle both array and object format
+  const isArray = Array.isArray(mystery);
+  const mysteryObj = isArray ? mystery[0] : mystery;
+  
+  // Check if synopsis already exists and is the same
+  if (mysteryObj.synopsis === synopsis) {
+    console.log(`✓ ${baseName} (unchanged)`);
+    return false;
+  }
+  
+  if (mysteryObj.synopsis) {
+    console.log(`↻ ${baseName}: "${synopsis}"`);
+  } else {
+    console.log(`+ ${baseName}: "${synopsis}"`);
+  }
+  
+  mysteryObj.synopsis = synopsis;
+  
+  // Update mystery.json in zip
+  const updatedContent = isArray ? [mysteryObj] : mysteryObj;
+  zip.file('mystery.json', JSON.stringify(updatedContent, null, 2));
+  
+  // Write updated zip
+  const newZipData = await zip.generateAsync({ type: 'nodebuffer' });
+  writeFileSync(zipPath, newZipData);
+  
+  return true;
 }
 
 async function main() {
