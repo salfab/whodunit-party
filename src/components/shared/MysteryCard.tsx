@@ -13,6 +13,7 @@ interface MysteryCardProps {
   mystery: {
     id: string;
     title: string;
+    synopsis?: string;
     author?: string;
     character_count?: number;
     language?: string;
@@ -110,6 +111,19 @@ export default function MysteryCard({
               </Tooltip>
             ) : (
               titleDisplay
+            )}
+            {mystery.synopsis && (
+              <Typography 
+                variant="body2" 
+                color="text.secondary"
+                sx={{ 
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  fontStyle: 'italic',
+                  mb: 0.5,
+                }}
+              >
+                {mystery.synopsis}
+              </Typography>
             )}
             <Typography 
               variant="body2" 

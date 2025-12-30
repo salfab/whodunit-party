@@ -29,6 +29,7 @@ import AdminNavBar from '@/components/admin/AdminNavBar';
 interface Mystery {
   id: string;
   title: string;
+  synopsis?: string;
   description: string;
   created_at: string;
   image_path: string | null;
@@ -233,9 +234,9 @@ export default function MysteriesPage() {
                       </Box>
                     </Box>
                     
-                    {mystery.description && (
+                    {(mystery.synopsis || mystery.description) && (
                       <Typography variant="body2" color="text.secondary" paragraph sx={{ mb: 1 }}>
-                        {truncateDescription(mystery.description)}
+                        {truncateDescription(mystery.synopsis || mystery.description)}
                       </Typography>
                     )}
                     

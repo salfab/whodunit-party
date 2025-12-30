@@ -6,6 +6,7 @@ import MysteryCard from '@/components/shared/MysteryCard';
 interface Mystery {
   id: string;
   title: string;
+  synopsis?: string;
   author?: string;
   character_count?: number;
   language?: string;

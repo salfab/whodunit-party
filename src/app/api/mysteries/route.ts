@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from('mysteries')
-      .select('id, title, description, language, author, theme, created_at, image_path')
+      .select('id, title, synopsis, description, language, author, theme, created_at, image_path')
       .order('created_at', { ascending: false });
 
     // Filter by language if provided
