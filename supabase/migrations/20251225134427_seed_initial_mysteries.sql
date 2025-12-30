@@ -93,22 +93,6 @@ Quelqu''un a remplacé le cacao en poudre du placard commun par une substance gr
 Je veux savoir qui a mis des cendres là où on attendait du réconfort… et si ce scandale servait surtout à détourner le vrai cacao.
 
 *Dans un bureau, on ne brûle pas des villes. On brûle la confiance.*', NULL, 'fr', 'Built-in', 'MACABRE', ARRAY['mug','pause','cuillère'], ARRAY['boîte','cendre','sachet'], '2025-12-25 08:39:47.051462+00'),
-('7e153ee0-f1da-402a-a890-af7e340a63d7', 'La lunette relevée', '## Mise en place
-*Couloir de bureau, porte des toilettes, désodorisant trop agressif. On peut mesurer la civilisation à la hauteur d''une lunette.*
-
-Quelqu''un a encore laissé la lunette relevée. Et pas une fois. Pas "par inadvertance". De manière répétée, au point que la moitié de l''équipe a développé une paranoïa hydrophobe. Dans un bureau, ce n''est pas un crime sanguinolent. C''est un crime de **guerre psychologique** : un petit acte qui déclenche des grandes rancunes.
-
-## Ce qui ne colle pas
-- Le panneau "Merci de laisser les lieux propres" a été déplacé puis remis, mais de travers.
-- Une trace d''eau mène du lavabo vers la porte… puis revient, comme un aller-retour précipité.
-- Un rouleau de papier a été remplacé par un modèle différent : même largeur, texture autre.
-- Un gel hydroalcoolique a été déplacé de 30 centimètres, comme si quelqu''un voulait forcer un geste.
-
-## Ce que je veux
-Je veux savoir si c''est une provocation ciblée, un "test" social, ou une diversion pour couvrir autre chose (un objet pris, un message lu, un placard ouvert).
-
-*On ne sous-estime jamais l''absurde : l''absurde est souvent un masque très pratique.*', NULL, 'fr', 'Built-in', 'FUNNY_CRIME', ARRAY['lavabo','désodorisant','papier'], ARRAY['cuvette','panneau','provocation'], '2025-12-25 08:39:47.231393+00'),
-
 -- English mysteries
 ('6aab8357-18ee-4f1f-a004-2e8ebf1b9777', 'Murder at the Manor', '## The Crime
 
