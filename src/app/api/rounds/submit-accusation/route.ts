@@ -206,6 +206,37 @@ export async function POST(request: NextRequest) {
         .eq('id', session.sessionId);
     }
 
+    // Get guilty player's information for the reveal
+    const { data: guiltyAssignmentData } = await (supabase
+      .from('player_assignments') as any)
+      .select(`
+        player_id,
+        character_sheets (
+          role,
+          character_name,
+          occupation,
+          image_path
+        ),
+        players (
+          name
+        )
+      `)
+      .eq('session_id', session.sessionId)
+      .eq('mystery_id', gameSession.current_mystery_id);
+    
+    const guiltyAssignment = guiltyAssignmentData as any;
+    const guiltyPlayerAssignment = guiltyAssignment?.find((a: any) => 
+      a.character_sheets?.role === 'guilty'
+    );
+
+    const guiltyPlayerInfo = guiltyPlayerAssignment ? {
+      id: guiltyPlayerAssignment.player_id,
+      name: guiltyPlayerAssignment.players?.name,
+      characterName: guiltyPlayerAssignment.character_sheets?.character_name,
+      occupation: guiltyPlayerAssignment.character_sheets?.occupation,
+      imagePath: guiltyPlayerAssignment.character_sheets?.image_path,
+    } : undefined;
+
     // Generate role-specific messages in French
     const investigatorMessage = wasCorrect 
       ? 'Bravo ! Vous avez trouvé le coupable ! +2 points'
@@ -235,6 +266,7 @@ export async function POST(request: NextRequest) {
       wasCorrect,
       accusedRole: accusedSheet.role,
       gameComplete: allHaveBeenInvestigator,
+      guiltyPlayer: guiltyPlayerInfo,
       messages: {
         investigator: investigatorMessage,
         guilty: guiltyMessage,

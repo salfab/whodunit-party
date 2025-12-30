@@ -247,6 +247,7 @@ export default function PlayPage() {
         role: data.accusedRole,
         gameComplete: data.gameComplete,
         message,
+        guiltyPlayer: data.guiltyPlayer,
       });
 
       setAccuseDialogOpen(false);
@@ -484,17 +485,35 @@ export default function PlayPage() {
             />
           )}
 
-          {accusationResult && (
+          </Paper>
+        </Collapse>
+
+        {/* Guilty Player Reveal - Shows after accusation */}
+        {accusationResult && accusationResult.guiltyPlayer && !accusationResult.gameComplete && (
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h5" gutterBottom align="center" sx={{ mb: 3 }}>
+              🎭 Le Coupable Révélé
+            </Typography>
+            <RoleRevealCard
+              imagePath={
+                accusationResult.guiltyPlayer.imagePath || 
+                `/characters/suspect_0${(parseInt(accusationResult.guiltyPlayer.id.slice(0, 8), 16) % 6) + 1}.jpg`
+              }
+              characterName={accusationResult.guiltyPlayer.characterName}
+              occupation={accusationResult.guiltyPlayer.occupation}
+              role="guilty"
+              showNameOverlay={!accusationResult.guiltyPlayer.imagePath}
+            />
+            
             <Alert
               severity={accusationResult.wasCorrect ? 'success' : 'error'}
-              sx={{ mt: 4 }}
+              sx={{ mt: 3 }}
               data-testid="accusation-result"
             >
               {accusationResult.message}
             </Alert>
-          )}
-          </Paper>
-        </Collapse>
+          </Box>
+        )}
 
         {/* Scoreboard and Mystery Voting - Separated from character sheet */}
         {accusationResult && !accusationResult.gameComplete && (

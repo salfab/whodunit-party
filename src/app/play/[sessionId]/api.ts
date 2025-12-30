@@ -308,6 +308,13 @@ export async function submitAccusation(
   wasCorrect: boolean;
   accusedRole: string;
   gameComplete: boolean;
+  guiltyPlayer?: {
+    id: string;
+    name: string;
+    characterName: string;
+    occupation?: string;
+    imagePath?: string;
+  };
   messages: {
     investigator: string;
     guilty: string;

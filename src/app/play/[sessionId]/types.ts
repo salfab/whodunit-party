@@ -33,4 +33,11 @@ export interface AccusationResult {
   role: string;
   gameComplete: boolean;
   message: string;
+  guiltyPlayer?: {
+    id: string;
+    name: string;
+    characterName: string;
+    occupation?: string;
+    imagePath?: string;
+  };
 }
