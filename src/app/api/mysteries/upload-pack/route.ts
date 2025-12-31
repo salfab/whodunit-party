@@ -127,17 +127,45 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < mysteriesData.length; i++) {
       const mysteryData = mysteriesData[i];
       
-      // Check if mystery already exists (by title and author)
-      const { data: existingMystery } = await supabase
+      // Check if mystery already exists by title only (author may vary or be null)
+      // This prevents duplicates when author field differs between uploads
+      const { data: existingMysteries, error: queryError } = await supabase
         .from('mysteries')
         .select('id, title, author, version')
-        .eq('title', mysteryData.title)
-        .eq('author', mysteryData.author || '')
-        .maybeSingle();
+        .eq('title', mysteryData.title);
+
+      if (queryError) {
+        log('error', 'Failed to query existing mysteries', { 
+          title: mysteryData.title,
+          error: queryError.message 
+        });
+      }
+
+      log('info', 'Duplicate check', {
+        title: mysteryData.title,
+        incomingAuthor: mysteryData.author,
+        incomingVersion: mysteryData.version,
+        existingCount: existingMysteries?.length || 0,
+        existingMysteries: existingMysteries?.map(m => ({ id: m.id, author: m.author, version: m.version }))
+      });
+
+      // Find best matching existing mystery (prefer same author, then any)
+      let existingMystery = existingMysteries?.find(m => m.author === (mysteryData.author || null));
+      if (!existingMystery && existingMysteries?.length) {
+        existingMystery = existingMysteries[0]; // Fall back to any existing with same title
+      }
 
       if (existingMystery) {
         const newVersion = mysteryData.version;
         const existingVersion = existingMystery.version || '0.0.0';
+        
+        log('info', 'Found existing mystery', {
+          title: mysteryData.title,
+          existingId: existingMystery.id,
+          existingAuthor: existingMystery.author,
+          existingVersion,
+          newVersion
+        });
         
         // No version provided - conservative mode
         if (!newVersion) {
