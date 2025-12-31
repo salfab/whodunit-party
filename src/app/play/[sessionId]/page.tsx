@@ -10,10 +10,8 @@ import {
   Snackbar,
   IconButton,
   Typography,
-  Collapse,
-  Button,
 } from '@mui/material';
-import { QrCode2 as QrCodeIcon, HelpOutline as HelpIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import { QrCode2 as QrCodeIcon, HelpOutline as HelpIcon, FlipCameraAndroid as FlipIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
@@ -90,9 +88,8 @@ export default function PlayPage() {
   const [transitionSubtitle, setTransitionSubtitle] = useState('');
   const [transitionImageUrl, setTransitionImageUrl] = useState<string | undefined>(undefined);
   
-  // Character sheet visibility (hide after accusation)
-  const [showCharacterSheet, setShowCharacterSheet] = useState(true);
-  const [characterSheetCollapsed, setCharacterSheetCollapsed] = useState(false);
+  // Character sheet visibility (hide after accusation) - now using flip card
+  const [isFlipped, setIsFlipped] = useState(false);
   
   // Dialogs
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
@@ -117,8 +114,8 @@ export default function PlayPage() {
     if (accusationResult && !accusationResult.gameComplete) {
       loadPostAccusationData();
       cleanupVotes = setupVoteSubscription(sessionId, setVoteCounts);
-      // Automatically hide character sheet after accusation
-      setShowCharacterSheet(false);
+      // Automatically flip to results after accusation
+      setIsFlipped(true);
     }
 
     return () => {
@@ -195,7 +192,7 @@ export default function PlayPage() {
           setSelectedMystery('');
           setVoteCounts({});
           setAvailableMysteries([]);
-          setShowCharacterSheet(true); // Expand character sheet for new round
+          setIsFlipped(false); // Flip back to character sheet for new round
         }
       }
 
@@ -327,239 +324,292 @@ export default function PlayPage() {
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4, minHeight: '100vh', position: 'relative' }}>
-        {/* Toggle button for character sheet after accusation */}
-        {accusationResult && (
-          <Box sx={{ mb: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={() => setShowCharacterSheet(!showCharacterSheet)}
-              endIcon={<ExpandMoreIcon sx={{ transform: showCharacterSheet ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }} />}
-              fullWidth
-            >
-              {showCharacterSheet ? 'Masquer la fiche personnage' : 'Afficher la fiche personnage'}
-            </Button>
-          </Box>
-        )}
-
-        <Collapse 
-          in={showCharacterSheet} 
-          timeout={400}
-          onExited={() => setCharacterSheetCollapsed(true)}
-          onEnter={() => setCharacterSheetCollapsed(false)}
+        {/* Flip Card Container */}
+        <Box
+          sx={{
+            perspective: '2000px',
+            transformStyle: 'preserve-3d',
+          }}
         >
-          <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
-          {/* Top Right Action Icons */}
-          <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
-            <IconButton
-              size="small"
-              onClick={() => setHelpDialogOpen(true)}
-              sx={{ color: 'secondary.main' }}
-              title="Comment jouer"
-            >
-              <HelpIcon fontSize="small" />
-            </IconButton>
-            {joinCode && (
-              <IconButton
-                size="small"
-                onClick={() => setQrDialogOpen(true)}
-                sx={{ color: 'secondary.main' }}
-                title="Afficher le QR code"
-              >
-                <QrCodeIcon fontSize="small" />
-              </IconButton>
-            )}
-          </Box>
-
-          {/* Character Header */}
-          <Box sx={{ 
-            mb: 4,
-            pb: 3,
-            borderBottom: '2px solid',
-            borderColor: 'primary.main',
-            mt: 4
-          }}>
-            {/* Mystery Title */}
-            <Box sx={{ mb: 3, textAlign: 'center' }}>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  color: 'primary.main',
-                  fontStyle: 'italic',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-                }}
-              >
-                {characterSheet.mystery.title}
-              </Typography>
-            </Box>
-
-            <RoleRevealCard
-              imagePath={
-                characterSheet.image_path || 
-                (characterSheet.role === 'investigator' 
-                  ? '/characters/investigator.jpg' 
-                  : getPlaceholderImage(characterSheet.playerIndex))
-              }
-              characterName={characterSheet.character_name}
-              occupation={characterSheet.occupation || undefined}
-              role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
-              showNameOverlay={!characterSheet.image_path}
-              isAccused={isAccused}
-            />
-          </Box>
-
-          {/* Investigator sees Mystery Description */}
-          {characterSheet.role === 'investigator' && (
-            <Box sx={{ 
-              mb: 4,
-              '& h1, & h2, & h3, & h4, & h5, & h6': {
-                color: 'primary.main',
-                fontWeight: 600,
-                mt: 3,
-                mb: 2,
-                textShadow: '0 1px 3px rgba(0,0,0,0.5)'
-              },
-              '& p': {
-                color: 'text.primary',
-                fontSize: '1.1rem',
-                lineHeight: 1.8,
-                mb: 2,
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-              },
-              '& ul, & ol': {
-                color: 'text.primary',
-                fontSize: '1.1rem',
-                lineHeight: 1.8,
-                pl: 3,
-                mb: 2
-              },
-              '& li': {
-                mb: 1,
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)'
-              },
-              '& strong': {
-                color: 'primary.light',
-                fontWeight: 700
-              },
-              '& em': {
-                color: 'primary.main',
-                fontStyle: 'italic'
-              },
-              '& code': {
-                backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                color: 'primary.main',
-                padding: '2px 6px',
-                borderRadius: '4px'
-              }
-            }}>
-              <Typography 
-                variant="h5" 
-                gutterBottom
-                sx={{ 
-                  color: 'primary.main',
-                  fontWeight: 600,
-                  textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-                  mb: 3
-                }}
-              >
-                📖 Description du mystère
-              </Typography>
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {characterSheet.mystery.description}
-              </ReactMarkdown>
-            </Box>
-          )}
-
-          {/* Words to Place - Only for guilty/innocent */}
-          {characterSheet.role !== 'investigator' && (
-            <WordsToPlace words={characterSheet.wordsToPlace} />
-          )}
-
-          {/* Alibi - Only for guilty/innocent */}
-          {characterSheet.role !== 'investigator' && (
-            <SecretPanel
-              title="Votre alibi"
-              emoji="🕵️"
-              content={characterSheet.alibi}
-              visible={alibiVisible}
-              onToggleVisibility={() => setAlibiVisible(!alibiVisible)}
-            />
-          )}
-
-          {/* Dark Secret - Only for guilty/innocent */}
-          {characterSheet.role !== 'investigator' && (
-            <SecretPanel
-              title="Sombre Secret"
-              emoji="🤫"
-              content={characterSheet.dark_secret}
-              visible={secretVisible}
-              onToggleVisibility={() => setSecretVisible(!secretVisible)}
-            />
-          )}
-
-          {/* J'Accuse Button - Only for investigator */}
-          {characterSheet.role === 'investigator' && !accusationResult && (
-            <AccuseButton
-              onClick={() => {
-                setSelectedPlayer('');
-                setAccuseDialogOpen(true);
+          <Box
+            sx={{
+              position: 'relative',
+              transformStyle: 'preserve-3d',
+              transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            }}
+          >
+            {/* Front of card - Character Sheet */}
+            <Box
+              sx={{
+                backfaceVisibility: 'hidden',
+                position: 'relative',
               }}
-            />
-          )}
-
-          </Paper>
-        </Collapse>
-
-        {/* Guilty Player Reveal - Shows after accusation and character sheet is collapsed */}
-        {accusationResult && accusationResult.guiltyPlayer && !accusationResult.gameComplete && characterSheetCollapsed && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant="h5" gutterBottom align="center" sx={{ mb: 3 }}>
-              🎭 Le Coupable Révélé
-            </Typography>
-            <RoleRevealCard
-              imagePath={
-                accusationResult.guiltyPlayer.imagePath || 
-                getPlaceholderImage(accusationResult.guiltyPlayer.playerIndex)
-              }
-              characterName={accusationResult.guiltyPlayer.characterName}
-              occupation={accusationResult.guiltyPlayer.occupation}
-              role="guilty"
-              showNameOverlay={!accusationResult.guiltyPlayer.imagePath}
-              isAccused={true}
-            />
-            
-            <Alert
-              severity={accusationResult.wasCorrect ? 'success' : 'error'}
-              sx={{ mt: 3 }}
-              data-testid="accusation-result"
             >
-              {accusationResult.message}
-            </Alert>
+              <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
+                {/* Top Right Action Icons */}
+                <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
+                  {accusationResult && (
+                    <IconButton
+                      size="small"
+                      onClick={() => setIsFlipped(true)}
+                      sx={{ 
+                        color: 'primary.main',
+                        bgcolor: 'background.paper',
+                        boxShadow: 1,
+                        '&:hover': { bgcolor: 'background.paper', transform: 'scale(1.1)' },
+                      }}
+                      title="Voir les résultats"
+                    >
+                      <FlipIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                  <IconButton
+                    size="small"
+                    onClick={() => setHelpDialogOpen(true)}
+                    sx={{ color: 'secondary.main' }}
+                    title="Comment jouer"
+                  >
+                    <HelpIcon fontSize="small" />
+                  </IconButton>
+                  {joinCode && (
+                    <IconButton
+                      size="small"
+                      onClick={() => setQrDialogOpen(true)}
+                      sx={{ color: 'secondary.main' }}
+                      title="Afficher le QR code"
+                    >
+                      <QrCodeIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                </Box>
+
+                {/* Character Header */}
+                <Box sx={{ 
+                  mb: 4,
+                  pb: 3,
+                  borderBottom: '2px solid',
+                  borderColor: 'primary.main',
+                  mt: 4
+                }}>
+                  {/* Mystery Title */}
+                  <Box sx={{ mb: 3, textAlign: 'center' }}>
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        color: 'primary.main',
+                        fontStyle: 'italic',
+                        textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                      }}
+                    >
+                      {characterSheet.mystery.title}
+                    </Typography>
+                  </Box>
+
+                  <RoleRevealCard
+                    imagePath={
+                      characterSheet.image_path || 
+                      (characterSheet.role === 'investigator' 
+                        ? '/characters/investigator.jpg' 
+                        : getPlaceholderImage(characterSheet.playerIndex))
+                    }
+                    characterName={characterSheet.character_name}
+                    occupation={characterSheet.occupation || undefined}
+                    role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
+                    showNameOverlay={!characterSheet.image_path}
+                    isAccused={isAccused}
+                  />
+                </Box>
+
+                {/* Investigator sees Mystery Description */}
+                {characterSheet.role === 'investigator' && (
+                  <Box sx={{ 
+                    mb: 4,
+                    '& h1, & h2, & h3, & h4, & h5, & h6': {
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      mt: 3,
+                      mb: 2,
+                      textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+                    },
+                    '& p': {
+                      color: 'text.primary',
+                      fontSize: '1.1rem',
+                      lineHeight: 1.8,
+                      mb: 2,
+                      textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                    },
+                    '& ul, & ol': {
+                      color: 'text.primary',
+                      fontSize: '1.1rem',
+                      lineHeight: 1.8,
+                      pl: 3,
+                      mb: 2
+                    },
+                    '& li': {
+                      mb: 1,
+                      textShadow: '0 1px 2px rgba(0,0,0,0.5)'
+                    },
+                    '& strong': {
+                      color: 'primary.light',
+                      fontWeight: 700
+                    },
+                    '& em': {
+                      color: 'primary.main',
+                      fontStyle: 'italic'
+                    },
+                    '& code': {
+                      backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                      color: 'primary.main',
+                      padding: '2px 6px',
+                      borderRadius: '4px'
+                    }
+                  }}>
+                    <Typography 
+                      variant="h5" 
+                      gutterBottom
+                      sx={{ 
+                        color: 'primary.main',
+                        fontWeight: 600,
+                        textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+                        mb: 3
+                      }}
+                    >
+                      📖 Description du mystère
+                    </Typography>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {characterSheet.mystery.description}
+                    </ReactMarkdown>
+                  </Box>
+                )}
+
+                {/* Words to Place - Only for guilty/innocent */}
+                {characterSheet.role !== 'investigator' && (
+                  <WordsToPlace words={characterSheet.wordsToPlace} />
+                )}
+
+                {/* Alibi - Only for guilty/innocent */}
+                {characterSheet.role !== 'investigator' && (
+                  <SecretPanel
+                    title="Votre alibi"
+                    emoji="🕵️"
+                    content={characterSheet.alibi}
+                    visible={alibiVisible}
+                    onToggleVisibility={() => setAlibiVisible(!alibiVisible)}
+                  />
+                )}
+
+                {/* Dark Secret - Only for guilty/innocent */}
+                {characterSheet.role !== 'investigator' && (
+                  <SecretPanel
+                    title="Sombre Secret"
+                    emoji="🤫"
+                    content={characterSheet.dark_secret}
+                    visible={secretVisible}
+                    onToggleVisibility={() => setSecretVisible(!secretVisible)}
+                  />
+                )}
+
+                {/* J'Accuse Button - Only for investigator */}
+                {characterSheet.role === 'investigator' && !accusationResult && (
+                  <AccuseButton
+                    onClick={() => {
+                      setSelectedPlayer('');
+                      setAccuseDialogOpen(true);
+                    }}
+                  />
+                )}
+
+              </Paper>
+            </Box>
+
+            {/* Back of card - Results (Guilty Reveal + Scoreboard) */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                backfaceVisibility: 'hidden',
+                transform: 'rotateY(180deg)',
+              }}
+            >
+              {accusationResult && !accusationResult.gameComplete && (
+                <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
+                  {/* Flip back icon */}
+                  <IconButton
+                    onClick={() => setIsFlipped(false)}
+                    sx={{
+                      position: 'absolute',
+                      top: 16,
+                      right: 16,
+                      color: 'primary.main',
+                      bgcolor: 'background.paper',
+                      boxShadow: 2,
+                      '&:hover': {
+                        bgcolor: 'background.paper',
+                        transform: 'scale(1.1)',
+                      },
+                    }}
+                    title="Voir ma fiche personnage"
+                  >
+                    <FlipIcon />
+                  </IconButton>
+
+                  {/* Guilty Player Reveal */}
+                  {accusationResult.guiltyPlayer && (
+                    <Box sx={{ mb: 4 }}>
+                      <Typography variant="h5" gutterBottom align="center" sx={{ mb: 3 }}>
+                        🎭 Le Coupable Révélé
+                      </Typography>
+                      <RoleRevealCard
+                        imagePath={
+                          accusationResult.guiltyPlayer.imagePath || 
+                          getPlaceholderImage(accusationResult.guiltyPlayer.playerIndex)
+                        }
+                        characterName={accusationResult.guiltyPlayer.characterName}
+                        occupation={accusationResult.guiltyPlayer.occupation}
+                        role="guilty"
+                        showNameOverlay={!accusationResult.guiltyPlayer.imagePath}
+                        isAccused={true}
+                      />
+                      
+                      <Alert
+                        severity={accusationResult.wasCorrect ? 'success' : 'error'}
+                        sx={{ mt: 3 }}
+                        data-testid="accusation-result"
+                      >
+                        {accusationResult.message}
+                      </Alert>
+                    </Box>
+                  )}
+
+                  {/* Scoreboard and Mystery Voting */}
+                  <ScoreboardAndVoting
+                    playerScores={playerScores}
+                    currentPlayerId={currentPlayer?.id}
+                    availableMysteries={availableMysteries}
+                    myVote={selectedMystery || null}
+                    voteCounts={voteCounts}
+                    hasVoted={false}
+                    startingNextRound={startingNextRound}
+                    onVote={handleVoteForMystery}
+                    allowUnvote={true}
+                  />
+
+                  {/* No mysteries available */}
+                  {availableMysteries.length === 0 && (
+                    <Alert severity="info" sx={{ mt: 4 }}>
+                      Aucun mystère disponible pour continuer. La partie est terminée !
+                    </Alert>
+                  )}
+                </Paper>
+              )}
+            </Box>
           </Box>
-        )}
+        </Box>
 
-        {/* Scoreboard and Mystery Voting - Separated from character sheet */}
-        {accusationResult && !accusationResult.gameComplete && characterSheetCollapsed && (
-          <ScoreboardAndVoting
-            playerScores={playerScores}
-            currentPlayerId={currentPlayer?.id}
-            availableMysteries={availableMysteries}
-            myVote={selectedMystery || null}
-            voteCounts={voteCounts}
-            hasVoted={false}
-            startingNextRound={startingNextRound}
-            onVote={handleVoteForMystery}
-            allowUnvote={true}
-          />
-        )}
-
-        {/* No mysteries available */}
-        {accusationResult && !accusationResult.gameComplete && characterSheetCollapsed && availableMysteries.length === 0 && (
-          <Alert severity="info" sx={{ mt: 4 }}>
-            Aucun mystère disponible pour continuer. La partie est terminée !
-          </Alert>
-        )}
-
-        {/* Game Complete */}
+        {/* Game Complete - Outside flip card */}
         {accusationResult && accusationResult.gameComplete && (
           <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
             <Box sx={{ textAlign: 'center' }}>
