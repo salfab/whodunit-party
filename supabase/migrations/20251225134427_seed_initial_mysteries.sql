@@ -92,58 +92,11 @@ Quelqu''un a remplacé le cacao en poudre du placard commun par une substance gr
 ## Ce que je veux
 Je veux savoir qui a mis des cendres là où on attendait du réconfort… et si ce scandale servait surtout à détourner le vrai cacao.
 
-*Dans un bureau, on ne brûle pas des villes. On brûle la confiance.*', NULL, 'fr', 'Built-in', 'MACABRE', ARRAY['mug','pause','cuillère'], ARRAY['boîte','cendre','sachet'], '2025-12-25 08:39:47.051462+00'),
--- English mysteries
-('6aab8357-18ee-4f1f-a004-2e8ebf1b9777', 'Murder at the Manor', '## The Crime
-
-Lord Blackwood was found dead in his study at midnight, poisoned by arsenic in his evening brandy. The doors were locked from the inside, and only five guests had access to the study that evening.
-
-## Your Mission
-
-As the investigator, you must question each guest, listen for their alibis, and determine who among them is guilty. Each person has secrets to hide, but only one is the murderer.', NULL, 'en', 'Built-in', 'SERIOUS_MURDER', ARRAY['manuscript','inheritance','betrayal'], ARRAY['ledger','poison','desperate'], '2025-12-24 22:58:10.721318+00'),
-('5fadc3f6-8391-4385-8cb5-dc784c2c6e95', 'Murder on the Orient Express', '## The Crime
-
-Wealthy industrialist Mr. Sterling was found stabbed twelve times in his locked compartment on the luxury train. The murder occurred somewhere between Paris and Vienna.
-
-## The Setting
-
-Aboard the famous Orient Express. Five passengers in the adjacent compartments are suspects.', NULL, 'en', 'Built-in', 'SERIOUS_MURDER', ARRAY['journey','business','destination'], ARRAY['account','evidence','mistake'], '2025-12-24 22:58:10.721318+00'),
-('6344f6a7-77ec-424d-8b85-0228b1153323', 'Murder at the Masquerade', '## The Crime
-
-During the annual Venetian masquerade ball, socialite Isabella Rossini was found dead in the conservatory, strangled with her own silk scarf. Her mask remained in place.
-
-## The Setting
-
-A luxurious palazzo during carnival season. Five masked guests had been seen near the conservatory.', NULL, 'en', 'Built-in', 'SERIOUS_MURDER', ARRAY['invitation','identity','rumor'], ARRAY['blackmail','secret','letter'], '2025-12-24 22:58:10.721318+00'),
-('0ff456b3-ff9e-426d-9d49-b4d6639424d5', 'The Poisoned Playwright', '## The Crime
-
-Celebrated playwright Marcus Thorne collapsed during the opening night party of his controversial new play. Toxicology revealed **hemlock poisoning** in his champagne.
-
-## The Setting
-
-Backstage at the Royal Theatre. Five members of the production team had access to the champagne bottles.', NULL, 'en', 'Built-in', 'SERIOUS_MURDER', ARRAY['review','performance','script'], ARRAY['plagiarism','original','stolen'], '2025-12-24 22:58:10.721318+00'),
-('a1b9c8b2-b67c-41e5-8f01-9c7a41d0f554', 'The Vanishing Heir', '## The Crime
-
-Young heir Alexandre Montfort was found dead in the wine cellar of his family château, strangled with a silk cravat. He was supposed to announce his engagement at tonight''s gala.
-
-## The Setting
-
-A grand château in the French countryside. Five family members and associates had the opportunity to reach the wine cellar during the evening reception.', NULL, 'en', 'Built-in', 'SERIOUS_MURDER', ARRAY['inheritance','wedding','fortune'], ARRAY['debt','conspiracy','desperation'], '2025-12-24 22:58:10.721318+00'),
-('bde37d2a-2b4f-44fb-a5ea-914bcc76d4ba', 'Death at the Museum', '## The Crime
-
-Renowned archaeologist Dr. Harrison Wells was found dead in the Egyptian wing, poisoned by a **rare toxin** derived from ancient herbs. His latest discovery was about to be unveiled.
-
-## The Setting
-
-The Metropolitan Museum after hours. Five colleagues had special access to the restricted exhibition.', NULL, 'en', 'Built-in', 'SERIOUS_MURDER', ARRAY['discovery','authentic','recognition'], ARRAY['forgery','expose','career'], '2025-12-24 22:58:10.721318+00'),
-('d0f32221-3c29-4454-9114-8a4548ec242a', 'Death at the Opera House', '## The Crime
-
-Diva Valentina Rose collapsed on stage during the final act of *La Traviata*. The autopsy revealed **cyanide poisoning** in her makeup.
-
-## The Setting
-
-Backstage at the Grand Opera House. Five people had access to her dressing room in the hour before her death.', NULL, 'en', 'Built-in', 'SERIOUS_MURDER', ARRAY['reputation','expose','truth'], ARRAY['composition','revenge','justice'], '2025-12-24 22:58:10.721318+00')
+*Dans un bureau, on ne brûle pas des villes. On brûle la confiance.*', NULL, 'fr', 'Built-in', 'MACABRE', ARRAY['mug','pause','cuillère'], ARRAY['boîte','cendre','sachet'], '2025-12-25 08:39:47.051462+00')
 ON CONFLICT (id) DO NOTHING;
+
+-- Note: English mysteries (Murder at the Manor, Murder on the Orient Express, etc.)
+-- are already seeded in 20241224000000_initial_schema.sql with character sheets
 
 -- Note: Character sheets data is extensive (175 records)
 -- Inserting in batches for better readability and maintenance
