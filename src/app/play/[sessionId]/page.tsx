@@ -92,6 +92,7 @@ export default function PlayPage() {
   
   // Character sheet visibility (hide after accusation)
   const [showCharacterSheet, setShowCharacterSheet] = useState(true);
+  const [characterSheetCollapsed, setCharacterSheetCollapsed] = useState(false);
   
   // Dialogs
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
@@ -340,7 +341,12 @@ export default function PlayPage() {
           </Box>
         )}
 
-        <Collapse in={showCharacterSheet} timeout="auto">
+        <Collapse 
+          in={showCharacterSheet} 
+          timeout={400}
+          onExited={() => setCharacterSheetCollapsed(true)}
+          onEnter={() => setCharacterSheetCollapsed(false)}
+        >
           <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
           {/* Top Right Action Icons */}
           <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
@@ -503,8 +509,8 @@ export default function PlayPage() {
           </Paper>
         </Collapse>
 
-        {/* Guilty Player Reveal - Shows after accusation */}
-        {accusationResult && accusationResult.guiltyPlayer && !accusationResult.gameComplete && (
+        {/* Guilty Player Reveal - Shows after accusation and character sheet is collapsed */}
+        {accusationResult && accusationResult.guiltyPlayer && !accusationResult.gameComplete && characterSheetCollapsed && (
           <Box sx={{ mt: 4 }}>
             <Typography variant="h5" gutterBottom align="center" sx={{ mb: 3 }}>
               🎭 Le Coupable Révélé
@@ -532,7 +538,7 @@ export default function PlayPage() {
         )}
 
         {/* Scoreboard and Mystery Voting - Separated from character sheet */}
-        {accusationResult && !accusationResult.gameComplete && (
+        {accusationResult && !accusationResult.gameComplete && characterSheetCollapsed && (
           <ScoreboardAndVoting
             playerScores={playerScores}
             currentPlayerId={currentPlayer?.id}
@@ -547,7 +553,7 @@ export default function PlayPage() {
         )}
 
         {/* No mysteries available */}
-        {accusationResult && !accusationResult.gameComplete && availableMysteries.length === 0 && (
+        {accusationResult && !accusationResult.gameComplete && characterSheetCollapsed && availableMysteries.length === 0 && (
           <Alert severity="info" sx={{ mt: 4 }}>
             Aucun mystère disponible pour continuer. La partie est terminée !
           </Alert>
