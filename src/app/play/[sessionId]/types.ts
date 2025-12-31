@@ -26,7 +26,12 @@ export interface PlayerScore {
 export interface AvailableMystery {
   id: string;
   title: string;
+  synopsis?: string;
+  author?: string;
+  character_count?: number;
+  language?: string;
   cover_image_url?: string;
+  image_path?: string;
 }
 
 export interface AccusationResult {

@@ -281,6 +281,7 @@ export async function loadAvailableMysteries(
   ).map((m: any) => ({
     id: m.id,
     title: m.title,
+    synopsis: m.synopsis,
     author: m.author,
     character_count: m.character_count,
     language: m.language,
