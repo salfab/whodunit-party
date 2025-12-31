@@ -281,32 +281,41 @@ export default function RoleRevealCard({
                 bottom: 0,
                 left: 0,
                 right: 0,
+                height: '33%',
                 background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.4) 80%, transparent 100%)',
-                padding: '60px 20px 24px',
                 backdropFilter: 'blur(4px)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                padding: '8px 16px 16px',
               }}
             >
               <Typography
-                variant="h4"
                 sx={{
                   color: '#ffd700',
                   textAlign: 'center',
                   fontWeight: 600,
                   textShadow: '0 3px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)',
                   letterSpacing: '0.05em',
+                  // Auto-sizing text: smaller on mobile, larger on desktop, clamped
+                  fontSize: 'clamp(1rem, 5vw, 2rem)',
+                  lineHeight: 1.2,
+                  wordBreak: 'break-word',
                 }}
               >
                 {characterName}
               </Typography>
               {occupation && (
                 <Typography
-                  variant="subtitle1"
                   sx={{
                     color: 'text.secondary',
                     textAlign: 'center',
                     fontStyle: 'italic',
                     mt: 0.5,
                     textShadow: '0 2px 8px rgba(0,0,0,0.9)',
+                    fontSize: 'clamp(0.7rem, 3vw, 1rem)',
+                    lineHeight: 1.2,
                   }}
                 >
                   {occupation}
