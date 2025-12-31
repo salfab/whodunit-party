@@ -168,8 +168,8 @@
       "investigatorWrong": "Erreur ! Vous avez accusé une personne innocente.",
       "guiltyAccused": "Vous avez été démasqué ! L'enquêteur a gagné.",
       "guiltySafe": "Bravo ! Vous n'avez pas été découvert. +2 points",
-      "innocentAccused": "Vous êtes innocent et avez été accusé à tort ! +1 point",
-      "innocentSafe": "Vous n'avez pas été accusé."
+      "innocentWrong": "L'enquêteur s'est trompé ! +1 point pour tous les innocents",
+      "innocentCorrect": "L'enquêteur a trouvé le coupable."
     }
   },
   "join": {

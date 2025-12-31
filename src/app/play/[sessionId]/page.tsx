@@ -223,7 +223,7 @@ export default function PlayPage() {
     }
   }
 
-  function getAccusationMessage(role: string, wasCorrect: boolean, isMe: boolean): string {
+  function getAccusationMessage(role: string, wasCorrect: boolean, _isMe: boolean): string {
     if (role === 'investigator') {
       return wasCorrect 
         ? 'Bravo ! Vous avez trouvé le coupable ! +2 points'
@@ -233,12 +233,10 @@ export default function PlayPage() {
         ? 'Vous avez été découvert par l\'enquêteur.'
         : 'Le coupable n\'a pas été attrapé ! +2 points';
     } else {
-      // Innocent
+      // Innocent - all innocents get +1 when investigator is wrong
       return wasCorrect
         ? 'L\'enquêteur a trouvé le coupable.'
-        : (isMe
-            ? 'Vous êtes innocent et avez été accusé à tort ! +1 point'
-            : 'L\'enquêteur s\'est trompé.');
+        : 'L\'enquêteur s\'est trompé ! +1 point pour tous les innocents';
     }
   }
 

@@ -51,7 +51,7 @@ Given('I mock the accusation API to return an incorrect result', () => {
       messages: {
         investigator: 'Raté ! Vous avez accusé une personne innocente.',
         guilty: 'Le coupable n\'a pas été attrapé ! +2 points',
-        innocent: 'Vous êtes innocent et avez été accusé à tort ! +1 point',
+        innocent: 'L\'enquêteur s\'est trompé ! +1 point pour tous les innocents',
       },
     },
   }).as('submitAccusation');

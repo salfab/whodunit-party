@@ -168,8 +168,8 @@
       "investigatorWrong": "Wrong! You accused an innocent person.",
       "guiltyAccused": "You've been exposed! The investigator won.",
       "guiltySafe": "Well done! You were not discovered. +2 points",
-      "innocentAccused": "You are innocent and were wrongly accused! +1 point",
-      "innocentSafe": "You were not accused."
+      "innocentWrong": "The investigator got it wrong! +1 point for all innocents",
+      "innocentCorrect": "The investigator found the guilty party."
     }
   },
   "join": {

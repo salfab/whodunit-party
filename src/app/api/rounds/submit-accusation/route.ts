@@ -142,26 +142,33 @@ export async function POST(request: NextRequest) {
     // Calculate and update scores
     const scoreUpdates: Array<{ id: string; increment: number }> = [];
 
+    // Get all player assignments for this mystery
+    const { data: allAssignmentsData } = await (supabase
+      .from('player_assignments') as any)
+      .select(`
+        player_id,
+        character_sheets (role)
+      `)
+      .eq('session_id', session.sessionId)
+      .eq('mystery_id', gameSession.current_mystery_id);
+    
+    const allAssignments = allAssignmentsData as any[] || [];
+
     if (wasCorrect) {
       // Investigator found guilty: +2 points to investigator
       scoreUpdates.push({ id: session.playerId, increment: 2 });
     } else {
-      // Investigator accused innocent: +1 point to wrongly accused innocent
-      scoreUpdates.push({ id: accusedPlayerId, increment: 1 });
+      // Investigator accused wrong: ALL innocents get +1 point each
+      const innocentPlayers = allAssignments.filter((a: any) => 
+        a.character_sheets?.role === 'innocent'
+      );
       
-      // Find the guilty player and give them +2 points for escaping
-      const { data: guiltyAssignmentData } = await (supabase
-        .from('player_assignments') as any)
-        .select(`
-          player_id,
-          character_sheets (role)
-        `)
-        .eq('session_id', session.sessionId)
-        .eq('mystery_id', gameSession.current_mystery_id);
+      for (const innocent of innocentPlayers) {
+        scoreUpdates.push({ id: innocent.player_id, increment: 1 });
+      }
       
-      const guiltyAssignment = guiltyAssignmentData as any;
-
-      const guiltyPlayer = guiltyAssignment?.find((a: any) => 
+      // Guilty player gets +2 points for escaping
+      const guiltyPlayer = allAssignments.find((a: any) => 
         a.character_sheets?.role === 'guilty'
       );
 
@@ -255,9 +262,7 @@ export async function POST(request: NextRequest) {
     
     const innocentMessage = wasCorrect
       ? 'L\'enquêteur a trouvé le coupable.'
-      : (accusedSheet.role === 'innocent' && accusedPlayerId === accusedPlayerId
-          ? 'Vous êtes innocent et avez été accusé à tort ! +1 point'
-          : 'L\'enquêteur s\'est trompé.');
+      : 'L\'enquêteur s\'est trompé ! +1 point pour tous les innocents';
 
     log('info', 'Accusation submitted', {
       sessionId: session.sessionId,
