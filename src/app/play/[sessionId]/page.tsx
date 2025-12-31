@@ -415,7 +415,6 @@ export default function PlayPage() {
                     occupation={characterSheet.occupation || undefined}
                     role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
                     showNameOverlay={!characterSheet.image_path}
-                    isAccused={isAccused}
                   />
                 </Box>
 
