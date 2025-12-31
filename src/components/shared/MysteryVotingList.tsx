@@ -180,9 +180,9 @@ export function MysteryVotingList({
         </Paper>
       )}
 
-      {/* Mystery list */}
+      {/* Mystery list - sorted by minimum players ascending */}
       <List>
-        {availableMysteries.map((mystery) => {
+        {[...availableMysteries].sort((a, b) => (a.character_count || 0) - (b.character_count || 0)).map((mystery) => {
           const voteCount = getVoteCount(mystery.id);
           const isSelected = myVote === mystery.id;
           
