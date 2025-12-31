@@ -188,14 +188,14 @@
     }
   },
   "createRoom": {
-    "title": "Création de la salle...",
-    "error": "Échec de la création de la salle"
+    "title": "Création de la partie...",
+    "error": "Échec de la création de la partie"
   },
   "home": {
     "title": "Whodunit Party",
     "subtitle": "Un Jeu de Meurtres et Mystères",
-    "createRoom": "Créer une Salle",
-    "joinRoom": "Rejoindre une Salle",
+    "createRoom": "Nouvelle partie",
+    "joinRoom": "Rejoindre une partie",
     "admin": "Administration",
     "selectLanguage": "Choisir la langue"
   }

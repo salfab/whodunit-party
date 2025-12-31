@@ -188,14 +188,14 @@
     }
   },
   "createRoom": {
-    "title": "Creating room...",
-    "error": "Failed to create room"
+    "title": "Creating game...",
+    "error": "Failed to create game"
   },
   "home": {
     "title": "Whodunit Party",
     "subtitle": "A Murder Mystery Game",
-    "createRoom": "Create Room",
-    "joinRoom": "Join Room",
+    "createRoom": "New Game",
+    "joinRoom": "Join Game",
     "admin": "Admin",
     "selectLanguage": "Select Language"
   }

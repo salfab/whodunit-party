@@ -43,7 +43,7 @@ A real-time multiplayer murder mystery party game built with Next.js, Supabase, 
    - Create new mystery at `/admin/mysteries/new/edit`
    - Upload JSON mysteries at `/admin/mysteries/upload`
 
-6. **Create a game** at `/admin/session/create`
+6. **Create a game** by clicking "New Game" on the home page
 
 See [SETUP.md](SETUP.md) for detailed setup instructions.
 

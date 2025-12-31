@@ -116,7 +116,7 @@ npm start
 
 ## Game Flow
 
-1. **Admin Creates Game**: `/admin/session/create` → Gets join code
+1. **Admin Creates Game**: Click "New Game" on home page → Gets join code
 2. **Players Join**: `/join` → Enter code and name → Go to lobby
 3. **Lobby**: Players mark themselves ready
 4. **Admin Starts**: Selects mystery → Distributes roles

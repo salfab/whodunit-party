@@ -60,4 +60,4 @@ console.log('📝 Next steps:');
 console.log('1. Run migrations: npx supabase db push');
 console.log('2. Start dev server: npm run dev');
 console.log('3. Upload mysteries at /admin/mysteries/upload');
-console.log('4. Create a game at /admin/session/create\n');
+console.log('4. Create a game by clicking "New Game" on the home page\n');

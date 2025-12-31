@@ -188,14 +188,14 @@
     }
   },
   "createRoom": {
-    "title": "Creando sala...",
-    "error": "Error al crear la sala"
+    "title": "Creando partida...",
+    "error": "Error al crear la partida"
   },
   "home": {
     "title": "Whodunit Party",
     "subtitle": "Un Juego de Asesinatos y Misterios",
-    "createRoom": "Crear Sala",
-    "joinRoom": "Unirse a Sala",
+    "createRoom": "Nueva partida",
+    "joinRoom": "Unirse a partida",
     "admin": "Administración",
     "selectLanguage": "Seleccionar Idioma"
   }
