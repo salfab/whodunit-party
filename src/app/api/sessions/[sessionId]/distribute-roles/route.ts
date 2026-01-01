@@ -26,10 +26,31 @@ export async function POST(
 
     const supabase = await createServiceClient();
 
-    // Try to atomically update session to 'playing' status
-    // This acts as a distributed lock - only one API call will succeed
-    // We update if current_mystery_id is different (null in lobby or different mystery)
-    // Force updated_at to change to trigger Realtime event
+    // First, check current session state to implement idempotency
+    const { data: currentSession, error: fetchError } = await (supabase
+      .from('game_sessions') as any)
+      .select('id, status, current_mystery_id')
+      .eq('id', sessionId)
+      .single();
+
+    if (fetchError || !currentSession) {
+      log('error', 'Failed to fetch session', { sessionId, error: fetchError?.message });
+      return NextResponse.json(
+        { error: 'Session not found' },
+        { status: 404 }
+      );
+    }
+
+    // Check if this mystery is already being played (idempotency check)
+    if (currentSession.current_mystery_id === mysteryId && currentSession.status === 'playing') {
+      log('info', 'Mystery already being played - skipping role distribution', { sessionId, mysteryId });
+      return NextResponse.json(
+        { success: true, note: 'Already playing this mystery' },
+        { status: 200 }
+      );
+    }
+
+    // Update session to 'playing' status with the new mystery
     const { data: updatedSession, error: lockError } = await (supabase
       .from('game_sessions') as any)
       .update({ 
@@ -38,16 +59,15 @@ export async function POST(
         updated_at: new Date().toISOString() // Force update to trigger Realtime
       })
       .eq('id', sessionId)
-      .neq('current_mystery_id', mysteryId) // Only update if mystery is changing
       .select()
       .single();
 
-    // If update failed, another API call already started this mystery
+    // If update failed, something went wrong
     if (lockError || !updatedSession) {
-      log('info', 'Lock conflict - another request already processing this mystery', { sessionId, mysteryId, lockError: lockError?.message });
+      log('error', 'Failed to update session', { sessionId, mysteryId, lockError: lockError?.message });
       return NextResponse.json(
-        { success: true, note: 'Already processing' },
-        { status: 200 }
+        { error: 'Failed to update session' },
+        { status: 500 }
       );
     }
 

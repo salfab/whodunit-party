@@ -8,13 +8,16 @@ import {
   Typography,
   Paper,
   Alert,
+  Button,
 } from '@mui/material';
+import { HelpOutline as HelpIcon } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@/lib/supabase/client';
-import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
+import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import LoadingScreen from '@/components/LoadingScreen';
 import TransitionScreen from '@/components/TransitionScreen';
+import { RoleHelpDialog } from '@/components/play';
 import {
   JoinCodeDisplay,
   PlayerList,
@@ -25,6 +28,7 @@ import {
 } from '@/components/lobby';
 import type { Database } from '@/types/database';
 import { MIN_PLAYERS } from '@/lib/constants';
+import { HELP_CONTENT } from '@/app/play/[sessionId]/constants';
 
 type Player = Database['public']['Tables']['players']['Row'];
 type GameSession = Database['public']['Tables']['game_sessions']['Row'];
@@ -46,11 +50,16 @@ export default function LobbyPage() {
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [playerToRemove, setPlayerToRemove] = useState<{ id: string; name: string } | null>(null);
   const [removeLoading, setRemoveLoading] = useState(false);
+  const [helpDialogOpen, setHelpDialogOpen] = useState(false);
+  const [sessionNotFound, setSessionNotFound] = useState(false);
 
   const supabase = createClient();
 
-  // Send heartbeats to keep player active
-  usePlayerHeartbeat(currentPlayerId, true);
+  // Get current player name for presence
+  const currentPlayerName = players.find(p => p.id === currentPlayerId)?.name || null;
+
+  // Track player presence using Supabase Presence (no database updates)
+  usePlayerPresence(sessionId, currentPlayerId, currentPlayerName, true);
 
   useEffect(() => {
     loadSessionData();
@@ -131,14 +140,34 @@ export default function LobbyPage() {
       if (sessionError) throw sessionError;
       setSession(sessionData);
 
-      // Load players
-      await loadPlayers();
+      // Load players directly (not via loadPlayers) so we can check membership
+      const { data: playersData, error: playersError } = await supabase
+        .from('players')
+        .select('*')
+        .eq('session_id', sessionId)
+        .order('created_at', { ascending: true });
+
+      if (playersError) {
+        console.error('Error loading players:', playersError);
+      }
+      const loadedPlayers = playersData || [];
+      setPlayers(loadedPlayers);
 
       // Get current player ID from session cookie by checking the response
       const response = await fetch('/api/session/me');
       if (response.ok) {
         const data = await response.json();
-        setCurrentPlayerId(data.playerId);
+        const playerId = data.playerId;
+        
+        // Check if this player belongs to this session
+        const playerInSession = loadedPlayers.find(p => p.id === playerId);
+        if (!playerInSession) {
+          // Player is authenticated but not for this session, redirect to join
+          router.push(`/join?code=${sessionData.join_code}`);
+          return;
+        }
+        
+        setCurrentPlayerId(playerId);
       } else {
         // User is not authenticated, redirect to join page
         router.push(`/join?code=${sessionData.join_code}`);
@@ -180,6 +209,15 @@ export default function LobbyPage() {
       setLoading(false);
     } catch (err: any) {
       console.error('Error loading session data:', err);
+      // Check if session not found (PGRST116 = single() returned 0 rows)
+      // or invalid UUID (22P02 = invalid syntax)
+      if (err.code === 'PGRST116' || err.code === '22P02' || err.message?.includes('0 rows')) {
+        setSessionNotFound(true);
+        setLoading(false);
+        // Auto-redirect after 5 seconds
+        setTimeout(() => router.push('/'), 5000);
+        return;
+      }
       setError(err.message || 'Failed to load session');
       setLoading(false);
     }
@@ -481,6 +519,33 @@ export default function LobbyPage() {
     return <LoadingScreen message="Chargement de la salle d'attente" />;
   }
 
+  if (sessionNotFound) {
+    return (
+      <Container maxWidth="sm">
+        <Box sx={{ py: 8, textAlign: 'center' }}>
+          <Paper elevation={3} sx={{ p: 4 }}>
+            <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
+              🔍 Partie introuvable
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+              Cette partie n'existe pas ou a été supprimée.
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Redirection automatique dans quelques secondes...
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => router.push('/')}
+            >
+              Retour à l'accueil
+            </Button>
+          </Paper>
+        </Box>
+      </Container>
+    );
+  }
+
   if (error) {
     return (
       <Container maxWidth="md">
@@ -495,9 +560,19 @@ export default function LobbyPage() {
     <Container maxWidth="md">
       <Box sx={{ py: 4, minHeight: '100vh' }}>
         <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 } }}>
-          <Typography variant="h3" component="h1" gutterBottom textAlign="center">
-            Salle d'attente
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 0 }}>
+              Salle d'attente
+            </Typography>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<HelpIcon />}
+              onClick={() => setHelpDialogOpen(true)}
+            >
+              Déroulement du jeu
+            </Button>
+          </Box>
 
           {session && <JoinCodeDisplay code={session.join_code} />}
 
@@ -583,6 +658,13 @@ export default function LobbyPage() {
         onConfirm={handleRemovePlayer}
         onCancel={closeRemoveDialog}
         loading={removeLoading}
+      />
+
+      {/* Help Dialog */}
+      <RoleHelpDialog
+        open={helpDialogOpen}
+        onClose={() => setHelpDialogOpen(false)}
+        helpContent={HELP_CONTENT.rules}
       />
     </Container>
   );

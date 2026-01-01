@@ -1,18 +1,19 @@
 -- Create storage bucket for mystery images (cover and character portraits)
 -- This bucket is public for read access (images displayed in game)
 
-INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+INSERT INTO storage.buckets (id, name, file_size_limit, allowed_mime_types)
 VALUES (
   'mystery-images',
   'mystery-images',
-  true,
   5242880, -- 5MB per image
   ARRAY['image/jpeg', 'image/png', 'image/webp']
 )
 ON CONFLICT (id) DO UPDATE SET
-  public = true,
   file_size_limit = 5242880,
   allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp'];
+
+-- Make the bucket public
+UPDATE storage.buckets SET public = true WHERE id = 'mystery-images';
 
 -- Public read access - anyone can view mystery images
 CREATE POLICY "Public read access for mystery images"

@@ -36,6 +36,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (playerName.trim().length > 15) {
+      return NextResponse.json(
+        { error: 'Player name must be at most 15 characters' },
+        { status: 400 }
+      );
+    }
+
     const supabase = await createServiceClient();
 
     // Find the session by join code

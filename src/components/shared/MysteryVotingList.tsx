@@ -39,6 +39,8 @@ interface MysteryVotingListProps {
   title?: string;
   /** Whether to show the title */
   showTitle?: boolean;
+  /** Whether mysteries are loading */
+  loading?: boolean;
 }
 
 export function MysteryVotingList({ 
@@ -54,6 +56,7 @@ export function MysteryVotingList({
   allowUnvote = true,
   title = '🎭 Votez pour le prochain mystère',
   showTitle = false,
+  loading = false,
 }: MysteryVotingListProps) {
   // Find the voted mystery to show its image
   const votedMystery = myVote ? availableMysteries.find(m => m.id === myVote) : null;
@@ -65,6 +68,29 @@ export function MysteryVotingList({
     }
     return voteCounts[mysteryId] || 0;
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <Box 
+        sx={{ 
+          textAlign: 'center', 
+          py: 6, 
+          px: 3, 
+          mb: 3,
+          border: '1px dashed',
+          borderColor: 'divider',
+          borderRadius: 2,
+          bgcolor: 'background.paper'
+        }}
+      >
+        <CircularProgress size={40} sx={{ mb: 2 }} />
+        <Typography variant="h6" color="text.secondary">
+          Chargement des mystères...
+        </Typography>
+      </Box>
+    );
+  }
 
   // Show empty state when no mysteries exist for the language
   if (mysteries.length === 0 && hasLanguage && availableMysteries.length === 0) {

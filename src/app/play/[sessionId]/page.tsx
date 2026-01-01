@@ -14,7 +14,7 @@ import {
 import { QrCode2 as QrCodeIcon, HelpOutline as HelpIcon, FlipCameraAndroid as FlipIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { usePlayerHeartbeat } from '@/hooks/usePlayerHeartbeat';
+import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import LoadingScreen from '@/components/LoadingScreen';
 import TransitionScreen from '@/components/TransitionScreen';
 import RoomQRCodeDialog from '@/components/shared/RoomQRCodeDialog';
@@ -78,6 +78,7 @@ export default function PlayPage() {
   const [voteCounts, setVoteCounts] = useState<Record<string, number>>({});
   const [hasVoted, setHasVoted] = useState(false);
   const [startingNextRound, setStartingNextRound] = useState(false);
+  const [loadingMysteries, setLoadingMysteries] = useState(false);
   
   // Notifications
   const [errorSnackbar, setErrorSnackbar] = useState<{ open: boolean; message: string }>({ open: false, message: '' });
@@ -99,8 +100,8 @@ export default function PlayPage() {
   // Refs
   const previousMysteryIdRef = useRef<string | null>(null);
 
-  // Send heartbeats to keep player active
-  usePlayerHeartbeat(currentPlayer?.id || null, true);
+  // Track player presence using Supabase Presence (no database updates)
+  usePlayerPresence(sessionId, currentPlayer?.id || null, currentPlayer?.name || null, true);
 
   // Handle accusation event from realtime - lightweight, no full reload
   const handleAccusationEvent = async (round: {
@@ -258,6 +259,7 @@ export default function PlayPage() {
   }
 
   async function loadPostAccusationData() {
+    setLoadingMysteries(true);
     try {
       const scores = await loadScoreboard(sessionId);
       setPlayerScores(scores);
@@ -273,6 +275,8 @@ export default function PlayPage() {
     } catch (err: any) {
       console.error('Error loading post-accusation data:', err);
       setErrorSnackbar({ open: true, message: 'Erreur lors du chargement des données' });
+    } finally {
+      setLoadingMysteries(false);
     }
   }
 
@@ -645,10 +649,11 @@ export default function PlayPage() {
                     startingNextRound={startingNextRound}
                     onVote={handleVoteForMystery}
                     allowUnvote={true}
+                    loading={loadingMysteries}
                   />
 
-                  {/* No mysteries available */}
-                  {availableMysteries.length === 0 && (
+                  {/* No mysteries available - only show after loading completes */}
+                  {!loadingMysteries && availableMysteries.length === 0 && (
                     <Alert severity="info" sx={{ mt: 4 }}>
                       Aucun mystère disponible pour continuer. La partie est terminée !
                     </Alert>

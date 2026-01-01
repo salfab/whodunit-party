@@ -39,6 +39,8 @@ interface ScoreboardAndVotingProps {
   onVote: (mysteryId: string | null) => void;
   /** Whether to allow unvoting */
   allowUnvote?: boolean;
+  /** Whether mysteries are loading */
+  loading?: boolean;
 }
 
 export default function ScoreboardAndVoting({
@@ -51,6 +53,7 @@ export default function ScoreboardAndVoting({
   startingNextRound = false,
   onVote,
   allowUnvote = true,
+  loading = false,
 }: ScoreboardAndVotingProps) {
   return (
     <Box sx={{ mt: 4 }}>
@@ -68,6 +71,7 @@ export default function ScoreboardAndVoting({
         onVote={onVote}
         allowUnvote={allowUnvote}
         showTitle={true}
+        loading={loading}
       />
     </Box>
   );

@@ -219,9 +219,10 @@ function JoinContent() {
               required
               sx={{ mb: 3 }}
               inputProps={{
-                maxLength: 30,
+                maxLength: 15,
                 'data-testid': 'player-name-input',
               }}
+              helperText={`${playerName.length}/15 caractères`}
             />
 
             <Button
