@@ -48,3 +48,11 @@ export interface AccusationResult {
     playerIndex: number;
   };
 }
+
+export interface SuspectInfo {
+  id: string;
+  playerName: string;
+  characterName: string;
+  occupation?: string | null;
+  imagePath?: string | null;
+}

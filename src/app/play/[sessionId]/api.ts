@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
-import type { PlayerOption, PlayerScore, AvailableMystery, CharacterWithWords } from './types';
+import type { PlayerOption, PlayerScore, AvailableMystery, CharacterWithWords, SuspectInfo } from './types';
 
 const supabase = createClient();
 
@@ -398,4 +398,24 @@ export async function submitMysteryVote(
     const data = await response.json();
     throw new Error(data.error || 'Failed to vote');
   }
+}
+
+/**
+ * Fetch suspects list for the investigator
+ * Returns character info without revealing roles
+ */
+export async function fetchSuspects(sessionId: string): Promise<SuspectInfo[]> {
+  const response = await fetch(`/api/sessions/${sessionId}/suspects`);
+
+  if (!response.ok) {
+    // Non-investigators will get 403, which is expected
+    if (response.status === 403) {
+      return [];
+    }
+    const data = await response.json();
+    throw new Error(data.error || 'Failed to fetch suspects');
+  }
+
+  const data = await response.json();
+  return data.suspects;
 }

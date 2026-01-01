@@ -37,6 +37,7 @@ import type {
   PlayerScore,
   AvailableMystery,
   AccusationResult,
+  SuspectInfo,
 } from './types';
 import {
   loadCharacterSheet,
@@ -45,8 +46,10 @@ import {
   submitAccusation,
   submitMysteryVote,
   fetchGuiltyPlayer,
+  fetchSuspects,
   getPlaceholderImage,
 } from './api';
+import SuspectsList from './components/SuspectsList';
 import { setupRealtimeSubscription, setupVoteSubscription } from './realtime';
 
 export default function PlayPage() {
@@ -68,6 +71,7 @@ export default function PlayPage() {
   const [accuseDialogOpen, setAccuseDialogOpen] = useState(false);
   const [players, setPlayers] = useState<PlayerOption[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
+  const [suspects, setSuspects] = useState<SuspectInfo[]>([]);
   const [accusationResult, setAccusationResult] = useState<AccusationResult | null>(null);
   const [submittingAccusation, setSubmittingAccusation] = useState(false);
   
@@ -185,6 +189,17 @@ export default function PlayPage() {
       setCharacterSheet(result.characterSheet);
       setPlayers(result.otherPlayers);
       if (result.joinCode) setJoinCode(result.joinCode);
+
+      // Fetch suspects for investigator
+      if (result.characterSheet.role === 'investigator') {
+        fetchSuspects(sessionId).then(suspectList => {
+          setSuspects(suspectList);
+        }).catch(err => {
+          console.error('Error fetching suspects:', err);
+        });
+      } else {
+        setSuspects([]);
+      }
 
       // Handle transition
       if (result.transitionData) {
@@ -535,6 +550,11 @@ export default function PlayPage() {
                       {characterSheet.mystery.description}
                     </ReactMarkdown>
                   </Box>
+                )}
+
+                {/* Suspects List - Only for investigator */}
+                {characterSheet.role === 'investigator' && suspects.length > 0 && (
+                  <SuspectsList suspects={suspects} />
                 )}
 
                 {/* Words to Place - Only for guilty/innocent */}
