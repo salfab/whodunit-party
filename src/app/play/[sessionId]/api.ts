@@ -133,7 +133,8 @@ export async function loadCharacterSheet(
 
   const characterSheet: CharacterWithWords = { ...sheet, wordsToPlace, mystery, playerIndex };
 
-  // Load all active players with their character names (for accusation list)
+  // Load all active players with their character names FOR THIS MYSTERY (for accusation list)
+  // Important: Filter by mystery_id to get correct character assignments
   const { data: allPlayers } = await supabase
     .from('players')
     .select(`
@@ -141,6 +142,7 @@ export async function loadCharacterSheet(
       name, 
       status,
       player_assignments!inner(
+        mystery_id,
         character_sheets!inner(
           character_name,
           occupation
@@ -148,7 +150,8 @@ export async function loadCharacterSheet(
       )
     `)
     .eq('session_id', sessionId)
-    .eq('status', 'active');
+    .eq('status', 'active')
+    .eq('player_assignments.mystery_id', mystery.id);
 
   // Filter out the current player (investigator can't accuse themselves) and format data
   const otherPlayers = allPlayers?.filter((p) => p.id !== playerData.playerId).map((p: any) => ({
