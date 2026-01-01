@@ -37,26 +37,26 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
 3. **Utilisez votre alibi** pour démarrer votre histoire si besoin
 
 4. **Pimentez votre récit** avec votre sombre secret si vous voulez étoffer votre personnage`,
-  rules: `# Règles du jeu (version reformulée)
+  rules: `# Déroulement d'une manche
 
 1. **Distribution des rôles**  
-   On tire au sort **un Inspecteur** et **un Suspect coupable**. Tous les autres joueurs deviennent des **Suspects innocents**.  
+   Le jeu choisit au hasard **un Inspecteur** et **un Suspect coupable**. Tous les autres joueurs deviennent des **Suspects innocents**.  
    Chaque joueur reçoit une **fiche de personnage**.  
-   **Important : seul le coupable sait qu’il est coupable.**
+   **Important :** seul le coupable sait qu’il est coupable.
 
 2. **Mise en place du mystère**  
-   L’Inspecteur lit à voix haute le texte d’introduction (la mise en place du mystère).
+   L’Inspecteur lit à voix haute le texte d’introduction.
 
 3. **Présentation des suspects**  
-   Chaque suspect se présente à tour de rôle.  
-   Pendant ce temps, l’Inspecteur garde sous les yeux la **liste des suspects**.
+   Chaque suspect annonce son nom à tour de rôle.  
+   L’Inspecteur peut "faire l'appel" grâce à la liste de suspects fournie sur sa fiche
 
 4. **Début des interrogatoires**  
    L’Inspecteur choisit un suspect et lui demande son **alibi**.
 
-5. **Alibi en 1 minute, avec contraintes**  
-   Le suspect dispose de **1 minute** pour raconter son alibi, **sans être interrompu**.  
-   Il doit obligatoirement placer **ses 3 mots imposés** dans son récit.  
+5. **Alibi en 1 minute**  
+   Le suspect dispose de **1 minute** pour exposer son alibi, **sans être interrompu**.  
+   Il doit obligatoirement placer **ses 3 mots imposés** dans son récit.
    Il n’y a **ni deuxième tour**, **ni questions supplémentaires** de la part de l’Inspecteur.
 
 6. **Interroger tout le monde**  
@@ -72,5 +72,7 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
 9. **Révélation**  
    On révèle l’identité du coupable.  
    S’il le souhaite, il peut alors **avouer** en lisant à voix haute son texte de **“Sombre secret”**.
+
+**Note** un bref récapitulatif est disponible sur la fiche de personnage via l'icône ❓
 `,
 };
