@@ -102,9 +102,62 @@ export default function PlayPage() {
   // Send heartbeats to keep player active
   usePlayerHeartbeat(currentPlayer?.id || null, true);
 
+  // Handle accusation event from realtime - lightweight, no full reload
+  const handleAccusationEvent = async (round: {
+    mystery_id: string;
+    accused_player_id: string;
+    was_correct: boolean;
+  }) => {
+    console.log('Accusation event received:', round);
+    
+    // Skip if we already have an accusation result (we're the investigator who just submitted)
+    if (accusationResult) {
+      console.log('Already have accusation result, skipping');
+      return;
+    }
+    
+    // Check if this accusation is for the current mystery
+    if (characterSheet && round.mystery_id !== characterSheet.mystery_id) {
+      console.log('Accusation is for different mystery, skipping');
+      return;
+    }
+
+    // Set isAccused if this player was accused
+    if (currentPlayer && round.accused_player_id === currentPlayer.id) {
+      setIsAccused(true);
+    }
+
+    // Build accusation message based on role
+    const message = characterSheet 
+      ? getAccusationMessage(characterSheet.role, round.was_correct, currentPlayer?.id === round.accused_player_id)
+      : '';
+
+    // Fetch guilty player from secure endpoint
+    try {
+      const guiltyPlayer = await fetchGuiltyPlayer(sessionId, round.mystery_id);
+      setAccusationResult({
+        wasCorrect: round.was_correct,
+        role: round.was_correct ? 'guilty' : 'innocent',
+        gameComplete: false,
+        message,
+        guiltyPlayer,
+      });
+    } catch (err) {
+      console.error('Error fetching guilty player:', err);
+      setErrorSnackbar({ open: true, message: 'Erreur lors du chargement du coupable' });
+      // Set accusation result without guilty player
+      setAccusationResult({
+        wasCorrect: round.was_correct,
+        role: round.was_correct ? 'guilty' : 'innocent',
+        gameComplete: false,
+        message,
+      });
+    }
+  };
+
   useEffect(() => {
     loadData();
-    const cleanup = setupRealtimeSubscription(sessionId, loadData);
+    const cleanup = setupRealtimeSubscription(sessionId, loadData, handleAccusationEvent);
     return cleanup;
   }, [sessionId]);
 

@@ -1,8 +1,19 @@
 import { createClient } from '@/lib/supabase/client';
 
+interface RoundPayload {
+  id: string;
+  session_id: string;
+  mystery_id: string;
+  investigator_player_id: string;
+  accused_player_id: string;
+  was_correct: boolean;
+  round_number: number;
+}
+
 export function setupRealtimeSubscription(
   sessionId: string,
-  onUpdate: () => void
+  onUpdate: () => void,
+  onAccusation?: (round: RoundPayload) => void
 ): () => void {
   console.log('Setting up realtime subscription for session:', sessionId);
   const supabase = createClient();
@@ -32,7 +43,12 @@ export function setupRealtimeSubscription(
       },
       async (payload) => {
         console.log('Round created:', payload.new);
-        onUpdate();
+        // Use dedicated accusation handler if provided, otherwise full reload
+        if (onAccusation) {
+          onAccusation(payload.new as RoundPayload);
+        } else {
+          onUpdate();
+        }
       }
     )
     .on(
