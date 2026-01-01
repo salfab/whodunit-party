@@ -3,6 +3,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import ThemeRegistry from "@/components/ThemeRegistry";
+import { CardFlipProvider } from "@/contexts/CardFlipContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,7 +24,9 @@ export default async function RootLayout({
         <AppRouterCacheProvider options={{ key: 'mui' }}>
           <NextIntlClientProvider messages={messages}>
             <ThemeRegistry>
-              {children}
+              <CardFlipProvider>
+                {children}
+              </CardFlipProvider>
             </ThemeRegistry>
           </NextIntlClientProvider>
         </AppRouterCacheProvider>

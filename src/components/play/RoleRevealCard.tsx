@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { keyframes } from '@mui/material/styles';
+import { useCardFlip } from '@/contexts/CardFlipContext';
 
 interface RoleRevealCardProps {
   imagePath: string;
@@ -106,12 +107,13 @@ export default function RoleRevealCard({
   const [showHintPill, setShowHintPill] = useState(false);
   const [imageHidden, setImageHidden] = useState(false);
   const [bloodSmearLoaded, setBloodSmearLoaded] = useState(false);
+  const { hasEverBeenFlipped, markAsFlipped } = useCardFlip();
 
   const roleLabel = getRoleLabel(role);
 
   // Occasional hint animation to show the card is interactive
   useEffect(() => {
-    if (isFlipped || isAnimating) return;
+    if (isFlipped || isAnimating || hasEverBeenFlipped) return;
 
     // Initial hint after 2 seconds
     const initialTimeout = setTimeout(() => {
@@ -148,13 +150,19 @@ export default function RoleRevealCard({
       clearTimeout(initialTimeout);
       clearTimeout(intervalRef);
     };
-  }, [isFlipped, isAnimating]);
+  }, [isFlipped, isAnimating, hasEverBeenFlipped]);
 
   const handleCardClick = () => {
     if (isAnimating || isHinting) return;
     setShowHintPill(false);
     setIsAnimating(true);
     setIsFlipped(!isFlipped);
+    
+    // Mark that the user has flipped a card (persists in app state)
+    if (!hasEverBeenFlipped) {
+      markAsFlipped();
+    }
+    
     // Animation duration is 600ms
     setTimeout(() => setIsAnimating(false), 600);
   };
