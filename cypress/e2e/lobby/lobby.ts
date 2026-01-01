@@ -103,15 +103,10 @@ Given('I mock a lobby session as {string} with {int} players', (playerName: stri
   cy.intercept('GET', '**/rest/v1/mystery_votes*', { statusCode: 200, body: [] }).as('getVotes');
   cy.intercept('GET', '**/rest/v1/rounds*', { statusCode: 200, body: [] }).as('getRounds');
 
-  cy.intercept('POST', '**/api/sessions/*/mark-ready', {
+  cy.intercept('POST', '**/api/sessions/*/vote-mystery', {
     statusCode: 200,
-    body: { success: true },
-  }).as('markReady');
-
-  cy.intercept('POST', '**/api/sessions/*/vote', {
-    statusCode: 200,
-    body: { success: true },
-  }).as('vote');
+    body: { success: true, roundNumber: 1, nextRoundStarted: false },
+  }).as('voteMystery');
 });
 
 Given('I mock a lobby session as {string} with mysteries', (playerName: string) => {
@@ -235,8 +230,9 @@ When('I click the refresh button', () => {
 });
 
 Then('I should be marked as ready', () => {
-  // After voting, the mark-ready API should have been called with isReady: true
-  cy.get('@markReady').its('request.body').should('deep.include', { isReady: true });
+  // After voting, the vote-mystery API should have been called
+  // Ready state is now derived from votes - voting = ready
+  cy.get('@voteMystery').its('request.body').should('have.property', 'mysteryId');
 });
 
 Then('the refresh button should be visible', () => {
@@ -261,8 +257,9 @@ Then('I should see {string} in the player list within {int} seconds', (playerNam
 });
 
 When('player {string} marks themselves as ready via API', (playerName: string) => {
-  // This would require the player's session token, so we'll skip for now
-  cy.log(`Marking ${playerName} as ready - requires session token`);
+  // Ready state is now derived from votes - voting = ready
+  // This would require the player's session token to vote, so we'll skip for now
+  cy.log(`Marking ${playerName} as ready via vote - requires session token`);
 });
 
 Then('the ready count should update within {int} seconds', (seconds: number) => {

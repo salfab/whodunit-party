@@ -203,11 +203,11 @@ Cypress.Commands.add('setupMockedSession', (options) => {
     },
   }).as('getPlayers');
 
-  // Mock ready state toggle
-  cy.intercept('POST', `/api/sessions/${sessionId}/mark-ready`, {
+  // Mock vote-mystery endpoint (handles voting and triggers next-round when all voted)
+  cy.intercept('POST', `/api/sessions/${sessionId}/vote-mystery`, {
     statusCode: 200,
-    body: { success: true },
-  }).as('markReady');
+    body: { success: true, roundNumber: 1, nextRoundStarted: false },
+  }).as('voteMystery');
 });
 
 // ==================== Real API Commands (for multi-player tests) ====================

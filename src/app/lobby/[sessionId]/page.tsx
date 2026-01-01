@@ -36,9 +36,6 @@ export default function LobbyPage() {
   const [session, setSession] = useState<GameSession | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerId, setCurrentPlayerId] = useState<string | null>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [readyCount, setReadyCount] = useState(0);
-  const [readyStates, setReadyStates] = useState<Map<string, boolean>>(new Map());
   const [mysteries, setMysteries] = useState<any[]>([]);
   const [votes, setVotes] = useState<Map<string, string>>(new Map());
   const [myVote, setMyVote] = useState<string | null>(null);
@@ -64,10 +61,9 @@ export default function LobbyPage() {
     };
   }, [sessionId]);
 
-  // Load ready state and vote when currentPlayerId is available
+  // Load vote when currentPlayerId is available
   useEffect(() => {
     if (currentPlayerId) {
-      checkReadyStates();
       if (votes.has(currentPlayerId)) {
         setMyVote(votes.get(currentPlayerId) || null);
       }
@@ -103,7 +99,13 @@ export default function LobbyPage() {
     (mystery) => mystery.character_count >= activePlayers.length
   );
   
-  const canStart = activePlayers.length >= MIN_PLAYERS && readyCount === activePlayers.length && availableMysteries.length > 0;
+  // Derive ready state from votes - a player is "ready" if they've voted
+  const voteCount = votes.size;
+  const readyStates = new Map<string, boolean>();
+  activePlayers.forEach(p => readyStates.set(p.id, votes.has(p.id)));
+  const isReady = currentPlayerId ? votes.has(currentPlayerId) : false;
+  
+  const canStart = activePlayers.length >= MIN_PLAYERS && voteCount === activePlayers.length && availableMysteries.length > 0;
 
   // Auto-redirect when game status changes to 'playing'
   useEffect(() => {
@@ -277,39 +279,6 @@ export default function LobbyPage() {
         }
       });
 
-    // Subscribe to ready states
-    const readyChannel = supabase
-      .channel(`session-${sessionId}-ready`, {
-        config: {
-          broadcast: { self: false },
-          presence: { key: '' },
-        },
-      })
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'player_ready_states',
-          filter: `session_id=eq.${sessionId}`,
-        },
-        (payload) => {
-          console.log('Ready state changed:', payload);
-          // Immediately update ready count when any player's state changes
-          checkReadyStates();
-        }
-      )
-      .subscribe((status, err) => {
-        console.log('Ready channel status:', status, err);
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Successfully subscribed to ready states channel');
-        } else if (status === 'CHANNEL_ERROR') {
-          console.error('❌ Ready states channel error:', err);
-        } else if (status === 'TIMED_OUT') {
-          console.error('❌ Ready states channel timed out');
-        }
-      });
-
     // Subscribe to game_sessions status changes
     const sessionChannel = supabase
       .channel(`session-${sessionId}-status`, {
@@ -368,7 +337,6 @@ export default function LobbyPage() {
     return () => {
       console.log('Cleaning up realtime subscriptions');
       supabase.removeChannel(playersChannel);
-      supabase.removeChannel(readyChannel);
       supabase.removeChannel(sessionChannel);
       supabase.removeChannel(votesChannel);
     };
@@ -398,29 +366,6 @@ export default function LobbyPage() {
     }
   }
 
-  async function checkReadyStates() {
-    const { data: readyStatesData } = await supabase
-      .from('player_ready_states')
-      .select('*')
-      .eq('session_id', sessionId);
-
-    const readyPlayers = readyStatesData?.filter((s) => s.is_ready) || [];
-    setReadyCount(readyPlayers.length);
-
-    // Build ready states map for display
-    const statesMap = new Map<string, boolean>();
-    readyStatesData?.forEach((state) => {
-      statesMap.set(state.player_id, state.is_ready);
-    });
-    setReadyStates(statesMap);
-
-    // Check if current player is ready
-    if (currentPlayerId) {
-      const myReadyState = readyStatesData?.find((s) => s.player_id === currentPlayerId);
-      setIsReady(myReadyState?.is_ready || false);
-    }
-  }
-
   async function handleVote(mysteryId: string | null) {
     if (!currentPlayerId) return;
 
@@ -435,7 +380,9 @@ export default function LobbyPage() {
       }
       setVotes(newVotes);
 
-      const response = await fetch(`/api/sessions/${sessionId}/vote`, {
+      // Use vote-mystery endpoint which handles both voting AND triggers 
+      // next-round when all players have voted (unified flow for lobby & play)
+      const response = await fetch(`/api/sessions/${sessionId}/vote-mystery`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mysteryId }),
@@ -445,68 +392,12 @@ export default function LobbyPage() {
         throw new Error('Failed to vote');
       }
 
-      // Automatically mark player as ready after voting, or not ready if unvoting
-      const shouldBeReady = !!mysteryId;
-      if (isReady !== shouldBeReady) {
-        const readyResponse = await fetch(`/api/sessions/${sessionId}/mark-ready`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ isReady: shouldBeReady }),
-        });
-
-        if (readyResponse.ok) {
-          setIsReady(shouldBeReady);
-        }
-      }
+      // Ready state is now derived from votes - no need to call mark-ready
+      // The vote-mystery endpoint handles triggering next-round when all voted
     } catch (err) {
       console.error('Error voting:', err);
       setError('Failed to submit vote');
       refreshVotes();
-    }
-  }
-
-  async function handleReadyToggle() {
-    if (!currentPlayerId) {
-      console.error('No current player ID');
-      return;
-    }
-
-    const newReadyState = !isReady;
-    console.log('Toggling ready state to:', newReadyState);
-
-    try {
-      // Optimistically update UI
-      setIsReady(newReadyState);
-      
-      const response = await fetch(`/api/sessions/${sessionId}/mark-ready`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isReady: newReadyState }),
-      });
-
-      if (!response.ok) {
-        console.error('Error updating ready state');
-        // Revert optimistic update on error
-        setIsReady(!newReadyState);
-        setError('Failed to update ready state. Please try again.');
-        setTimeout(() => setError(''), 3000);
-        return;
-      }
-
-      const data = await response.json();
-      console.log('Ready state updated successfully', data);
-
-      // If game started, redirect to play page
-      if (data.gameStarted) {
-        console.log('Game started! Redirecting to play page...');
-        router.push(`/play/${sessionId}`);
-      }
-    } catch (err) {
-      console.error('Error updating ready state:', err);
-      // Revert optimistic update
-      setIsReady(!newReadyState);
-      setError('Failed to update ready state. Please try again.');
-      setTimeout(() => setError(''), 3000);
     }
   }
 
@@ -665,7 +556,7 @@ export default function LobbyPage() {
           />
 
           <ReadyStatusBar
-            readyCount={readyCount}
+            readyCount={voteCount}
             totalPlayers={activePlayers.length}
             canStart={canStart}
             minPlayers={MIN_PLAYERS}

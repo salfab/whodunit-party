@@ -37,4 +37,40 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
 3. **Utilisez votre alibi** pour démarrer votre histoire si besoin
 
 4. **Pimentez votre récit** avec votre sombre secret si vous voulez étoffer votre personnage`,
+  rules: `# Règles du jeu (version reformulée)
+
+1. **Distribution des rôles**  
+   On tire au sort **un Inspecteur** et **un Suspect coupable**. Tous les autres joueurs deviennent des **Suspects innocents**.  
+   Chaque joueur reçoit une **fiche de personnage**.  
+   **Important : seul le coupable sait qu’il est coupable.**
+
+2. **Mise en place du mystère**  
+   L’Inspecteur lit à voix haute le texte d’introduction (la mise en place du mystère).
+
+3. **Présentation des suspects**  
+   Chaque suspect se présente à tour de rôle.  
+   Pendant ce temps, l’Inspecteur garde sous les yeux la **liste des suspects**.
+
+4. **Début des interrogatoires**  
+   L’Inspecteur choisit un suspect et lui demande son **alibi**.
+
+5. **Alibi en 1 minute, avec contraintes**  
+   Le suspect dispose de **1 minute** pour raconter son alibi, **sans être interrompu**.  
+   Il doit obligatoirement placer **ses 3 mots imposés** dans son récit.  
+   Il n’y a **ni deuxième tour**, **ni questions supplémentaires** de la part de l’Inspecteur.
+
+6. **Interroger tout le monde**  
+   L’Inspecteur recommence avec un autre suspect, jusqu’à avoir interrogé **tous** les suspects.
+
+7. **Les mots imposés : le cœur du jeu**  
+   Tous les **innocents** ont exactement les **mêmes 3 mots imposés**.  
+   Le **coupable**, lui, a **3 mots différents**.
+
+8. **Accusation finale**  
+   Une fois tous les alibis entendus, l’Inspecteur doit identifier le coupable **en repérant celui dont les mots imposés diffèrent** des autres, puis **accuse** le suspect qu’il pense coupable.
+
+9. **Révélation**  
+   On révèle l’identité du coupable.  
+   S’il le souhaite, il peut alors **avouer** en lisant à voix haute son texte de **“Sombre secret”**.
+`,
 };

@@ -33,13 +33,6 @@ export async function POST(
 
     const { mysteryId } = await request.json();
 
-    if (!mysteryId) {
-      return NextResponse.json(
-        { error: 'mysteryId est requis' },
-        { status: 400 }
-      );
-    }
-
     const supabase = await createServiceClient();
 
     // Get current round number for this session
@@ -62,6 +55,27 @@ export async function POST(
 
     // Next round number is current + 1, or 1 if no rounds yet
     const nextRoundNumber = rounds?.[0]?.round_number ? rounds[0].round_number + 1 : 1;
+
+    // Handle unvoting (mysteryId is null or undefined)
+    if (!mysteryId) {
+      const { error: deleteError } = await (supabase
+        .from('mystery_votes') as any)
+        .delete()
+        .eq('session_id', sessionId)
+        .eq('player_id', session.playerId)
+        .eq('round_number', nextRoundNumber);
+
+      if (deleteError) {
+        logger('error', 'Error deleting vote', { error: deleteError });
+        return NextResponse.json(
+          { error: 'Erreur lors de la suppression du vote' },
+          { status: 500 }
+        );
+      }
+
+      logger('info', `Player ${session.playerId} unvoted for round ${nextRoundNumber}`);
+      return NextResponse.json({ success: true, action: 'unvoted', roundNumber: nextRoundNumber });
+    }
 
     // Upsert the vote (update if exists, insert if not)
     const { error: voteError } = await (supabase
@@ -132,6 +146,10 @@ export async function POST(
       ) {
         logger('info', `All ${activePlayerCount} players voted. Triggering next round.`);
         
+        // Note: Multiple concurrent votes may reach this point simultaneously
+        // This is expected - next-round and distribute-roles have protection
+        // against race conditions, so multiple calls are handled gracefully
+        
         // Trigger next round
         const nextRoundUrl = new URL(`/api/sessions/${sessionId}/next-round`, request.url);
         logger('info', `Triggering next round via ${nextRoundUrl.toString()}`);
@@ -146,7 +164,12 @@ export async function POST(
         
         if (nextRoundResponse.ok) {
           nextRoundStarted = true;
-          logger('info', 'Next round triggered successfully');
+          const responseData = await nextRoundResponse.json();
+          if (responseData.note) {
+            logger('info', 'Next round trigger result', { note: responseData.note });
+          } else {
+            logger('info', 'Next round triggered successfully');
+          }
         } else {
           const errorText = await nextRoundResponse.text();
           logger('error', 'Failed to trigger next round', { status: nextRoundResponse.status, body: errorText });
