@@ -450,8 +450,8 @@ export default function RoleRevealCard({
         {/* Role label - discreet, small text */}
         <Typography
           sx={{
-            color: 'rgba(255,255,255,0.35)',
-            fontSize: '0.7rem',
+            color: 'rgba(255, 255, 255, 1)',
+            fontSize: '1rem',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
             fontWeight: 300,
