@@ -68,7 +68,7 @@ Then('I should see the mysteries table', () => {
 });
 
 Then('I should see at least 1 mystery in the list', () => {
-  cy.getByTestId('admin-mysteries-list')
+  cy.getByTestId('admin-mysteries-table')
     .find('[data-testid^="admin-mystery-row-"]')
     .should('have.length.at.least', 1);
 });
@@ -78,7 +78,7 @@ Then('I should see the empty state message', () => {
 });
 
 Then('I should see a create mystery button', () => {
-  cy.contains('Create Mystery').should('be.visible');
+  cy.contains('Créer un Mystère').should('be.visible');
 });
 
 // ==================== Delete Operations ====================

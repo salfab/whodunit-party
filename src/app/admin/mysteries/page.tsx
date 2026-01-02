@@ -119,7 +119,7 @@ export default function MysteriesPage() {
       
       <Box sx={{ py: 4 }}>
         <Typography variant="h3" component="h1" data-testid="admin-mysteries-title" sx={{ mb: 2 }}>
-          Mystères
+          Mysteries
         </Typography>
         
         <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
@@ -150,7 +150,7 @@ export default function MysteriesPage() {
         {mysteries.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              Aucun mystère trouvé
+              No mysteries found
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
               Créez votre premier mystère pour commencer
@@ -164,7 +164,12 @@ export default function MysteriesPage() {
             </Button>
           </Paper>
         ) : (
-          <Grid container spacing={3} data-testid="admin-mysteries-list">
+          <Grid 
+            container 
+            spacing={3} 
+            data-testid="admin-mysteries-table"
+            sx={{ '&': { '&': { } } }}
+          >
             {mysteries.map((mystery) => (
               <Grid item xs={12} sm={6} md={4} key={mystery.id}>
                 <Card 

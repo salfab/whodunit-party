@@ -1,0 +1,226 @@
+
+> whodunit-party@0.1.0 cypress:run C:\ieu\sources\whodunit-party
+> node scripts/run-e2e-tests.mjs
+
+🚀 Starting E2E test environment...
+
+📦 Checking Supabase status...
+🔧 Starting Next.js dev server...
+✅ Dev server already running on port 3000
+
+📝 Setting Cypress baseUrl to http://localhost:3000...
+
+✅ Cypress baseUrl configured
+
+⏳ Waiting for server to be ready...
+✅ Server is ready
+
+🧪 Running Cypress in run mode...
+
+
+
+DevTools listening on ws://127.0.0.1:62071/devtools/browser/6443f52d-b19b-4cc0-b855-c9185ebb7a51
+Missing baseUrl in compilerOptions. tsconfig-paths will be skipped
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v20.17.0 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          10 found (admin-access.feature, create-room.feature, join-game.feature, admin/ │
+  │                 mysteries-list.feature, admin/upload-mysteries.feature, gameplay/accusation.fe │
+  │                 ature, gameplay/character-sheet.feature, gameplay/multi-player-voting.feature, │
+  │                  lobby/lobby.feature, p...)                                                    │
+  │ Searched:       **/*.feature                                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin-access.feature                                                           (1 of 10)
+
+
+  Admin Console Access
+    1) Access admin console via settings icon
+
+
+  0 passing (8s)
+  1 failing
+
+  1) Admin Console Access
+       Access admin console via settings icon:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Mysteries' within the selector: 'h1, h3' but never did.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin-access.feature:19281:38)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin-access.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin-access.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin-access.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin-access.feature:17786:62)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     8 seconds                                                                        │
+  │ Spec Ran:     admin-access.feature                                                             │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\admin-access.feature\Admin Con     (1280x720)
+     sole Access -- Access admin console via settings icon (failed).png                             
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  create-room.feature                                                            (2 of 10)
+
+
+  Create Game Room
+    √ Successfully create a game room and go to join page (5332ms)
+    √ Create room shows loading state (3027ms)
+    √ Join page has QR code for sharing after room creation (3052ms)
+
+
+  3 passing (12s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      3                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     11 seconds                                                                       │
+  │ Spec Ran:     create-room.feature                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  join-game.feature                                                              (3 of 10)
+
+
+  Join Game Room
+    √ Join a game with valid code (7117ms)
+    √ Cannot join with invalid code (4272ms)
+    √ Join button disabled without required fields (3532ms)
+    √ Join game via direct URL with code (4810ms)
+    √ Game code is automatically uppercased (3523ms)
+
+
+  5 passing (24s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     23 seconds                                                                       │
+  │ Spec Ran:     join-game.feature                                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin/mysteries-list.feature                                                   (4 of 10)
+
+
+  Admin Mystery List
+    1) Admin sees list of mysteries
+    2) Admin can navigate to create new mystery
+    √ Admin can navigate to upload mysteries (2430ms)
+    √ Admin can delete a mystery (2116ms)
+    √ Admin can cancel mystery deletion (1631ms)
+    3) Empty state when no mysteries exist
+
+
+  3 passing (25s)
+  3 failing
+
+  1) Admin Mystery List
+       Admin sees list of mysteries:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="admin-mysteries-table"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:19435:49)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17786:62)
+
+  2) Admin Mystery List
+       Admin can navigate to create new mystery:
+     AssertionError: Timed out retrying after 4000ms: expected 'http://localhost:3000/admin/mysteries' to include '/admin/mysteries/new/edit'
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:19429:18)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17786:62)
+
+  3) Admin Mystery List
+       Empty state when no mysteries exist:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'No mysteries found' but never did.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:19441:43)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\admin\mysteries-list.feature:17786:62)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        6                                                                                │
+  │ Passing:      3                                                                                │
+  │ Failing:      3                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  3                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     24 seconds                                                                       │
+  │ Spec Ran:     admin/mysteries-list.feature                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\admin\mysteries-list.feature\A     (1280x720)
+     dmin Mystery List -- Admin sees list of mysteries (failed).png                                 
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\admin\mysteries-list.feature\A     (1280x720)
+     dmin Mystery List -- Admin can navigate to create new mystery (failed).png                     
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\admin\mysteries-list.feature\A     (1280x720)
+     dmin Mystery List -- Empty state when no mysteries exist (failed).png                          
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin/upload-mysteries.feature                                                 (5 of 10)
+
+
+  Upload Mysteries
+    √ Admin sees upload page with both options (1499ms)
+    √ Admin can upload valid JSON mystery (29161ms)
+    √ Admin sees validation error for invalid JSON (2473ms)
