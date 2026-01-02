@@ -321,7 +321,7 @@ export default function UploadMysteriesPage() {
               {selectedFiles.length > 0 && (
                 <Box sx={{ mt: 2 }}>
                   <Typography color="success.main" variant="body2" gutterBottom>
-                    ✓ {selectedFiles.length} fichier(s) sélectionné(s)
+                    ✓ {selectedFiles.length} file(s) selected
                   </Typography>
                   <Box sx={{ maxHeight: '150px', overflow: 'auto', textAlign: 'left', px: 2 }}>
                     {selectedFiles.map((file, idx) => (
