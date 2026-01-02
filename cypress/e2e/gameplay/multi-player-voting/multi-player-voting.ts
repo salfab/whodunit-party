@@ -30,13 +30,13 @@ Given('5 players are in an active game with an accusation made', () => {
     sessionData = data;
     
     // Join 5 players with unique names (under 15 chars)
-    const suffix = Math.random().toString(36).substring(2, 6);
+    const timestamp = Date.now().toString().slice(-6);
     const playerNames = [
-      `A-${suffix}`,
-      `B-${suffix}`,
-      `C-${suffix}`,
-      `D-${suffix}`,
-      `E-${suffix}`
+      `A-${timestamp}`,
+      `B-${timestamp}`,
+      `C-${timestamp}`,
+      `D-${timestamp}`,
+      `E-${timestamp}`
     ];
     players = [];
     
@@ -66,15 +66,15 @@ Given('5 players are in an active game with an accusation made', () => {
 // ==================== When Steps ====================
 
 When('5 players join the room via API', () => {
-  // Use unique player names with random suffix to avoid NAME_TAKEN conflicts
+  // Use unique player names with timestamp suffix to avoid NAME_TAKEN conflicts
   // Keep names under 15 chars (API limit)
-  const suffix = Math.random().toString(36).substring(2, 6); // 4 char random
+  const timestamp = Date.now().toString().slice(-6); // Last 6 digits
   const playerNames = [
-    `A-${suffix}`,
-    `B-${suffix}`,
-    `C-${suffix}`,
-    `D-${suffix}`,
-    `E-${suffix}`
+    `A-${timestamp}`,
+    `B-${timestamp}`,
+    `C-${timestamp}`,
+    `D-${timestamp}`,
+    `E-${timestamp}`
   ];
   players = [];
   
@@ -97,8 +97,8 @@ When('5 players join the room via API', () => {
 });
 
 When('1 player joins and votes for a mystery', () => {
-  const suffix = Math.random().toString(36).substring(2, 6);
-  const playerName = `Solo-${suffix}`;
+  const timestamp = Date.now().toString().slice(-6);
+  const playerName = `Solo-${timestamp}`;
   
   // Join as single player
   cy.request({
@@ -136,8 +136,8 @@ When('1 player joins and votes for a mystery', () => {
 });
 
 When('1 player joins and votes twice quickly', () => {
-  const suffix = Math.random().toString(36).substring(2, 6);
-  const playerName = `DC-${suffix}`;
+  const timestamp = Date.now().toString().slice(-6);
+  const playerName = `DC-${timestamp}`;
   
   // Join as single player
   cy.request({
