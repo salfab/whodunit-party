@@ -32,11 +32,11 @@ Given('5 players are in an active game with an accusation made', () => {
     // Join 5 players with unique names (under 15 chars)
     const timestamp = Date.now().toString().slice(-6);
     const playerNames = [
-      `A-${timestamp}`,
-      `B-${timestamp}`,
-      `C-${timestamp}`,
-      `D-${timestamp}`,
-      `E-${timestamp}`
+      `A${timestamp}0`,
+      `B${timestamp}1`,
+      `C${timestamp}2`,
+      `D${timestamp}3`,
+      `E${timestamp}4`
     ];
     players = [];
     
@@ -66,15 +66,15 @@ Given('5 players are in an active game with an accusation made', () => {
 // ==================== When Steps ====================
 
 When('5 players join the room via API', () => {
-  // Use unique player names with timestamp suffix to avoid NAME_TAKEN conflicts
+  // Use unique player names with timestamp+index to avoid NAME_TAKEN conflicts
   // Keep names under 15 chars (API limit)
   const timestamp = Date.now().toString().slice(-6); // Last 6 digits
   const playerNames = [
-    `A-${timestamp}`,
-    `B-${timestamp}`,
-    `C-${timestamp}`,
-    `D-${timestamp}`,
-    `E-${timestamp}`
+    `A${timestamp}0`,
+    `B${timestamp}1`,
+    `C${timestamp}2`,
+    `D${timestamp}3`,
+    `E${timestamp}4`
   ];
   players = [];
   
@@ -98,7 +98,7 @@ When('5 players join the room via API', () => {
 
 When('1 player joins and votes for a mystery', () => {
   const timestamp = Date.now().toString().slice(-6);
-  const playerName = `Solo-${timestamp}`;
+  const playerName = `Solo${timestamp}`;
   
   // Join as single player
   cy.request({
@@ -137,7 +137,7 @@ When('1 player joins and votes for a mystery', () => {
 
 When('1 player joins and votes twice quickly', () => {
   const timestamp = Date.now().toString().slice(-6);
-  const playerName = `DC-${timestamp}`;
+  const playerName = `DC${timestamp}`;
   
   // Join as single player
   cy.request({
