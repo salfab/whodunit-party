@@ -62,6 +62,21 @@ async function ensureSupabaseRunning() {
 async function startDevServer() {
   console.log('🔧 Starting Next.js dev server...');
   
+  // First check if a server is already running on common ports
+  const commonPorts = [3000, 3001, 3002, 3003];
+  
+  for (const port of commonPorts) {
+    try {
+      const response = await fetch(`http://localhost:${port}`, { method: 'HEAD' });
+      if (response.ok || response.status === 404) {
+        console.log(`✅ Dev server already running on port ${port}\n`);
+        return { devProcess: null, port };
+      }
+    } catch (error) {
+      // Port not responding, continue checking
+    }
+  }
+  
   return new Promise((resolve, reject) => {
     const devProcess = spawn('pnpm', ['dev'], {
       cwd: projectRoot,
@@ -141,10 +156,11 @@ async function runCypress(mode = 'run', extraArgs = []) {
   console.log(`🧪 Running Cypress in ${mode} mode...\n`);
   
   return new Promise((resolve, reject) => {
-    const cypressCmd = mode === 'open' ? 'cypress:open' : 'cypress:run';
-    const args = ['run', cypressCmd, ...extraArgs];
+    // Call cypress directly, not through pnpm script
+    const cypressCmd = mode === 'open' ? 'open' : 'run';
+    const args = [cypressCmd, ...extraArgs];
     
-    const cypressProcess = spawn('pnpm', args, {
+    const cypressProcess = spawn('npx', ['cypress', ...args], {
       cwd: projectRoot,
       stdio: 'inherit',
       shell: true,
@@ -203,7 +219,7 @@ async function main() {
     console.error('\n❌ Error:', error.message);
     exitCode = 1;
   } finally {
-    // Cleanup: Kill dev server
+    // Cleanup: Kill dev server only if we started it
     if (devProcess) {
       console.log('\n🧹 Cleaning up dev server...');
       devProcess.kill('SIGTERM');
@@ -217,6 +233,8 @@ async function main() {
       } catch (e) {
         // Already dead, ignore
       }
+    } else {
+      console.log('\n✅ Leaving existing dev server running');
     }
     
     console.log('✅ Cleanup complete\n');
