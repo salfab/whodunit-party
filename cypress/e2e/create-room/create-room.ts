@@ -2,6 +2,10 @@ import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 // Create Room steps - now redirects directly to join page
 
+When('I click the create room button', () => {
+  cy.get('[data-testid="create-room-button"]').click();
+});
+
 Then('I should be redirected to the join page', () => {
   cy.url({ timeout: 10000 }).should('include', '/join');
   cy.url().should('include', 'code=');

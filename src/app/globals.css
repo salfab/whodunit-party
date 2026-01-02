@@ -13,7 +13,7 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-image: url('/background.png');
+  background-image: url('/background.jpg');
   background-size: 100% auto;
   background-position: top center;
   background-repeat: no-repeat;
