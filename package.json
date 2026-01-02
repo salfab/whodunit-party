@@ -13,7 +13,10 @@
     "seed:mysteries": "node scripts/seed-mysteries.mjs",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "test:e2e": "start-server-and-test dev http://localhost:3000 cypress:run"
+    "cy:run": "node scripts/run-e2e-tests.mjs",
+    "cy:open": "node scripts/run-e2e-tests.mjs --open",
+    "test:e2e": "node scripts/run-e2e-tests.mjs",
+    "test:e2e:multi-player": "node scripts/run-e2e-tests.mjs --spec 'cypress/e2e/gameplay/multi-player-voting.feature'"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",

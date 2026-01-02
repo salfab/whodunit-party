@@ -49,6 +49,23 @@ declare global {
       }): Chainable<null>;
 
       /**
+       * Login as a player (or create new player) and cache the session.
+       * Uses cy.session() to cache authentication between tests.
+       * @example cy.loginAsPlayer('Alice', 'ABC123')
+       */
+      loginAsPlayer(
+        playerName: string,
+        joinCode: string,
+        options?: { playerId?: string; sessionId?: string }
+      ): Chainable<{ playerId: string; sessionId: string; playerName: string }>;
+
+      /**
+       * Switch to a different player session.
+       * @example cy.switchToPlayer('Bob')
+       */
+      switchToPlayer(playerName: string): Chainable<null>;
+
+      /**
        * Set up a complete mocked session for lobby/play page tests.
        * Mocks session/me, mysteries, and session lookup APIs.
        */
@@ -242,6 +259,75 @@ Cypress.Commands.add('joinRealRoom', (joinCode: string, playerName: string) => {
         sessionId: response.body.sessionId,
       };
     });
+});
+
+// ==================== Multi-Player Session Management ====================
+
+/**
+ * Login as a player and cache the session using cy.session().
+ * This allows switching between multiple players in a single test.
+ */
+Cypress.Commands.add(
+  'loginAsPlayer',
+  (
+    playerName: string,
+    joinCode: string,
+    options?: { playerId?: string; sessionId?: string }
+  ) => {
+    cy.session(
+      playerName,
+      () => {
+        // If playerId/sessionId provided, just set cookies
+        if (options?.playerId && options?.sessionId) {
+          cy.setCookie('player_id', options.playerId);
+          cy.setCookie('session_id', options.sessionId);
+          cy.setCookie('player_name', playerName);
+        } else {
+          // Otherwise join the room via API
+          cy.request({
+            method: 'POST',
+            url: '/api/join',
+            body: { joinCode, playerName },
+          }).then((response) => {
+            expect(response.status).to.eq(200);
+            // Cookies are automatically set by the API response
+          });
+        }
+      },
+      {
+        validate() {
+          // Validate session by checking cookies exist
+          cy.getCookie('player_id').should('exist');
+          cy.getCookie('session_id').should('exist');
+        },
+      }
+    );
+
+    // Return the session info for convenience
+    return cy.getCookie('player_id').then((playerIdCookie) => {
+      return cy.getCookie('session_id').then((sessionIdCookie) => {
+        return {
+          playerId: playerIdCookie!.value,
+          sessionId: sessionIdCookie!.value,
+          playerName,
+        };
+      });
+    });
+  }
+);
+
+/**
+ * Switch to a different player session.
+ * This clears current session and restores the cached session for the given player.
+ */
+Cypress.Commands.add('switchToPlayer', (playerName: string) => {
+  // cy.session will restore the cached session for this player
+  return cy.session(playerName, () => {
+    // This should never run if session was already cached
+    throw new Error(
+      `Session for ${playerName} not found. Call loginAsPlayer first.`
+    );
+  });
 });
 
 export {};
