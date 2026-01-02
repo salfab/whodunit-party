@@ -1,0 +1,844 @@
+
+> whodunit-party@0.1.0 cypress:run C:\ieu\sources\whodunit-party
+> node scripts/run-e2e-tests.mjs
+
+🚀 Starting E2E test environment...
+
+📦 Checking Supabase status...
+🔧 Starting Next.js dev server...
+✅ Dev server already running on port 3000
+
+📝 Setting Cypress baseUrl to http://localhost:3000...
+
+✅ Cypress baseUrl configured
+
+⏳ Waiting for server to be ready...
+✅ Server is ready
+
+🧪 Running Cypress in run mode...
+
+
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v20.17.0 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          10 found (admin-access.feature, create-room.feature, join-game.feature, admin/ │
+  │                 mysteries-list.feature, admin/upload-mysteries.feature, lobby/lobby.feature, g │
+  │                 ameplay/accusation.feature, gameplay/character-sheet.feature, gameplay/multi-p │
+  │                 layer-voting.feature, p...)                                                    │
+  │ Searched:       **/*.feature                                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin-access.feature                                                           (1 of 10)
+
+
+  Admin Console Access
+    √ Access admin console via settings icon (3864ms)
+
+
+  1 passing (4s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        1                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 seconds                                                                        │
+  │ Spec Ran:     admin-access.feature                                                             │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  create-room.feature                                                            (2 of 10)
+
+
+  Create Game Room
+    √ Successfully create a game room and go to join page (4292ms)
+    √ Create room shows loading state (4025ms)
+    √ Join page has QR code for sharing after room creation (2921ms)
+
+
+  3 passing (12s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      3                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     11 seconds                                                                       │
+  │ Spec Ran:     create-room.feature                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  join-game.feature                                                              (3 of 10)
+
+
+  Join Game Room
+    √ Join a game with valid code (6515ms)
+    √ Cannot join with invalid code (4445ms)
+    √ Join button disabled without required fields (3826ms)
+    √ Join game via direct URL with code (4635ms)
+    √ Game code is automatically uppercased (3836ms)
+
+
+  5 passing (24s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     23 seconds                                                                       │
+  │ Spec Ran:     join-game.feature                                                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin/mysteries-list.feature                                                   (4 of 10)
+
+
+  Admin Mystery List
+    √ Admin sees list of mysteries (2024ms)
+    √ Admin can navigate to create new mystery (3267ms)
+    √ Admin can navigate to upload mysteries (2002ms)
+    √ Admin can delete a mystery (1553ms)
+    √ Admin can cancel mystery deletion (1806ms)
+    √ Empty state when no mysteries exist (1307ms)
+
+
+  6 passing (12s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        6                                                                                │
+  │ Passing:      6                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     12 seconds                                                                       │
+  │ Spec Ran:     admin/mysteries-list.feature                                                     │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin/upload-mysteries.feature                                                 (5 of 10)
+
+
+  Upload Mysteries
+    √ Admin sees upload page with both options (1471ms)
+    √ Admin can upload valid JSON mystery (30785ms)
+    √ Admin sees validation error for invalid JSON (2490ms)
+    √ Admin can select a ZIP file (1615ms)
+    √ Upload button is disabled without input (1331ms)
+
+
+  5 passing (38s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        5                                                                                │
+  │ Passing:      5                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     38 seconds                                                                       │
+  │ Spec Ran:     admin/upload-mysteries.feature                                                   │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  lobby/lobby.feature                                                            (6 of 10)
+
+
+  Game Lobby
+    √ Player sees lobby with join code (3833ms)
+    1) Player voting automatically marks as ready
+    √ Lobby has refresh and quit buttons (3351ms)
+    √ Player sees mystery voting list (3089ms)
+    - New players appear in real-time
+    - Ready count updates in real-time
+
+
+  3 passing (15s)
+  2 pending
+  1 failing
+
+  1) Game Lobby
+       Player voting automatically marks as ready:
+     CypressError: `cy.wait()` could not find a registered alias for: `@vote`.
+Available aliases are: `sessionMe, getSession, getPlayers, getMysteries, getReadyStates, getVotes, getRounds, voteMystery`.
+      at $Cy.aliasNotFoundFor (http://localhost:3000/__cypress/runner/cypress_runner.js:132315:66)
+      at $Cy.getAlias (http://localhost:3000/__cypress/runner/cypress_runner.js:132258:12)
+      at waitForXhr (http://localhost:3000/__cypress/runner/cypress_runner.js:135391:23)
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:135494:14)
+      at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)
+      at MappingPromiseArray._promiseFulfilled (http://localhost:3000/__cypress/runner/cypress_runner.js:4970:38)
+      at PromiseArray._iterate (http://localhost:3000/__cypress/runner/cypress_runner.js:2943:31)
+      at MappingPromiseArray.init (http://localhost:3000/__cypress/runner/cypress_runner.js:2907:10)
+      at MappingPromiseArray._asyncInit (http://localhost:3000/__cypress/runner/cypress_runner.js:4939:10)
+      at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2434:12)
+      at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)
+      at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)
+      at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)
+  From Your Spec Code:
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\lobby\lobby.feature:18744:12)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\lobby\lobby.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\lobby\lobby.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\lobby\lobby.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\lobby\lobby.feature:17786:62)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        6                                                                                │
+  │ Passing:      3                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      2                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     14 seconds                                                                       │
+  │ Spec Ran:     lobby/lobby.feature                                                              │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\lobby\lobby.feature\Game Lobby     (1280x720)
+      -- Player voting automatically marks as ready (failed).png                                    
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  gameplay/accusation.feature                                                    (7 of 10)
+
+
+  Accusation System
+    1) Mobile - Investigator sees the accuse button
+    √ Mobile - Non-investigator does not see accuse button (2423ms)
+    2) Mobile - Investigator can open accusation dialog
+    3) Mobile - Correct accusation shows success result
+    4) Mobile - Wrong accusation shows failure result
+    5) Mobile - Mystery voting appears after incorrect accusation
+    6) Mobile - Player can vote for next mystery after accusation
+    7) Mobile - Vote counts update in real-time
+
+
+  1 passing (51s)
+  7 failing
+
+  1) Accusation System
+       Mobile - Investigator sees the accuse button:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:19060:46)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  2) Accusation System
+       Mobile - Investigator can open accusation dialog:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\support\e2e.ts:5:15)
+
+  3) Accusation System
+       Mobile - Correct accusation shows success result:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\support\e2e.ts:5:15)
+
+  4) Accusation System
+       Mobile - Wrong accusation shows failure result:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\support\e2e.ts:5:15)
+
+  5) Accusation System
+       Mobile - Mystery voting appears after incorrect accusation:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\support\e2e.ts:5:15)
+
+  6) Accusation System
+       Mobile - Player can vote for next mystery after accusation:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\support\e2e.ts:5:15)
+
+  7) Accusation System
+       Mobile - Vote counts update in real-time:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\support\e2e.ts:5:15)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      1                                                                                │
+  │ Failing:      7                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  7                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     51 seconds                                                                       │
+  │ Spec Ran:     gameplay/accusation.feature                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\accusation.feature\Ac     (1280x720)
+     cusation System -- Mobile - Investigator sees the accuse button (failed).png                   
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\accusation.feature\Ac     (1280x720)
+     cusation System -- Mobile - Investigator can open accusation dialog (failed).png               
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\accusation.feature\Ac     (1280x720)
+     cusation System -- Mobile - Correct accusation shows success result (failed).png               
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\accusation.feature\Ac     (1280x720)
+     cusation System -- Mobile - Wrong accusation shows failure result (failed).png                 
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\accusation.feature\Ac     (1280x720)
+     cusation System -- Mobile - Mystery voting appears after incorrect accusation (f               
+     ailed).png                                                                                     
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\accusation.feature\Ac     (1280x720)
+     cusation System -- Mobile - Player can vote for next mystery after accusation (f               
+     ailed).png                                                                                     
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\accusation.feature\Ac     (1280x720)
+     cusation System -- Mobile - Vote counts update in real-time (failed).png                       
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  gameplay/character-sheet.feature                                               (8 of 10)
+
+
+  Character Sheet Display
+    1) Mobile - Investigator is visible
+    2) Mobile - Character name and image display properly
+    3) Mobile - Card flip reveals role on tap
+    4) Mobile - Card can be flipped back to front
+    5) Mobile - Player sees their words to place
+    6) Mobile - Player can toggle secret visibility
+
+
+  0 passing (43s)
+  6 failing
+
+  1) Character Sheet Display
+       Mobile - Investigator is visible:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-accuse-button"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:18987:46)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17786:62)
+
+  2) Character Sheet Display
+       Mobile - Character name and image display properly:
+     AssertionError: Timed out retrying after 4000ms: Expected to find content: 'Jean Dupont' but never did.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:18952:36)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17786:62)
+
+  3) Character Sheet Display
+       Mobile - Card flip reveals role on tap:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="role-reveal-card"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:18958:44)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17786:62)
+
+  4) Character Sheet Display
+       Mobile - Card can be flipped back to front:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="role-reveal-card"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\support\e2e.ts:5:15)
+
+  5) Character Sheet Display
+       Mobile - Player sees their words to place:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid="play-words-section"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:18977:46)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17786:62)
+
+  6) Character Sheet Display
+       Mobile - Player can toggle secret visibility:
+     AssertionError: Timed out retrying after 4000ms: Expected to find element: `[data-testid^="play-secret-toggle-"]`, but never found it.
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:18981:12)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:10416:48)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\character-sheet.feature:17786:62)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        6                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      6                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  6                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     43 seconds                                                                       │
+  │ Spec Ran:     gameplay/character-sheet.feature                                                 │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\character-sheet.featu     (1280x720)
+     re\Character Sheet Display -- Mobile - Investigator is visible (failed).png                    
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\character-sheet.featu     (1280x720)
+     re\Character Sheet Display -- Mobile - Character name and image display properly               
+      (failed).png                                                                                  
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\character-sheet.featu     (1280x720)
+     re\Character Sheet Display -- Mobile - Card flip reveals role on tap (failed).pn               
+     g                                                                                              
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\character-sheet.featu     (1280x720)
+     re\Character Sheet Display -- Mobile - Card can be flipped back to front (failed               
+     ).png                                                                                          
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\character-sheet.featu     (1280x720)
+     re\Character Sheet Display -- Mobile - Player sees their words to place (failed)               
+     .png                                                                                           
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\character-sheet.featu     (1280x720)
+     re\Character Sheet Display -- Mobile - Player can toggle secret visibility (fail               
+     ed).png                                                                                        
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  gameplay/multi-player-voting.feature                                           (9 of 10)
+
+
+  Multi-Player Voting and Game Start
+    1) 5 players vote in lobby to start game
+    2) Single player cannot start game by voting
+    3) 5 players vote after accusation to start round 2
+    4) Double-clicking vote does not bypass minimum players
+
+
+  0 passing (3s)
+  4 failing
+
+  1) Multi-Player Voting and Game Start
+       5 players vote in lobby to start game:
+     CypressError: `cy.request()` failed on:
+
+http://localhost:3000/api/join
+
+The response we received from your web server was:
+
+  > 409: Conflict
+
+This was considered a failure because the status code was not `2xx` or `3xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+-----------------------------------------------------------
+
+The request we sent was:
+
+Method: POST
+URL: http://localhost:3000/api/join
+Headers: {
+  "Connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36",
+  "accept": "*/*",
+  "accept-encoding": "gzip, deflate",
+  "content-type": "application/json",
+  "content-length": 45
+}
+Body: {"joinCode":"E9AXS5","playerName":"A0487400"}
+
+-----------------------------------------------------------
+
+The response we got was:
+
+Status: 409 - Conflict
+Headers: {
+  "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+  "content-type": "application/json",
+  "date": "Fri, 02 Jan 2026 15:34:08 GMT",
+  "connection": "keep-alive",
+  "keep-alive": "timeout=5",
+  "transfer-encoding": "chunked"
+}
+Body: {
+  "error": "NAME_TAKEN",
+  "message": "Ce nom est déjà utilisé dans cette partie",
+  "existingPlayerId": "59cbbfd9-4ad5-4dfc-8d32-cdb96f619823",
+  "canTakeover": true
+}
+
+
+This error occurred while creating the session. Because the session setup failed, we failed the test.
+
+https://on.cypress.io/request
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)
+      at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)
+      at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)
+      at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)
+      at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)
+      at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)
+  From Your Spec Code:
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\multi-player-voting.feature:19529:13)
+
+  2) Multi-Player Voting and Game Start
+       Single player cannot start game by voting:
+     CypressError: `cy.request()` failed on:
+
+http://localhost:3000/api/join
+
+The response we received from your web server was:
+
+  > 409: Conflict
+
+This was considered a failure because the status code was not `2xx` or `3xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+-----------------------------------------------------------
+
+The request we sent was:
+
+Method: POST
+URL: http://localhost:3000/api/join
+Headers: {
+  "Connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36",
+  "accept": "*/*",
+  "accept-encoding": "gzip, deflate",
+  "content-type": "application/json",
+  "content-length": 47
+}
+Body: {"joinCode":"YV6XZE","playerName":"Solo049627"}
+
+-----------------------------------------------------------
+
+The response we got was:
+
+Status: 409 - Conflict
+Headers: {
+  "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+  "content-type": "application/json",
+  "date": "Fri, 02 Jan 2026 15:34:09 GMT",
+  "connection": "keep-alive",
+  "keep-alive": "timeout=5",
+  "transfer-encoding": "chunked"
+}
+Body: {
+  "error": "NAME_TAKEN",
+  "message": "Ce nom est déjà utilisé dans cette partie",
+  "existingPlayerId": "5bd41a05-c2ae-43f4-ba3b-ec342a47ebbb",
+  "canTakeover": true
+}
+
+
+This error occurred while creating the session. Because the session setup failed, we failed the test.
+
+https://on.cypress.io/request
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)
+      at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)
+      at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)
+      at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)
+      at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)
+      at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)
+  From Your Spec Code:
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\multi-player-voting.feature:19546:11)
+
+  3) Multi-Player Voting and Game Start
+       5 players vote after accusation to start round 2:
+     CypressError: `cy.request()` failed on:
+
+http://localhost:3000/api/join
+
+The response we received from your web server was:
+
+  > 409: Conflict
+
+This was considered a failure because the status code was not `2xx` or `3xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+-----------------------------------------------------------
+
+The request we sent was:
+
+Method: POST
+URL: http://localhost:3000/api/join
+Headers: {
+  "Connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36",
+  "accept": "*/*",
+  "accept-encoding": "gzip, deflate",
+  "content-type": "application/json",
+  "content-length": 45
+}
+Body: {"joinCode":"VSDC7M","playerName":"A0503580"}
+
+-----------------------------------------------------------
+
+The response we got was:
+
+Status: 409 - Conflict
+Headers: {
+  "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+  "content-type": "application/json",
+  "date": "Fri, 02 Jan 2026 15:34:10 GMT",
+  "connection": "keep-alive",
+  "keep-alive": "timeout=5",
+  "transfer-encoding": "chunked"
+}
+Body: {
+  "error": "NAME_TAKEN",
+  "message": "Ce nom est déjà utilisé dans cette partie",
+  "existingPlayerId": "66ebf856-ba91-4196-8810-f8906ea5b92b",
+  "canTakeover": true
+}
+
+
+This error occurred while creating the session. Because the session setup failed, we failed the test.
+
+https://on.cypress.io/request
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)
+      at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)
+      at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)
+      at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)
+      at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)
+      at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)
+  From Your Spec Code:
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\multi-player-voting.feature:19503:15)
+
+  4) Multi-Player Voting and Game Start
+       Double-clicking vote does not bypass minimum players:
+     CypressError: `cy.request()` failed on:
+
+http://localhost:3000/api/join
+
+The response we received from your web server was:
+
+  > 409: Conflict
+
+This was considered a failure because the status code was not `2xx` or `3xx`.
+
+If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`
+
+-----------------------------------------------------------
+
+The request we sent was:
+
+Method: POST
+URL: http://localhost:3000/api/join
+Headers: {
+  "Connection": "keep-alive",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36",
+  "accept": "*/*",
+  "accept-encoding": "gzip, deflate",
+  "content-type": "application/json",
+  "content-length": 45
+}
+Body: {"joinCode":"LEXJ9E","playerName":"DC051264"}
+
+-----------------------------------------------------------
+
+The response we got was:
+
+Status: 409 - Conflict
+Headers: {
+  "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+  "content-type": "application/json",
+  "date": "Fri, 02 Jan 2026 15:34:11 GMT",
+  "connection": "keep-alive",
+  "keep-alive": "timeout=5",
+  "transfer-encoding": "chunked"
+}
+Body: {
+  "error": "NAME_TAKEN",
+  "message": "Ce nom est déjà utilisé dans cette partie",
+  "existingPlayerId": "b4ab22a6-0816-4229-8a7c-70b3f1cf0e0f",
+  "canTakeover": true
+}
+
+
+This error occurred while creating the session. Because the session setup failed, we failed the test.
+
+https://on.cypress.io/request
+      at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)
+      at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)
+      at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)
+      at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)
+      at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)
+      at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)
+      at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)
+      at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)
+      at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)
+      at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)
+  From Your Spec Code:
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\multi-player-voting.feature:19576:11)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      4                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  4                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 seconds                                                                        │
+  │ Spec Ran:     gameplay/multi-player-voting.feature                                             │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\multi-player-voting.f     (1280x720)
+     eature\Multi-Player Voting and Game Start -- 5 players vote in lobby to start ga               
+     me (failed).png                                                                                
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\multi-player-voting.f     (1280x720)
+     eature\Multi-Player Voting and Game Start -- Single player cannot start game by                
+     voting (failed).png                                                                            
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\multi-player-voting.f     (1280x720)
+     eature\Multi-Player Voting and Game Start -- 5 players vote after accusation to                
+     start round 2 (failed).png                                                                     
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\gameplay\multi-player-voting.f     (1280x720)
+     eature\Multi-Player Voting and Game Start -- Double-clicking vote does not bypas               
+     s minimum players (failed).png                                                                 
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  player-management/player-management.feature                                   (10 of 10)
+
+
+  Player Management
+    √ Player sees kick button for other players (4130ms)
+    √ Player can open kick confirmation dialog (3482ms)
+    √ Player can cancel kick action (3537ms)
+    √ Player can confirm kick action (3545ms)
+    √ Player sees takeover dialog when name is already taken (2639ms)
+    √ Player can cancel takeover and choose another name (2708ms)
+    √ Player can confirm takeover and join with existing session (4545ms)
+    √ Kicked player sees warning message on join page (2033ms)
+
+
+  8 passing (27s)
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      8                                                                                │
+  │ Failing:      0                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  0                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     27 seconds                                                                       │
+  │ Spec Ran:     player-management/player-management.feature                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✔  admin-access.feature                     00:03        1        1        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  create-room.feature                      00:11        3        3        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  join-game.feature                        00:23        5        5        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  admin/mysteries-list.feature             00:12        6        6        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  admin/upload-mysteries.feature           00:38        5        5        -        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  lobby/lobby.feature                      00:14        6        3        1        2        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  gameplay/accusation.feature              00:51        8        1        7        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  gameplay/character-sheet.feature         00:43        6        -        6        -        - │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✖  gameplay/multi-player-voting.featur      00:03        4        -        4        -        - │
+  │    e                                                                                           │
+  ├────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ ✔  player-management/player-management      00:27        8        8        -        -        - │
+  │    .feature                                                                                    │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  4 of 10 failed (40%)                     03:50       52       32       18        2        -  
+
+
+❌ Tests failed with exit code 18
+
+✅ Leaving existing dev server running
+✅ Cleanup complete
+
+ ELIFECYCLE  Command failed with exit code 18.

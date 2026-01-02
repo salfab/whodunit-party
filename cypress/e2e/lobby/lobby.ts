@@ -220,7 +220,7 @@ When('I vote for a mystery', () => {
   // MUI ListItemButton renders as a div with role="button", so we find by text and click
   cy.contains('Test Mystery').click();
   // Wait for the vote API call
-  cy.wait('@vote');
+  cy.wait('@voteMystery');
   // Voting automatically marks player as ready
   cy.wait('@markReady');
 });
