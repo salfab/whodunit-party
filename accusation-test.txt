@@ -1,0 +1,202 @@
+
+> whodunit-party@0.1.0 cypress:run C:\ieu\sources\whodunit-party
+> node scripts/run-e2e-tests.mjs "--spec" "cypress/e2e/gameplay/accusation.feature"
+
+🚀 Starting E2E test environment...
+
+📦 Checking Supabase status...
+🔧 Starting Next.js dev server...
+✅ Dev server already running on port 3000
+
+📝 Setting Cypress baseUrl to http://localhost:3000...
+
+✅ Cypress baseUrl configured
+
+⏳ Waiting for server to be ready...
+✅ Server is ready
+
+🧪 Running Cypress in run mode...
+
+
+
+DevTools listening on ws://127.0.0.1:59295/devtools/browser/99c06b93-1abc-456f-b31a-78166647f73b
+Missing baseUrl in compilerOptions. tsconfig-paths will be skipped
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v20.17.0 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          1 found (accusation.feature)                                                   │
+  │ Searched:       C:\ieu\sources\whodunit-party\cypress\e2e\gameplay\accusation.feature          │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  accusation.feature                                                              (1 of 1)
+
+
+  Accusation System
+    1) Mobile - Investigator sees the accuse button
+    2) Mobile - Non-investigator does not see accuse button
+    3) Mobile - Investigator can open accusation dialog
+    4) Mobile - Correct accusation shows success result
+    5) Mobile - Wrong accusation shows failure result
+    6) Mobile - Mystery voting appears after incorrect accusation
+    7) Mobile - Player can vote for next mystery after accusation
+    8) Mobile - Vote counts update in real-time
+
+
+  0 passing (4s)
+  8 failing
+
+  1) Accusation System
+       Mobile - Investigator sees the accuse button:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  2) Accusation System
+       Mobile - Non-investigator does not see accuse button:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  3) Accusation System
+       Mobile - Investigator can open accusation dialog:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  4) Accusation System
+       Mobile - Correct accusation shows success result:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  5) Accusation System
+       Mobile - Wrong accusation shows failure result:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  6) Accusation System
+       Mobile - Mystery voting appears after incorrect accusation:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  7) Accusation System
+       Mobile - Player can vote for next mystery after accusation:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+  8) Accusation System
+       Mobile - Vote counts update in real-time:
+     Error: Multiple matching step definitions for: I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+ I am logged in as a player in a playing session
+      at Registry.resolveStepDefintion (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10393:19)
+      at Registry.runStepDefininition (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:10408:39)
+      at Object.fn (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17790:43)
+      at runStepWithLogGroup (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17250:29)
+      at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\e2e\gameplay\accusation.feature:17786:62)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        8                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      8                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  8                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     3 seconds                                                                        │
+  │ Spec Ran:     accusation.feature                                                               │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Investigator sees the accuse button (failed).png                            
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Non-investigator does not see accuse button (failed).png                    
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Investigator can open accusation dialog (failed).png                        
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Correct accusation shows success result (failed).png                        
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Wrong accusation shows failure result (failed).png                          
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Mystery voting appears after incorrect accusation (failed).pn               
+     g                                                                                              
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Player can vote for next mystery after accusation (failed).pn               
+     g                                                                                              
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\accusation.feature\Accusation      (1280x720)
+     System -- Mobile - Vote counts update in real-time (failed).png                                
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  accusation.feature                       00:03        8        -        8        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  1 of 1 failed (100%)                     00:03        8        -        8        -        -  
+
+
+❌ Tests failed with exit code 8
+
+✅ Leaving existing dev server running
+✅ Cleanup complete
+
+ ELIFECYCLE  Command failed with exit code 8.

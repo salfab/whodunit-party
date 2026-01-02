@@ -139,10 +139,7 @@ Then('I should see the mystery voting list', () => {
   cy.getByTestId('mystery-voting-list').find('[data-testid^="mystery-card-"]').should('have.length', 3);
 });
 
-When('I vote for a mystery', () => {
-  cy.getByTestId('mystery-card-mystery-1').click();
-  cy.wait('@voteMystery');
-});
+// Note: "When I vote for a mystery" step is defined in lobby.ts and reused here
 
 Then('I should see my vote was recorded', () => {
   cy.getByTestId('mystery-card-mystery-1').should('have.attr', 'data-voted', 'true');
