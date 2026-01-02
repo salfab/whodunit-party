@@ -560,18 +560,33 @@ export default function LobbyPage() {
     <Container maxWidth="md">
       <Box sx={{ py: 4, minHeight: '100vh' }}>
         <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 } }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-            <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 0 }}>
-              Salle d'attente
-            </Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between', 
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            gap: 2,
+            mb: 2 
+          }}>
             <Button
-              variant="outlined"
+              variant="text"
               size="small"
-              startIcon={<HelpIcon />}
+              endIcon={<HelpIcon />}
               onClick={() => setHelpDialogOpen(true)}
+              sx={{ 
+                order: { xs: -1, sm: 1 },
+                alignSelf: 'flex-end',
+                color: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                }
+              }}
             >
               Déroulement du jeu
             </Button>
+            <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 0 }}>
+              Salle d'attente
+            </Typography>
           </Box>
 
           {session && <JoinCodeDisplay code={session.join_code} />}

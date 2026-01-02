@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '@/lib/auth';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
+import { MIN_PLAYERS } from '@/lib/constants';
 
 const logger = createLogger('api:vote-mystery');
 
@@ -142,6 +143,7 @@ export async function POST(
         !voteCountError && 
         activePlayerCount !== null && 
         voteCount !== null && 
+        activePlayerCount >= MIN_PLAYERS &&
         voteCount >= activePlayerCount
       ) {
         logger('info', `All ${activePlayerCount} players voted. Triggering next round.`);

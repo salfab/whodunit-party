@@ -18,6 +18,7 @@ export default function RoleHelpDialog({ open, onClose, helpContent }: RoleHelpD
       onClose={onClose}
       maxWidth="sm"
       fullWidth
+      fullScreen
       PaperProps={{
         sx: {
           bgcolor: 'background.paper',
