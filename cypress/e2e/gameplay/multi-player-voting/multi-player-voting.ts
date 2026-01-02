@@ -1,8 +1,14 @@
-import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, When, Then, Before } from '@badeball/cypress-cucumber-preprocessor';
 
 // Shared state between steps
 let sessionData: { sessionId: string; joinCode: string };
 let players: Array<{ name: string; id: string }> = [];
+
+// Clear all cached sessions before each scenario to avoid NAME_TAKEN conflicts
+Before(() => {
+  Cypress.session.clearAllSavedSessions();
+  players = [];
+});
 
 // ==================== Given Steps ====================
 
@@ -23,8 +29,15 @@ Given('5 players are in an active game with an accusation made', () => {
   cy.createRealRoom().then((data) => {
     sessionData = data;
     
-    // Join 5 players
-    const playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'];
+    // Join 5 players with unique names (under 15 chars)
+    const suffix = Math.random().toString(36).substring(2, 6);
+    const playerNames = [
+      `A-${suffix}`,
+      `B-${suffix}`,
+      `C-${suffix}`,
+      `D-${suffix}`,
+      `E-${suffix}`
+    ];
     players = [];
     
     cy.wrap(playerNames).each((name: string) => {
@@ -53,7 +66,16 @@ Given('5 players are in an active game with an accusation made', () => {
 // ==================== When Steps ====================
 
 When('5 players join the room via API', () => {
-  const playerNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'];
+  // Use unique player names with random suffix to avoid NAME_TAKEN conflicts
+  // Keep names under 15 chars (API limit)
+  const suffix = Math.random().toString(36).substring(2, 6); // 4 char random
+  const playerNames = [
+    `A-${suffix}`,
+    `B-${suffix}`,
+    `C-${suffix}`,
+    `D-${suffix}`,
+    `E-${suffix}`
+  ];
   players = [];
   
   cy.wrap(playerNames).each((name: string) => {
@@ -75,7 +97,8 @@ When('5 players join the room via API', () => {
 });
 
 When('1 player joins and votes for a mystery', () => {
-  const playerName = 'SinglePlayer';
+  const suffix = Math.random().toString(36).substring(2, 6);
+  const playerName = `Solo-${suffix}`;
   
   // Join as single player
   cy.request({
@@ -113,7 +136,8 @@ When('1 player joins and votes for a mystery', () => {
 });
 
 When('1 player joins and votes twice quickly', () => {
-  const playerName = 'DoubleClicker';
+  const suffix = Math.random().toString(36).substring(2, 6);
+  const playerName = `DC-${suffix}`;
   
   // Join as single player
   cy.request({
@@ -166,8 +190,8 @@ When('all players vote for a mystery', () => {
     
     // Each player votes
     cy.wrap(players).each((player: any) => {
-      // Switch to this player's session
-      cy.switchToPlayer(player.name);
+      // Switch to this player's session (pass sessionId for uniqueness)
+      cy.switchToPlayer(player.name, sessionData.sessionId);
       
       // Vote via API (faster than UI)
       cy.request({
@@ -193,7 +217,7 @@ When('all 5 players vote for the next mystery', () => {
     const mysteryId = suitableMysteries[1]?.id || suitableMysteries[0].id;
     
     cy.wrap(players).each((player: any) => {
-      cy.switchToPlayer(player.name);
+      cy.switchToPlayer(player.name, sessionData.sessionId);
       
       cy.request({
         method: 'POST',
@@ -211,7 +235,7 @@ When('all 5 players vote for the next mystery', () => {
 Then('the game should start with roles assigned', () => {
   // Verify by checking that players can load their character sheets
   // If roles are assigned, the play page should work
-  cy.switchToPlayer(players[0].name);
+  cy.switchToPlayer(players[0].name, sessionData.sessionId);
   cy.visit(`/play/${sessionData.sessionId}`, { failOnStatusCode: false });
   
   // Wait a bit for the page to load
@@ -224,7 +248,7 @@ Then('the game should start with roles assigned', () => {
 Then('all players should see their character sheets', () => {
   // Switch to each player and verify they can load character sheet
   cy.wrap(players).each((player: any) => {
-    cy.switchToPlayer(player.name);
+    cy.switchToPlayer(player.name, sessionData.sessionId);
     
     cy.visit(`/play/${sessionData.sessionId}`);
     
@@ -238,7 +262,7 @@ Then('the game should not start', () => {
   // Verify game doesn't start by trying to access play page
   cy.wait(2000); // Wait to ensure no round starts
   
-  cy.switchToPlayer(players[0].name);
+  cy.switchToPlayer(players[0].name, sessionData.sessionId);
   cy.visit(`/play/${sessionData.sessionId}`, { failOnStatusCode: false });
   
   // Should redirect or show error since game hasn't started
@@ -266,7 +290,7 @@ Then('round 2 should start', () => {
 Then('all players should see new character sheets', () => {
   // Similar to first round verification
   cy.wrap(players).each((player: any) => {
-    cy.switchToPlayer(player.name);
+    cy.switchToPlayer(player.name, sessionData.sessionId);
     
     cy.visit(`/play/${sessionData.sessionId}`);
     cy.get('[data-testid="character-name"]', { timeout: 10000 }).should('exist');

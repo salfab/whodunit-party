@@ -61,9 +61,9 @@ declare global {
 
       /**
        * Switch to a different player session.
-       * @example cy.switchToPlayer('Bob')
+       * @example cy.switchToPlayer('Bob', sessionId)
        */
-      switchToPlayer(playerName: string): Chainable<null>;
+      switchToPlayer(playerName: string, sessionId?: string): Chainable<null>;
 
       /**
        * Set up a complete mocked session for lobby/play page tests.
@@ -274,8 +274,14 @@ Cypress.Commands.add(
     joinCode: string,
     options?: { playerId?: string; sessionId?: string }
   ) => {
+    // Use both playerName AND sessionId as cache key to avoid conflicts
+    // between players with same name in different sessions
+    const sessionKey = options?.sessionId 
+      ? `${playerName}-${options.sessionId}`
+      : playerName;
+    
     cy.session(
-      playerName,
+      sessionKey,
       () => {
         // If playerId/sessionId provided, just set cookies
         if (options?.playerId && options?.sessionId) {
@@ -319,10 +325,14 @@ Cypress.Commands.add(
 /**
  * Switch to a different player session.
  * This clears current session and restores the cached session for the given player.
+ * Note: You must provide the sessionId if players with same name exist in different sessions.
  */
-Cypress.Commands.add('switchToPlayer', (playerName: string) => {
+Cypress.Commands.add('switchToPlayer', (playerName: string, sessionId?: string) => {
+  // Use same compound key as loginAsPlayer
+  const sessionKey = sessionId ? `${playerName}-${sessionId}` : playerName;
+  
   // cy.session will restore the cached session for this player
-  return cy.session(playerName, () => {
+  return cy.session(sessionKey, () => {
     // This should never run if session was already cached
     throw new Error(
       `Session for ${playerName} not found. Call loginAsPlayer first.`

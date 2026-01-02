@@ -1,0 +1,2517 @@
+
+
+DevTools listening on ws://127.0.0.1:57347/devtools/browser/6ddd1a17-3d85-4405-bf14-81d2916ec58c
+Missing baseUrl in compilerOptions. tsconfig-paths will be skipped
+
+====================================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        13.17.0                                                                        │
+  │ Browser:        Electron 118 (headless)                                                        │
+  │ Node Version:   v20.17.0 (C:\nvm4w\nodejs\node.exe)                                            │
+  │ Specs:          1 found (multi-player-voting.feature)                                          │
+  │ Searched:       C:\ieu\sources\whodunit-party\cypress\e2e\gameplay\multi-player-voting.feature │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  multi-player-voting.feature                                                     (1 of 1)
+{
+  "stats": {
+    "suites": 1,
+    "tests": 4,
+    "passes": 0,
+    "pending": 0,
+    "failures": 4,
+    "start": "2026-01-02T10:14:35.363Z",
+    "end": "2026-01-02T10:14:37.800Z",
+    "duration": 2437
+  },
+  "tests": [
+    {
+      "title": "5 players vote in lobby to start game",
+      "fullTitle": "Multi-Player Voting and Game Start 5 players vote in lobby to start game",
+      "duration": 817,
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"PFV8EF\",\"playerName\":\"A-6ogf\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:35 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"1ee0c6db-0ea7-41bd-84f4-e2b192f7cffe\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"PFV8EF\",\"playerName\":\"A-6ogf\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:35 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"1ee0c6db-0ea7-41bd-84f4-e2b192f7cffe\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19530:13)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 43",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"PFV8EF\",\"playerName\":\"A-6ogf\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:35 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"1ee0c6db-0ea7-41bd-84f4-e2b192f7cffe\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19530,
+            "column": 13,
+            "whitespace": "    "
+          }
+        ]
+      }
+    },
+    {
+      "title": "Single player cannot start game by voting",
+      "fullTitle": "Multi-Player Voting and Game Start Single player cannot start game by voting",
+      "duration": 500,
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 46\n}\nBody: {\"joinCode\":\"DZDL36\",\"playerName\":\"Solo-al0x\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:36 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"0de4df99-08ee-419c-b20e-7b840fbac164\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 46\n}\nBody: {\"joinCode\":\"DZDL36\",\"playerName\":\"Solo-al0x\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:36 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"0de4df99-08ee-419c-b20e-7b840fbac164\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19547:11)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 46",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"DZDL36\",\"playerName\":\"Solo-al0x\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:36 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"0de4df99-08ee-419c-b20e-7b840fbac164\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19547,
+            "column": 11,
+            "whitespace": "    "
+          }
+        ]
+      }
+    },
+    {
+      "title": "5 players vote after accusation to start round 2",
+      "fullTitle": "Multi-Player Voting and Game Start 5 players vote after accusation to start round 2",
+      "duration": 457,
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"3PYU24\",\"playerName\":\"A-zgjl\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"eb941663-26ea-46e0-a1e2-fc9eb26cc01e\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"3PYU24\",\"playerName\":\"A-zgjl\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"eb941663-26ea-46e0-a1e2-fc9eb26cc01e\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19504:15)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 43",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"3PYU24\",\"playerName\":\"A-zgjl\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"eb941663-26ea-46e0-a1e2-fc9eb26cc01e\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19504,
+            "column": 15,
+            "whitespace": "    "
+          }
+        ]
+      }
+    },
+    {
+      "title": "Double-clicking vote does not bypass minimum players",
+      "fullTitle": "Multi-Player Voting and Game Start Double-clicking vote does not bypass minimum players",
+      "duration": 428,
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 44\n}\nBody: {\"joinCode\":\"2SXVAD\",\"playerName\":\"DC-0gip\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"6dd21bc4-4aae-4e6a-b548-931c51d253c3\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 44\n}\nBody: {\"joinCode\":\"2SXVAD\",\"playerName\":\"DC-0gip\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"6dd21bc4-4aae-4e6a-b548-931c51d253c3\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19577:11)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 44",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"2SXVAD\",\"playerName\":\"DC-0gip\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"6dd21bc4-4aae-4e6a-b548-931c51d253c3\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19577,
+            "column": 11,
+            "whitespace": "    "
+          }
+        ]
+      }
+    }
+  ],
+  "pending": [],
+  "failures": [
+    {
+      "title": "5 players vote in lobby to start game",
+      "fullTitle": "Multi-Player Voting and Game Start 5 players vote in lobby to start game",
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"PFV8EF\",\"playerName\":\"A-6ogf\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:35 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"1ee0c6db-0ea7-41bd-84f4-e2b192f7cffe\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"PFV8EF\",\"playerName\":\"A-6ogf\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:35 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"1ee0c6db-0ea7-41bd-84f4-e2b192f7cffe\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19530:13)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 43",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"PFV8EF\",\"playerName\":\"A-6ogf\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:35 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"1ee0c6db-0ea7-41bd-84f4-e2b192f7cffe\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19530,
+            "column": 13,
+            "whitespace": "    "
+          }
+        ]
+      }
+    },
+    {
+      "title": "Single player cannot start game by voting",
+      "fullTitle": "Multi-Player Voting and Game Start Single player cannot start game by voting",
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 46\n}\nBody: {\"joinCode\":\"DZDL36\",\"playerName\":\"Solo-al0x\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:36 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"0de4df99-08ee-419c-b20e-7b840fbac164\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 46\n}\nBody: {\"joinCode\":\"DZDL36\",\"playerName\":\"Solo-al0x\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:36 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"0de4df99-08ee-419c-b20e-7b840fbac164\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19547:11)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 46",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"DZDL36\",\"playerName\":\"Solo-al0x\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:36 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"0de4df99-08ee-419c-b20e-7b840fbac164\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19547,
+            "column": 11,
+            "whitespace": "    "
+          }
+        ]
+      }
+    },
+    {
+      "title": "5 players vote after accusation to start round 2",
+      "fullTitle": "Multi-Player Voting and Game Start 5 players vote after accusation to start round 2",
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"3PYU24\",\"playerName\":\"A-zgjl\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"eb941663-26ea-46e0-a1e2-fc9eb26cc01e\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 43\n}\nBody: {\"joinCode\":\"3PYU24\",\"playerName\":\"A-zgjl\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"eb941663-26ea-46e0-a1e2-fc9eb26cc01e\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19504:15)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 43",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"3PYU24\",\"playerName\":\"A-zgjl\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"eb941663-26ea-46e0-a1e2-fc9eb26cc01e\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19504,
+            "column": 15,
+            "whitespace": "    "
+          }
+        ]
+      }
+    },
+    {
+      "title": "Double-clicking vote does not bypass minimum players",
+      "fullTitle": "Multi-Player Voting and Game Start Double-clicking vote does not bypass minimum players",
+      "currentRetry": 0,
+      "err": {
+        "message": "`cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 44\n}\nBody: {\"joinCode\":\"2SXVAD\",\"playerName\":\"DC-0gip\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"6dd21bc4-4aae-4e6a-b548-931c51d253c3\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request",
+        "name": "CypressError",
+        "stack": "CypressError: `cy.request()` failed on:\n\nhttp://localhost:3000/api/join\n\nThe response we received from your web server was:\n\n  > 409: Conflict\n\nThis was considered a failure because the status code was not `2xx` or `3xx`.\n\nIf you do not want status codes to cause failures pass the option: `failOnStatusCode: false`\n\n-----------------------------------------------------------\n\nThe request we sent was:\n\nMethod: POST\nURL: http://localhost:3000/api/join\nHeaders: {\n  \"Connection\": \"keep-alive\",\n  \"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",\n  \"accept\": \"*/*\",\n  \"accept-encoding\": \"gzip, deflate\",\n  \"content-type\": \"application/json\",\n  \"content-length\": 44\n}\nBody: {\"joinCode\":\"2SXVAD\",\"playerName\":\"DC-0gip\"}\n\n-----------------------------------------------------------\n\nThe response we got was:\n\nStatus: 409 - Conflict\nHeaders: {\n  \"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",\n  \"content-type\": \"application/json\",\n  \"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",\n  \"connection\": \"keep-alive\",\n  \"keep-alive\": \"timeout=5\",\n  \"transfer-encoding\": \"chunked\"\n}\nBody: {\n  \"error\": \"NAME_TAKEN\",\n  \"message\": \"Ce nom est déjà utilisé dans cette partie\",\n  \"existingPlayerId\": \"6dd21bc4-4aae-4e6a-b548-931c51d253c3\",\n  \"canTakeover\": true\n}\n\n\nThis error occurred while creating the session. Because the session setup failed, we failed the test.\n\nhttps://on.cypress.io/request\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:132876:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at _drainQueueStep (http://localhost:3000/__cypress/runner/cypress_runner.js:2430:12)\n    at _drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:2423:9)\n    at Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2439:5)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:2309:14)\nFrom Your Spec Code:\n    at Context.eval (http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature:19577:11)",
+        "parsedStack": [
+          {
+            "message": "CypressError: `cy.request()` failed on:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we received from your web server was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "> 409: Conflict",
+            "whitespace": "  "
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This was considered a failure because the status code was not `2xx` or `3xx`.",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "If you do not want status codes to cause failures pass the option: `failOnStatusCode: false`",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The request we sent was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Method: POST",
+            "whitespace": ""
+          },
+          {
+            "message": "URL: http://localhost:3000/api/join",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"Connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"user-agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cypress/13.17.0 Chrome/118.0.5993.159 Electron/27.3.10 Safari/537.36\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept\": \"*/*\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"accept-encoding\": \"gzip, deflate\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-length\": 44",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {\"joinCode\":\"2SXVAD\",\"playerName\":\"DC-0gip\"}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "-----------------------------------------------------------",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "The response we got was:",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "Status: 409 - Conflict",
+            "whitespace": ""
+          },
+          {
+            "message": "Headers: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"vary\": \"rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"content-type\": \"application/json\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"date\": \"Fri, 02 Jan 2026 10:14:37 GMT\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"connection\": \"keep-alive\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"keep-alive\": \"timeout=5\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"transfer-encoding\": \"chunked\"",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "Body: {",
+            "whitespace": ""
+          },
+          {
+            "message": "\"error\": \"NAME_TAKEN\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"message\": \"Ce nom est déjà utilisé dans cette partie\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"existingPlayerId\": \"6dd21bc4-4aae-4e6a-b548-931c51d253c3\",",
+            "whitespace": "  "
+          },
+          {
+            "message": "\"canTakeover\": true",
+            "whitespace": "  "
+          },
+          {
+            "message": "}",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "",
+            "whitespace": ""
+          },
+          {
+            "message": "This error occurred while creating the session. Because the session setup failed, we failed the test.",
+            "whitespace": ""
+          },
+          {
+            "function": "<unknown>",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 132876,
+            "column": 72,
+            "whitespace": "    "
+          },
+          {
+            "function": "tryCatcher",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1830,
+            "column": 23,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromiseFromHandler",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1542,
+            "column": 31,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1599,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromise0",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1644,
+            "column": 10,
+            "whitespace": "    "
+          },
+          {
+            "function": "Promise._settlePromises",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 1724,
+            "column": 18,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueueStep",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2430,
+            "column": 12,
+            "whitespace": "    "
+          },
+          {
+            "function": "_drainQueue",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2423,
+            "column": 9,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async._drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2439,
+            "column": 5,
+            "whitespace": "    "
+          },
+          {
+            "function": "Async.drainQueues",
+            "fileUrl": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "originalFile": "http://localhost:3000/__cypress/runner/cypress_runner.js",
+            "line": 2309,
+            "column": 14,
+            "whitespace": "    "
+          },
+          {
+            "message": "From Your Spec Code:",
+            "whitespace": ""
+          },
+          {
+            "function": "Context.eval",
+            "fileUrl": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "originalFile": "http://localhost:3000/__cypress/tests?p=cypress\\e2e\\gameplay\\multi-player-voting.feature",
+            "line": 19577,
+            "column": 11,
+            "whitespace": "    "
+          }
+        ]
+      }
+    }
+  ],
+  "passes": []
+}
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        4                                                                                │
+  │ Passing:      0                                                                                │
+  │ Failing:      4                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  4                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     2 seconds                                                                        │
+  │ Spec Ran:     multi-player-voting.feature                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\multi-player-voting.feature\Mu     (1280x720)
+     lti-Player Voting and Game Start -- 5 players vote in lobby to start game (faile               
+     d).png                                                                                         
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\multi-player-voting.feature\Mu     (1280x720)
+     lti-Player Voting and Game Start -- Single player cannot start game by voting (f               
+     ailed).png                                                                                     
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\multi-player-voting.feature\Mu     (1280x720)
+     lti-Player Voting and Game Start -- 5 players vote after accusation to start rou               
+     nd 2 (failed).png                                                                              
+  -  C:\ieu\sources\whodunit-party\cypress\screenshots\multi-player-voting.feature\Mu     (1280x720)
+     lti-Player Voting and Game Start -- Double-clicking vote does not bypass minimum               
+      players (failed).png                                                                          
+
+
+====================================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  multi-player-voting.feature              00:02        4        -        4        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  1 of 1 failed (100%)                     00:02        4        -        4        -        -  
+
