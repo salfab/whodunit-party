@@ -262,6 +262,9 @@ export default function PlayPage() {
           setVoteCounts({});
           setAvailableMysteries([]);
           setIsFlipped(false); // Flip back to character sheet for new round
+          
+          // Scroll to top of page
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
 
@@ -335,6 +338,9 @@ export default function PlayPage() {
       });
 
       setAccuseDialogOpen(false);
+      
+      // Scroll to top to see the accusation result
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
       console.error('Error submitting accusation:', err);
       setErrorSnackbar({ open: true, message: err.message || 'Erreur lors de l\'accusation' });
@@ -703,10 +709,6 @@ export default function PlayPage() {
           </Paper>
         )}
 
-        <Alert severity="warning" sx={{ mt: 4 }}>
-          Gardez votre fiche de personnage secrète des autres joueurs !
-        </Alert>
-
         <AccusationDialog
           open={accuseDialogOpen}
           onClose={() => setAccuseDialogOpen(false)}
@@ -716,6 +718,10 @@ export default function PlayPage() {
           onConfirm={handleAccuse}
           submitting={submittingAccusation}
         />
+
+        <Alert severity="warning" sx={{ mt: 4, mb: 2 }}>
+          Gardez votre fiche de personnage secrète des autres joueurs !
+        </Alert>
       </Box>
 
       <Snackbar
