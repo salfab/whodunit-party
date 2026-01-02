@@ -3,6 +3,7 @@
 import { Box, Container, Typography, Button, IconButton, MenuItem, Select } from '@mui/material';
 import { Settings as SettingsIcon } from '@mui/icons-material';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { type Locale } from '@/i18n/request';
@@ -93,12 +94,21 @@ export default function Home() {
           gap: 4,
         }}
       >
-        <Typography variant="h2" component="h1" textAlign="center">
-          🔍 {t('home.title')}
-        </Typography>
-        <Typography variant="h5" textAlign="center" color="text.secondary">
-          {t('home.subtitle')}
-        </Typography>
+        <Box 
+          sx={{ 
+            filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.9))',
+            display: 'flex'
+          }}
+        >
+          <Image 
+            src="/logo.png" 
+            alt={t('home.title')} 
+            width={300}
+            height={150}
+            style={{ width: '95%', height: 'auto', display: 'block' }}
+            priority
+          />
+        </Box>
         
         <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
           <Button
