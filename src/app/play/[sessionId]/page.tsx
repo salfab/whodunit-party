@@ -718,10 +718,6 @@ export default function PlayPage() {
           onConfirm={handleAccuse}
           submitting={submittingAccusation}
         />
-
-        <Alert severity="warning" sx={{ mt: 4, mb: 2 }}>
-          Gardez votre fiche de personnage secrète des autres joueurs !
-        </Alert>
       </Box>
 
       <Snackbar
