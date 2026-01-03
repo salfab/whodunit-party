@@ -72,6 +72,9 @@ export default function MysteryCard({
       <ListItemButton
         onClick={onClick}
         selected={selected}
+        data-testid={`mystery-card-${mystery.id}`}
+        data-voted={selected ? 'true' : 'false'}
+        aria-disabled={selected && showRadio ? 'true' : 'false'}
         sx={{
           border: selected ? '2px solid' : '1px solid',
           borderColor: selected ? 'primary.main' : 'divider',
@@ -138,6 +141,7 @@ export default function MysteryCard({
             color={voteCount > 0 ? 'primary' : 'default'}
             size="small"
             variant={voteCount > 0 ? 'filled' : 'outlined'}
+            data-testid="vote-count"
             sx={{ 
               alignSelf: { xs: 'flex-end', sm: 'center' },
             }}

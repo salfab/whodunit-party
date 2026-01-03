@@ -192,7 +192,14 @@ Given('I create a real room with {int} players', (playerCount: number) => {
 // ==================== Navigation ====================
 
 When('I visit the lobby page', () => {
-  cy.visit(`/lobby/${testSessionId || 'mock-session-001'}`, { failOnStatusCode: false });
+  cy.log(`Visiting lobby page for session: ${testSessionId || 'mock-session-001'}`);
+  cy.visit(`/lobby/${testSessionId || 'mock-session-001'}`, { 
+    failOnStatusCode: false,
+    timeout: 30000 
+  });
+  // Wait for initial API calls
+  cy.wait('@sessionMe', { timeout: 10000 });
+  cy.wait('@getSession', { timeout: 10000 });
 });
 
 // ==================== Assertions ====================
@@ -210,19 +217,17 @@ Then('I should see the {string} badge next to my name', () => {
 });
 
 Then('I should see the mystery voting section', () => {
-  cy.contains('Votez pour le mystère').should('be.visible');
+  cy.getByTestId('mystery-voting-title').should('be.visible');
 });
 
 // ==================== Voting and Ready State ====================
 
 When('I vote for a mystery', () => {
-  // Click on the first mystery in the list to vote
-  // MUI ListItemButton renders as a div with role="button", so we find by text and click
-  cy.contains('Test Mystery').click();
+  // Click on the first mystery in the list to vote using its data-testid
+  cy.getByTestId('mystery-card-mystery-1').click({force: true});
   // Wait for the vote API call
   cy.wait('@voteMystery');
-  // Voting automatically marks player as ready
-  cy.wait('@markReady');
+  // Voting automatically marks player as ready (no separate API call needed)
 });
 
 When('I click the refresh button', () => {

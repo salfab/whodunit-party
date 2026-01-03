@@ -74,11 +74,11 @@ Then('I should see at least 1 mystery in the list', () => {
 });
 
 Then('I should see the empty state message', () => {
-  cy.contains('No mysteries found').should('be.visible');
+  cy.getByTestId('empty-state-message').should('be.visible').and('contain', 'No mysteries found');
 });
 
 Then('I should see a create mystery button', () => {
-  cy.contains('Créer un Mystère').should('be.visible');
+  cy.getByTestId('create-mystery-button').should('be.visible').and('contain', 'Créer un Mystère');
 });
 
 // ==================== Delete Operations ====================

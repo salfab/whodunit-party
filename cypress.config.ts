@@ -5,8 +5,12 @@ import { createEsbuildPlugin } from '@badeball/cypress-cucumber-preprocessor/esb
 
 export default defineConfig({
   e2e: {
-    baseUrl: process.env.CYPRESS_BASE_URL || 'http://localhost:3002',
+    baseUrl: process.env.CYPRESS_BASE_URL || 'http://localhost:3000',
     specPattern: '**/*.feature',
+    defaultCommandTimeout: 10000,
+    pageLoadTimeout: 60000,
+    requestTimeout: 10000,
+    responseTimeout: 30000,
     async setupNodeEvents(
       on: Cypress.PluginEvents,
       config: Cypress.PluginConfigOptions

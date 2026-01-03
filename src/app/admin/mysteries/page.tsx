@@ -149,7 +149,7 @@ export default function MysteriesPage() {
 
         {mysteries.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: 'center' }}>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
+            <Typography variant="h6" color="text.secondary" gutterBottom data-testid="empty-state-message">
               No mysteries found
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
@@ -159,6 +159,7 @@ export default function MysteriesPage() {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => router.push('/admin/mysteries/new/edit')}
+              data-testid="create-mystery-button"
             >
               Créer un Mystère
             </Button>

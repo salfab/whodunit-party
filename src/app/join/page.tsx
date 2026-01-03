@@ -177,7 +177,7 @@ function JoinContent() {
           </Typography>
 
           {wasKicked && (
-            <Alert severity="warning" sx={{ mb: 3 }} onClose={() => setWasKicked(false)}>
+            <Alert severity="warning" sx={{ mb: 3 }} onClose={() => setWasKicked(false)} data-testid="kicked-player-alert">
               Vous avez été retiré de la partie. Vous pouvez rejoindre à nouveau.
             </Alert>
           )}

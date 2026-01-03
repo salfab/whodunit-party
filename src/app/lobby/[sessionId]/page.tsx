@@ -643,6 +643,7 @@ export default function LobbyPage() {
             myVote={myVote}
             onVote={handleVote}
             hasLanguage={!!session?.language}
+            showTitle={true}
           />
 
           <ReadyStatusBar

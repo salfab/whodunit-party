@@ -52,23 +52,23 @@ When('I click the kick button for {string}', (playerName: string) => {
 });
 
 Then('I should see the kick confirmation dialog', () => {
-  cy.contains('Retirer un joueur').should('be.visible');
+  cy.getByTestId('remove-player-dialog').should('be.visible');
 });
 
 Then('the dialog should mention {string}', (playerName: string) => {
-  cy.contains(playerName).should('be.visible');
+  cy.getByTestId('remove-player-dialog-content').should('contain', playerName);
 });
 
 When('I click the cancel button in the dialog', () => {
-  cy.contains('button', 'Annuler').click();
+  cy.getByTestId('remove-player-cancel-button').click();
 });
 
 Then('the kick confirmation dialog should be closed', () => {
-  cy.contains('Retirer un joueur').should('not.exist');
+  cy.getByTestId('remove-player-dialog').should('not.exist');
 });
 
 When('I click the confirm button in the dialog', () => {
-  cy.contains('button', 'Retirer').click();
+  cy.getByTestId('remove-player-confirm-button').click();
 });
 
 Then('the kick API should be called for {string}', (_playerName: string) => {
@@ -78,23 +78,23 @@ Then('the kick API should be called for {string}', (_playerName: string) => {
 // ==================== Takeover Dialog Actions ====================
 
 Then('I should see the takeover dialog', () => {
-  cy.contains('Nom déjà utilisé').should('be.visible');
+  cy.getByTestId('takeover-dialog').should('be.visible');
 });
 
 Then('the dialog should explain the takeover option', () => {
-  cy.contains('reprendre votre session précédente').should('be.visible');
+  cy.getByTestId('takeover-dialog-content').should('contain', 'reprendre votre session précédente');
 });
 
 When('I click the cancel takeover button', () => {
-  cy.contains('button', 'Choisir un autre nom').click();
+  cy.getByTestId('takeover-cancel-button').click();
 });
 
 Then('the takeover dialog should be closed', () => {
-  cy.contains('Nom déjà utilisé').should('not.exist');
+  cy.getByTestId('takeover-dialog').should('not.exist');
 });
 
 When('I click the confirm takeover button', () => {
-  cy.contains('button', 'Reprendre ma session').click();
+  cy.getByTestId('takeover-confirm-button').click();
 });
 
 Then('the takeover API should be called', () => {
@@ -104,11 +104,11 @@ Then('the takeover API should be called', () => {
 // ==================== Kicked Player Experience ====================
 
 Then('I should see the kicked warning message', () => {
-  cy.contains('Vous avez été retiré de la partie').should('be.visible');
+  cy.getByTestId('kicked-player-alert').should('be.visible');
 });
 
 Then('I should be able to dismiss the warning', () => {
   // Click the close button on the Alert
   cy.get('[data-testid="CloseIcon"]').first().click();
-  cy.contains('Vous avez été retiré de la partie').should('not.exist');
+  cy.getByTestId('kicked-player-alert').should('not.exist');
 });

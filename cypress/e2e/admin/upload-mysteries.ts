@@ -96,8 +96,8 @@ When('I select a ZIP file for upload', () => {
 
 Then('I should see the selected file name', () => {
   // Now shows "1 file(s) selected" and file list in separate elements
-  cy.contains('1 file(s) selected').should('be.visible');
-  cy.contains('test-mystery.zip').should('be.visible');
+  cy.getByTestId('file-selection-count').should('be.visible').and('contain', '1 file(s) selected');
+  cy.getByTestId('file-list').should('be.visible').and('contain', 'test-mystery.zip');
 });
 
 // ==================== Button States ====================

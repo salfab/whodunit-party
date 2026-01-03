@@ -421,6 +421,7 @@ export default function RoleRevealCard({
         {/* Character name - prominent */}
         <Typography
           variant="h5"
+          data-testid="character-name"
           sx={{
             color: cardDesign.accentColor,
             fontWeight: 600,

@@ -31,6 +31,14 @@ Given('I mock the accusation API to return a correct result', () => {
       wasCorrect: true,
       accusedRole: 'guilty',
       gameComplete: false,
+      guiltyPlayer: {
+        id: 'test-player-002',
+        name: 'Player2',
+        characterName: 'M. Rouge',
+        occupation: 'Détective',
+        imagePath: null,
+        playerIndex: 1,
+      },
       messages: {
         investigator: 'Bravo ! Vous avez trouvé le coupable ! +2 points',
         guilty: 'Vous avez été découvert par l\'enquêteur.',
@@ -48,6 +56,14 @@ Given('I mock the accusation API to return an incorrect result', () => {
       wasCorrect: false,
       accusedRole: 'innocent',
       gameComplete: false,
+      guiltyPlayer: {
+        id: 'test-player-002',
+        name: 'Player2',
+        characterName: 'M. Rouge',
+        occupation: 'Détective',
+        imagePath: null,
+        playerIndex: 1,
+      },
       messages: {
         investigator: 'Raté ! Vous avez accusé une personne innocente.',
         guilty: 'Le coupable n\'a pas été attrapé ! +2 points',
@@ -70,31 +86,63 @@ When('I select an innocent player', () => {
 When('I confirm the accusation', () => {
   cy.getByTestId('accusation-confirm-button').click();
   cy.wait('@submitAccusation');
+  // Wait for the card to flip (dialog closes and flip animation happens)
+  // The accusation-result element will exist after the flip completes
+  cy.wait(1500); // Wait for flip animation to complete
+  cy.getByTestId('accusation-result', { timeout: 15000 }).should('exist');
 });
 
 // ==================== Result Assertions ====================
 
 Then('I should see the accusation was correct', () => {
+  // Element is on the flipped card, check existence and text content
+  cy.getByTestId('accusation-result').should('exist');
   cy.getByTestId('accusation-result').invoke('text').should('match', /correct|Bravo/);
 });
 
 Then('I should see the accusation was incorrect', () => {
+  // Element is on the flipped card, check existence and text content
+  cy.getByTestId('accusation-result').should('exist');
   cy.getByTestId('accusation-result').invoke('text').should('match', /incorrect|Raté/);
 });
 
 // ==================== Mystery Voting After Accusation ====================
 
 Given('I mock the mysteries list for voting', () => {
+  // Mock the scoreboard players query (returns player with scores)
+  cy.intercept('GET', '**/rest/v1/players*select=id%2Cname%2Cscore*', {
+    statusCode: 200,
+    headers: { 'content-range': '0-2/3' },
+    body: [
+      { id: 'test-player-001', name: 'Alice', score: 0 },
+      { id: 'test-player-002', name: 'Bob', score: 2 },
+      { id: 'test-player-003', name: 'Charlie', score: 1 },
+    ],
+  }).as('getScoreboard');
+
+  // Mock the active players count query
+  cy.intercept('GET', '**/rest/v1/players*status=eq.active*select=id*', {
+    statusCode: 200,
+    headers: { 'content-range': '0-2/3' },
+    body: [
+      { id: 'test-player-001' },
+      { id: 'test-player-002' },
+      { id: 'test-player-003' },
+    ],
+  }).as('getActivePlayers');
+
+  // Mock the mysteries API
   cy.intercept('GET', '/api/mysteries?*', {
     statusCode: 200,
     body: {
       mysteries: [
         {
           id: 'mystery-1',
-          title: 'Le Manoir Hanté',
-          description: 'Un mystère au manoir',
+          title: 'Test Mystery', // Use 'Test Mystery' so the lobby voting step works
+          description: 'Un mystère de test',
           language: 'fr',
           author: 'Test Author',
+          character_count: 3,
         },
         {
           id: 'mystery-2',
@@ -102,6 +150,7 @@ Given('I mock the mysteries list for voting', () => {
           description: 'Un crime dans la capitale',
           language: 'fr',
           author: 'Test Author',
+          character_count: 4,
         },
         {
           id: 'mystery-3',
@@ -109,10 +158,31 @@ Given('I mock the mysteries list for voting', () => {
           description: 'Un mystère dans un vieux château',
           language: 'fr',
           author: 'Test Author',
+          character_count: 5,
         },
       ],
     },
   }).as('getMysteries');
+
+  // Mock the vote tally API
+  cy.intercept('GET', '/api/sessions/*/tally-votes', {
+    statusCode: 200,
+    body: {
+      voteCounts: {
+        'mystery-1': 0,
+        'mystery-2': 0,
+        'mystery-3': 0,
+      },
+      roundNumber: 1,
+    },
+  }).as('getTallyVotes');
+
+  // Mock existing vote check (no vote yet)
+  cy.intercept('GET', '**/rest/v1/mystery_votes*', {
+    statusCode: 200,
+    headers: { 'content-range': '*/0' },
+    body: null,
+  }).as('checkExistingVote');
 });
 
 Given('I mock the mystery vote API', () => {
@@ -135,7 +205,11 @@ Given('I mock real-time vote updates', () => {
 });
 
 Then('I should see the mystery voting list', () => {
-  cy.getByTestId('mystery-voting-list').should('be.visible');
+  // Wait for mysteries API to be called after accusation result
+  cy.wait('@getMysteries');
+  // Wait for the loading to complete and list to render
+  // Use 'exist' since the element is on a flipped card that might have backface-visibility
+  cy.getByTestId('mystery-voting-list', { timeout: 15000 }).should('exist');
   cy.getByTestId('mystery-voting-list').find('[data-testid^="mystery-card-"]').should('have.length', 3);
 });
 

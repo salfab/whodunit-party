@@ -10,5 +10,5 @@ Then('I should be on the admin mysteries page', () => {
 });
 
 Then('I should see the page title {string}', (title: string) => {
-  cy.contains('h1, h3', title).should('be.visible');
+  cy.getByTestId('admin-mysteries-title').should('be.visible').and('contain', title);
 });

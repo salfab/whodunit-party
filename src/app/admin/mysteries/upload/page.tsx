@@ -320,10 +320,10 @@ export default function UploadMysteriesPage() {
 
               {selectedFiles.length > 0 && (
                 <Box sx={{ mt: 2 }}>
-                  <Typography color="success.main" variant="body2" gutterBottom>
+                  <Typography color="success.main" variant="body2" gutterBottom data-testid="file-selection-count">
                     ✓ {selectedFiles.length} file(s) selected
                   </Typography>
-                  <Box sx={{ maxHeight: '150px', overflow: 'auto', textAlign: 'left', px: 2 }}>
+                  <Box sx={{ maxHeight: '150px', overflow: 'auto', textAlign: 'left', px: 2 }} data-testid="file-list">
                     {selectedFiles.map((file, idx) => (
                       <Typography key={idx} variant="caption" component="div" sx={{ fontFamily: 'monospace' }}>
                         {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)

@@ -172,9 +172,9 @@ export function MysteryVotingList({
   }
 
   return (
-    <Box sx={{ mb: 3, mt: showTitle ? 4 : 0 }}>
+    <Box sx={{ mb: 3, mt: showTitle ? 4 : 0 }} data-testid="mystery-voting-list">
       {showTitle && (
-        <Typography variant="h5" gutterBottom align="center">
+        <Typography variant="h5" gutterBottom align="center" data-testid="mystery-voting-title">
           {title}
         </Typography>
       )}

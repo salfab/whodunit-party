@@ -26,10 +26,10 @@ export function RemovePlayerDialog({
   loading = false,
 }: RemovePlayerDialogProps) {
   return (
-    <Dialog open={open} onClose={onCancel}>
-      <DialogTitle>Retirer un joueur</DialogTitle>
+    <Dialog open={open} onClose={onCancel} data-testid="remove-player-dialog">
+      <DialogTitle data-testid="remove-player-dialog-title">Retirer un joueur</DialogTitle>
       <DialogContent>
-        <DialogContentText>
+        <DialogContentText data-testid="remove-player-dialog-content">
           Êtes-vous sûr de vouloir retirer <strong>{playerName}</strong> de la partie ?
         </DialogContentText>
         <DialogContentText sx={{ mt: 2, color: 'warning.main' }}>
@@ -37,7 +37,7 @@ export function RemovePlayerDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} disabled={loading}>
+        <Button onClick={onCancel} disabled={loading} data-testid="remove-player-cancel-button">
           Annuler
         </Button>
         <Button
@@ -46,6 +46,7 @@ export function RemovePlayerDialog({
           variant="contained"
           disabled={loading}
           startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
+          data-testid="remove-player-confirm-button"
         >
           {loading ? 'Retrait...' : 'Retirer'}
         </Button>

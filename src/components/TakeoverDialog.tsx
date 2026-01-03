@@ -26,9 +26,9 @@ export default function TakeoverDialog({
   loading = false,
 }: TakeoverDialogProps) {
   return (
-    <Dialog open={open} onClose={onCancel}>
-      <DialogTitle>Nom déjà utilisé</DialogTitle>
-      <DialogContent>
+    <Dialog open={open} onClose={onCancel} data-testid="takeover-dialog">
+      <DialogTitle data-testid="takeover-dialog-title">Nom déjà utilisé</DialogTitle>
+      <DialogContent data-testid="takeover-dialog-content">
         <DialogContentText>
           Un joueur nommé <strong>{playerName}</strong> existe déjà dans cette partie.
         </DialogContentText>
@@ -41,7 +41,7 @@ export default function TakeoverDialog({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} disabled={loading}>
+        <Button onClick={onCancel} disabled={loading} data-testid="takeover-cancel-button">
           Choisir un autre nom
         </Button>
         <Button
@@ -49,6 +49,7 @@ export default function TakeoverDialog({
           variant="contained"
           disabled={loading}
           startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
+          data-testid="takeover-confirm-button"
         >
           {loading ? 'Connexion...' : 'Reprendre ma session'}
         </Button>
