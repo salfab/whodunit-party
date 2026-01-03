@@ -45,6 +45,13 @@ These commands automatically:
 - Require local Supabase running
 - Tagged with `@multi-player`
 
+### 4. Real-Time Tests (Require Backend + Real-Time)
+- Test features that depend on Supabase real-time subscriptions
+- Require local Supabase with real-time enabled
+- Tagged with `@realtime` and `@skip`
+- Must be run explicitly: `pnpm cy:run --env tags="@realtime"`
+- Skipped by default because they need actual backend presence/subscriptions
+
 ## Running Tests
 
 ### Automated Setup (Recommended)
@@ -128,6 +135,13 @@ npx cypress run --env tags="@integration"
 
 # Multi-player tests
 npx cypress run --env tags="@multi-player"
+
+# Real-time tests (require Supabase with real-time enabled)
+# Note: These are @skip by default, must be run explicitly
+pnpm cy:run --env tags="@realtime"
+
+# Skip real-time tests (default behavior)
+npx cypress run --env tags="not @skip"
 
 # Mobile tests
 npx cypress run --env tags="@mobile"
