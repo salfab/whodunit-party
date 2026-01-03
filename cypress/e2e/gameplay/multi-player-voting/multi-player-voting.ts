@@ -10,12 +10,12 @@ let scenarioCounter = 0;
 Before(() => {
   Cypress.session.clearAllSavedSessions();
   players = [];
-  // Generate truly unique ID using crypto random UUID (short version)
-  // This ensures no collisions even across test runs or parallel execution
+  // Generate truly unique ID with timestamp to avoid collisions across test runs
   scenarioCounter++;
-  const uuid = crypto.randomUUID();
-  // Use last 8 chars of UUID + counter for uniqueness (very low collision probability)
-  scenarioId = `${uuid.slice(-8)}${scenarioCounter}`;
+  const timestamp = Date.now() % 100000; // Last 5 digits for brevity
+  const random = Math.random().toString(36).substring(2, 6); // 4 random chars
+  // Format: {timestamp}{random} = ~9 chars, keeps names under 15 char limit
+  scenarioId = `${timestamp}${random}`;
 });
 
 // ==================== Given Steps ====================
