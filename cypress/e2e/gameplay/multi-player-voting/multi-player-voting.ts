@@ -3,11 +3,19 @@ import { Given, When, Then, Before } from '@badeball/cypress-cucumber-preprocess
 // Shared state between steps
 let sessionData: { sessionId: string; joinCode: string };
 let players: Array<{ name: string; id: string }> = [];
+let scenarioId: string;
+let scenarioCounter = 0;
 
 // Clear all cached sessions before each scenario to avoid NAME_TAKEN conflicts
 Before(() => {
   Cypress.session.clearAllSavedSessions();
   players = [];
+  // Generate truly unique ID using crypto random UUID (short version)
+  // This ensures no collisions even across test runs or parallel execution
+  scenarioCounter++;
+  const uuid = crypto.randomUUID();
+  // Use last 8 chars of UUID + counter for uniqueness (very low collision probability)
+  scenarioId = `${uuid.slice(-8)}${scenarioCounter}`;
 });
 
 // ==================== Given Steps ====================
@@ -29,19 +37,19 @@ Given('5 players are in an active game with an accusation made', () => {
   cy.createRealRoom().then((data) => {
     sessionData = data;
     
-    // Join 5 players with unique names (under 15 chars)
-    const timestamp = Date.now().toString().slice(-6);
+    // Join 5 players with unique names using scenarioId
     const playerNames = [
-      `A${timestamp}0`,
-      `B${timestamp}1`,
-      `C${timestamp}2`,
-      `D${timestamp}3`,
-      `E${timestamp}4`
+      `A${scenarioId}0`,
+      `B${scenarioId}1`,
+      `C${scenarioId}2`,
+      `D${scenarioId}3`,
+      `E${scenarioId}4`
     ];
     players = [];
     
+    // Join players sequentially using cy.wrap().each() which properly chains
     cy.wrap(playerNames).each((name: string) => {
-      cy.request({
+      return cy.request({
         method: 'POST',
         url: '/api/join',
         body: { joinCode: sessionData.joinCode, playerName: name },
@@ -49,7 +57,7 @@ Given('5 players are in an active game with an accusation made', () => {
         expect(response.status).to.eq(200);
         players.push({ name, id: response.body.playerId });
         
-        // Cache this player's session
+        // Use loginAsPlayer to properly cache the session for later switchToPlayer calls
         cy.loginAsPlayer(name, sessionData.joinCode, {
           playerId: response.body.playerId,
           sessionId: sessionData.sessionId,
@@ -66,20 +74,19 @@ Given('5 players are in an active game with an accusation made', () => {
 // ==================== When Steps ====================
 
 When('5 players join the room via API', () => {
-  // Use unique player names with timestamp+index to avoid NAME_TAKEN conflicts
-  // Keep names under 15 chars (API limit)
-  const timestamp = Date.now().toString().slice(-6); // Last 6 digits
+  // Use unique player names with scenarioId to avoid NAME_TAKEN conflicts
   const playerNames = [
-    `A${timestamp}0`,
-    `B${timestamp}1`,
-    `C${timestamp}2`,
-    `D${timestamp}3`,
-    `E${timestamp}4`
+    `A${scenarioId}0`,
+    `B${scenarioId}1`,
+    `C${scenarioId}2`,
+    `D${scenarioId}3`,
+    `E${scenarioId}4`
   ];
   players = [];
   
+  // Join players sequentially using cy.wrap().each() which properly chains
   cy.wrap(playerNames).each((name: string) => {
-    cy.request({
+    return cy.request({
       method: 'POST',
       url: '/api/join',
       body: { joinCode: sessionData.joinCode, playerName: name },
@@ -87,7 +94,7 @@ When('5 players join the room via API', () => {
       expect(response.status).to.eq(200);
       players.push({ name, id: response.body.playerId });
       
-      // Cache this player's session using cy.session()
+      // Use loginAsPlayer to properly cache the session for later switchToPlayer calls
       cy.loginAsPlayer(name, sessionData.joinCode, {
         playerId: response.body.playerId,
         sessionId: sessionData.sessionId,
@@ -97,8 +104,7 @@ When('5 players join the room via API', () => {
 });
 
 When('1 player joins and votes for a mystery', () => {
-  const timestamp = Date.now().toString().slice(-6);
-  const playerName = `Solo${timestamp}`;
+  const playerName = `S${scenarioId}`; // S + scenarioId = ~10 chars total
   
   // Join as single player
   cy.request({
@@ -107,13 +113,13 @@ When('1 player joins and votes for a mystery', () => {
     body: { joinCode: sessionData.joinCode, playerName },
   }).then((response) => {
     expect(response.status).to.eq(200);
-    players.push({ name: playerName, id: response.body.playerId });
+    const playerId = String(response.body.playerId);
+    players.push({ name: playerName, id: playerId });
     
-    // Cache session
-    cy.loginAsPlayer(playerName, sessionData.joinCode, {
-      playerId: response.body.playerId,
-      sessionId: sessionData.sessionId,
-    });
+    // Set cookies directly with string values
+    cy.setCookie('player_id', playerId);
+    cy.setCookie('session_id', String(sessionData.sessionId));
+    cy.setCookie('player_name', String(playerName));
     
     // Get a suitable mystery and vote via API (faster)
     cy.request({
@@ -136,8 +142,7 @@ When('1 player joins and votes for a mystery', () => {
 });
 
 When('1 player joins and votes twice quickly', () => {
-  const timestamp = Date.now().toString().slice(-6);
-  const playerName = `DC${timestamp}`;
+  const playerName = `DC${scenarioId}`; // DC + scenarioId = ~11 chars total
   
   // Join as single player
   cy.request({
@@ -146,12 +151,13 @@ When('1 player joins and votes twice quickly', () => {
     body: { joinCode: sessionData.joinCode, playerName },
   }).then((response) => {
     expect(response.status).to.eq(200);
-    players.push({ name: playerName, id: response.body.playerId });
+    const playerId = String(response.body.playerId);
+    players.push({ name: playerName, id: playerId });
     
-    cy.loginAsPlayer(playerName, sessionData.joinCode, {
-      playerId: response.body.playerId,
-      sessionId: sessionData.sessionId,
-    });
+    // Set cookies directly with string values
+    cy.setCookie('player_id', playerId);
+    cy.setCookie('session_id', String(sessionData.sessionId));
+    cy.setCookie('player_name', String(playerName));
     
     // Get a mystery and vote twice via API
     cy.request({
