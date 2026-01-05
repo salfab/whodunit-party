@@ -97,7 +97,10 @@ export default function Home() {
         <Box 
           sx={{ 
             filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.9))',
-            display: 'flex'
+            display: 'flex',
+            width: 'calc(100% + 28px)',
+            marginLeft: '-14px',
+            marginRight: '-14px',
           }}
         >
           <Image 
@@ -105,7 +108,7 @@ export default function Home() {
             alt={t('home.title')} 
             width={300}
             height={150}
-            style={{ width: '95%', height: 'auto', display: 'block' }}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
             priority
           />
         </Box>
