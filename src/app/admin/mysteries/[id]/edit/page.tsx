@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import {
   Container,
@@ -17,11 +17,12 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon, Visibility as VisibilityIcon, Edit as EditIcon } from '@mui/icons-material';
+import { Add as AddIcon, Delete as DeleteIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon, Edit as EditIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import LoadingScreen from '@/components/LoadingScreen';
 import AdminNavBar from '@/components/admin/AdminNavBar';
+import CharacterPreviewCard from '@/components/admin/CharacterPreviewCard';
 
 interface CharacterSheet {
   role: 'investigator' | 'guilty' | 'innocent';
@@ -57,6 +58,62 @@ export default function EditMysteryPage() {
   
   const [descriptionPreview, setDescriptionPreview] = useState(false);
   const [characterPreview, setCharacterPreview] = useState<Map<number, { darkSecret: boolean; alibi: boolean }>>(new Map());
+  
+  // Blur state for sensitive fields (default: blurred for spoiler protection)
+  const [blurredFields, setBlurredFields] = useState<Map<string, boolean>>(new Map());
+  
+  // Preview values updated on blur (not on every keystroke)
+  const [previewValues, setPreviewValues] = useState<Map<number, { name: string; imagePath: string }>>(new Map());
+  
+  // Randomized order for preview cards (shuffled indices)
+  const [previewOrder, setPreviewOrder] = useState<number[]>([]);
+  
+  // Shuffle function (Fisher-Yates)
+  const shuffleArray = (array: number[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+  
+  // Helper to check if a field is blurred (defaults to true if not set)
+  const isFieldBlurred = (key: string) => {
+    return blurredFields.get(key) ?? true;
+  };
+  
+  // Toggle blur state for a field
+  const toggleBlur = (key: string) => {
+    setBlurredFields(prev => {
+      const newMap = new Map(prev);
+      newMap.set(key, !isFieldBlurred(key));
+      return newMap;
+    });
+  };
+  
+  // Get preview value for a character (falls back to form data if not set)
+  const getPreviewValue = (index: number, field: 'name' | 'imagePath') => {
+    const preview = previewValues.get(index);
+    if (preview) {
+      return field === 'name' ? preview.name : preview.imagePath;
+    }
+    const sheet = formData.character_sheets[index];
+    return field === 'name' ? sheet?.character_name : sheet?.image_path || '';
+  };
+  
+  // Update preview value on blur
+  const updatePreviewOnBlur = (index: number, field: 'name' | 'imagePath', value: string) => {
+    setPreviewValues(prev => {
+      const newMap = new Map(prev);
+      const current = newMap.get(index) || { 
+        name: formData.character_sheets[index]?.character_name || '', 
+        imagePath: formData.character_sheets[index]?.image_path || '' 
+      };
+      newMap.set(index, { ...current, [field]: value });
+      return newMap;
+    });
+  };
 
   const [formData, setFormData] = useState<MysteryFormData>({
     title: '',
@@ -74,6 +131,15 @@ export default function EditMysteryPage() {
       { role: 'innocent', character_name: 'Un Innocent', dark_secret: '', alibi: '' },
     ],
   });
+
+  // Update preview order when character sheets change
+  useEffect(() => {
+    const indices = formData.character_sheets.map((_, i) => i);
+    // Only reshuffle if the count changed
+    if (indices.length !== previewOrder.length) {
+      setPreviewOrder(shuffleArray(indices));
+    }
+  }, [formData.character_sheets.length]);
 
   useEffect(() => {
     if (!isNew) {
@@ -345,7 +411,20 @@ export default function EditMysteryPage() {
             </FormControl>
           </Box>
 
-          <Typography variant="h5" gutterBottom sx={{ mt: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 4, mb: 1 }}>
+            <Typography variant="h5">
+              Mots Obligatoires
+            </Typography>
+            <IconButton
+              size="small"
+              onClick={() => toggleBlur('mandatory-words')}
+              title={isFieldBlurred('mandatory-words') ? 'Révéler les mots' : 'Masquer les mots'}
+            >
+              {isFieldBlurred('mandatory-words') ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </IconButton>
+          </Box>
+
+          <Typography variant="subtitle1" gutterBottom color="text.secondary">
             Mots Innocents (3 requis)
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
@@ -356,12 +435,18 @@ export default function EditMysteryPage() {
                 value={word}
                 onChange={(e) => updateInnocentWord(index, e.target.value)}
                 required
-                sx={{ flex: 1 }}
+                sx={{
+                  flex: 1,
+                  '& .MuiInputBase-input': {
+                    filter: isFieldBlurred('mandatory-words') ? 'blur(8px)' : 'none',
+                    transition: 'filter 0.3s ease',
+                  },
+                }}
               />
             ))}
           </Box>
 
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="subtitle1" gutterBottom color="text.secondary">
             Mots Coupables (3 requis)
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
@@ -372,7 +457,13 @@ export default function EditMysteryPage() {
                 value={word}
                 onChange={(e) => updateGuiltyWord(index, e.target.value)}
                 required
-                sx={{ flex: 1 }}
+                sx={{
+                  flex: 1,
+                  '& .MuiInputBase-input': {
+                    filter: isFieldBlurred('mandatory-words') ? 'blur(8px)' : 'none',
+                    transition: 'filter 0.3s ease',
+                  },
+                }}
               />
             ))}
           </Box>
@@ -383,6 +474,36 @@ export default function EditMysteryPage() {
               Ajouter un Personnage
             </Button>
           </Box>
+
+          {/* Spoiler-free preview cards in randomized order */}
+          {formData.character_sheets.length > 0 && (
+            <Paper sx={{ p: 3, mb: 3, bgcolor: 'background.paper' }}>
+              <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 2, textAlign: 'center' }}>
+                Aperçu des fiches (ordre aléatoire - cliquez pour retourner)
+              </Typography>
+              <Box sx={{ 
+                display: 'flex', 
+                flexWrap: 'wrap', 
+                gap: 2, 
+                justifyContent: 'center',
+              }}>
+                {(previewOrder.length === formData.character_sheets.length ? previewOrder : formData.character_sheets.map((_, i) => i)).map((originalIndex) => {
+                  const sheet = formData.character_sheets[originalIndex];
+                  if (!sheet) return null;
+                  return (
+                    <Box key={originalIndex} sx={{ width: 180 }}>
+                      <CharacterPreviewCard
+                        imagePath={getPreviewValue(originalIndex, 'imagePath') || undefined}
+                        characterName={getPreviewValue(originalIndex, 'name') || sheet.character_name}
+                        occupation={sheet.occupation}
+                        role={sheet.role}
+                      />
+                    </Box>
+                  );
+                })}
+              </Box>
+            </Paper>
+          )}
 
           {formData.character_sheets.map((sheet, index) => (
             <Paper key={index} sx={{ p: 3, mb: 2, bgcolor: 'background.default' }}>
@@ -414,6 +535,7 @@ export default function EditMysteryPage() {
                   label="Nom du Personnage"
                   value={sheet.character_name}
                   onChange={(e) => updateCharacterSheet(index, 'character_name', e.target.value)}
+                  onBlur={(e) => updatePreviewOnBlur(index, 'name', e.target.value)}
                   required
                   helperText="Le nom de ce personnage (ex : 'Jean Dupont', 'Marie Laurent')"
                 />
@@ -430,18 +552,27 @@ export default function EditMysteryPage() {
                     <Typography variant="body2" color="text.secondary">
                       Sombre Secret
                     </Typography>
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        const newMap = new Map(characterPreview);
-                        const current = newMap.get(index) || { darkSecret: false, alibi: false };
-                        newMap.set(index, { ...current, darkSecret: !current.darkSecret });
-                        setCharacterPreview(newMap);
-                      }}
-                      title={characterPreview.get(index)?.darkSecret ? 'Modifier' : 'Aperçu'}
-                    >
-                      {characterPreview.get(index)?.darkSecret ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
-                    </IconButton>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => toggleBlur(`${index}-darkSecret`)}
+                        title={isFieldBlurred(`${index}-darkSecret`) ? 'Révéler' : 'Masquer'}
+                      >
+                        {isFieldBlurred(`${index}-darkSecret`) ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          const newMap = new Map(characterPreview);
+                          const current = newMap.get(index) || { darkSecret: false, alibi: false };
+                          newMap.set(index, { ...current, darkSecret: !current.darkSecret });
+                          setCharacterPreview(newMap);
+                        }}
+                        title={characterPreview.get(index)?.darkSecret ? 'Modifier' : 'Aperçu Markdown'}
+                      >
+                        {characterPreview.get(index)?.darkSecret ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" color="secondary" />}
+                      </IconButton>
+                    </Box>
                   </Box>
                   {characterPreview.get(index)?.darkSecret ? (
                     <Box
@@ -451,6 +582,8 @@ export default function EditMysteryPage() {
                         borderRadius: 1,
                         p: 2,
                         minHeight: 80,
+                        filter: isFieldBlurred(`${index}-darkSecret`) ? 'blur(8px)' : 'none',
+                        transition: 'filter 0.3s ease',
                         '& h1, & h2, & h3': { mt: 1, mb: 0.5, fontSize: '1rem' },
                         '& p': { mb: 0.5 },
                         '& ul, & ol': { pl: 2 },
@@ -461,15 +594,23 @@ export default function EditMysteryPage() {
                       </ReactMarkdown>
                     </Box>
                   ) : (
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows={3}
-                      label="Sombre Secret"
-                      value={sheet.dark_secret}
-                      onChange={(e) => updateCharacterSheet(index, 'dark_secret', e.target.value)}
-                      required
-                    />
+                    <Box sx={{ position: 'relative' }}>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={3}
+                        label="Sombre Secret"
+                        value={sheet.dark_secret}
+                        onChange={(e) => updateCharacterSheet(index, 'dark_secret', e.target.value)}
+                        required
+                        sx={{
+                          '& .MuiInputBase-input': {
+                            filter: isFieldBlurred(`${index}-darkSecret`) ? 'blur(8px)' : 'none',
+                            transition: 'filter 0.3s ease',
+                          },
+                        }}
+                      />
+                    </Box>
                   )}
                 </Box>
 
@@ -478,18 +619,27 @@ export default function EditMysteryPage() {
                     <Typography variant="body2" color="text.secondary">
                       Alibi
                     </Typography>
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        const newMap = new Map(characterPreview);
-                        const current = newMap.get(index) || { darkSecret: false, alibi: false };
-                        newMap.set(index, { ...current, alibi: !current.alibi });
-                        setCharacterPreview(newMap);
-                      }}
-                      title={characterPreview.get(index)?.alibi ? 'Modifier' : 'Aperçu'}
-                    >
-                      {characterPreview.get(index)?.alibi ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
-                    </IconButton>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => toggleBlur(`${index}-alibi`)}
+                        title={isFieldBlurred(`${index}-alibi`) ? 'Révéler' : 'Masquer'}
+                      >
+                        {isFieldBlurred(`${index}-alibi`) ? <VisibilityIcon fontSize="small" /> : <VisibilityOffIcon fontSize="small" />}
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          const newMap = new Map(characterPreview);
+                          const current = newMap.get(index) || { darkSecret: false, alibi: false };
+                          newMap.set(index, { ...current, alibi: !current.alibi });
+                          setCharacterPreview(newMap);
+                        }}
+                        title={characterPreview.get(index)?.alibi ? 'Modifier' : 'Aperçu Markdown'}
+                      >
+                        {characterPreview.get(index)?.alibi ? <EditIcon fontSize="small" /> : <VisibilityIcon fontSize="small" color="secondary" />}
+                      </IconButton>
+                    </Box>
                   </Box>
                   {characterPreview.get(index)?.alibi ? (
                     <Box
@@ -499,6 +649,8 @@ export default function EditMysteryPage() {
                         borderRadius: 1,
                         p: 2,
                         minHeight: 80,
+                        filter: isFieldBlurred(`${index}-alibi`) ? 'blur(8px)' : 'none',
+                        transition: 'filter 0.3s ease',
                         '& h1, & h2, & h3': { mt: 1, mb: 0.5, fontSize: '1rem' },
                         '& p': { mb: 0.5 },
                         '& ul, & ol': { pl: 2 },
@@ -509,15 +661,23 @@ export default function EditMysteryPage() {
                       </ReactMarkdown>
                     </Box>
                   ) : (
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows={3}
-                      label="Alibi"
-                      value={sheet.alibi}
-                      onChange={(e) => updateCharacterSheet(index, 'alibi', e.target.value)}
-                      required
-                    />
+                    <Box sx={{ position: 'relative' }}>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={3}
+                        label="Alibi"
+                        value={sheet.alibi}
+                        onChange={(e) => updateCharacterSheet(index, 'alibi', e.target.value)}
+                        required
+                        sx={{
+                          '& .MuiInputBase-input': {
+                            filter: isFieldBlurred(`${index}-alibi`) ? 'blur(8px)' : 'none',
+                            transition: 'filter 0.3s ease',
+                          },
+                        }}
+                      />
+                    </Box>
                   )}
                 </Box>
 
@@ -525,6 +685,7 @@ export default function EditMysteryPage() {
                   label="Chemin de l'Image (optionnel)"
                   value={sheet.image_path || ''}
                   onChange={(e) => updateCharacterSheet(index, 'image_path', e.target.value)}
+                  onBlur={(e) => updatePreviewOnBlur(index, 'imagePath', e.target.value)}
                 />
               </Box>
             </Paper>
