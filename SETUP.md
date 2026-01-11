@@ -3,18 +3,150 @@
 ## Prerequisites
 
 - Node.js 20+ installed
-- A Supabase account (free tier works)
-- A Vercel account (for deployment)
+- Docker Desktop installed and running (for local Supabase)
+- pnpm, npm, or yarn package manager
 
-## Initial Setup
+## Quick Start (Local Development)
 
-### 1. Install Dependencies
+The fastest way to get started is with Supabase local development using Docker:
 
 ```bash
-npm install
+# 1. Install dependencies
+pnpm install
+
+# 2. Start Supabase locally (requires Docker)
+npx supabase start
+
+# 3. Copy local environment config
+cp .env.local.example .env.local
+# Edit .env.local and use the credentials shown by `supabase start`
+
+# 4. Seed the database with sample mysteries
+pnpm seed:mysteries
+
+# 5. Start development server
+pnpm dev
 ```
 
-### 2. Set Up Supabase
+Visit `http://localhost:3000` to start playing!
+
+---
+
+## Local Development with Supabase (Docker)
+
+### 1. Install Docker Desktop
+
+Download and install Docker Desktop for your operating system:
+- **Windows**: https://docs.docker.com/desktop/install/windows-install/
+- **macOS**: https://docs.docker.com/desktop/install/mac-install/
+- **Linux**: https://docs.docker.com/desktop/install/linux-install/
+
+Make sure Docker Desktop is **running** before proceeding.
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Start Supabase Locally
+
+```bash
+npx supabase start
+```
+
+This will pull the required Docker images (first time only) and start:
+- **PostgreSQL** database on port 54422
+- **Supabase Studio** (admin UI) on port 54423
+- **Auth service** for authentication
+- **Realtime service** for live updates
+- **Storage service** for file uploads
+
+After startup, you'll see output like:
+
+```
+Started supabase local development setup.
+
+         API URL: http://127.0.0.1:54421
+     GraphQL URL: http://127.0.0.1:54421/graphql/v1
+  S3 Storage URL: http://127.0.0.1:54421/storage/v1/s3
+          DB URL: postgresql://postgres:postgres@127.0.0.1:54422/postgres
+      Studio URL: http://127.0.0.1:54423
+    Inbucket URL: http://127.0.0.1:54424
+      JWT secret: super-secret-jwt-token-with-at-least-32-characters-long
+        anon key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+service_role key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+   S3 Access Key: ...
+   S3 Secret Key: ...
+       S3 Region: local
+```
+
+### 4. Configure Environment Variables
+
+Copy the example environment file:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Edit `.env.local` with the values from `supabase start` output:
+
+```env
+# For LOCAL development with Supabase Docker
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54421
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key from supabase start>
+SUPABASE_SERVICE_ROLE_KEY=<service_role key from supabase start>
+JWT_SECRET=<JWT secret from supabase start>
+```
+
+> **Tip:** You can also run `npx supabase status` anytime to see the credentials again.
+
+### 5. Seed Sample Mysteries
+
+```bash
+pnpm seed:mysteries
+```
+
+This loads sample mysteries from `seed-data/mysteries/` into your local database.
+
+### 6. Start Development Server
+
+```bash
+pnpm dev
+```
+
+Visit `http://localhost:3000`
+
+### Useful Supabase Commands
+
+| Command | Description |
+|---------|-------------|
+| `npx supabase start` | Start local Supabase services |
+| `npx supabase stop` | Stop local Supabase services |
+| `npx supabase status` | Show status and credentials |
+| `npx supabase db reset` | Reset database and re-run migrations |
+| `npx supabase db diff` | Show differences between local and migrations |
+| `npx supabase migration new <name>` | Create a new migration file |
+
+### Accessing Supabase Studio
+
+While Supabase is running locally, access the admin UI at:
+
+**http://127.0.0.1:54423**
+
+From here you can:
+- Browse and edit database tables
+- Run SQL queries
+- View realtime subscriptions
+- Manage authentication
+
+---
+
+## Cloud Development (Supabase Hosted)
+
+If you prefer to use a hosted Supabase instance instead of Docker:
+
+### 1. Create Supabase Project
 
 1. Create a new project at [https://supabase.com](https://supabase.com)
 2. Copy your project credentials from the Supabase Dashboard:
@@ -128,23 +260,49 @@ npm start
 
 ## Troubleshooting
 
+### Docker / Supabase Start Issues
+
+**"Docker Desktop is a prerequisite for local development"**
+- Make sure Docker Desktop is installed and **running**
+- On Windows: Look for the Docker whale icon in the system tray
+- Try restarting Docker Desktop
+- Run `docker --version` to verify Docker is accessible
+
+**"Cannot connect to Docker daemon"**
+- Docker Desktop might not be running - start it from your applications
+- On Windows, you may need to run terminal as Administrator
+- Check Docker Desktop settings → Resources → WSL Integration is enabled
+
+**"Port already in use"**
+- Run `npx supabase stop` then `npx supabase start`
+- Check if another service is using ports 54421-54427
+
+**First-time startup is slow**
+- Supabase needs to pull Docker images (~2GB) on first run
+- This only happens once; subsequent starts are fast
+
 ### Database Connection Issues
 
 - Verify your Supabase URL and keys are correct
-- Check that migrations have been applied
+- For local dev: run `npx supabase status` to see correct credentials
+- Check that migrations have been applied (`npx supabase db reset`)
 - Ensure RLS policies are enabled
 
 ### Session/Auth Issues
 
 - Verify JWT_SECRET is at least 32 characters
+- For local dev: use the JWT secret from `npx supabase status`
 - Clear cookies and try again
 - Check browser console for errors
 
 ### Realtime Not Working
 
 - Ensure Supabase Realtime is enabled for your project
+- For local: realtime is enabled by default in `supabase/config.toml`
 - Check that REPLICA IDENTITY is set on tables (migrations handle this)
 - Verify table subscriptions in Supabase dashboard
+
+---
 
 ## Project Structure
 

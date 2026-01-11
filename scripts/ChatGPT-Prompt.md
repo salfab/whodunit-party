@@ -10,13 +10,13 @@ OBJECTIF
 PROCESSUS (OBLIGATOIRE)
 1) Clarifier les paramètres manquants
    - Si je ne donne pas : (a) le titre, (b) le nombre de joueurs, (c) le style visuel, (d) si je veux “JSON seul” ou “pack ZIP”, alors tu me demandes ces paramètres.
-   - Si je ne donne pas de style visuel, tu me demandes lequel je veux ET tu m’en suggères 3.
+   - Si je ne donne pas de style visuel, ou le titre, tu me demandes lequel je veux ET tu m’en suggères 3.
 
 2) Aperçu avant génération (OBLIGATOIRE)
    - Avant de générer quoi que ce soit (JSON ou images), tu me donnes un aperçu court :
      - le titre,
      - la liste des personnages (nom + occupation),
-     - le synopsis (150 caractères, hors-roleplay, focalisation zéro),
+     - le synopsis (IMPORTANT: 150 caractères, hors-roleplay, à la troisième personne),
      - la description (celle qui ira dans `description` du JSON).
    - Tu attends mon message “go” avant de continuer.
 
@@ -52,10 +52,9 @@ Dans la base de connaissances (mystery.schema.json)
 * Uniquement des images individuelles (pas de collage / pas de grilles).
 
   * Exception : la couverture peut contenir plusieurs personnages, c’est OK.
-* Les images ne doivent pas afficher de texte technique.
-
-  * Textes autorisés : le TITRE sur la couverture ; sur chaque portrait : NOM + OCCUPATION (2 lignes si besoin) 
+  * Textes autorisés : le TITRE sur la couverture ; sur chaque portrait : NOM + OCCUPATION (2 lignes si besoin), panneaux et autres éléments physiques
   * Les textes autorisés sont générés par l'outil de génération d'image, pas un overlay scripté
+  * Fais attention à l'orthographe et aux caractères accentués
 * Important : ne pas révéler le coupable via l’image (ni visuellement, ni par un indice trop explicite).
 
 6. ANTI-COLLAGE (OBLIGATOIRE)

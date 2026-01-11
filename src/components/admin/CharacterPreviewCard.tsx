@@ -174,70 +174,6 @@ export default function CharacterPreviewCard({
               </Typography>
             </Box>
           )}
-          
-          {/* Name overlay at bottom */}
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.4) 80%, transparent 100%)',
-              backdropFilter: 'blur(4px)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              padding: '16px 8px 12px',
-            }}
-          >
-            <Typography
-              sx={{
-                color: '#ffd700',
-                textAlign: 'center',
-                fontWeight: 600,
-                textShadow: '0 3px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)',
-                letterSpacing: '0.05em',
-                fontSize: 'clamp(0.8rem, 3vw, 1rem)',
-                lineHeight: 1.2,
-                wordBreak: 'break-word',
-              }}
-            >
-              {characterName}
-            </Typography>
-            {occupation && (
-              <Typography
-                sx={{
-                  color: 'rgba(255,255,255,0.7)',
-                  textAlign: 'center',
-                  fontStyle: 'italic',
-                  mt: 0.5,
-                  textShadow: '0 2px 8px rgba(0,0,0,0.9)',
-                  fontSize: 'clamp(0.6rem, 2vw, 0.8rem)',
-                  lineHeight: 1.2,
-                }}
-              >
-                {occupation}
-              </Typography>
-            )}
-          </Box>
-
-          {/* Tap hint */}
-          <Typography
-            sx={{
-              position: 'absolute',
-              top: 8,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              fontSize: '0.6rem',
-              color: 'rgba(255,255,255,0.5)',
-              backgroundColor: 'rgba(0,0,0,0.5)',
-              padding: '2px 8px',
-              borderRadius: '8px',
-            }}
-          >
-            cliquez pour retourner
-          </Typography>
         </Box>
 
         {/* Back of card - Role reveal (spoiler-free) */}
@@ -387,19 +323,6 @@ export default function CharacterPreviewCard({
               background: cardDesign.accentColor,
             }}
           />
-
-          {/* Tap hint on back */}
-          <Typography
-            sx={{
-              position: 'absolute',
-              bottom: 16,
-              fontSize: '0.5rem',
-              color: 'rgba(255,255,255,0.3)',
-              letterSpacing: '0.05em',
-            }}
-          >
-            cliquez pour retourner
-          </Typography>
         </Box>
       </Box>
     </Box>

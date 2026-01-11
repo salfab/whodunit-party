@@ -19,31 +19,36 @@ A real-time multiplayer murder mystery party game built with Next.js, Supabase, 
 
 1. **Install dependencies**
    ```bash
-   npm install
+   pnpm install
    ```
 
-2. **Set up environment**
+2. **Start Supabase locally** (requires Docker)
+   ```bash
+   npx supabase start
+   ```
+
+3. **Set up environment**
    ```bash
    cp .env.local.example .env.local
-   # Edit .env.local with your Supabase credentials
+   # The example file has local development defaults that work out of the box
    ```
 
-3. **Run migrations**
+4. **Seed sample mysteries**
    ```bash
-   npx supabase db push
+   pnpm seed:mysteries
    ```
 
-4. **Start development server**
+5. **Start development server**
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
-5. **Manage mysteries**
+6. **Manage mysteries**
    - Browse mysteries at `/admin/mysteries`
    - Create new mystery at `/admin/mysteries/new/edit`
    - Upload JSON mysteries at `/admin/mysteries/upload`
 
-6. **Create a game** by clicking "New Game" on the home page
+7. **Create a game** by clicking "New Game" on the home page
 
 See [SETUP.md](SETUP.md) for detailed setup instructions.
 
