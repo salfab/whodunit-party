@@ -166,7 +166,7 @@ Given('I am assigned the guilty role', () => {
             character_name: 'Jean Dupont',
             occupation: 'Butler',
             image_path: null, // No custom image - will show name overlay on placeholder
-            dark_secret: 'You poisoned the victim to prevent exposure.',
+            dark_secret: '**Vous êtes le meurtrier.**\n\nIl y a trois ans, vous avez découvert que Lord Blackwood avait une liaison avec votre épouse. Consumé par la rage et la jalousie, vous avez commencé à planifier votre vengeance.\n\n**Le poison :** Vous avez passé des mois à étudier les herbes toxiques dans la bibliothèque du manoir. Vous avez cultivé en secret de la digitale pourpre dans un coin reculé du jardin.\n\n**La nuit fatidique :** Hier soir, vous avez versé l\'extrait mortel dans le cognac de Lord Blackwood. Vous saviez qu\'il prenait toujours un dernier verre avant de se coucher.\n\n**Votre alibi :** Vous prétendez avoir passé la soirée à polir l\'argenterie dans l\'office, mais en réalité, vous surveilliez la porte de la bibliothèque, attendant que votre victime s\'effondre.\n\n*Maintenant, vous devez jouer les innocents et détourner les soupçons vers les autres invités...*',
             alibi: 'I was in my room writing letters.',
             mystery_id: 'test-mystery-001',
             mysteries: {

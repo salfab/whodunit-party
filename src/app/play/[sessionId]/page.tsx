@@ -10,6 +10,7 @@ import {
   Snackbar,
   IconButton,
   Typography,
+  Button,
 } from '@mui/material';
 import { QrCode2 as QrCodeIcon, HelpOutline as HelpIcon, FlipCameraAndroid as FlipIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
@@ -27,6 +28,7 @@ import {
   RoleRevealCard,
   RoleHelpDialog,
   ScoreboardAndVoting,
+  ConfessionDialog,
 } from '@/components/play';
 import { MysteryVotingList } from '@/components/shared/MysteryVotingList';
 
@@ -100,6 +102,7 @@ export default function PlayPage() {
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
   const [helpDialogOpen, setHelpDialogOpen] = useState(false);
+  const [confessionDialogOpen, setConfessionDialogOpen] = useState(false);
   
   // Refs
   const previousMysteryIdRef = useRef<string | null>(null);
@@ -315,13 +318,13 @@ export default function PlayPage() {
     }
   }
 
-  async function handleAccuse() {
-    if (!selectedPlayer || !characterSheet) return;
+  async function handleAccuse(playerId: string) {
+    if (!playerId || !characterSheet) return;
 
     setSubmittingAccusation(true);
 
     try {
-      const data = await submitAccusation(selectedPlayer);
+      const data = await submitAccusation(playerId);
 
       const message = characterSheet.role === 'investigator'
         ? data.messages.investigator
@@ -664,6 +667,37 @@ export default function PlayPage() {
                     </Box>
                   )}
 
+                  {/* Confession CTA - Only for guilty player */}
+                  {characterSheet?.role === 'guilty' && (
+                    <Box sx={{ textAlign: 'center', mb: 4 }}>
+                      <Button
+                        variant="contained"
+                        size="large"
+                        onClick={() => setConfessionDialogOpen(true)}
+                        data-testid="confession-cta"
+                        sx={{
+                          px: 4,
+                          py: 1.5,
+                          fontSize: '1.1rem',
+                          fontWeight: 600,
+                          bgcolor: '#e4c98b',
+                          color: '#1a1a2e',
+                          borderRadius: 2,
+                          textTransform: 'none',
+                          boxShadow: '0 4px 14px rgba(228, 201, 139, 0.4)',
+                          '&:hover': {
+                            bgcolor: '#d4b97b',
+                            boxShadow: '0 6px 20px rgba(228, 201, 139, 0.5)',
+                            transform: 'translateY(-2px)',
+                          },
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        🎭 J&apos;avoue tout !
+                      </Button>
+                    </Box>
+                  )}
+
                   {/* Scoreboard and Mystery Voting */}
                   <ScoreboardAndVoting
                     playerScores={playerScores}
@@ -747,6 +781,12 @@ export default function PlayPage() {
         open={helpDialogOpen}
         onClose={() => setHelpDialogOpen(false)}
         helpContent={helpContent}
+      />
+
+      <ConfessionDialog
+        open={confessionDialogOpen}
+        onClose={() => setConfessionDialogOpen(false)}
+        darkSecret={characterSheet?.dark_secret || ''}
       />
     </Container>
   );

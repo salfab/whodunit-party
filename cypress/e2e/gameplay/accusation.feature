@@ -91,3 +91,15 @@ Feature: Accusation System
     And I confirm the accusation
     And I vote for a mystery
     Then I should see the vote count increase
+
+  @mobile @mocked
+  Scenario: Mobile - Accusation dialog scrolls with 15 players
+    Given I am assigned the investigator role with 15 players
+    And I visit the play page
+    And I mock the accusation API for last player
+    When I click the accuse button
+    Then I should see the accusation dialog
+    And I should see 14 players to accuse
+    When I scroll to the last player
+    And I select the last player
+    Then I should see the accusation result
