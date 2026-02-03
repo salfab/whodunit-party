@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     // If not found at root, search in subdirectories (prefer shallowest depth)
     if (!mysteryJsonFile) {
       const allFiles = Object.keys(zip.files);
-      const mysteryJsonPaths = allFiles.filter(path => path.endsWith('/mystery.json'));
+      const mysteryJsonPaths = allFiles.filter(path => /\/mystery\.json$/.test(path));
       
       if (mysteryJsonPaths.length > 0) {
         // Sort by path depth (fewer slashes = shallower) and take the first one
