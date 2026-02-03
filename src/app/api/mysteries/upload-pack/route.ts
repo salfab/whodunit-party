@@ -87,12 +87,20 @@ export async function POST(request: NextRequest) {
     // First try root level
     mysteryJsonFile = zip.file('mystery.json');
     
-    // If not found at root, search in subdirectories
+    // If not found at root, search in subdirectories (prefer shallowest depth)
     if (!mysteryJsonFile) {
       const allFiles = Object.keys(zip.files);
-      const mysteryJsonPath = allFiles.find(path => path.endsWith('/mystery.json') || path === 'mystery.json');
+      const mysteryJsonPaths = allFiles.filter(path => path.endsWith('/mystery.json'));
       
-      if (mysteryJsonPath) {
+      if (mysteryJsonPaths.length > 0) {
+        // Sort by path depth (fewer slashes = shallower) and take the first one
+        mysteryJsonPaths.sort((a, b) => {
+          const depthA = (a.match(/\//g) || []).length;
+          const depthB = (b.match(/\//g) || []).length;
+          return depthA - depthB;
+        });
+        
+        const mysteryJsonPath = mysteryJsonPaths[0];
         mysteryJsonFile = zip.file(mysteryJsonPath);
         // Extract base directory (everything before mystery.json)
         baseDir = mysteryJsonPath.replace(/mystery\.json$/, '');
