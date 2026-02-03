@@ -56,3 +56,4 @@ supabase/.temp
 *.tmp
 *.temp
 nul
+package-lock.json
