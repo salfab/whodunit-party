@@ -80,14 +80,33 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const zip = await JSZip.loadAsync(arrayBuffer);
 
-    // Find mystery.json
-    const mysteryJsonFile = zip.file('mystery.json');
+    // Find mystery.json (search in root or any subdirectory)
+    let mysteryJsonFile: JSZip.JSZipObject | null = null;
+    let baseDir = '';
+    
+    // First try root level
+    mysteryJsonFile = zip.file('mystery.json');
+    
+    // If not found at root, search in subdirectories
+    if (!mysteryJsonFile) {
+      const allFiles = Object.keys(zip.files);
+      const mysteryJsonPath = allFiles.find(path => path.endsWith('/mystery.json') || path === 'mystery.json');
+      
+      if (mysteryJsonPath) {
+        mysteryJsonFile = zip.file(mysteryJsonPath);
+        // Extract base directory (everything before mystery.json)
+        baseDir = mysteryJsonPath.replace(/mystery\.json$/, '');
+      }
+    }
+    
     if (!mysteryJsonFile) {
       return NextResponse.json(
-        { error: 'Missing mystery.json', details: 'Zip must contain a mystery.json file at root level' },
+        { error: 'Missing mystery.json', details: 'Zip must contain a mystery.json file' },
         { status: 400 }
       );
     }
+    
+    log('info', 'Found mystery.json', { baseDir: baseDir || 'root' });
 
     // Parse mystery.json
     const mysteryJsonContent = await mysteryJsonFile.async('string');
@@ -285,6 +304,10 @@ export async function POST(request: NextRequest) {
         imagePath.replace(/^\/+/, ''), // Remove leading slashes
         `images/${imagePath}`, // Try in images folder
         `images/${imagePath.replace(/^\/+/, '')}`, // Try in images folder without leading slash
+        `${baseDir}${imagePath}`, // Try in base directory
+        `${baseDir}${imagePath.replace(/^\/+/, '')}`, // Try in base directory without leading slash
+        `${baseDir}images/${imagePath}`, // Try in base/images folder
+        `${baseDir}images/${imagePath.replace(/^\/+/, '')}`, // Try in base/images folder without leading slash
       ];
 
       let imageFile = null;
