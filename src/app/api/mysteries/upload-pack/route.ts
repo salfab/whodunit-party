@@ -80,41 +80,14 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const zip = await JSZip.loadAsync(arrayBuffer);
 
-    // Find mystery.json (search in root or any subdirectory)
-    let mysteryJsonFile: JSZip.JSZipObject | null = null;
-    let baseDir = '';
-    
-    // First try root level
-    mysteryJsonFile = zip.file('mystery.json');
-    
-    // If not found at root, search in subdirectories (prefer shallowest depth)
-    if (!mysteryJsonFile) {
-      const allFiles = Object.keys(zip.files);
-      const mysteryJsonPaths = allFiles.filter(path => /\/mystery\.json$/.test(path));
-      
-      if (mysteryJsonPaths.length > 0) {
-        // Sort by path depth (fewer slashes = shallower) and take the first one
-        mysteryJsonPaths.sort((a, b) => {
-          const depthA = (a.match(/\//g) || []).length;
-          const depthB = (b.match(/\//g) || []).length;
-          return depthA - depthB;
-        });
-        
-        const mysteryJsonPath = mysteryJsonPaths[0];
-        mysteryJsonFile = zip.file(mysteryJsonPath);
-        // Extract base directory (everything before mystery.json)
-        baseDir = mysteryJsonPath.replace(/mystery\.json$/, '');
-      }
-    }
-    
+    // Find mystery.json
+    const mysteryJsonFile = zip.file('mystery.json');
     if (!mysteryJsonFile) {
       return NextResponse.json(
-        { error: 'Missing mystery.json', details: 'Zip must contain a mystery.json file' },
+        { error: 'Missing mystery.json', details: 'Zip must contain a mystery.json file at root level' },
         { status: 400 }
       );
     }
-    
-    log('info', 'Found mystery.json', { baseDir: baseDir || 'root' });
 
     // Parse mystery.json
     const mysteryJsonContent = await mysteryJsonFile.async('string');
@@ -312,10 +285,6 @@ export async function POST(request: NextRequest) {
         imagePath.replace(/^\/+/, ''), // Remove leading slashes
         `images/${imagePath}`, // Try in images folder
         `images/${imagePath.replace(/^\/+/, '')}`, // Try in images folder without leading slash
-        `${baseDir}${imagePath}`, // Try in base directory
-        `${baseDir}${imagePath.replace(/^\/+/, '')}`, // Try in base directory without leading slash
-        `${baseDir}images/${imagePath}`, // Try in base/images folder
-        `${baseDir}images/${imagePath.replace(/^\/+/, '')}`, // Try in base/images folder without leading slash
       ];
 
       let imageFile = null;
