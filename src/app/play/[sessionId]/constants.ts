@@ -48,8 +48,8 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
    L’Inspecteur lit à voix haute le texte d’introduction.
 
 3. **Présentation des suspects**  
-   Chaque suspect annonce son nom à tour de rôle.  
-   L’Inspecteur peut "faire l'appel" grâce à la liste de suspects fournie sur sa fiche
+   Chaque suspect s'annonce à tour de rôle.  
+   Pour ce faire, l’Inspecteur "fait l'appel" grâce à la liste de suspects fournie sur sa fiche
 
 4. **Début des interrogatoires**  
    L’Inspecteur choisit un suspect et lui demande son **alibi**.
@@ -71,7 +71,11 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
 
 9. **Révélation**  
    On révèle l’identité du coupable.  
-   S’il le souhaite, il peut alors **avouer** en lisant à voix haute son texte de **“Sombre secret”**.
+   Il peut alors **avouer** en lisant à voix haute son texte de **“Sombre secret”**.
+
+10. **Un peu de stratégie**
+   Le coupable doit essayer de deviner les mots des innocents pour brouiller les pistes
+   Les innocents peuvent essayer de deviner les mots du coupable pour le couvrir.
 
 **Note** un bref récapitulatif est disponible sur la fiche de personnage via l'icône ❓
 `,
