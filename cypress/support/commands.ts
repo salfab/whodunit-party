@@ -1,5 +1,10 @@
 /// <reference types="cypress" />
 
+const playerSessionCache = new Map<
+  string,
+  { playerId: string; sessionId: string; playerName: string; sessionToken: string }
+>();
+
 // Type definitions for custom commands
 declare global {
   namespace Cypress {
@@ -238,9 +243,13 @@ Cypress.Commands.add('createRealRoom', () => {
     })
     .then((response) => {
       expect(response.status).to.eq(200);
+      const sessionId = response.body.sessionId ?? response.body.id;
+      const joinCode = response.body.joinCode;
+      expect(sessionId, 'sessionId from /api/sessions').to.be.a('string').and.not.be.empty;
+      expect(joinCode, 'joinCode from /api/sessions').to.be.a('string').and.not.be.empty;
       return {
-        sessionId: response.body.id,
-        joinCode: response.body.joinCode,
+        sessionId,
+        joinCode,
       };
     });
 });
@@ -283,11 +292,20 @@ Cypress.Commands.add(
     cy.session(
       sessionKey,
       () => {
-        // If playerId/sessionId provided, just set cookies
+        // If playerId/sessionId provided, use takeover to mint a valid auth cookie.
         if (options?.playerId && options?.sessionId) {
-          cy.setCookie('player_id', options.playerId);
-          cy.setCookie('session_id', options.sessionId);
-          cy.setCookie('player_name', playerName);
+          cy.request({
+            method: 'POST',
+            url: '/api/join/takeover',
+            body: { joinCode, playerName },
+          }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.body.playerId).to.eq(options.playerId);
+            expect(response.body.sessionId).to.eq(options.sessionId);
+            cy.setCookie('player_id', options.playerId);
+            cy.setCookie('session_id', options.sessionId);
+            cy.setCookie('player_name', playerName);
+          });
         } else {
           // Otherwise join the room via API
           cy.request({
@@ -296,13 +314,16 @@ Cypress.Commands.add(
             body: { joinCode, playerName },
           }).then((response) => {
             expect(response.status).to.eq(200);
-            // Cookies are automatically set by the API response
+            cy.setCookie('player_id', response.body.playerId);
+            cy.setCookie('session_id', response.body.sessionId);
+            cy.setCookie('player_name', response.body.playerName || playerName);
           });
         }
       },
       {
         validate() {
-          // Validate session by checking cookies exist
+          // Validate session by checking auth + helper cookies exist.
+          cy.getCookie('whodunit_session').should('exist');
           cy.getCookie('player_id').should('exist');
           cy.getCookie('session_id').should('exist');
         },
@@ -312,11 +333,20 @@ Cypress.Commands.add(
     // Return the session info for convenience
     return cy.getCookie('player_id').then((playerIdCookie) => {
       return cy.getCookie('session_id').then((sessionIdCookie) => {
-        return {
-          playerId: playerIdCookie!.value,
-          sessionId: sessionIdCookie!.value,
-          playerName,
-        };
+        return cy.getCookie('whodunit_session').then((sessionCookie) => {
+          const sessionInfo = {
+            playerId: String(playerIdCookie?.value || ''),
+            sessionId: String(sessionIdCookie?.value || ''),
+            playerName,
+            sessionToken: String(sessionCookie?.value || ''),
+          };
+          playerSessionCache.set(sessionKey, sessionInfo);
+          return {
+            playerId: sessionInfo.playerId,
+            sessionId: sessionInfo.sessionId,
+            playerName: sessionInfo.playerName,
+          };
+        });
       });
     });
   }
@@ -330,15 +360,17 @@ Cypress.Commands.add(
 Cypress.Commands.add('switchToPlayer', (playerName: string, sessionId?: string) => {
   // Use same compound key as loginAsPlayer
   const sessionKey = sessionId ? `${playerName}-${sessionId}` : playerName;
-  
-  // cy.session will restore the cached session for this player
-  return cy.session(sessionKey, () => {
-    // This should never run if session was already cached
-    throw new Error(
-      `Session for ${playerName} not found. Call loginAsPlayer first.`
-    );
-  });
+  const cached = playerSessionCache.get(sessionKey);
+
+  if (!cached) {
+    throw new Error(`Session for ${playerName} not found. Call loginAsPlayer first.`);
+  }
+
+  cy.setCookie('whodunit_session', cached.sessionToken);
+  cy.setCookie('player_id', cached.playerId);
+  cy.setCookie('session_id', cached.sessionId);
+  cy.setCookie('player_name', cached.playerName);
+  return cy.wrap(null);
 });
 
 export {};
-

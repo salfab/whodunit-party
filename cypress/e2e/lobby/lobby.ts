@@ -131,7 +131,24 @@ Given('I mock a lobby session as {string} with mysteries', (playerName: string) 
 
   cy.intercept('GET', '/api/mysteries*', {
     statusCode: 200,
-    fixture: 'mysteries.json',
+    body: {
+      mysteries: [
+        {
+          id: 'mystery-1',
+          title: 'Test Mystery One',
+          synopsis: 'Mock mystery one',
+          language: 'en',
+          character_count: 4,
+        },
+        {
+          id: 'mystery-2',
+          title: 'Test Mystery Two',
+          synopsis: 'Mock mystery two',
+          language: 'en',
+          character_count: 6,
+        },
+      ],
+    },
   }).as('getMysteries');
 
   cy.intercept('GET', '**/rest/v1/player_ready_states*', { statusCode: 200, body: [] }).as('getReadyStates');
@@ -144,7 +161,7 @@ Given('I mock a lobby session as {string} with mysteries', (playerName: string) 
 Given('I create a real room as {string}', (playerName: string) => {
   // Create room via API
   cy.request('POST', '/api/sessions').then((response) => {
-    testSessionId = response.body.id;
+    testSessionId = response.body.sessionId ?? response.body.id;
     testJoinCode = response.body.joinCode;
 
     // Join as player
@@ -162,7 +179,7 @@ Given('I create a real room as {string}', (playerName: string) => {
 
 Given('I create a real room with {int} players', (playerCount: number) => {
   cy.request('POST', '/api/sessions').then((response) => {
-    testSessionId = response.body.id;
+    testSessionId = response.body.sessionId ?? response.body.id;
     testJoinCode = response.body.joinCode;
 
     // Join as first player

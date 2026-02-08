@@ -397,8 +397,12 @@ Given('I visit the play page', () => {
 // ==================== Character Display ====================
 
 Then('I should see the character name {string}', (characterName: string) => {
-  // Character name is displayed in the RoleRevealCard component
-  cy.getByTestId('character-name').should('be.visible').and('contain', characterName);
+  // Character name must be visible on the front side of the reveal card.
+  cy.getByTestId('role-reveal-card')
+    .should('have.attr', 'data-flipped', 'false')
+    .within(() => {
+      cy.contains('p', characterName).should('be.visible');
+    });
 });
 
 Then('the character image should be displayed', () => {
