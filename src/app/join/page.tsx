@@ -11,7 +11,11 @@ import {
   Paper,
   Alert,
   FormLabel,
+  CircularProgress,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { motion } from 'framer-motion';
 import OtpInput from '@/components/OtpInput';
 import LoadingScreen from '@/components/LoadingScreen';
@@ -27,9 +31,15 @@ function JoinContent() {
   const [showTakeoverDialog, setShowTakeoverDialog] = useState(false);
   const [takeoverLoading, setTakeoverLoading] = useState(false);
   const [wasKicked, setWasKicked] = useState(false);
+  const [joinCodeValidationState, setJoinCodeValidationState] = useState<
+    'idle' | 'validating' | 'valid' | 'invalid'
+  >('idle');
+  const [joinCodeValidationMessage, setJoinCodeValidationMessage] = useState('');
   const prefilledJoinCode = searchParams.get('code')?.trim().toUpperCase() ?? '';
   const hasPrefilledJoinCode = prefilledJoinCode.length > 0;
   const effectiveJoinCode = hasPrefilledJoinCode ? prefilledJoinCode : joinCode;
+  const isJoinCodeComplete = effectiveJoinCode.trim().length === 6;
+  const isJoinCodeValidating = !hasPrefilledJoinCode && joinCodeValidationState === 'validating';
 
   // Pre-fill code from URL parameter and check for existing session
   useEffect(() => {
@@ -43,6 +53,56 @@ function JoinContent() {
       checkExistingSession(prefilledJoinCode);
     }
   }, [searchParams, hasPrefilledJoinCode, prefilledJoinCode]);
+
+  // Validate manual join code as soon as all 6 characters are entered
+  useEffect(() => {
+    if (hasPrefilledJoinCode) {
+      return;
+    }
+
+    const code = joinCode.trim().toUpperCase();
+    if (code.length !== 6) {
+      setJoinCodeValidationState('idle');
+      setJoinCodeValidationMessage('');
+      return;
+    }
+
+    let cancelled = false;
+    setJoinCodeValidationState('validating');
+    setJoinCodeValidationMessage('');
+
+    const validateCode = async () => {
+      try {
+        const response = await fetch(`/api/sessions/by-code/${code}`);
+        if (cancelled) return;
+
+        if (response.ok) {
+          setJoinCodeValidationState('valid');
+          setJoinCodeValidationMessage('Code valide');
+        } else {
+          setJoinCodeValidationState('invalid');
+          setJoinCodeValidationMessage('Code invalide, essayez un autre code');
+        }
+      } catch (err) {
+        if (cancelled) return;
+        setJoinCodeValidationState('invalid');
+        setJoinCodeValidationMessage('Validation impossible, reessayez');
+      }
+    };
+
+    validateCode();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [joinCode, hasPrefilledJoinCode]);
+
+  const handleResetValidatedCode = () => {
+    setJoinCode('');
+    setJoinCodeValidationState('idle');
+    setJoinCodeValidationMessage('');
+    setError('');
+  };
 
   // Check if user already has an active session in this room
   async function checkExistingSession(code: string) {
@@ -191,24 +251,52 @@ function JoinContent() {
 
           <Box component="form" onSubmit={handleJoin} sx={{ mt: 3 }}>
             {!hasPrefilledJoinCode && <Box sx={{ mb: 4 }}>
-              <FormLabel
-                sx={{
-                  display: 'block',
-                  textAlign: 'center',
-                  mb: 2,
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                }}
-              >
-                Code d'accès
-              </FormLabel>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, mb: 2 }}>
+                <FormLabel
+                  sx={{
+                    textAlign: 'center',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                  }}
+                >
+                  Code d'accès
+                </FormLabel>
+                {joinCodeValidationState === 'validating' && <CircularProgress size={16} data-testid="join-code-validating-spinner" />}
+                {joinCodeValidationState === 'valid' && (
+                  <Tooltip title="Modifier le code">
+                    <IconButton
+                      size="small"
+                      color="success"
+                      onClick={handleResetValidatedCode}
+                      aria-label="Modifier le code valide"
+                      data-testid="join-code-validated-tick"
+                    >
+                      <CheckCircleIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </Box>
               <OtpInput
                 length={6}
                 value={joinCode}
                 onChange={setJoinCode}
-                disabled={loading}
+                disabled={loading || joinCodeValidationState === 'validating' || joinCodeValidationState === 'valid'}
                 data-testid="game-code-input-container"
               />
+              {joinCodeValidationMessage && (
+                <Typography
+                  variant="caption"
+                  display="block"
+                  textAlign="center"
+                  sx={{
+                    mt: 1,
+                    color: joinCodeValidationState === 'valid' ? 'success.main' : 'error.main',
+                  }}
+                  data-testid="join-code-validation-message"
+                >
+                  {joinCodeValidationMessage}
+                </Typography>
+              )}
             </Box>}
 
             <TextField
@@ -231,7 +319,7 @@ function JoinContent() {
               variant="contained"
               size="large"
               fullWidth
-              disabled={loading || !effectiveJoinCode || !playerName}
+              disabled={loading || !isJoinCodeComplete || !playerName || isJoinCodeValidating}
               data-testid="submit-join-button"
             >
               {loading ? 'Connexion...' : 'Rejoindre la partie'}
