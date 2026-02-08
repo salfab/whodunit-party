@@ -70,9 +70,9 @@ export default function Home() {
             },
           }}
         >
-          <MenuItem value="fr">🇫🇷 FR</MenuItem>
-          <MenuItem value="en">🇬🇧 EN</MenuItem>
-          <MenuItem value="es">🇪🇸 ES</MenuItem>
+          <MenuItem value="fr">FR</MenuItem>
+          <MenuItem value="en">EN</MenuItem>
+          <MenuItem value="es">ES</MenuItem>
         </Select>
         <IconButton
           component={Link}
@@ -135,3 +135,4 @@ export default function Home() {
     </Container>
   );
 }
+

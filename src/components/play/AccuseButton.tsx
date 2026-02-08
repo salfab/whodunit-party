@@ -28,7 +28,7 @@ export default function AccuseButton({ onClick }: AccuseButtonProps) {
           }
         }}
       >
-        🔍 J&apos;Accuse!
+        J&apos;accuse
       </Button>
     </Box>
   );

@@ -54,7 +54,7 @@ export default function CreateRoomPage() {
           }}
         >
           <Typography variant="h2" component="h1" textAlign="center" data-testid="create-room-title">
-            🔪 Créer une salle de jeu
+            Créer une salle de jeu
           </Typography>
           <Alert severity="error" sx={{ width: '100%' }} data-testid="error-message">
             {error}

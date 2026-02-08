@@ -553,7 +553,7 @@ export default function PlayPage() {
                         mb: 3
                       }}
                     >
-                      📖 Description du mystère
+                      Description du mystère
                     </Typography>
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {characterSheet.mystery.description}
@@ -575,7 +575,7 @@ export default function PlayPage() {
                 {characterSheet.role !== 'investigator' && (
                   <SecretPanel
                     title="Votre alibi"
-                    emoji="🕵️"
+                    emoji=""
                     content={characterSheet.alibi}
                     visible={alibiVisible}
                     onToggleVisibility={() => setAlibiVisible(!alibiVisible)}
@@ -586,7 +586,7 @@ export default function PlayPage() {
                 {characterSheet.role !== 'investigator' && (
                   <SecretPanel
                     title="Sombre Secret"
-                    emoji="🤫"
+                    emoji=""
                     content={characterSheet.dark_secret}
                     visible={secretVisible}
                     onToggleVisibility={() => setSecretVisible(!secretVisible)}
@@ -643,7 +643,7 @@ export default function PlayPage() {
                   {accusationResult.guiltyPlayer && (
                     <Box sx={{ mb: 4 }}>
                       <Typography variant="h5" gutterBottom align="center" sx={{ mb: 3 }}>
-                        🎭 Le Coupable Révélé
+                        Le coupable révélé
                       </Typography>
                       <RoleRevealCard
                         imagePath={
@@ -693,7 +693,7 @@ export default function PlayPage() {
                           transition: 'all 0.2s ease',
                         }}
                       >
-                        🎭 J&apos;avoue tout !
+                        J&apos;avoue tout !
                       </Button>
                     </Box>
                   )}
@@ -729,7 +729,7 @@ export default function PlayPage() {
           <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" gutterBottom>
-                🎉 Partie terminée !
+                Partie terminée !
               </Typography>
               <Typography variant="h6" gutterBottom>
                 Scores finaux :

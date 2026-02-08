@@ -525,7 +525,7 @@ export default function LobbyPage() {
         <Box sx={{ py: 8, textAlign: 'center' }}>
           <Paper elevation={3} sx={{ p: 4 }}>
             <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-              🔍 Partie introuvable
+              Partie introuvable
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
               Cette partie n'existe pas ou a été supprimée.

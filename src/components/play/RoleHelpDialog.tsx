@@ -33,7 +33,7 @@ export default function RoleHelpDialog({ open, onClose, helpContent }: RoleHelpD
         color: 'primary.main',
         fontWeight: 600,
       }}>
-        <Box component="span">💡 Aide</Box>
+        <Box component="span">Aide</Box>
         <IconButton onClick={onClose} size="small" sx={{ color: 'text.secondary' }}>
           <CloseIcon />
         </IconButton>

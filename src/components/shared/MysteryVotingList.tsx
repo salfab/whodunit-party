@@ -54,7 +54,7 @@ export function MysteryVotingList({
   hasVoted = false,
   startingNextRound = false,
   allowUnvote = true,
-  title = '🎭 Votez pour le prochain mystère',
+  title = 'Votez pour le prochain mystère',
   showTitle = false,
   loading = false,
 }: MysteryVotingListProps) {
@@ -152,7 +152,7 @@ export function MysteryVotingList({
         <Paper elevation={2} sx={{ p: 3 }}>
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body1" gutterBottom>
-              ✅ Vote enregistré !
+              Vote enregistré
             </Typography>
             <Typography variant="body2" color="text.secondary">
               En attente des autres joueurs...
@@ -183,7 +183,7 @@ export function MysteryVotingList({
       {allowUnvote && votedMystery && (
         <Paper elevation={2} sx={{ p: 2, mb: 3, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            ✅ Vous avez voté pour :
+            Vous avez voté pour :
           </Typography>
           {(votedMystery.cover_image_url || votedMystery.image_path) && (
             <Box

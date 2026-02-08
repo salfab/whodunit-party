@@ -83,7 +83,7 @@ export default function ConfessionDialog({
             textShadow: '0 2px 8px rgba(0,0,0,0.5)',
           }}
         >
-          🎭 Vos Aveux
+          Vos aveux
         </Typography>
         <Typography
           variant="subtitle1"

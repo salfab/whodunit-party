@@ -71,9 +71,17 @@ export default function LoadingScreen({ message = 'Chargement...', imageUrl }: L
                   }}
                 />
               ) : (
-                <Typography variant="h3" component="div" sx={{ fontSize: 40 }}>
-                  🔍
-                </Typography>
+                <Box
+                  component="img"
+                  src="/logo.png"
+                  alt="Whodunit Party"
+                  sx={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: '8px',
+                    objectFit: 'cover',
+                  }}
+                />
               )}
             </motion.div>
           </Box>

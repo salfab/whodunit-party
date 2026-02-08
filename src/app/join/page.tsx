@@ -234,7 +234,7 @@ function JoinContent() {
             data-testid="join-form-container"
           >
           <Typography variant="h4" component="h1" gutterBottom textAlign="center" data-testid="join-page-title">
-            🔍 Rejoindre une partie
+            Rejoindre une partie
           </Typography>
 
           {wasKicked && (

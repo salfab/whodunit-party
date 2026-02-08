@@ -26,12 +26,12 @@ interface MysteryCardProps {
   onClick?: () => void;
 }
 
-const languageFlags: Record<string, string> = {
-  fr: '🇫🇷',
-  en: '🇬🇧',
-  es: '🇪🇸',
-  de: '🇩🇪',
-  it: '🇮🇹',
+const languageLabels: Record<string, string> = {
+  fr: 'FR',
+  en: 'EN',
+  es: 'ES',
+  de: 'DE',
+  it: 'IT',
 };
 
 export default function MysteryCard({
@@ -41,7 +41,9 @@ export default function MysteryCard({
   showRadio = false,
   onClick,
 }: MysteryCardProps) {
-  const flag = mystery.language ? languageFlags[mystery.language] || '🌍' : '';
+  const language = mystery.language
+    ? languageLabels[mystery.language] || mystery.language.toUpperCase()
+    : '';
   const imageUrl = mystery.cover_image_url || mystery.image_path;
 
   const titleDisplay = (
@@ -61,7 +63,7 @@ export default function MysteryCard({
 
   const secondaryInfo = [
     mystery.character_count && `${mystery.character_count} joueurs`,
-    flag,
+    language,
     mystery.author && `par ${mystery.author}`,
   ]
     .filter(Boolean)
@@ -151,4 +153,5 @@ export default function MysteryCard({
     </ListItem>
   );
 }
+
 

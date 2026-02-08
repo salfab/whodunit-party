@@ -14,15 +14,8 @@ interface ScoreboardProps {
   title?: string;
 }
 
-export default function Scoreboard({ playerScores, currentPlayerId, title = '🏆 Scores' }: ScoreboardProps) {
-  const getMedal = (index: number) => {
-    switch (index) {
-      case 0: return '🥇';
-      case 1: return '🥈';
-      case 2: return '🥉';
-      default: return `${index + 1}.`;
-    }
-  };
+export default function Scoreboard({ playerScores, currentPlayerId, title = 'Scores' }: ScoreboardProps) {
+  const getRank = (index: number) => `${index + 1}.`;
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -42,7 +35,7 @@ export default function Scoreboard({ playerScores, currentPlayerId, title = '�
                 primary={
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Typography variant="h6" sx={{ minWidth: '30px' }}>
-                      {getMedal(index)}
+                      {getRank(index)}
                     </Typography>
                     <Typography variant="body1" sx={{ flex: 1 }}>
                       {player.name} {player.id === currentPlayerId ? '(Vous)' : ''}

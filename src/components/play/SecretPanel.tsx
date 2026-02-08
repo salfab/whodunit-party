@@ -7,7 +7,7 @@ import remarkGfm from 'remark-gfm';
 
 interface SecretPanelProps {
   title: string;
-  emoji: string;
+  emoji?: string;
   content: string;
   visible: boolean;
   onToggleVisibility: () => void;
@@ -25,7 +25,7 @@ export default function SecretPanel({ title, emoji, content, visible, onToggleVi
             textShadow: '0 1px 3px rgba(0,0,0,0.5)'
           }}
         >
-          {emoji} {title}
+          {emoji ? `${emoji} ` : ''}{title}
         </Typography>
         <IconButton onClick={onToggleVisibility} size="small" data-testid={`play-secret-toggle-${title.toLowerCase().replace(/\s+/g, '-')}`}>
           {visible ? <VisibilityOff /> : <Visibility />}

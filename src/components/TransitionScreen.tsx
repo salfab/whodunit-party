@@ -110,9 +110,20 @@ export default function TransitionScreen({
                         }}
                       />
                     ) : (
-                      <Typography variant="h1" sx={{ fontSize: 80, mb: 3 }}>
-                        🎭
-                      </Typography>
+                      <Box
+                        component="img"
+                        src="/logo.png"
+                        alt="Whodunit Party"
+                        sx={{
+                          width: 120,
+                          height: 120,
+                          borderRadius: '16px',
+                          objectFit: 'cover',
+                          mb: 3,
+                          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                          border: '3px solid rgba(255,255,255,0.2)',
+                        }}
+                      />
                     )}
                   </motion.div>
 

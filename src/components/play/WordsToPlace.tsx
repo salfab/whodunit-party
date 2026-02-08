@@ -20,7 +20,7 @@ export default function WordsToPlace({ words }: WordsToPlaceProps) {
           textShadow: '0 1px 3px rgba(0,0,0,0.5)'
         }}
       >
-        💬 Trois mots à placer dans la conversation
+        Trois mots à placer dans la conversation
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }} data-testid="play-words-list">
         {words.map((word, index) => (

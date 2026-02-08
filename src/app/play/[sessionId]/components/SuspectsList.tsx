@@ -29,7 +29,7 @@ export default function SuspectsList({ suspects }: SuspectsListProps) {
           gap: 1
         }}
       >
-        🎭 Les Suspects
+        Les suspects
       </Typography>
       
       <Box sx={{ 

@@ -92,7 +92,7 @@ export default function AccusationDialog({
             color: goldAccent,
           }}
         >
-          🎯 Qui accusez-vous ?
+          Qui accusez-vous ?
         </Typography>
         <IconButton
           onClick={onClose}
