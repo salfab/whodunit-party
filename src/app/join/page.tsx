@@ -27,21 +27,22 @@ function JoinContent() {
   const [showTakeoverDialog, setShowTakeoverDialog] = useState(false);
   const [takeoverLoading, setTakeoverLoading] = useState(false);
   const [wasKicked, setWasKicked] = useState(false);
+  const prefilledJoinCode = searchParams.get('code')?.trim().toUpperCase() ?? '';
+  const hasPrefilledJoinCode = prefilledJoinCode.length > 0;
+  const effectiveJoinCode = hasPrefilledJoinCode ? prefilledJoinCode : joinCode;
 
   // Pre-fill code from URL parameter and check for existing session
   useEffect(() => {
-    const codeFromUrl = searchParams.get('code');
     const kicked = searchParams.get('kicked');
     
     if (kicked === 'true') {
       setWasKicked(true);
     }
     
-    if (codeFromUrl) {
-      setJoinCode(codeFromUrl.toUpperCase());
-      checkExistingSession(codeFromUrl.toUpperCase());
+    if (hasPrefilledJoinCode) {
+      checkExistingSession(prefilledJoinCode);
     }
-  }, [searchParams]);
+  }, [searchParams, hasPrefilledJoinCode, prefilledJoinCode]);
 
   // Check if user already has an active session in this room
   async function checkExistingSession(code: string) {
@@ -82,7 +83,7 @@ function JoinContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          joinCode: joinCode.trim().toUpperCase(),
+          joinCode: effectiveJoinCode.trim().toUpperCase(),
           playerName: playerName.trim(),
         }),
       });
@@ -119,7 +120,7 @@ function JoinContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          joinCode: joinCode.trim().toUpperCase(),
+          joinCode: effectiveJoinCode.trim().toUpperCase(),
           playerName: playerName.trim(),
         }),
       });
@@ -189,7 +190,7 @@ function JoinContent() {
           )}
 
           <Box component="form" onSubmit={handleJoin} sx={{ mt: 3 }}>
-            <Box sx={{ mb: 4 }}>
+            {!hasPrefilledJoinCode && <Box sx={{ mb: 4 }}>
               <FormLabel
                 sx={{
                   display: 'block',
@@ -208,7 +209,7 @@ function JoinContent() {
                 disabled={loading}
                 data-testid="game-code-input-container"
               />
-            </Box>
+            </Box>}
 
             <TextField
               fullWidth
@@ -230,7 +231,7 @@ function JoinContent() {
               variant="contained"
               size="large"
               fullWidth
-              disabled={loading || !joinCode || !playerName}
+              disabled={loading || !effectiveJoinCode || !playerName}
               data-testid="submit-join-button"
             >
               {loading ? 'Connexion...' : 'Rejoindre la partie'}
@@ -258,3 +259,4 @@ export default function JoinPage() {
     </Suspense>
   );
 }
+

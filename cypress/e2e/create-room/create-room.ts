@@ -12,8 +12,7 @@ Then('I should be redirected to the join page', () => {
 });
 
 Then('the game code field should be pre-filled with a 6-character code', () => {
-  // The OTP input should have 6 characters filled in
-  cy.get('[data-testid="game-code-input"]', { timeout: 10000 }).should('be.visible');
+  cy.get('[data-testid="game-code-input-container"]').should('not.exist');
   // Check that code param exists in URL and has 6 characters
   cy.url().then((url) => {
     const urlObj = new URL(url);
@@ -30,7 +29,7 @@ Then('I should briefly see the loading screen', () => {
 
 When('I wait to be on the join page', () => {
   cy.url({ timeout: 10000 }).should('include', '/join');
-  cy.get('[data-testid="game-code-input"]').should('be.visible');
+  cy.get('[data-testid="player-name-input"]').should('be.visible');
 });
 
 Then('I should be able to access the QR code from the lobby', () => {
