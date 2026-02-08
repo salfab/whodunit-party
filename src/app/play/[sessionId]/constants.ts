@@ -73,7 +73,7 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
    On révèle l’identité du coupable.  
    Il peut alors **avouer** en lisant à voix haute son texte de **“Sombre secret”**.
 
-10. **Un peu de stratégie**
+10. **Un peu de stratégie**  
    Le coupable doit essayer de deviner les mots des innocents pour brouiller les pistes
    Les innocents peuvent essayer de deviner les mots du coupable pour le couvrir.
 
