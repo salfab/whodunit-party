@@ -9,6 +9,14 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Whodunit Party",
   description: "Murder mystery party game",
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/logo.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.svg',
+    apple: '/logo.png',
+  },
 };
 
 export default async function RootLayout({
