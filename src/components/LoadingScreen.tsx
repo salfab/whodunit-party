@@ -73,7 +73,7 @@ export default function LoadingScreen({ message = 'Chargement...', imageUrl }: L
               ) : (
                 <Box
                   component="img"
-                  src="/logo.png"
+                  src="/magnifier.png"
                   alt="Whodunit Party"
                   sx={{
                     width: 50,
