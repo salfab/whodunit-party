@@ -67,7 +67,7 @@ export default function LoadingScreen({ message = 'Chargement...', imageUrl }: L
                     width: 50,
                     height: 50,
                     borderRadius: '8px',
-                    objectFit: 'cover',
+                    objectFit: 'contain',
                   }}
                 />
               ) : (
@@ -79,7 +79,7 @@ export default function LoadingScreen({ message = 'Chargement...', imageUrl }: L
                     width: 50,
                     height: 50,
                     borderRadius: '8px',
-                    objectFit: 'cover',
+                    objectFit: 'contain',
                   }}
                 />
               )}
