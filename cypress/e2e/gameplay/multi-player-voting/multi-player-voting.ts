@@ -87,7 +87,8 @@ Given('5 players are in an active game with an accusation made', () => {
           const mysteryId = suitableMysteries[0].id;
 
           cy.wrap(players)
-            .each((player) => {
+            .each((_player) => {
+              const player = _player as unknown as { name: string; id: string };
               return cy.switchToPlayer(player.name, sessionData.sessionId).then(() => {
                 return cy.request({
                   method: 'POST',
@@ -104,7 +105,8 @@ Given('5 players are in an active game with an accusation made', () => {
               let accusedPlayerId: string | null = null;
 
               cy.wrap(players)
-                .each((player) => {
+                .each((_player) => {
+                  const player = _player as unknown as { name: string; id: string };
                   return cy.switchToPlayer(player.name, sessionData.sessionId).then(() => {
                     return cy.request({
                       method: 'GET',

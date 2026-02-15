@@ -302,8 +302,8 @@ Cypress.Commands.add(
             expect(response.status).to.eq(200);
             expect(response.body.playerId).to.eq(options.playerId);
             expect(response.body.sessionId).to.eq(options.sessionId);
-            cy.setCookie('player_id', options.playerId);
-            cy.setCookie('session_id', options.sessionId);
+            cy.setCookie('player_id', options.playerId!);
+            cy.setCookie('session_id', options.sessionId!);
             cy.setCookie('player_name', playerName);
           });
         } else {
