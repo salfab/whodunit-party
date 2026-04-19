@@ -1,0 +1,2866 @@
+{
+  "format": "whodunit-party-confession-rewrite-template",
+  "version": 1,
+  "instructions": [
+    "Remplir uniquement character_sheets[].dark_secret pour les fiches dont role vaut \"suspect\".",
+    "Ne pas modifier zip_file, mystery_index, rewrite_key, title, role, character_name, occupation, alibi, ni les autres champs de structure.",
+    "Chaque dark_secret suspect doit etre un aveu narratif complet et original, coherent avec le mystere, le personnage, son alibi et le ton du pack.",
+    "Le texte doit pouvoir etre lu tel quel quand ce personnage est revele coupable.",
+    "Laisser les fiches investigator telles quelles."
+  ],
+  "mysteries": [
+    {
+      "zip_file": "Comme-un-poisson-davril-dans-leau-de-boudin.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Comme un poisson d’avril dans l’eau de boudin",
+        "synopsis": "Le 1er avril, un chien empaillé remplace Chase au chenil du commissariat. Holt recoupe badges et alibis pour trouver l’auteur.",
+        "description": "Ce matin, je découvre un berger allemand empaillé à la place de Chase, notre chien-policier…\n\nDans *mon* commissariat.  \nPour un 1er avril ! \n\nCeci ne me fait pas rire du tout…  \nEt celui qui a osé ce poisson d’avril d’un goût douteux va l’avoir dans l’os, car je vais lui mettre la pâtée !",
+        "image_path": "cover_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Capitaine Raymond Holt",
+            "occupation": "Commandant",
+            "dark_secret": "J’ai déjà rédigé une note disciplinaire vierge, prête à accueillir un nom, et je compte m’en servir.",
+            "alibi": "Au moment de la découverte, j’étais dans mon bureau en visioconférence avec la hiérarchie, porte entrouverte, et plusieurs agents ont pu m’entendre.",
+            "image_path": "char_01_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jake Peralta",
+            "occupation": "Inspecteur",
+            "dark_secret": "",
+            "alibi": "Quand le chenil a fait parler de lui, j’étais avec Amy près de la photocopieuse à assembler un dossier, et nous étions visibles depuis le couloir.",
+            "image_path": "char_02_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Amy Santiago",
+            "occupation": "Inspectrice",
+            "dark_secret": "",
+            "alibi": "À l’heure de la découverte, je vérifiais un lot de formulaires avec Jake, et Gina est passée nous interrompre pour une signature.",
+            "image_path": "char_03_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Rosa Diaz",
+            "occupation": "Inspectrice",
+            "dark_secret": "",
+            "alibi": "Au moment où Holt a hurlé, j’étais au stand d’entraînement avec Terry, et nous avons signé le registre de passage.",
+            "image_path": "char_04_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Terry Jeffords",
+            "occupation": "Lieutenant",
+            "dark_secret": "",
+            "alibi": "J’étais avec Rosa à l’entraînement, et on peut confirmer notre présence par le registre et par les témoins du couloir.",
+            "image_path": "char_05_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Charles Boyle",
+            "occupation": "Inspecteur",
+            "dark_secret": "",
+            "alibi": "Quand la farce a été découverte, j’étais à la salle de pause avec Hitchcock et Scully, en train de préparer le café.",
+            "image_path": "char_06_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gina Linetti",
+            "occupation": "Secrétaire",
+            "dark_secret": "",
+            "alibi": "À l’heure exacte, j’étais à l’accueil à gérer un livreur égaré et le standard sonnait sans arrêt, ce qui a laissé des traces d’appels.",
+            "image_path": "char_07_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Michael Hitchcock",
+            "occupation": "Brigadier",
+            "dark_secret": "",
+            "alibi": "Au moment de la découverte, j’étais à la salle de pause avec Scully et Boyle, et personne n’a quitté la pièce sans que ça se voie.",
+            "image_path": "char_08_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Norm Scully",
+            "occupation": "Brigadier",
+            "dark_secret": "",
+            "alibi": "Quand Holt a débarqué, j’étais avec Hitchcock et Boyle à la salle de pause, et on a tous entendu les cris en même temps.",
+            "image_path": "char_09_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "The Pontiac Bandit",
+            "occupation": "Informateur",
+            "dark_secret": "",
+            "alibi": "Au moment de la découverte, j’étais dans la salle d’audition avec Jake pour une signature rapide, et on a été interrompus par l’agitation du couloir.",
+            "image_path": "char_10_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-9"
+          },
+          {
+            "role": "suspect",
+            "character_name": "The Vulture",
+            "occupation": "Inspecteur",
+            "dark_secret": "",
+            "alibi": "Quand Holt a fait la découverte, j’étais ostensiblement au téléphone dans le couloir principal, assez visible pour que plusieurs personnes puissent croire que je n’avais pas bougé.",
+            "image_path": "char_11_comme-un-poisson-davril-dans-leau-de-boudin_20260208-072225_8igdx.jpg",
+            "rewrite_key": "suspect-10"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "a_pas_de_loup_garou.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "À pas de loup-garou",
+        "synopsis": "À Thiercelieux, un corps est découvert et la peur se propage. L’enquêtrice doit démasquer le monstre avant que le soleil ne se couche.",
+        "description": "Je débarque à Thiercelieux au pire moment : un corps, des témoins, et une panique qui cherche déjà un visage à haïr.\n\nJe n’ai pas droit à l’erreur. Je dois démêler les rumeurs, recouper les contradictions, et faire parler ceux qui se taisent.\n\nJe dois trouver la vérité **avant que le soleil ne se couche** — après, ce village n’appartiendra plus à personne.",
+        "image_path": "cover_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Capitaine Séréna Vauclair",
+            "occupation": "Enquêtrice itinérante",
+            "dark_secret": "Je n’ai pas été envoyée ici par hasard : j’ai déjà couvert une affaire similaire, et je crains d’en reconnaître la signature.",
+            "alibi": "Au moment du drame, je traversais la place et j’ai été vue par plusieurs habitants, sans jamais quitter la foule.",
+            "image_path": "char_01_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gaspard",
+            "occupation": "Maire",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, je me suis arrangé pour être vu au bon endroit, au bon moment, avec des témoins trop sûrs d’eux.",
+            "image_path": "char_02_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Ysabeau",
+            "occupation": "Voyante",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_03_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Maud",
+            "occupation": "Sorcière",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_04_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Ernest",
+            "occupation": "Chasseur",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_05_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Lucien",
+            "occupation": "Cupidon",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_06_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Octave",
+            "occupation": "Voleur",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_07_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Bertille",
+            "occupation": "Petite Fille",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_08_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Éloi",
+            "occupation": "Ancien",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_09_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Lise",
+            "occupation": "Villageoise",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais occupé(e) à une tâche banale dont quelqu’un peut confirmer une partie.",
+            "image_path": "char_10_a_pas_de_loup_garou_20260207_151729_fs0c.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "anaconda_constructeur.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Le Devis Disparu d’Anaconda Constructeur",
+        "description": "Je débarque au Salon des Merveilles Industrielles de 1967 avec mon carnet, mon appareil photo et un mauvais pressentiment.\n\nAnaconda Constructeur doit présenter son offre pour bâtir la **Passerelle Spirale**, un chantier inédit censé relier notre ville à un monde nouvellement découvert — un archipel de falaises flottantes, de jardins luminescents et de ruines impossibles.\n\nMais l’enveloppe scellée disparaît à quelques minutes de la remise officielle. Sans cette offre, le projet bascule chez un concurrent… et la porte vers l’inconnu risque de s’ouvrir sur un désastre.\n\nJe mène l’enquête parmi les stands, les maquettes et les démonstrations d’outils futuristes. Chaque suspect a eu une raison d’approcher le dossier, et chacun peut cacher une petite trahison derrière un sourire d’aventure.",
+        "image_path": "cover_mnouggjo.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "PETTY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Cléo Marceau",
+            "occupation": "Journaliste d’aventure",
+            "dark_secret": "Je crains que mon dernier scoop ait été publié sans preuve solide.",
+            "alibi": "Au moment du vol, je photographie la maquette de la Passerelle Spirale au centre du hall, entourée de visiteurs.",
+            "image_path": "char_01_mnouggjo.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Inez Calder",
+            "occupation": "Architecte visionnaire",
+            "dark_secret": "",
+            "alibi": "Au moment du vol, je présente mes plans aux jurés dans la salle des maquettes, sous les yeux du public.",
+            "image_path": "char_02_mnouggjo.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Basile Kerman",
+            "occupation": "Chef de la sécurité",
+            "dark_secret": "",
+            "alibi": "Au moment du vol, je fais une ronde près des issues de secours et je note les badges des retardataires.",
+            "image_path": "char_03_mnouggjo.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Milo Tchao",
+            "occupation": "Inventeur d’outils modulaires",
+            "dark_secret": "",
+            "alibi": "Au moment du vol, je fais une démonstration de ma clé universelle sur scène, avec des applaudissements comme témoin.",
+            "image_path": "char_04_mnouggjo.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Soraya N’Diaye",
+            "occupation": "Cartographe des mondes",
+            "dark_secret": "",
+            "alibi": "Au moment du vol, je compare des relevés de terrain dans le coin presse, en compagnie d’un archiviste.",
+            "image_path": "char_05_mnouggjo.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hugo Lemaître",
+            "occupation": "Représentant d’Anaconda",
+            "dark_secret": "",
+            "alibi": "Au moment du vol, je négocie un créneau de présentation avec l’organisateur au bureau d’accueil.",
+            "image_path": "char_06_mnouggjo.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Renaud Varga",
+            "occupation": "Négociateur de chantiers",
+            "dark_secret": "",
+            "alibi": "Au moment du vol, je discute avec un imprimeur dans l’allée des exposants, prétendant vérifier des épreuves.",
+            "image_path": "char_07_mnouggjo.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "attaque_des_tiquants.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "L'attaque des tiquants",
+        "synopsis": "Dans un groupe de soutien aux tics de langage, un harceleur est retrouvé mort. Dix membres sont suspects; l’inspecteur recoupe leurs versions.",
+        "description": "Je pousse la porte de la salle de réunion. D’habitude, ici, on vient parler de nos tics de langage, partager des astuces, reprendre confiance. Ce soir, il suffit d’un regard pour comprendre : il n’y aura pas de cercle de parole.\n\nAu sol, il y a un corps. La victime ne fait pas partie du groupe. Pourtant, elle connaissait chacun des participants… et pas pour de bonnes raisons : elle les harcelait précisément à cause de leur tic, les imitait, les ridiculisait, les suivait, comme si ces mots involontaires l’autorisaient à les détruire.\n\nDix personnes, dix tics, dix versions d’une même soirée. Je dois reconstituer ce qui s’est passé, comprendre comment le harceleur est entré ici, et pourquoi quelqu’un a fini par vouloir le faire taire pour de bon.",
+        "image_path": "cover-attaque-des-tiquants-20260208-185942-rcaa.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "SERIOUS_MURDER",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Capitaine Adrien",
+            "occupation": "Inspecteur",
+            "dark_secret": "Je connais déjà la victime : son nom revient dans plusieurs signalements, mais jamais assez pour la faire condamner.",
+            "alibi": "Je suis appelé après l’alerte et j’arrive sur place pour prendre la scène en main.",
+            "image_path": "capitaine-adrien.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Milo",
+            "occupation": "*« ben voilà »*",
+            "dark_secret": "",
+            "alibi": "Je dis avoir été dans la kitchenette à faire chauffer de l’eau quand le bruit a éclaté.",
+            "image_path": "milo.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nora",
+            "occupation": "*« c’est pour ça, hein »*",
+            "dark_secret": "",
+            "alibi": "Je dis être sortie passer un appel près des escaliers pendant quelques minutes.",
+            "image_path": "nora.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sofiane",
+            "occupation": "*« du coup »*",
+            "dark_secret": "",
+            "alibi": "Je dis être resté dans le couloir pour respirer, en gardant un œil sur la porte.",
+            "image_path": "sofiane.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Maud",
+            "occupation": "*« bref »*",
+            "dark_secret": "",
+            "alibi": "Je dis n’avoir pas quitté mon siège et avoir pris des notes tout du long.",
+            "image_path": "maud.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Anouk",
+            "occupation": "*« à la base »*",
+            "dark_secret": "",
+            "alibi": "Je dis avoir été près de l’entrée à ranger la feuille de présence et les stylos.",
+            "image_path": "anouk.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hugo",
+            "occupation": "*« j'dis ça j'dis rien »*",
+            "dark_secret": "",
+            "alibi": "Je dis être sorti prendre l’air au pire moment, et être revenu quand tout le monde était déjà en panique.",
+            "image_path": "hugo.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Clémence",
+            "occupation": "*« genre »*",
+            "dark_secret": "",
+            "alibi": "Je dis être restée après la séance pour remettre les chaises en place et fermer.",
+            "image_path": "clemence.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Baptiste",
+            "occupation": "*« tu vois comment? »*",
+            "dark_secret": "",
+            "alibi": "Je dis avoir vérifié une prise au fond de la salle quand quelqu’un a crié.",
+            "image_path": "baptiste.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Rim",
+            "occupation": "*« patate-poulet »*",
+            "dark_secret": "",
+            "alibi": "Je dis être restée assise, téléphone éteint, sans parler en tête-à-tête.",
+            "image_path": "rim.jpg",
+            "rewrite_key": "suspect-9"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jean-Eustache",
+            "occupation": "*« wesh »*",
+            "dark_secret": "",
+            "alibi": "Je dis avoir attendu dans le couloir près du distributeur quand la porte a claqué.",
+            "image_path": "jean-eustache.jpg",
+            "rewrite_key": "suspect-10"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "audit_interne_repas_disparu.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Audit interne d'un REPAS DISPARU",
+        "synopsis": "Les vermicelles du CEO disparaissent du frigo de la salle de pause, déclenchant un audit interne officieux.",
+        "description": "Je suis le garde du corps du CEO.\n\nQuand Patrick ouvre le frigo et que ses vermicelles aux marrons ont disparu, je comprends que c’est mon moment.\n\nEncore en période d’essai, je lance discrètement une enquête interne pour prouver ma valeur.",
+        "image_path": "cover_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "LE PIERRE",
+            "occupation": "Garde du corps du CEO",
+            "dark_secret": "Je garde pour moi un détail anodin qui pourrait troubler les apparences.",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_01_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "PATRICK",
+            "occupation": "CEO",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_02_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "ÉLISE",
+            "occupation": "Responsable conformité",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_03_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "LAURENT",
+            "occupation": "Directeur financier",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_04_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "ISABELLE",
+            "occupation": "Responsable RH",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_05_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "JEAN-CLAUDE",
+            "occupation": "Responsable IT",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_06_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "ANTOINE",
+            "occupation": "Analyste risques",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_07_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "NADIA",
+            "occupation": "Juriste senior",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_08_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "THOMAS",
+            "occupation": "Stagiaire opérations",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_09_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "MONIQUE",
+            "occupation": "Assistante administrative senior",
+            "dark_secret": "",
+            "alibi": "J’étais occupé par une tâche professionnelle vérifiable.",
+            "image_path": "char_10_audit_interne_repas_disparu_20260201-102236_o68k.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "chou-flower-power.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Chou-Flower Power",
+        "synopsis": "Une glace sabotée transforme la gelateria en scène de crime culinaire.",
+        "description": "Je pousse la porte de la gelateria _ploum_ et je tombe sur une scène surréelle : six clients livides, l’œil vitreux, la cuillère encore levée.\n\nJe suis Jeanne-Anaïs Chopinne, inspectrice sanitaire de la ville. On m’affirme que “la vanille” a été remplacée par quelque chose d’ignoble : du jus de chou-fleur frelaté !\n\nJe scelle le bac, je recoupe les commandes, et j’observe les trajectoires : qui s’est approché du comptoir, qui a demandé un extra, qui a profité du chaos.\n\nJe n’ai qu’une mission : reconstituer la manipulation et nommer la personne responsable avant d'être trop pétée pour mener l'enquête.",
+        "image_path": "cover_chou-flower-power_20251230-125407_tl8b.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Jeanne-Anaïs Chopinne",
+            "occupation": "Inspectrice sanitaire municipale",
+            "dark_secret": "J’ai déjà laissé passer une non-conformité mineure pour éviter un scandale municipal.",
+            "alibi": "J’arrive après l’alerte et je ne touche aux bacs qu’une fois la zone sécurisée et constatée.",
+            "image_path": "char_01_chou-flower-power_20251230-125407_tl8b.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Léonard",
+            "occupation": "Plombier en dépannage",
+            "dark_secret": "",
+            "alibi": "Après avoir payé, je reste assis près de la vitrine et je suis visible depuis la salle quand les bacs sont ouverts.",
+            "image_path": "char_02_chou-flower-power_20251230-125407_tl8b.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Soraya",
+            "occupation": "Professeure de yoga",
+            "dark_secret": "",
+            "alibi": "Je fais une story face caméra au moment où je goûte, et on m’entend au premier plan sans bouger du spot.",
+            "image_path": "char_03_chou-flower-power_20251230-125407_tl8b.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Marie",
+            "occupation": "Hippie éclatée",
+            "dark_secret": "",
+            "alibi": "Je suis au milieu de la file, coincée entre deux clients, et je ne m’approche jamais seule des bacs.",
+            "image_path": "char_04_chou-flower-power_20251230-125407_tl8b.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Madame Dubouchon",
+            "occupation": "Commère délirante",
+            "dark_secret": "",
+            "alibi": "Je reste collée à la terrasse à bavarder fort, loin du comptoir, jusqu’au moment où on m’apporte mon cornet.",
+            "image_path": "char_05_chou-flower-power_20251230-125407_tl8b.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Julie",
+            "occupation": "Blogueuse hallucinée",
+            "dark_secret": "",
+            "alibi": "Je prétends être restée à filmer sans quitter mon téléphone, mais je coupe l’enregistrement pile au moment crucial.",
+            "image_path": "char_06_chou-flower-power_20251230-125407_tl8b.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jean-Phil’",
+            "occupation": "Col bleu écœuré",
+            "dark_secret": "",
+            "alibi": "Je suis au bout du comptoir à demander de l’eau à voix haute, sous les yeux de plusieurs personnes, quand la vanille est servie.",
+            "image_path": "char_07_chou-flower-power_20251230-125407_tl8b.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "concombre_sacré.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "L’Affaire du Concombre Sacré",
+        "synopsis": "Au Conseil olympien, une recette sacrée fuite chez les mortels. Dix dieux sont convoqués pour identifier l’auteur.",
+        "description": "Je préside le Conseil olympien quand une nouvelle dérisoire devient un outrage : une préparation servie à nos tables circule désormais chez les mortels, à l’identique.\n\nCe n’est pas le plat qui m’inquiète, c’est la brèche. Un secret de cuisine n’arrive pas sur terre sans qu’une main l’ait laissé passer : un mot de trop, un messager mal avisé, une coupe mal rangée, une faveur accordée à la légère.\n\nJ’ouvre l’audience. Je fais venir chacun à la barre, je recoupe les accès au foyer sacré, et je remonte la chaîne des transmissions jusqu’au premier faux pas.",
+        "image_path": "cover_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Zeus",
+            "occupation": "Roi des dieux",
+            "dark_secret": "J’ai déjà étouffé un petit scandale de table pour sauver l’autorité du Conseil, et je crains qu’on s’en serve contre moi.",
+            "alibi": "Au moment où l’on situe la fuite, je présidais une séance formelle devant Thémis et l’assemblée.",
+            "image_path": "char_01_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Héra",
+            "occupation": "Reine",
+            "dark_secret": "",
+            "alibi": "J’étais au temple des serments, à régler un rite, quand la recette a quitté l’Olympe.",
+            "image_path": "char_02_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Thémis",
+            "occupation": "Loi",
+            "dark_secret": "",
+            "alibi": "Je consignais les débats au grand rouleau, sans quitter le dais du Conseil.",
+            "image_path": "char_03_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Athéna",
+            "occupation": "Sagesse",
+            "dark_secret": "",
+            "alibi": "J’étais aux ateliers du palais à vérifier des sceaux, loin du foyer sacré.",
+            "image_path": "char_04_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hermès",
+            "occupation": "Messager",
+            "dark_secret": "",
+            "alibi": "Je courais entre Olympe et sanctuaires, vu par plusieurs nymphes et par Poséidon sur la route des vents.",
+            "image_path": "char_05_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hestia",
+            "occupation": "Foyer",
+            "dark_secret": "",
+            "alibi": "Je n’ai pas quitté le foyer sacré de la salle, occupée à maintenir les braises et les marmites.",
+            "image_path": "char_06_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Apollon",
+            "occupation": "Oracle",
+            "dark_secret": "",
+            "alibi": "J’étais au portique à purifier un espace rituel avec Athéna, loin des cuisines.",
+            "image_path": "char_07_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Aphrodite",
+            "occupation": "Charme",
+            "dark_secret": "",
+            "alibi": "J’étais dans les jardins suspendus à recevoir des suppliques, et personne n’oserait dire que j’étais seule.",
+            "image_path": "char_08_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Poséidon",
+            "occupation": "Mer",
+            "dark_secret": "",
+            "alibi": "J’étais au rivage des nuées à calmer une houle, loin des salles du Conseil.",
+            "image_path": "char_09_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Déméter",
+            "occupation": "Moissons",
+            "dark_secret": "",
+            "alibi": "Je comptais les réserves et les offrandes dans les greniers, sous la garde d’Héra.",
+            "image_path": "char_10_affaire_concombre_sacre_20260105-214238_ec0o.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "dernier-strike-pour-billy-callaghan.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Dernier Strike pour Billy Callaghan",
+        "synopsis": "Samedi soir, une panne fige le bowling. Dans l’éjecteur de boules, Billy Callaghan est retrouvé bâillonné par une quille.",
+        "description": "Je débarque un samedi soir sous des néons fatigués, quand la mécanique du bowling s’étouffe d’un coup. Une famille vient de signaler que la piste déconne et que quelque chose cloche dans le retour des boules.\n\nDans l’arrière-salle, l’alerte se transforme en cauchemar : Billy Callaghan, costume impeccable, est coincé dans l’éjecteur, une quille enfoncée dans la bouche. Ce n’est pas une chute. C’est un message.\n\nLa salle continue de vivre, mais plus rien n’est innocent : rires trop forts, verres trop vite bus, regards qui se dérobent. Je dois reconstituer la soirée entre la piste défectueuse, les accès réservés, les angles morts et les non-dits — avant que le bowling ne referme ses portes et que la vérité se perde dans le bruit.",
+        "image_path": "cover_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "SERIOUS_MURDER",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Mara Vollen",
+            "occupation": "Enquêtrice privée",
+            "dark_secret": "Je connais Billy Callaghan d’un dossier ancien que je n’ai jamais officiellement clos.",
+            "alibi": "Quand la panne se déclare, je suis encore dehors, au téléphone, juste avant d’entrer.",
+            "image_path": "char_01_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nils Perrault",
+            "occupation": "Employé de salle et étudiant",
+            "dark_secret": "",
+            "alibi": "Au moment où l’arrêt brutal retentit, je suis au comptoir des chaussures avec Thierry et Aurore.",
+            "image_path": "char_02_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sabine Kessler",
+            "occupation": "Gérante du bowling",
+            "dark_secret": "",
+            "alibi": "Quand on parle de panne, je suis au bureau en train d’appeler l’astreinte, téléphone sur haut-parleur.",
+            "image_path": "char_03_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Rafaela Molina",
+            "occupation": "Responsable du snack-bar",
+            "dark_secret": "",
+            "alibi": "Quand la salle réagit à l’arrêt, je suis derrière le bar avec Luna qui filme près de moi.",
+            "image_path": "char_04_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Chloé Ardent",
+            "occupation": "Joueuse de ligue locale",
+            "dark_secret": "",
+            "alibi": "Au moment précis de la panne, je suis sur la piste 9 en plein lancer, sous le regard de Jonas.",
+            "image_path": "char_05_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Thierry Delmas",
+            "occupation": "Commerçant",
+            "dark_secret": "",
+            "alibi": "Je suis près du retour de boules avec Aurore à signaler l’anomalie quand la machine se bloque.",
+            "image_path": "char_06_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Aurore Delmas",
+            "occupation": "Infirmière",
+            "dark_secret": "",
+            "alibi": "Je reste à l’accueil avec Thierry pour exiger qu’on coupe la machine juste avant l’ouverture de l’accès technique.",
+            "image_path": "char_07_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Viktor Hale",
+            "occupation": "Représentant d’une société de financement",
+            "dark_secret": "",
+            "alibi": "Quand l’arrêt se produit, je suis près de la sortie arrière, en appel prétendument professionnel.",
+            "image_path": "char_08_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Luna Vesper",
+            "occupation": "Vidéaste",
+            "dark_secret": "",
+            "alibi": "Je filme près du bar avant l’arrêt, et ma vidéo capture le bruit de la panne en direct.",
+            "image_path": "char_09_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jonas Ravel",
+            "occupation": "Avocat",
+            "dark_secret": "",
+            "alibi": "Au moment de la panne, je suis assis au bout de la piste 9, carnet ouvert, à côté de Chloé.",
+            "image_path": "char_10_dernier-strike-pour-billy-callaghan_20260111-195237_0552.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "guilli-guillis-lugubres.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Guilli-Guillis Lugubres",
+        "description": "*Le caveau du manoir Mornelune respire la pierre froide et l’histoire mal refermée.*\n\nJe m’appelle Kevin Giroud. Mes copains et moi sommes descendus ici pour obtenir des réponses — pas des frissons, pas des histoires à raconter demain : des réponses. Il y a une semaine, nous avons fait une séance ici, dans ce caveau, pour contacter les esprits… mais depuis, c’est comme si ça avait ouvert une porte.\n\nChaque nuit, quelque chose vient nous chatouiller les orteils au bord du lit. On rit pour ne pas y penser, mais on dort de moins en moins.\n\nAlors ce soir, je dirige l’ultime séance. Je pose mes doigts sur la planche, j’écoute les souffles retenir leur peur, et j’appelle les morts de cette famille lugubre, un par un. Si l’un d’eux s’amuse à nous hanter, je veux savoir lequel… et pourquoi.",
+        "image_path": "cover_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "MACABRE",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Kevin Giroud",
+            "dark_secret": "Je n’ai pas dit aux autres qu’un signe de la dernière séance mentionnait mon prénom, comme si le caveau m’attendait.",
+            "alibi": "Au moment où les chatouilles ont recommencé, j’étais réveillé, assis au bord de mon lit, à guetter un bruit dans le couloir.",
+            "image_path": "char_01_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+            "occupation": "spiritiste",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Isabeau de Mornelune",
+            "dark_secret": "",
+            "alibi": "Quand les vivants dorment, je reste près du caveau, incapable de m’éloigner de ma pierre.",
+            "image_path": "char_02_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+            "occupation": "marquise (†1793)",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gaspard du Caveau",
+            "dark_secret": "",
+            "alibi": "Je hante la bibliothèque et ses serrures, et je n’ai pas quitté les portes cette nuit-là.",
+            "image_path": "char_03_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+            "occupation": "majordome (†1881)",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Agnès des Dentelles",
+            "dark_secret": "",
+            "alibi": "Je rôde autour des chambres hautes et je n’ai pas approché les lits des vivants.",
+            "image_path": "char_04_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+            "occupation": "héritière (†1911)",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Vicomte Octave Poussière",
+            "dark_secret": "",
+            "alibi": "Je reste là où l’on m’a honoré, dans la galerie, loin des dortoirs des mortels.",
+            "image_path": "char_05_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+            "occupation": "duelliste (†1706)",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sœur Berthe-Lettrine",
+            "dark_secret": "",
+            "alibi": "Je prétends prier dans la chapelle du manoir quand la nuit s’épaissit.",
+            "image_path": "char_06_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+            "occupation": "pieuse (†1842)",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Éloi le Tison Mornelune",
+            "dark_secret": "",
+            "alibi": "Je reste près de l’escalier, à guetter le passage, sans oser entrer dans les chambres.",
+            "image_path": "char_07_guilli-guillis-lugubres-20251227-185127-y9m0t.jpg",
+            "occupation": "enfant (†1958)",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "Depuis la séance de spiritisme, quelque chose chatouille les orteils chaque nuit.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "la-fausse-bombe-du-nouvel-an.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "La fausse bombe du Nouvel An",
+        "description": "*Minuit vient de passer.*\n\nJe m’appelle **Agent Pittet**. Quand j’arrive sur la place, il y a la fumée, la pluie froide, et ce silence bizarre qui suit un grand bruit.\n\nOn parle déjà d’attentat, de sabotage, de menace, et chacun a un coupable imaginaire à brandir pour se rassurer.\n\nJe n’ai, pour l’instant, que des faits : une zone technique accessible à quelques personnes, du matériel qui a changé de mains, et des passants dont les souvenirs se contredisent à mesure que la peur se propage.\n\nJe vais écouter tout le monde, comparer les récits, et chercher ce qui ne colle pas — parce qu’à minuit, quand tout le monde regardait le ciel, quelqu’un regardait ailleurs.",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "image_path": "cover_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Agent Pittet",
+            "dark_secret": "Je déteste admettre quand je doute, alors je surjoue la certitude même quand j’ai peur de me tromper.",
+            "alibi": "J’arrive après l’explosion, appelé par la centrale, et je prends la main sur le périmètre immédiatement.",
+            "image_path": "char_01_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+            "occupation": "Police cantonale, cellule Événements",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hugo Perrin",
+            "dark_secret": "",
+            "alibi": "Je prétends avoir été au camion technique à préparer le feu d’artifice final, loin de la zone au moment critique.",
+            "image_path": "char_02_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+            "occupation": "artificier communal",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Timo Hertig",
+            "dark_secret": "",
+            "alibi": "Au moment du décompte, j’étais sous la scène à vérifier un câble qui sautait, loin du point de l’explosion.",
+            "image_path": "char_03_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+            "occupation": "technicien lumière et son",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Viktor Benčić",
+            "dark_secret": "",
+            "alibi": "Quand ça a claqué, j’étais devant mon stand à servir des clients, et plusieurs personnes peuvent le confirmer.",
+            "image_path": "char_04_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+            "occupation": "vendeur ambulant",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Maya Schaller",
+            "dark_secret": "",
+            "alibi": "J’étais en bord de place, coincée dans la foule, et je n’ai pas approché la zone technique.",
+            "image_path": "char_05_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+            "occupation": "professeure de yoga",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Lionel Favre",
+            "dark_secret": "",
+            "alibi": "J’étais près de l’arrêt de bus à l’angle, au téléphone avec mon dépôt, quand l’explosion a retenti.",
+            "image_path": "char_06_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+            "occupation": "chauffeur de bus",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Élise Montandon",
+            "dark_secret": "",
+            "alibi": "Je me suis précipitée vers les blessés dès les premières secondes, et on m’a vue donner les premiers soins.",
+            "image_path": "char_07_la_fausse_bombe_du_nouvel_an_20251228_150728_aa26.jpg",
+            "occupation": "infirmière",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "À minuit, tout le monde regardait le ciel — sauf quelqu'un.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "la-perruque-de-kojak-dans-la-soupe.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "La perruque de Kojak dans la soupe",
+        "synopsis": "Une perruque dans la marmite : blague ou règlement de comptes ?",
+        "description": "### Mise en place\n\nJe m’appelle **Gaston Louchet**, cantinier bénévole, et ce soir l’assemblée de **l’Amicale des gens qui ont un cheveu sur la langue** devait se terminer par une soupe bien chaude et des éclats de rire.\n\nSauf que quelqu’un a trouvé malin d’y faire tremper **la perruque de Kojak** : une farce crasseuse, humiliante, et un gaspillage qui me reste en travers.\n\nTout le monde marmonne “maladresse”, “accident”, “c’est pas moi”… mais moi, je veux une chose : **qui** a voulu faire rire aux dépens des autres, et **pourquoi**.",
+        "image_path": "cover_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Gaston Louchet",
+            "occupation": "Cantinier bénévole",
+            "dark_secret": "J’ai déjà couvert un petit sabotage de buffet lors d’une réunion précédente, parce que j’avais peur de perdre ma place de bénévole et d’être la risée de l’Amicale des gens qui ont un cheveu sur la langue.",
+            "alibi": "J’étais en cuisine à surveiller la marmite et à servir les bols, et j’ai quitté la salle seulement quelques secondes pour aller chercher du pain au local d’à côté.",
+            "image_path": "char_01_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gilbert Rocher",
+            "occupation": "Chauffagiste",
+            "dark_secret": "",
+            "alibi": "J’ai passé la fin de soirée près du radiateur du réfectoire à bricoler une vanne capricieuse avec l’autorisation de Gaston, sans m’approcher du service.",
+            "image_path": "char_02_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Fofie Favier",
+            "occupation": "Orthophoniste",
+            "dark_secret": "",
+            "alibi": "Je me suis occupée d’un petit groupe qui répétait un toast devant le miroir du couloir, loin des tables, jusqu’au moment où l’odeur a tourné.",
+            "image_path": "char_03_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Karim Salhi",
+            "occupation": "Contrôleur qualité agroalimentaire",
+            "dark_secret": "",
+            "alibi": "J’étais à l’entrée du réfectoire à discuter avec plusieurs passants du quartier venus voir la fête, et je n’ai pas touché au service.",
+            "image_path": "char_04_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sylvette Maréchal",
+            "occupation": "Avocate du travail",
+            "dark_secret": "",
+            "alibi": "Je soutiens que je faisais le tour des tables pour faire signer une pétition, toujours sous le regard de plusieurs personnes, et que je ne me suis pas approchée de la cuisine.",
+            "image_path": "char_05_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Pascaline Droz",
+            "occupation": "Archiviste municipale",
+            "dark_secret": "",
+            "alibi": "Je classais des cartons et des affiches de l’Amicale dans la petite salle annexe, et je n’ai rejoint la soupe qu’au dernier moment.",
+            "image_path": "char_06_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jérémy Vénard",
+            "occupation": "Régisseur événementiel",
+            "dark_secret": "",
+            "alibi": "Je prétends avoir passé le moment du service à vérifier une prise électrique et les guirlandes dans le couloir, avec mon talkie-walkie, sans toucher à la cuisine.",
+            "image_path": "char_07_la-perruque-de-kojak-dans-la-soupe_20251230_133939_0ba9.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "le-hollandais-violent.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Le Hollandais Violent",
+        "description": "*Le pont craque, la mer grogne, et mon équipage retient son souffle.*\n\nJe suis Kapitein VanHouten, et je ne “perds” pas mes affaires : on me les vole. Cette nuit, pendant mon sommeil, quelqu’un a fait disparaître mon houten been — ma jambe de bois. Sans elle, je ne marche pas : je claque, je bascule, et je me souviens de chaque regard qui ricane.\n\nJ’ai six pirates devant moi. Je vais les regarder dans les yeux, un par un, jusqu’à ce que la vérité tombe — ou que quelqu’un avoue pour éviter pire.\n\nRendez-moi mon houten been. Maintenant.",
+        "image_path": "cover_le-hollandais-violent-20251227-161027-9b99.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Kapitein VanHouten",
+            "dark_secret": "J’ai déjà puni un voleur à tort autrefois, et je refuse que ça se reproduise même si je tremble de rage.",
+            "alibi": "Je dormais dans ma cabine, porte verrouillée, quand ma jambe a disparu sous mon nez.",
+            "image_path": "char_01_le-hollandais-violent-20251227-161027-9b99.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Bibi Van Dérive",
+            "dark_secret": "",
+            "alibi": "Je passais la fin de nuit sur le pont, à vérifier les étoiles et les cartes, loin de la cabine du capitaine.",
+            "image_path": "char_02_le-hollandais-violent-20251227-161027-9b99.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jan Plankebord",
+            "dark_secret": "",
+            "alibi": "Je réparaissais une rambarde qui grinçait à l’avant, marteau à la main, quand le capitaine a hurlé.",
+            "image_path": "char_03_le-hollandais-violent-20251227-161027-9b99.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Maaike Du Suif",
+            "dark_secret": "",
+            "alibi": "Je tenais le quart au bastingage avec la mouette du bord quand l’alarme a éclaté.",
+            "image_path": "char_04_le-hollandais-violent-20251227-161027-9b99.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Piet Polderboom",
+            "dark_secret": "",
+            "alibi": "Je contrôlais les canons et la poudre au moment où le capitaine a commencé à tout menacer.",
+            "image_path": "char_05_le-hollandais-violent-20251227-161027-9b99.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hendrik Zoutebeek",
+            "dark_secret": "",
+            "alibi": "J’étais près du chaudron, en train de sauver le petit-déjeuner, quand les cris ont roulé sur le pont.",
+            "image_path": "char_06_le-hollandais-violent-20251227-161027-9b99.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Saskia Vlekkeloos",
+            "dark_secret": "",
+            "alibi": "Je m’entraînais seule à l’arrière du navire quand on a découvert le vol.",
+            "image_path": "char_07_le-hollandais-violent-20251227-161027-9b99.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "Le capitaine pirate s'est fait voler sa jambe de bois pendant son sommeil.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "le_conclave_au_jus_rouge.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Le conclave au jus rouge",
+        "synopsis": "Au conclave des vampires, l'un d'eux serait secrètement végan.",
+        "description": "_Une salle de velours, des chandelles, et des regards qui hésitent le miroir._\n\nCette nuit, nous, immortels, nous réunissons au conclave pour renouveler notre serment.\n\nMais une rumeur me fait trembler les canines : l’un d’entre vous est secrètement végan.\n\nLe coupable est une honte pour notre espèce et notre héritage — et je compte bien planter un pieu dans le cœur de cet embarras nocturne.",
+        "image_path": "cover_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "MACABRE",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Varek Noctis",
+            "occupation": "Inspecteur du Voile",
+            "dark_secret": "Je suis venu au conclave sans mandat : je dois régler une dette ancienne avant que les doyens ne sentent ma faiblesse.",
+            "alibi": "Quand le calice a circulé, j’étais près de la balustrade, à observer les mains et les bouches, sans quitter la table des yeux.",
+            "image_path": "char_01_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Prince Églantier",
+            "occupation": "Esthète immortel",
+            "dark_secret": "",
+            "alibi": "Pendant le service, je me suis tenu au centre, un verre en main, à porter des toasts et à sourire pour qu’on me regarde… ailleurs.",
+            "image_path": "char_02_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Comtesse Nocturna",
+            "occupation": "Mondaine glaciale",
+            "dark_secret": "",
+            "alibi": "Je n’ai touché à rien : je n’ai levé mon verre qu’après que d’autres ont déjà goûté, pour lire leurs réactions.",
+            "image_path": "char_03_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Docteur Hemlock",
+            "occupation": "Chirurgien du sang",
+            "dark_secret": "",
+            "alibi": "Je suis resté sous les lueurs d’un cierge, mes fioles scellées, à surveiller les teintures et les pupilles.",
+            "image_path": "char_04_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Baron Rictus",
+            "occupation": "Ancien guerrier",
+            "dark_secret": "",
+            "alibi": "Je suis resté bien en vue derrière la table, trop exposé pour manipuler quoi que ce soit sans être remarqué.",
+            "image_path": "char_05_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sœur Cendre",
+            "occupation": "Nonne vampirique",
+            "dark_secret": "",
+            "alibi": "Je n’ai quitté mon chapelet que pour bénir le calice du regard, sans jamais y poser les doigts.",
+            "image_path": "char_06_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Archiviste Vladomir",
+            "occupation": "Gardien de grimoires",
+            "dark_secret": "",
+            "alibi": "J’écrivais les signatures au pupitre et plusieurs mains sont venues à moi, attestant que je n’ai pas bougé.",
+            "image_path": "char_07_le_conclave_au_jus_rouge_20251230-122410_9lee.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "le_fantome_du_grand_huit.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Le Fantôme du Grand Huit",
+        "synopsis": "Au parc Noctiland, le Grand Huit s’arrête en pleine nuit. Une “apparition” affole les témoins. Daphné suspecte une mise en scène.",
+        "description": "Je passe les grilles quand le parc ferme et que la brume avale les allées.\n\nLe Grand Huit, fierté de Noctiland, s’est figé pendant un tour nocturne. Depuis, on parle d’une présence qui traverse les décors et d’une silhouette impossible à suivre.\n\nTout le monde est persuadé qu’un fantôme hante le parc. Moi, je n’y crois pas — mais je crois aux gens. Et à ce qu’ils feraient pour cacher la vérité.",
+        "image_path": "cover_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Daphné",
+            "occupation": "Chasseuse de fantômes",
+            "dark_secret": "Elle a déjà démystifié une “hantise” très médiatisée et craint qu’on la prenne pour une vendeuse d’histoires.",
+            "alibi": "Au moment de la panne, elle interroge un opérateur près de la sortie du Grand Huit et voit la foule se disperser.",
+            "image_path": "char_01_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Monsieur Weavers",
+            "occupation": "Gérant du parc d’attraction",
+            "dark_secret": "",
+            "alibi": "À l’heure de l’incident, il est au bureau de contrôle central au téléphone avec la mairie au sujet d’une plainte de riverains.",
+            "image_path": "char_02_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Roxy",
+            "occupation": "Responsable com’ & réseaux sociaux",
+            "dark_secret": "",
+            "alibi": "Pendant la panne, elle filme en direct près de l’entrée principale, entourée de visiteurs et de son trépied.",
+            "image_path": "char_03_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Malik",
+            "occupation": "Chef maintenance des manèges",
+            "dark_secret": "",
+            "alibi": "Quand le Grand Huit s’arrête, il est dans l’atelier, les mains pleines de graisse, avec un collègue qui lui apporte des pièces.",
+            "image_path": "char_04_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Agnès",
+            "occupation": "Voyante du parc",
+            "dark_secret": "",
+            "alibi": "Au moment des cris, elle est sur scène au kiosque, en plein spectacle, sous les projecteurs et face à un public.",
+            "image_path": "char_05_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Tomi",
+            "occupation": "Comédien/cascadeur",
+            "dark_secret": "",
+            "alibi": "Lors de l’incident, il se change en coulisses de la maison hantée, loin du Grand Huit, avec deux collègues.",
+            "image_path": "char_06_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Chloé",
+            "occupation": "Vendeuse snacks & barbe à papa",
+            "dark_secret": "",
+            "alibi": "Quand tout bascule, elle ferme son stand et recompte la caisse devant les caméras du comptoir.",
+            "image_path": "char_07_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Baptiste “Bats”",
+            "occupation": "Agent de sécurité de nuit",
+            "dark_secret": "",
+            "alibi": "Au moment précis de la panne, il est sur la ronde du lac artificiel, appelé par radio pour calmer un groupe agité.",
+            "image_path": "char_08_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Diane",
+            "occupation": "Historienne locale",
+            "dark_secret": "",
+            "alibi": "Au moment de l’incident, elle est dans la petite salle d’archives du parc à consulter de vieux plans, seule mais horodatée par le registre d’entrée.",
+            "image_path": "char_09_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nino",
+            "occupation": "Illusionniste invité",
+            "dark_secret": "",
+            "alibi": "Il affirme qu’il répétait seul sur la petite scène des automates au moment de la panne, à l’écart du Grand Huit.",
+            "image_path": "char_10_le_fant_me_du_grand_huit_20260108_163855_ur8r.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "le_nez_hautbois_de_Pinokku.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Le \"nez\" hautbois de Pinokku",
+        "description": "*Chaque fois que je dis le mot \"nez\", je fais des guillemets avec les doigts.*\n\nOn a retrouvé Pinokku au pied du clocher, en larmes, les mains plaquées sur son \"nez\" comme sur une flûte.\n\nQuelqu’un a percé son \"nez\" de petits trous réguliers, et chaque fois qu’il parle, l’air s’y engouffre et siffle : dans ce village, un mensonge se repère désormais au premier souffle.\n\nJe convoque ceux qui rôdaient près de l’atelier et de la place ce soir-là. Qu’on cesse les détours : je veux des versions nettes, et des vérités qui tiennent debout.",
+        "image_path": "cover_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Auguste Brindavoine",
+            "occupation": "Inspecteur itinérant",
+            "dark_secret": "J’ai la mauvaise manie de traquer le moindre mensonge comme s’il était un aveu, et je sais que ça me rend injuste.",
+            "alibi": "J’ai été appelé après l’incident et je n’ai touché à rien avant d’ordonner que l’on sécurise la place.",
+            "image_path": "char_01_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gepette",
+            "occupation": "Père adoptif",
+            "dark_secret": "",
+            "alibi": "J’étais dans mon atelier, porte ouverte, à terminer une commande quand les cloches ont sonné et que tout le monde a couru dehors.",
+            "image_path": "char_02_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Célestine Filigrane",
+            "occupation": "Professeure, pédagogue",
+            "dark_secret": "",
+            "alibi": "Je corrigeais des copies à la fenêtre de l’école, d’où l’on voit la place, jusqu’au tumulte qui a suivi les cris.",
+            "image_path": "char_03_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dottore Biscotto",
+            "occupation": "Médecin du village",
+            "dark_secret": "",
+            "alibi": "Je rangeais mes fioles à l’arrière de l’officine, et l’odeur d’alcool camphré sur ma veste peut le confirmer.",
+            "image_path": "char_04_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Rufus le Renard",
+            "occupation": "Camelot",
+            "dark_secret": "",
+            "alibi": "Je prétends avoir été sur la place à fermer mon étal, entouré de témoins, mais je compte sur la foule pour brouiller les souvenirs.",
+            "image_path": "char_05_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Pia la Fée",
+            "occupation": "Fée donneuse de vie",
+            "dark_secret": "",
+            "alibi": "Je n’étais pas au village : j’étais à la lisière, là où l’on n’entre qu’en suivant les lucioles, et personne ne m’y a vue sauf les chouettes.",
+            "image_path": "char_06_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Salvatore \"Sifflet\" Carminati",
+            "occupation": "Charmeur de serpent",
+            "dark_secret": "",
+            "alibi": "Je jouais plus loin, près des étables, et mon serpent était avec moi quand les cloches ont lancé l’alerte.",
+            "image_path": "char_07_le_nez_hautbois_de_Pinokku_20251229_101901_56u1.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "Quelqu'un a percé le nez de Pinokku — maintenant ses mensonges sifflent.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "ma-neige-enchantee.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Ma Neige Enchantée",
+        "description": "*Le royaume scintille encore des dernières étincelles du réveillon.*\n\nJe pousse la porte des réserves royales… et je trouve le vide : plus une pincée de poudre de Perlimpimpin, pas même la poussière au fond des fioles.\n\nSans cette magie, les sorts du quotidien s’éteignent, les promesses se défont, et la cour va vite chercher un coupable tout trouvé.\n\nJe dois découvrir qui a siphonné les stocks avant que la panique n’avale le royaume et que la “neige” ne retombe… pour de bon.",
+        "image_path": "cover_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "suspect",
+            "character_name": "Chapi-Elchapo",
+            "dark_secret": "",
+            "alibi": "Il affirme avoir passé la nuit à vérifier les serrures des coffres pour “éviter les vols”.",
+            "image_path": "char_01_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+            "rewrite_key": "suspect-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "La Fée Cartelabosse",
+            "dark_secret": "",
+            "alibi": "Elle soutient qu’elle était sur son balcon à bénir les flocons, visible de tous depuis la grande allée.",
+            "image_path": "char_02_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Tony Montagnard",
+            "dark_secret": "",
+            "alibi": "Il assure qu’il n’a pas quitté sa colline, trop occupé à surveiller le vent et les traces dans la neige.",
+            "image_path": "char_03_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "L'Ours Cocolargol",
+            "dark_secret": "",
+            "alibi": "Il dit avoir animé la fête au salon d’honneur, distribuant du miel épicé sans interruption.",
+            "image_path": "char_04_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Bilbo Baggy",
+            "dark_secret": "",
+            "alibi": "Il prétend avoir été au miroir des vérifications, à s’assurer que personne ne changeait de visage cette nuit-là.",
+            "image_path": "char_05_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Schnouff Grincheux",
+            "dark_secret": "",
+            "alibi": "Il jure qu’il bougonnait dehors, seul, à compter les étoiles et à râler sur les chants.",
+            "image_path": "char_06_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "investigator",
+            "character_name": "Cocosinus",
+            "dark_secret": "Il a falsifié des comptes de réserve pour masquer une erreur de calcul catastrophique.",
+            "alibi": "Il certifie qu’il classait les inventaires à la bibliothèque, entouré de bougies et de registres.",
+            "image_path": "char_07_ma-neige-enchant-e-20251227-151041-pa1w5.jpg",
+            "rewrite_key": "investigator-6"
+          }
+        ],
+        "synopsis": "Toute la poudre de Perlimpimpin a disparu des réserves royales.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "meurtre_a_lopera.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Meurtre à l'opéra",
+        "description": "*Velours rouge, dorures, parfum poudré. Le public s’écoule dans le grand foyer tandis que, derrière le rideau, la machinerie respire encore.*\n\nCe soir-là, l’Opéra Verlaine joue **La Nuit des Masques**, une première attendue comme une délivrance après des semaines de répétitions sous tension. Entre deux saluts, on découvre le corps de **César Montfort**, directeur artistique et ancien baryton, allongé face contre le sol dans un couloir de service, à quelques mètres des loges. À côté de lui : une partition froissée, une trace de poudre dorée, et un petit outil de scène qui n’aurait jamais dû quitter l’atelier.\n\nOn ne parle pas d’un accident. La porte coupe-feu qui mène aux coulisses était *verrouillée de l’intérieur*, et la clé de secours a disparu du tableau. Les témoins se contredisent : certains jurent avoir vu Montfort se disputer avec quelqu’un dans une loge vide, d’autres parlent d’un message anonyme glissé dans le pupitre du chef.\n\n**Ce que l’on sait :**\n\n- Montfort avait rendez-vous “pour signer” quelque chose, juste avant l’entracte.  \n- Une page du registre des clés a été arrachée avec soin.  \n- Le souffleur a retrouvé, dans la trappe, un bout de papier huilé taché d’encre violette.\n\n**Ce qui gêne le plus :** tout le monde a une raison de vouloir faire taire Montfort… mais personne ne veut dire *pourquoi*.",
+        "image_path": "01_couverture_meurtre_a_lopera.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "SERIOUS_MURDER",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Capitaine Iris Valmont — brigade criminelle",
+            "dark_secret": "J’ai déjà laissé un artiste “intouchable” s’en tirer après un incident mortel, parce que tout le milieu culturel faisait bloc et que ma hiérarchie voulait éviter le scandale. J’ai classé trop vite, puis j’ai appris, des mois plus tard, qu’on avait acheté des silences. Depuis, je ne supporte plus les dossiers “propres” et les explications élégantes. À l’Opéra Verlaine, je sens la même odeur : celle d’une vérité maquillée en fatalité. Si je me trompe encore, je n’aurai plus aucune légitimité.",
+            "alibi": "Je suis arrivée sur appel de la régie, avant que les accès soient rouverts au public. Je fais sceller les issues, je prends les noms des personnes présentes dans le bâtiment et je fais couper le standard interne pour éviter les fuites. Mon “alibi”, c’est l’horodatage radio de mon arrivée et le fait que je ne quitte pas la zone sous scellés avant d’avoir fait photographier la scène et inventorié les clés. Je n’ai aucun lien avec l’Opéra, et je n’ai pas mis les pieds ici avant ce soir.",
+            "image_path": "02_capitaine_iris_valmont.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Armand Chéret — directeur administratif",
+            "dark_secret": "",
+            "alibi": "Je prétends être resté dans mon bureau à gérer la crise : appels aux sponsors, feuilles de paie, autorisations d’heures supplémentaires. Je dis que j’ai simplement validé la fermeture des accès après l’entracte, comme d’habitude. Je m’appuie sur le fait que je connais les procédures mieux que personne, et sur quelques messages que j’ai envoyés depuis le standard interne pour “prouver” ma présence ailleurs. Mon histoire tient si personne ne regarde de trop près le registre des clés… justement celui dont une page manque.",
+            "image_path": "03_armand_cheret.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sélène Mariani — soprano vedette",
+            "dark_secret": "",
+            "alibi": "Au moment où Montfort est retrouvé, je suis encore en costume, entourée de deux habilleuses et de la régisseuse de plateau qui vérifie mes entrées. Je prépare mon retour pour l’acte suivant et je fais répéter, à voix basse, une reprise délicate. On peut confirmer ma présence : maquillage en retouche, corset resserré, épingles remplacées. Je n’ai pas accès aux clés des couloirs techniques, et je ne traverse jamais seule les zones de service ; mon contrat l’interdit pour “sécurité” et pour éviter les rencontres avec le public.",
+            "image_path": "04_selene_mariani.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Lucien Varga — chef d’orchestre",
+            "dark_secret": "",
+            "alibi": "Pendant les moments critiques, je suis dans la fosse : on ne dirige pas un acte depuis un couloir. Plusieurs instrumentistes, plus le régisseur son, peuvent attester que je suis resté à mon pupitre, puis que j’ai rejoint brièvement la loge de direction… mais seulement après l’annonce du drame. Mon téléphone est resté éteint, comme toujours en représentation, et je n’ai pas de clé de service. Je peux être odieux, certes, mais je n’avais aucune fenêtre réaliste pour me retrouver seul avec Montfort sans que tout le monde le voie.",
+            "image_path": "05_lucien_varga.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nora Kessler — régisseuse générale",
+            "dark_secret": "",
+            "alibi": "J’étais en poste au pupitre régie, casque sur les oreilles, à coordonner les changements de décor et les entrées. Ma présence est visible : cahier de régie annoté, appels micro, communications radio enregistrées. Je me suis absentée une minute pour calmer un machiniste, puis je suis revenue. Montfort est découvert alors que je gère déjà un incident de rideau bloqué : on a plusieurs témoins qui me voient courir entre régie et plateau. Je pouvais mentir sur une procédure, oui, mais pas disparaître assez longtemps pour tendre un piège sans que l’équipe le remarque.",
+            "image_path": "06_nora_kessler.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Basile Ormont — chef machiniste",
+            "dark_secret": "",
+            "alibi": "À l’entracte, je suis en sous-scène avec deux machinistes à vérifier une poulie qui grince et à préparer la descente d’un praticable. Les mains pleines de graisse, je suis resté dans l’atelier technique, loin des loges. On m’a vu nettoyer une clé plate, puis signer un bon de sortie de matériel. Quand Montfort est trouvé, on m’appelle pour sécuriser la zone et couper la machinerie. Je suis rude et je parle fort, mais je n’ai pas quitté mon équipe : sans moi, le décor ne bouge pas et tout le monde le sait.",
+            "image_path": "07_basile_ormont.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Giulia Rinaldi — cheffe costumière",
+            "dark_secret": "",
+            "alibi": "Je suis restée aux cintres-costumes, entre la loge et le couloir de changement rapide, avec une habilleuse et la doublure de Sélène. On ajustait une robe qui craquait à la couture et on recousait un bouton qui menaçait de sauter en plein air. Mes mains étaient dans le fil, pas sur une poignée. Les allées et venues sont constantes : on peut confirmer que je n’ai pas quitté la zone, parce que tout le monde venait me réclamer épingles, ruban, ou retouche d’urgence. Je n’ai ni le temps ni l’envie de me glisser seule dans un couloir technique verrouillé.",
+            "image_path": "08_giulia_rinaldi.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Théo Dumas — technicien lumière",
+            "dark_secret": "",
+            "alibi": "Je suis en passerelle et en régie lumière, en permanence. Les changements de tableaux sont minutés : on ne quitte pas son poste en pleine représentation. Le régisseur plateau et deux électriciens peuvent attester que j’étais en train de corriger un faisceau trop bas et de vérifier un gradateur capricieux. Je suis descendu seulement quand l’alarme a été donnée, parce qu’on m’a demandé de rallumer en plein service pour sécuriser les couloirs. Mon badge ouvre certains locaux, pas les loges verrouillées, et je n’ai aucune clé physique sur moi.",
+            "image_path": "09_theo_dumas.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hector Salvi — bibliothécaire d’orchestre",
+            "dark_secret": "",
+            "alibi": "Je suis à la bibliothèque de l’orchestre, entre la fosse et les coulisses, à gérer les changements de feuilles et à préparer des partitions pour l’acte suivant. Plusieurs musiciens passent par moi, et l’on peut tracer mes déplacements : je fais signer des reçus, je récupère des pages volantes, je replace des marques. Quand Montfort est trouvé, je suis en train de recopier une annotation au crayon sur une partie de violoncelle. Je n’ai aucun intérêt à me retrouver dans un couloir de loges : je déteste les conflits, et je fuis les gens de pouvoir.",
+            "image_path": "10_hector_salvi.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Mila Rozan — doublure",
+            "dark_secret": "",
+            "alibi": "Au moment de la découverte, je suis avec Giulia et une habilleuse dans le couloir de changement rapide, en tenue neutre, prête à prendre une place si Sélène flanche. Je répète mentalement et je fais des vocalises discrètes dans un coin. On m’a demandé de porter une robe de secours à l’étage : une machiniste m’a croisée avec le vêtement sur un cintre. Je suis nerveuse, oui, mais je n’ai pas de clé ni d’autorité. Et surtout, si Montfort meurt, mes chances d’être “promue” s’effondrent : la maison se referme, les rumeurs étouffent tout, et je disparais avec elles.",
+            "image_path": "11_mila_rozan.jpg",
+            "rewrite_key": "suspect-9"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Raoul Nivelle — critique musical",
+            "dark_secret": "",
+            "alibi": "J’étais dans le foyer, entouré d’invités et d’un photographe, à commenter l’acte précédent. On m’a vu écrire dans mon carnet, boire un verre, faire des apartés acides sur la mise en scène. Les témoignages sont nombreux, parce que j’adore être vu. Je suis monté brièvement au balcon pour “prendre l’air” et observer la salle : une ouvreuse peut confirmer. Je n’ai pas accès aux zones de service, on me fait escorter dès que j’approche des coulisses. Et si Montfort meurt, mes sources se tarissent : plus personne ne me parle, je perds mon petit théâtre d’influence.",
+            "image_path": "12_raoul_nivelle.jpg",
+            "rewrite_key": "suspect-10"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Oksana Velours — mécène",
+            "dark_secret": "",
+            "alibi": "Je suis au salon des mécènes pendant l’entracte, avec deux administrateurs, un serveur et le directeur de salle. Les conversations sont mondaines, faciles à vérifier : on échange des banalités, on signe un livre d’or, on pose pour une photographie. Je suis ensuite reconduite à ma loge de face, parce que je n’aime pas les couloirs. Quand le drame éclate, on me tient à l’écart “pour préserver l’institution”. Mon bracelet d’invitée ne donne accès à rien, et je ne porte ni clés ni badge. On peut acheter beaucoup de choses, mais pas la discrétion d’un meurtre en plein théâtre.",
+            "image_path": "13_oksana_velours.jpg",
+            "rewrite_key": "suspect-11"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sergio Kahn — responsable sécurité",
+            "dark_secret": "",
+            "alibi": "Je suis en poste à l’entrée des coulisses, avec un agent, à contrôler que personne du public ne franchit les portes. Les caméras enregistrent mes allées et venues dans le hall technique, et plusieurs membres du personnel viennent me voir pour récupérer des badges oubliés. Je fais une ronde rapide après l’entracte, puis je reviens à mon poste. Quand Montfort est découvert, c’est moi qui bloque les accès et qui appelle la police. Mon problème : je sais trop bien quelles portes ouvrent quoi. Mais ce soir-là, j’avais surtout intérêt à ce que rien n’arrive : un incident, et on inspecte tout… y compris mes petits arrangements.",
+            "image_path": "14_sergio_kahn.jpg",
+            "rewrite_key": "suspect-12"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "mort-sur-la-furka.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Mort sur la Furka",
+        "description": "*Nuit glaciale, néons et fumée de pneus au col de la Furka.*\n\nJ’arrive sur une chaussée trempée où les traînées de lumière dessinent encore la folie de la course. Une voiture est en morceaux, et l’accident “simple” qu’on me décrit sonne trop propre.\n\nQuelqu’un ici sait pourquoi ça a basculé — et je dois comprendre vite, avant que la montagne n’engloutisse les preuves… ou un autre pilote.",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "SERIOUS_MURDER",
+        "image_path": "cover_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Maya Keller",
+            "dark_secret": "Je connais un des coureurs depuis une ancienne affaire et je l’ai laissé filer jadis.",
+            "alibi": "J’étais en patrouille sur la route du col quand l’appel radio signale le crash.",
+            "image_path": "char_01_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "inspectrice cantonale",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nils Aeschlimann",
+            "dark_secret": "",
+            "alibi": "Je gérais les messages du groupe depuis un recoin de parking, loin de la route.",
+            "image_path": "char_02_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "organisateur discret",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Inès Varga",
+            "dark_secret": "",
+            "alibi": "Je faisais chauffer mes freins plus bas et je n’étais pas au niveau du choc.",
+            "image_path": "char_03_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "pilote vétérane",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Rachid Benali",
+            "dark_secret": "",
+            "alibi": "Je réparais un démarreur récalcitrant quand j’ai entendu les sirènes.",
+            "image_path": "char_04_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "mécanicien de fortune",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Luca Ferri",
+            "dark_secret": "",
+            "alibi": "J’étais en live sur mon téléphone, arrêté sur un bas-côté au moment du fracas.",
+            "image_path": "char_05_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "influenceur volant",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Saskia Blum",
+            "dark_secret": "",
+            "alibi": "Je stabilise un blessé dans l’ambulance quand la scène devient un périmètre.",
+            "image_path": "char_06_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "médecin urgentiste",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sven Rüegg",
+            "dark_secret": "",
+            "alibi": "J’attachais mon treuil à une voiture en panne à plusieurs lacets de là.",
+            "image_path": "char_07_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "dépanneur de montagne",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Livia Moret",
+            "dark_secret": "",
+            "alibi": "Je notais des plaques depuis le belvédère quand la voiture a décroché.",
+            "image_path": "char_08_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "journaliste auto",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jonas Widmer",
+            "dark_secret": "",
+            "alibi": "Je traînais en arrière du peloton et je vois les feux s’éteindre après le choc.",
+            "image_path": "char_09_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "coureur amateur",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Chiara Salvini",
+            "dark_secret": "",
+            "alibi": "Je vérifiais la télémétrie sur ma tablette, à l’écart, quand l’accident survient.",
+            "image_path": "char_10_mort-sur-la-furka-20251227-153409-5uruq.jpg",
+            "occupation": "ingénieure data",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "synopsis": "Une course nocturne au col de la Furka tourne à l'accident mortel.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "panique-noel-castors-paillettes.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Panique à Noël chez la tribu des Castors-à-Paillettes",
+        "description": "*Le réveillon s’éteint, la neige étouffe les rires.*\n\nJe contemple Petiteb-Bûche-de-Noël-Friable allongé dans la poudre, un tomahawk dans le dos, et on me chuchote que c’était « un suicide de nostalgie ». Je connais la nostalgie… et je connais aussi les histoires qu’on lui fait raconter.\n\nCe soir, je fais le tour de ma tribu des Castors-à-Paillettes : chacun a une version, chacun a les mains pleines de fête, et personne n’a l’air à sa place. Si ce n’est pas un suicide, alors quelqu’un a profité du réveillon pour offrir un cadeau empoisonné — et je compte bien le déballer.",
+        "image_path": "cover_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Grand-Chef-Papier-Cadeau-Froissé",
+            "dark_secret": "J’ai promis à Petiteb-Bûche-de-Noël-Friable de garder un secret de réveillon, et je crains qu’il ne me rattrape.",
+            "alibi": "Je faisais le tour des tipis pour souhaiter bonne nuit quand les cris ont éclaté près du feu.",
+            "image_path": "char_01_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+            "occupation": "chef nostalgique",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Coussin-de-Plumes-Pressées",
+            "dark_secret": "",
+            "alibi": "Je rangeais cordes et maillets dans mon abri, loin du cercle du feu, quand j’ai entendu l’agitation.",
+            "image_path": "char_02_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+            "occupation": "responsable des outils",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Chaussette-Orpheline-Volante",
+            "dark_secret": "",
+            "alibi": "Je ravivais les braises et soufflais sur les flammes quand on a découvert le corps.",
+            "image_path": "char_03_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+            "occupation": "gardien du feu",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dinde-Élastique-Glougloutante",
+            "dark_secret": "",
+            "alibi": "Je remettais une marmite au chaud derrière le tipi cuisine au moment des cris.",
+            "image_path": "char_04_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+            "occupation": "cuisinier du réveillon",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Tambour-Mou-À-Pois",
+            "dark_secret": "",
+            "alibi": "Je somnolais près de mon tambour et je ne me réveille vraiment qu’au vacarme.",
+            "image_path": "char_05_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+            "occupation": "chamane somnolent",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Guirlande-Perdue-Dans-Le-Tepee",
+            "dark_secret": "",
+            "alibi": "Je fixais des décorations sur le grand tipi quand tout le monde a couru vers le feu.",
+            "image_path": "char_06_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+            "occupation": "artisan décorateur",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Renne-Imaginaire-À-Roulettes",
+            "dark_secret": "",
+            "alibi": "Je revenais d’une course entre deux tipis, essoufflé, quand j’ai vu le rassemblement.",
+            "image_path": "char_07_panique-noel-castors-paillettes-20251227-z660ad.jpg",
+            "occupation": "messager du village",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "Un tomahawk dans le dos au réveillon — ce n'est pas un suicide.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "panique_au_salon_des_mochis.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Panique au Salon des Mochis",
+        "synopsis": "Au Salon des Mochis, le trophée « Mochi d’Or » disparaît et la mascotte s’effondre; l’inspectrice Iris enquête parmi dix suspects.",
+        "description": "Je débarque au Salon des Mochis au pire moment : le prestigieux trophée a disparu, et la mascotte officielle est retrouvée KO au milieu des confettis pastel.\n\nTout le monde jure être venu « juste pour l’ambiance », mais les sourires sont trop parfaits et les sacs beaucoup trop grands. Je vais devoir démêler les petites jalousies, les grandes maladresses et les mensonges mignons qui collent aux doigts.\n\nCe soir, on ne cherche pas la gloire : on cherche la science de savoir qui a commis un crime aussi ridicule.",
+        "image_path": "cover_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Capitaine Iris Meringue",
+            "occupation": "Inspectrice de brigade",
+            "dark_secret": "Je suis venue incognito pour coincer un réseau de faux badges et je n’ai pas prévenu l’organisation.",
+            "alibi": "Quand la mascotte s’effondre, je suis près de l’entrée VIP à vérifier des badges au hasard.",
+            "image_path": "char_01_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Milo Boba",
+            "occupation": "Barista bubble tea",
+            "dark_secret": "",
+            "alibi": "Au moment du tumulte, je suis derrière mon bar à secouer un shaker et à compter mes perles de tapioca.",
+            "image_path": "char_02_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Chloé Choupette",
+            "occupation": "Influenceuse DIY",
+            "dark_secret": "",
+            "alibi": "Quand tout crie, je filme au photocall, téléphone levé, avec mon ring-light allumé.",
+            "image_path": "char_03_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Kenji Pocky",
+            "occupation": "Responsable logistique du salon",
+            "dark_secret": "",
+            "alibi": "À l’instant du drame, je cours entre le dépôt et la scène avec mon talkie et une check-list.",
+            "image_path": "char_04_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nina Nuage",
+            "occupation": "Décoratrice de ballons",
+            "dark_secret": "",
+            "alibi": "Quand la mascotte tombe, je suis en haut d’un escabeau à nouer des rubans sur l’arche.",
+            "image_path": "char_05_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Omar Origami",
+            "occupation": "Artiste papier",
+            "dark_secret": "",
+            "alibi": "Au moment précis, je plie un origami géant sur ma table, entouré de papier coloré.",
+            "image_path": "char_06_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sophie Sprinkles",
+            "occupation": "Juge du concours pâtisserie",
+            "dark_secret": "",
+            "alibi": "Quand la panique éclate, je suis en coulisses à remplir ma grille de notes avec une petite cuillère.",
+            "image_path": "char_07_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Aya Pastel",
+            "occupation": "Vendeuse de peluches",
+            "dark_secret": "",
+            "alibi": "À l’instant du chaos, je suis derrière mon rideau à recompter les peluches et à replacer les prix.",
+            "image_path": "char_08_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gaspard Glitters",
+            "occupation": "Technicien lumières & effets",
+            "dark_secret": "",
+            "alibi": "Quand la mascotte s’effondre, je suis officiellement à la régie, casque sur les oreilles, à lancer un test de projecteurs.",
+            "image_path": "char_09_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Roxane Ribbon",
+            "occupation": "Couturière de costumes",
+            "dark_secret": "",
+            "alibi": "Au moment du tumulte, je suis à l’atelier couture à repriser un costume fendu sous une lampe.",
+            "image_path": "char_10_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-9"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hugo Hibi",
+            "occupation": "Photographe instantané",
+            "dark_secret": "",
+            "alibi": "Quand tout le monde s’agite, je suis près de mon petit labo à secouer les photos instantanées qui sèchent.",
+            "image_path": "char_11_panique_au_salon_des_mochis_20260207_162600_3dut.jpg",
+            "rewrite_key": "suspect-10"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "pitch_empoisonne.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Pitch Empoisonné",
+        "synopsis": "En pleine levée de fonds, le CEO meurt au toast. L’étage est verrouillé. Dix personnes restent piégées avec leurs versions.",
+        "description": "Je suis appelé au dernier moment pour encadrer une soirée de levée de fonds décisive. Les chiffres, les signatures et la réputation se jouent ce soir, à huis clos, au sommet de l’immeuble.\n\nAu moment du toast, le CEO s’écroule. Malgré les tentatives de secours, il meurt sur place.\n\nLa sécurité verrouille l’étage. Tout le monde est encore là : équipe, investisseur, avocate, communication. Si la levée capote, tous y laissent quelque chose — une réputation, un poste, un deal, une protection.\n\nMais au milieu de la panique, je vois aussi autre chose : pour quelques-uns, ce chaos peut devenir une opportunité de changer le rapport de force. Mon travail est simple : reconstituer la chronologie, comprendre comment la substance a pu être administrée, et identifier qui avait une raison solide d’agir — avant que la vérité ne se retrouve enterrée sous les communiqués.",
+        "image_path": "cover_pitch_empoisonne_20260107_000000_b12b1.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "SERIOUS_MURDER",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Adrian Cole",
+            "occupation": "Risk & Compliance Officer (VC)",
+            "dark_secret": "Je connais déjà une alerte de conformité sur l’IP de la start-up et je suis venu prêt à geler la signature si je trouve un mensonge.",
+            "alibi": "Au moment du toast, je suis sur la terrasse latérale à vérifier un dossier sur mon téléphone, visible depuis la baie vitrée.",
+            "image_path": "char_01_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Claire Vaughn",
+            "occupation": "CTO",
+            "dark_secret": "",
+            "alibi": "Pendant le toast, je calibre l’ordinateur de démo derrière la table technique avec Nate.",
+            "image_path": "char_02_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hugh Bennett",
+            "occupation": "CFO",
+            "dark_secret": "",
+            "alibi": "Au moment du toast, je fais circuler les coupes depuis le bar mobile, au milieu de plusieurs invités.",
+            "image_path": "char_03_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Maya Rhodes",
+            "occupation": "Head of Product",
+            "dark_secret": "",
+            "alibi": "Au toast, je suis au coin canapé à écouter un message vocal, et Inez m’entend répondre.",
+            "image_path": "char_04_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nate Dawson",
+            "occupation": "Lead Designer (Brand/UI)",
+            "dark_secret": "",
+            "alibi": "Au toast, je suis collé à la régie de projection avec Claire, les mains sur les câbles et la télécommande.",
+            "image_path": "char_05_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Inez Calder",
+            "occupation": "PR & Communications Lead",
+            "dark_secret": "",
+            "alibi": "Au toast, je suis en appel discret dans le couloir vitré, et Jonas me voit y entrer.",
+            "image_path": "char_06_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Victor Hale",
+            "occupation": "VC Partner",
+            "dark_secret": "",
+            "alibi": "Au toast, je suis au centre du groupe, verre levé, avec Evan juste à côté de moi.",
+            "image_path": "char_07_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Leah Mercer",
+            "occupation": "Deal Counsel",
+            "dark_secret": "",
+            "alibi": "Au toast, je relis les annexes sur ma tablette à une table haute, à portée de vue d’Adrian.",
+            "image_path": "char_08_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jonas Keller",
+            "occupation": "Head of Building Security",
+            "dark_secret": "",
+            "alibi": "Au toast, je suis près du tableau électrique à vérifier l’alarme, et plusieurs invités me passent devant.",
+            "image_path": "char_09_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Evan Brooks",
+            "occupation": "Angel Investor",
+            "dark_secret": "",
+            "alibi": "Au toast, je parle face à face avec Victor, et Leah passe derrière nous.",
+            "image_path": "char_10_pitch_empoisonne_20260107_000000_b12b1.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "protocole-abduction.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Protocole Abduction",
+        "synopsis": "Arizona, 1997 : une brève transmission alien a été captée — qui s'est fait enlever par des extra-terrestres pour le remplacer par l'un des leurs ?",
+        "description": "*Arizona, 1997. Le ciel grésille comme une vieille cassette, et la base fait semblant que tout est normal.*\n\nL’un de nous a disparu pendant quelques heures lors d’une panne générale, puis il est revenu sans égratignure, avec la même voix et les mêmes souvenirs… à ceci près que tout sonne trop juste.\n\nJe remonte la chronologie, j’écoute les silences, et je cherche l’instant où quelqu’un a été remplacé, avant que le prochain faisceau venu des nuages ne nous coupe du monde.",
+        "image_path": "cover_protocole-abduction-20251227-124630-szd9i.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "SERIOUS_MURDER",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Agente Dana Kline — responsable du protocole",
+            "dark_secret": "J’ai déjà étouffé une affaire d’intrusion et je sais que si ce dossier ressort, ma carrière s’effondre.",
+            "alibi": "J’étais au centre radio, casque sur les oreilles, quand l’alarme de secteur a hurlé.",
+            "image_path": "char_01_protocole-abduction-20251227-124630-szd9i.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dr Victor Halloway — xénobiologiste consultant",
+            "dark_secret": "",
+            "alibi": "J’étais au laboratoire d’analyse, seul derrière une porte sécurisée, quand le générateur a sauté.",
+            "image_path": "char_02_protocole-abduction-20251227-124630-szd9i.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sergent Luis Ortega — sécurité du périmètre",
+            "dark_secret": "",
+            "alibi": "J’étais en ronde sur la clôture nord et j’ai signalé la lueur au-dessus du canyon.",
+            "image_path": "char_03_protocole-abduction-20251227-124630-szd9i.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Riley Chen — technicien vidéo",
+            "dark_secret": "",
+            "alibi": "J’étais en salle de contrôle à vérifier les flux au moment de la coupure.",
+            "image_path": "char_04_protocole-abduction-20251227-124630-szd9i.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Pr Eleanor Shaw — astrophysicienne médiatique",
+            "dark_secret": "",
+            "alibi": "J’étais en visioconférence quand la salle de conférence s’est vidée d’un coup.",
+            "image_path": "char_05_protocole-abduction-20251227-124630-szd9i.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Cassidy Brooks — pilote d’hélicoptère",
+            "dark_secret": "",
+            "alibi": "J’étais sur le tarmac à préparer un décollage d’urgence quand les projecteurs ont balayé le ciel.",
+            "image_path": "char_06_protocole-abduction-20251227-124630-szd9i.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Pasteur Hank Mallory — porte-parole des familles",
+            "dark_secret": "",
+            "alibi": "J’étais dans la chapelle improvisée à calmer les civils quand la panne a plongé la base dans le noir.",
+            "image_path": "char_07_protocole-abduction-20251227-124630-szd9i.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "qui-a-condamne-la-sortie-de-la-mine.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Qui a condamné la sortie de la mine alors qu’il y avait trois nains dedans ?",
+        "description": "*J’arrive avant l’aube, quand les torches fument encore et que les voix se brisent en chuchotements.*\n\nOn a retrouvé l’accès secondaire **barricadé de pierres neuves**, posé avec soin — trop de soin pour un simple réflexe de panique. Trois nains étaient encore au fond, et tout le village jure qu’il s’agissait d’une « mesure de sécurité ».\n\nJe n’ai qu’un indice, mais il suffit : sur les gonds, une **poussière fraîche** qui n’a rien à faire là, et des traces de pas qui s’arrêtent… comme si quelqu’un avait hésité, puis s’était ravisé.\n\nJe vais parler à chacun. Les mots glissent, les regards aussi. Et sous la roche, la vérité gratte déjà.",
+        "image_path": "cover_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "MACABRE",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Inspecteur Griselda Ronce",
+            "dark_secret": "J’ai déjà enterré un rapport gênant pour éviter un scandale royal, et je redoute que cette affaire me renvoie la même lâcheté au visage.",
+            "alibi": "On m’a dépêchée depuis la capitale au premier corbeau, et je n’ai mis les pieds sur place qu’après la découverte de la barricade.",
+            "image_path": "char_01_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "sûreté du Royaume (affaires souterraines)",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Bartholomé “Bart” Gravier",
+            "dark_secret": "",
+            "alibi": "Je surveillais l’appel des équipes et la fermeture des outils au dépôt, devant plusieurs mineurs, au moment où l’accès a été muré.",
+            "image_path": "char_02_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "contremaître de la mine, autoritaire",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Frère Ponce",
+            "dark_secret": "",
+            "alibi": "Je bénissais les lampes au seuil du sanctuaire, en plein village, quand on dit que la pierre a été posée.",
+            "image_path": "char_03_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "prêtre des galeries, superstitieux",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dame Astrée Paillette",
+            "dark_secret": "",
+            "alibi": "Je prétendais être restée toute la nuit à recalculer les contributions dans mon bureau, lampe allumée, pour préparer l’arrivée des inspecteurs.",
+            "image_path": "char_04_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "intendante du village, obsession des comptes",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Rurik",
+            "dark_secret": "",
+            "alibi": "Je martelais des clous et des cercles de renfort à la forge, et le feu a été vu et entendu par la moitié du hameau.",
+            "image_path": "char_05_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "forgeron, colosse au cœur tendre",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sifflotin",
+            "dark_secret": "",
+            "alibi": "Je faisais ma tournée à l’auberge puis au poste de garde, et plusieurs clients m’ont retenu à parler trop longtemps.",
+            "image_path": "char_06_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "livreur de lanternes, langue trop rapide",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Maître Orlin",
+            "dark_secret": "",
+            "alibi": "Je consignais mes relevés et scellais mes échantillons à l’auberge sous bonne garde, loin du flanc de la colline.",
+            "image_path": "char_07_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "géologue royal, savant méprisant",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Ysabeau",
+            "dark_secret": "",
+            "alibi": "Je servais jusqu’à tard, et on peut confirmer que je n’ai pas quitté la salle quand les dernières chopes ont été remplies.",
+            "image_path": "char_08_qui_a_condamne_la_sortie_de_la_mine_20251228_084750_mmhh.jpg",
+            "occupation": "tavernière, oreilles partout",
+            "rewrite_key": "suspect-7"
+          }
+        ],
+        "synopsis": "Trois nains piégés au fond d'une mine barricadée avec soin.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "qui-a-pousse-meme-dans-les-ortilles.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Qui a poussé Mémé dans les ortilles ?",
+        "description": "*Je viens d’arriver au hameau des Rochat.*\n\nMémé Odette gît face contre terre dans un carré d’orties derrière la maison. On parle d’une simple chute, d’un accident bête… mais le silence est trop bien rangé.\n\nSur le seuil : une canne cassée et des lunettes tordues, comme si quelqu’un les avait déplacées à la hâte. Dans la cuisine : une table dressée, des tasses encore tièdes, et des regards qui se croisent sans se fixer.\n\nJe vais écouter les mots qui hésitent, les gestes qui s’excusent, et cette petite seconde où l’histoire dérape. Ce soir, la vérité sortira — même si elle pique.",
+        "image_path": "cover_meme_orties_20251228_6dh2.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Capitaine Iris Mermod",
+            "dark_secret": "J’ai déjà fermé les yeux sur une querelle de famille qui a mal fini, et je refuse de refaire la même erreur.",
+            "alibi": "J’étais en intervention dans le village voisin quand l’appel a retenti, puis j’ai foncé sur place sans quitter la route principale.",
+            "image_path": "char_01_meme_orties_20251228_6dh2.jpg",
+            "occupation": "Brigade de proximité",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Baptiste “Bibi” Rochat",
+            "dark_secret": "",
+            "alibi": "Au moment du drame, j’étais à l’atelier des voisins, couvert de sciure, avec de la musique à fond et des témoins partout.",
+            "image_path": "char_02_meme_orties_20251228_6dh2.jpg",
+            "occupation": "Petit-fils bricoleur",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nadine Rochat",
+            "dark_secret": "",
+            "alibi": "Je préparais le dîner dans la cuisine, visible depuis la salle, et je n’ai pas quitté les casseroles plus de quelques secondes.",
+            "image_path": "char_03_meme_orties_20251228_6dh2.jpg",
+            "occupation": "Belle-fille, reine des apparences",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Serge Rochat",
+            "dark_secret": "",
+            "alibi": "Je prétends avoir rangé des papiers au bureau avec la radio comme seul témoin, et je répète que je ne supporte pas les orties.",
+            "image_path": "char_04_meme_orties_20251228_6dh2.jpg",
+            "occupation": "Fils, gestionnaire anxieux",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Mireille Jaccard",
+            "dark_secret": "",
+            "alibi": "Je surveillais mon potager de l’autre côté du chemin, et les chiens du voisin n’ont pas cessé d’aboyer près de moi.",
+            "image_path": "char_05_meme_orties_20251228_6dh2.jpg",
+            "occupation": "Voisine, commère au grand cœur",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dr. Anouk Vial",
+            "dark_secret": "",
+            "alibi": "J’étais au cabinet en consultation, et l’heure des patients est notée noir sur blanc à l’accueil.",
+            "image_path": "char_06_meme_orties_20251228_6dh2.jpg",
+            "occupation": "Médecin de famille, calme clinique",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Lucien “Lulu” Besson",
+            "dark_secret": "",
+            "alibi": "Je changeais des ampoules chez la voisine au moment où tout s’est emballé, en plein jour et sous les yeux de la rue.",
+            "image_path": "char_07_meme_orties_20251228_6dh2.jpg",
+            "occupation": "Aide à domicile, serviable et fauché",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "Mémé Odette gît dans les orties — simple chute ou coup bas ?",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "qui_a_laisse_la_lunette_des_toilettes_relevee.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Qui a laissé la lunette des toilettes relevée ?",
+        "synopsis": "Karen, la crieuse du loto, revient des toilettes mixtes et interrompt la partie : la lunette a été laissée relevée, déclenchant une dispute immédiate.",
+        "description": "Je m'appelle Karen, et ce soir, c'est moi qui crie les numéros au Loto. Mais c'en est trop : je reviens des toilettes mixtes et là… non, vraiment, c’est pas possible.\n\nLa lunette est relevée, encore. Comme si c’était trop demander de la baisser après être passé.\n\nLa salle des fêtes est pleine de grands garçons vexés et sûrs d’eux, capables de tout commenter sauf leurs propres habitudes.\n\nAlors je coupe net la soirée : je fais aligner les versions, je note les allées et venues, et je ne laisse personne s’esquiver derrière une blague.\n\nLa partie reprendra quand j’aurai une chronologie claire et que l’un d’eux aura enfin le courage d’assumer.",
+        "image_path": "cover_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Karen",
+            "occupation": "Crieuse du loto",
+            "dark_secret": "Elle connaît le petit arrangement qui a sauvé la soirée loto l’an dernier, et elle refuse qu’on la traite comme une idiote.",
+            "alibi": "Au moment du scandale, elle était dans le couloir des toilettes mixtes, et tout le monde a entendu sa voix.",
+            "image_path": "char_01_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gérard “Gégé” Boulard",
+            "occupation": "Chauffeur-livreur",
+            "dark_secret": "",
+            "alibi": "Il affirme qu’il était collé au buffet à remplir des assiettes quand la dispute a éclaté.",
+            "image_path": "char_02_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Mickaël “Mika” Roussel",
+            "occupation": "Vendeur de scooters",
+            "dark_secret": "",
+            "alibi": "Il dit qu’il était devant le panneau du loto à commenter les numéros, entouré de plusieurs joueurs.",
+            "image_path": "char_03_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Thierry Coudray",
+            "occupation": "Agent d’entretien de la salle des fêtes",
+            "dark_secret": "",
+            "alibi": "Il soutient qu’il rangeait près du vestiaire au moment où Karen a crié.",
+            "image_path": "char_04_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Franck Legrand",
+            "occupation": "Boucher",
+            "dark_secret": "",
+            "alibi": "Il raconte qu’il était dehors à fumer près des poubelles, à portée de vue de la porte principale.",
+            "image_path": "char_05_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Loïc Perez",
+            "occupation": "Animateur de soirées / DJ amateur",
+            "dark_secret": "",
+            "alibi": "Il assure qu’il était derrière sa table de mixage à régler le volume quand Karen est revenue.",
+            "image_path": "char_06_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Pascal Martin",
+            "occupation": "Plombier",
+            "dark_secret": "",
+            "alibi": "Il prétend qu’il était au bar improvisé à discuter plomberie “pour rire” avec deux habitués quand tout a explosé.",
+            "image_path": "char_07_qui_a_laisse_la_lunette_des_toilettes_relevee_20251231-2010_k7r4.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "rital-sous-ritaline.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Rital sous Ritaline",
+        "description": "*Sud de l’Italie, années soixante-dix. Une cuisine trop chaude, un plan de travail fariné, et une réputation à tenir.*\n\nAu petit matin, Gianni — le rouleur de cannoli du village — est retrouvé inerte près du laboratoire improvisé : tasse de café froide, boîtes d’ordonnances qui ne devraient pas être là, et des mains qui évitent de se regarder.\n\nTout le monde a une bonne raison de parler bas, et une meilleure raison de se taire. Je vais écouter les versions, puis recoller ce qui manque : qui a alimenté la spirale… et qui a laissé la dose de trop ?",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "MACABRE",
+        "image_path": "cover_rital_sous_ritaline_20251228_133836_icp3.jpg",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Vito Bellini",
+            "dark_secret": "Je suis venu seul et sans renfort parce que je veux laver une ancienne erreur qui m’a valu une mutation humiliante.",
+            "alibi": "J’ai été appelé à l’aube, et je suis arrivé avant l’ouverture, accompagné seulement des clés et des regards qui se ferment.",
+            "image_path": "char_01_rital_sous_ritaline_20251228_133836_icp3.jpg",
+            "occupation": "Carabinier enquêteur",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nonna Lucia Ferraro",
+            "dark_secret": "",
+            "alibi": "J’étais chez moi, à préparer le café et à surveiller la place depuis ma fenêtre, jusqu’à ce que l’agitation me fasse descendre.",
+            "image_path": "char_02_rital_sous_ritaline_20251228_133836_icp3.jpg",
+            "occupation": "Grand-mère du village",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Carmela Vitale",
+            "dark_secret": "",
+            "alibi": "Je prétends avoir fermé la pharmacie tôt et être restée chez moi à classer des factures jusqu’au matin.",
+            "image_path": "char_03_rital_sous_ritaline_20251228_133836_icp3.jpg",
+            "occupation": "Pharmacienne du village",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dr. Serena Caruso",
+            "dark_secret": "",
+            "alibi": "J’étais de garde chez une famille à l’écart du village, et plusieurs personnes peuvent attester de ma présence tardive.",
+            "image_path": "char_04_rital_sous_ritaline_20251228_133836_icp3.jpg",
+            "occupation": "Médecin",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Enzo Spatola",
+            "dark_secret": "",
+            "alibi": "J’étais dans mon atelier à l’autre bout du village à finir une commande, et mon apprenti m’a vu toute la nuit.",
+            "image_path": "char_05_rital_sous_ritaline_20251228_133836_icp3.jpg",
+            "occupation": "Pâtissier rival",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Alessia Rinaldi",
+            "dark_secret": "",
+            "alibi": "Je dis avoir rangé la salle puis être rentrée directement, en évitant la cuisine parce que je ne voulais pas le contrarier.",
+            "image_path": "char_06_rital_sous_ritaline_20251228_133836_icp3.jpg",
+            "occupation": "Serveuse, fiancée de Gianni",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Padre Matteo",
+            "dark_secret": "",
+            "alibi": "Je suis resté à l’église après complies, à écrire mon sermon, jusqu’à ce que les cloches sonnent l’alerte.",
+            "image_path": "char_07_rital_sous_ritaline_20251228_133836_icp3.jpg",
+            "occupation": "Prêtre du village",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "Le rouleur de cannoli retrouvé inerte près de boîtes suspectes.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "rouge_interdit.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Rouge interdit",
+        "synopsis": "À La Chaux-de-Fonds, Lolo (12 ans) reçoit un magnum de rouge. Son père mène l’enquête : neige, rumeurs et secrets de route.",
+        "description": "Je suis **Thierry Sanchez**, horloger à La Chaux-de-Fonds… et le père de Lolo.\n\nCette nuit-là, mon fils de **12 ans** s’est retrouvé au centre d’un cadeau absurde : **un magnum de rouge**. Dans les hauteurs, on s’entraide vite — et on se tait encore plus vite.\n\nJe vais recouper les versions, suivre les traces laissées dans la neige, et comprendre **qui** a offert ce magnum… et **pourquoi**.",
+        "image_path": "cover_rouge_interdit_20260111_1138_hw5r.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "PETTY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Thierry Sanchez",
+            "occupation": "Horloger (père de Lolo)",
+            "dark_secret": "Je connais quelqu’un qui était dehors cette nuit-là, mais je préfère le protéger tant que je ne suis pas certain.",
+            "alibi": "Au moment où le magnum a été évoqué, j’étais chez moi à appeler Lolo sans réussir à le joindre.",
+            "image_path": "char_01_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Camille Perrin",
+            "occupation": "Vétérinaire (gros bétail)",
+            "dark_secret": "",
+            "alibi": "À l’heure où le cadeau a été remis, j’étais en intervention dans une étable et plusieurs personnes m’ont vue.",
+            "image_path": "char_02_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Noah Robert",
+            "occupation": "Apprenti à l’auberge",
+            "dark_secret": "",
+            "alibi": "Quand on a aperçu le magnum, j’étais en salle à débarrasser et je ne suis pas sorti derrière.",
+            "image_path": "char_03_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sofia Monnier",
+            "occupation": "Caviste",
+            "dark_secret": "",
+            "alibi": "Au moment où le magnum est arrivé, j’étais à la cave en train de fermer et j’ai appelé un client en témoin.",
+            "image_path": "char_04_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Hugo Chappuis",
+            "occupation": "Éleveur",
+            "dark_secret": "",
+            "alibi": "À l’instant où le magnum a circulé, j’étais au téléphone avec un fournisseur, dehors, loin de la table.",
+            "image_path": "char_05_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Inès Dubois",
+            "occupation": "Institutrice",
+            "dark_secret": "",
+            "alibi": "Quand la rumeur a démarré, j’étais chez moi à corriger des cahiers, et j’ai envoyé un message daté.",
+            "image_path": "char_06_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jade Girard",
+            "occupation": "Artisane (bois & laine)",
+            "dark_secret": "",
+            "alibi": "Au moment où le magnum a été montré, j’étais à mon atelier, en appel vidéo avec une cliente.",
+            "image_path": "char_07_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Malik Vuillemin",
+            "occupation": "Vidéaste",
+            "dark_secret": "",
+            "alibi": "Quand le magnum a été offert, je filmais l’ambiance de la soirée devant l’auberge, caméra allumée.",
+            "image_path": "char_08_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Élise Maire",
+            "occupation": "Notaire",
+            "dark_secret": "",
+            "alibi": "À l’heure du cadeau, j’étais assise au fond de la salle à trier des dossiers, sous les yeux de plusieurs témoins.",
+            "image_path": "char_09_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Clémence Perroud",
+            "occupation": "Aide-soignante",
+            "dark_secret": "",
+            "alibi": "Au moment où le magnum a fait du bruit, j’étais en tournée et mon téléphone a borné sur la route.",
+            "image_path": "char_10_rouge_interdit_20260111_1138_hw5r.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "un-autel-rue-de-la-guerre.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Un autel rue de la guerre : resto-rancœur",
+        "description": "*Au petit Beirut, Place de l’Entourloupe, les verres tintent… et les sourires grincent.*\n\nJe filme la réception au caméscope, persuadée que le pire risque d’être la sauce blanche sur la robe — jusqu’à ce que je voie le plan de table : quelqu’un l’a remodelé comme un piège, en alignant les rancunes face à face.\n\nTout le monde fait semblant de ne rien remarquer, mais les regards se plantent comme des fourchettes, et la moindre chaise devient une provocation.\n\nJe relève mes lunettes, je coupe le son des politesses… et je veux un nom : qui a trafiqué la disposition pour transformer ce repas en duel mondain ?",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "FUNNY_CRIME",
+        "image_path": "cover_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Nora Giroud",
+            "dark_secret": "J’ai conservé une copie du plan de table original dans mon sac, au cas où la soirée tournerait mal.",
+            "alibi": "J’étais derrière la caméra au moment où les invités se sont levés pour le buffet.",
+            "image_path": "char_01_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Camille Carron",
+            "dark_secret": "",
+            "alibi": "J’étais assise à la table d’honneur quand la confusion a commencé.",
+            "image_path": "char_02_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Mathis Fellay",
+            "dark_secret": "",
+            "alibi": "J’étais coincé à saluer une file d’oncles au même endroit pendant le remue-ménage.",
+            "image_path": "char_03_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jade Pralong",
+            "dark_secret": "",
+            "alibi": "J’étais au bar avec un serveur quand on a découvert que les places ne correspondaient plus.",
+            "image_path": "char_04_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Romain Pannatier",
+            "dark_secret": "",
+            "alibi": "J’étais dehors à fumer avec deux invités pendant que tout le monde cherchait son siège.",
+            "image_path": "char_05_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Léa Voeffray",
+            "dark_secret": "",
+            "alibi": "J’étais près de l’entrée, loin des tables, quand les premiers éclats de voix ont commencé.",
+            "image_path": "char_06_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Monique Samaire",
+            "dark_secret": "",
+            "alibi": "J’étais en train de sermonner le photographe à l’écart quand la salle s’est agitée.",
+            "image_path": "char_07_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gérard Tornay",
+            "dark_secret": "",
+            "alibi": "J’étais assis au fond, à observer la salle sans bouger, quand les gens ont commencé à se déplacer.",
+            "image_path": "char_08_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Basile Bonvin",
+            "dark_secret": "",
+            "alibi": "J’étais en pleine conversation au téléphone dans le couloir au moment où les marqueurs ont changé.",
+            "image_path": "char_09_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Sacha Rappaz",
+            "dark_secret": "",
+            "alibi": "J’étais en salle à faire la navette entre les tables pendant que chacun cherchait son nom.",
+            "image_path": "char_10_un-autel-rue-de-la-guerre-20251228-090858-dk6gf.jpg",
+            "rewrite_key": "suspect-9"
+          }
+        ],
+        "synopsis": "Le plan de table a été trafiqué pour aligner les rancunes face à face.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "un-casino-en-campagne-c-est-trelex.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Un Casino en campagne : c’est Trélex",
+        "synopsis": "À Trélex, un casino et une tour de 22 étages surgissent sans permis; six investisseurs se renient, et l’enquête publique semble avoir été court-circuitée.",
+        "description": "Je débarque à Trélex au petit matin. Entre les fermes et les haies, un halo rose-turquoise clignote : un casino flambant neuf au pied d’une tour de 22 étages.\n\nLe chantier a poussé sans autorisations, comme si la paperasse n’avait jamais existé. Ici, on est sourcilleux sur le paysage : le village a même voté contre des éoliennes, jugées trop bruyantes, trop laides, et accusées de « découper les oiseaux ».\n\nEt pourtant, ce mini-Las Vegas s’est planté au milieu des champs, sans prévenir.\n\nSix investisseurs jurent qu’ils n’ont rien contourné. À moi de retrouver où la procédure a été cassée — et par qui.",
+        "image_path": "cover_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+        "language": "fr",
+        "author": "Atelier Mystere",
+        "theme": "FUNNY_CRIME",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Sophie Monnard",
+            "occupation": "Secrétaire municipale",
+            "dark_secret": "J’ai mis de côté un courrier délicat qui pourrait donner l’impression que j’ai voulu gagner du temps pour quelqu’un.",
+            "alibi": "Au moment où la procédure aurait dérapé, j’étais au greffe communal avec un registre de dépôt signé.",
+            "image_path": "char_01_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Armand Piguet",
+            "occupation": "Promoteur",
+            "dark_secret": "",
+            "alibi": "Le soir où tout s’est accéléré, j’étais sur un autre chantier avec deux sous-traitants qui peuvent l’attester.",
+            "image_path": "char_02_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Séverine Chappuis",
+            "occupation": "Notaire",
+            "dark_secret": "",
+            "alibi": "Au moment clé, j’étais officiellement à mon étude, mais j’ai déclenché la mécanique sans me montrer.",
+            "image_path": "char_03_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Loïc Chessex",
+            "occupation": "Terrassier",
+            "dark_secret": "",
+            "alibi": "Quand l’étape litigieuse s’est jouée, j’étais sur la route avec des tickets et un trajet enregistrés.",
+            "image_path": "char_04_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Luc-André Berset",
+            "occupation": "Banquier privé",
+            "dark_secret": "",
+            "alibi": "Cette nuit-là, j’étais à un événement à Lausanne avec badge et paiements horodatés.",
+            "image_path": "char_05_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Pascal Fivaz",
+            "occupation": "Architecte",
+            "dark_secret": "",
+            "alibi": "Au moment où tout s’est décidé, j’étais en visioconférence enregistrée avec un bureau partenaire.",
+            "image_path": "char_06_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Gérard Deschamps",
+            "occupation": "Exilé fiscal",
+            "dark_secret": "",
+            "alibi": "Quand la procédure a basculé, j’étais en déplacement privé avec chauffeur et localisation du véhicule.",
+            "image_path": "char_07_un-casino-en-campagne-c-est-trelex_20260216-055303_rah5.jpg",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "un-vin-qui-a-du-corps.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Un vin qui a du corps",
+        "description": "*Odeur de bois humide. Couloir étroit. Un silence qui colle aux bottes.*\n\nOn a retrouvé Stu Pedassow mort, la tête plongée dans un grand tonneau de vin, comme si la fête avait dérapé en une seconde. Rien n’a été forcé, pourtant une clé a disparu du tableau d’accès, et une page du registre a été arrachée au milieu.\n\nTout le monde a une version simple, trop simple. Moi, je remonte les gestes : qui est entré, qui a manipulé quoi, qui a menti par réflexe. Je ne cherche pas le spectaculaire — je cherche l’instant précis où quelqu’un a choisi de ne pas arrêter la catastrophe.",
+        "image_path": "cover_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+        "language": "fr",
+        "author": "ChatGPT",
+        "theme": "SERIOUS_MURDER",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Inspectrice Maud Keller",
+            "dark_secret": "J’ai déjà classé un décès en “accident” pour préserver la paix d’un village, et je me suis juré de ne plus jamais fermer les yeux.",
+            "alibi": "J’arrive après l’alerte, je fige la scène et je ne quitte plus le site tant que chaque accès n’a pas été vérifié.",
+            "image_path": "char_01_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+            "occupation": "crimes ruraux",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Aubin Pedassow",
+            "dark_secret": "",
+            "alibi": "Je prétends être resté au bureau, allergique à l’humidité du chai, occupé à préparer des contrats et des relances.",
+            "image_path": "char_02_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+            "occupation": "cousin associé, finances du domaine",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Émile",
+            "dark_secret": "",
+            "alibi": "J’ai fermé les accès puis je suis rentré dormir tôt, et mon téléphone borne chez moi toute la nuit.",
+            "image_path": "char_03_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+            "occupation": "maître de chai, maniaque des numéros",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Solange",
+            "dark_secret": "",
+            "alibi": "J’étais avec des visiteurs tardifs en surface et plusieurs personnes peuvent confirmer que je n’ai pas quitté le groupe.",
+            "image_path": "char_04_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+            "occupation": "responsable dégustation, image du domaine",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Rui",
+            "dark_secret": "",
+            "alibi": "Je finissais le nettoyage dehors et on m’a vu fumer près du portail au moment où tout a basculé.",
+            "image_path": "char_05_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+            "occupation": "ouvrier saisonnier, bottes sales",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dr. Lise Martel",
+            "dark_secret": "",
+            "alibi": "J’étais au laboratoire à analyser des échantillons, avec des notes horodatées et des messages envoyés pendant la nuit.",
+            "image_path": "char_06_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+            "occupation": "œnologue consultante",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Henri",
+            "dark_secret": "",
+            "alibi": "Je suis passé en journée seulement, et le soir je regardais un match chez moi avec un voisin qui peut témoigner.",
+            "image_path": "char_07_un_vin_qui_a_du_corps_20251228_193252_6zoj.jpg",
+            "occupation": "voisin collectionneur de bouchons",
+            "rewrite_key": "suspect-6"
+          }
+        ],
+        "synopsis": "La tête dans un tonneau de vin — la fête a dérapé en une seconde.",
+        "version": "2.0.0"
+      }
+    },
+    {
+      "zip_file": "un_tueur_parmi_les_educateurs.zip",
+      "mystery_index": 0,
+      "mystery": {
+        "title": "Un tueur parmi les éducateurs",
+        "synopsis": "Lors d’une veillée au lac, un éducateur est retrouvé mort. Le chef de camp doit démêler mensonges et alibis avant l’aube.",
+        "description": "Je suis Léon Myers, chef de camp. Cette nuit, au bord du lac, une veillée s’est terminée dans le silence : un éducateur a été retrouvé sans vie, et le camp s’est figé.\n\nNous étions censés encadrer, rassurer, tenir la ligne. Maintenant, chaque minute compte : qui est parti, qui a menti, qui a “oublié” un détail.\n\nJe vais recueillir vos versions, recouper vos trajets, et faire tomber les masques — avant que la nuit ne nous engloutisse.",
+        "image_path": "cover_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+        "language": "fr",
+        "author": "Atelier Mystère",
+        "theme": "SERIOUS_MURDER",
+        "character_sheets": [
+          {
+            "role": "investigator",
+            "character_name": "Léon Myers",
+            "occupation": "Chef de camp",
+            "dark_secret": "J’ai truqué un ancien rapport d’accident du camp pour éviter une fermeture administrative.",
+            "alibi": "Au moment du drame, je faisais l’inventaire des lampes et talkies dans le bureau, et Nora m’a vu y entrer puis en ressortir.",
+            "image_path": "char_01_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "investigator-0"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Nora Krueger",
+            "occupation": "Adjointe de direction",
+            "dark_secret": "",
+            "alibi": "Je rangeais les dossiers et le planning à l’accueil quand Clara est venue chercher une clé, et nous avons parlé quelques minutes.",
+            "image_path": "char_02_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-1"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Clara Loomis",
+            "occupation": "Responsable des veillées",
+            "dark_secret": "",
+            "alibi": "Je ramassais les gobelets et j’éteignais le foyer de la veillée près du cercle de pierres, et Samir m’a aidée.",
+            "image_path": "char_03_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-2"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Samir Willis",
+            "occupation": "Éducateur social",
+            "dark_secret": "",
+            "alibi": "Je raccompagnais un groupe vers les cabanes depuis la clairière, et Anaïs était avec moi jusqu’au couloir des chalets.",
+            "image_path": "char_04_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-3"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Maëlle Bates",
+            "occupation": "Ateliers créatifs",
+            "dark_secret": "",
+            "alibi": "Je fermais l’atelier et je nettoyais l’évier plein de pinceaux quand Baptiste est passé déposer une caisse et m’a saluée.",
+            "image_path": "char_05_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-4"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Jérémie Voorhees",
+            "occupation": "Moniteur nautique",
+            "dark_secret": "",
+            "alibi": "Je vérifiais les gilets et l’amarrage au hangar à bateaux, et Inès m’a croisé en entrant à l’infirmerie.",
+            "image_path": "char_06_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-5"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Inès Robitaille",
+            "occupation": "Infirmière du camp",
+            "dark_secret": "",
+            "alibi": "Je réorganisais les pansements et je notais des constantes à l’infirmerie quand Jérémie est venu demander une pile.",
+            "image_path": "char_07_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-6"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Baptiste Warden",
+            "occupation": "Cuisinier",
+            "dark_secret": "",
+            "alibi": "Je finissais une soupe et je sortais les plats pour le lendemain dans la cuisine quand Maëlle est passée prendre de l’eau.",
+            "image_path": "char_08_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-7"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Victoire Vernon",
+            "occupation": "Psychologue",
+            "dark_secret": "",
+            "alibi": "Je relisais mes notes dans le bureau de consultation, la lanterne allumée, et j’ai échangé un appel radio bref avec Léon.",
+            "image_path": "char_09_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-8"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Dylan Macher",
+            "occupation": "Régisseur",
+            "dark_secret": "",
+            "alibi": "Je prétends avoir remplacé des fusibles au local technique, seul, pendant que la veillée se dispersait.",
+            "image_path": "char_10_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-9"
+          },
+          {
+            "role": "suspect",
+            "character_name": "Anaïs Hewitt",
+            "occupation": "Stagiaire",
+            "dark_secret": "",
+            "alibi": "Je revenais des cabanes par le sentier quand Samir m’a accompagné jusqu’au carrefour des chalets.",
+            "image_path": "char_11_un_tueur_parmi_les_educateurs_20260207_151100_8032.jpg",
+            "rewrite_key": "suspect-10"
+          }
+        ],
+        "version": "2.0.0"
+      }
+    }
+  ]
+}
