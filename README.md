@@ -5,7 +5,7 @@ A real-time multiplayer murder mystery party game built with Next.js, Supabase, 
 ## Features
 
 - **Real-time Multiplayer**: Players join game rooms and interact in real-time
-- **Role-Based Gameplay**: Investigator, guilty party, and innocent characters
+- **Role-Based Gameplay**: Investigator and suspects, with the culprit chosen per round
 - **Secret Character Sheets**: Each player receives unique markdown-formatted character info
 - **Consensus System**: Players must all be ready to proceed
 - **Dramatic Accusation**: Investigator makes accusations with animated reveals
@@ -67,7 +67,7 @@ See [SETUP.md](SETUP.md) for detailed setup instructions.
 2. Players join via join code → enter lobby
 3. Players mark themselves ready
 4. Admin selects mystery and starts game
-5. Roles are randomly distributed (investigator + guilty always assigned)
+5. Character sheets are randomly distributed (one investigator + suspects)
 6. Players receive secret character sheets
 7. Investigation phase (free-form discussion)
 8. Investigator makes accusation
@@ -116,13 +116,18 @@ Mysteries must conform to the schema defined in [`schemas/mystery.schema.json`](
 - `description` (string, min 10 chars, supports markdown)
 - `innocent_words` (array of exactly 3 strings)
 - `guilty_words` (array of exactly 3 strings)
-- `character_sheets` (array, min 3 items, must include investigator + guilty)
+- `character_sheets` (array, min 2 items, must include exactly one investigator and at least one suspect)
 
 **Character sheet fields:**
-- `role`: "investigator" | "guilty" | "innocent"
+- `role`: "investigator" | "suspect"
 - `dark_secret` (string, min 10 chars)
 - `alibi` (string, min 10 chars)
 - `image_path` (optional string)
+
+New packs never define the culprit. Every suspect sheet must contain a
+`dark_secret` that can work as a confession if that suspect is chosen at runtime.
+Legacy uploads using `guilty` or `innocent` are accepted as import aliases and
+normalized to `suspect`.
 
 ### Uploading Mysteries
 
@@ -143,6 +148,9 @@ Mysteries must conform to the schema defined in [`schemas/mystery.schema.json`](
   {
     "title": "Murder at the Manor",
     "description": "## The Crime\\n\\nLord Blackwood was found dead...",
+    "language": "en",
+    "author": "Example",
+    "theme": "SERIOUS_MURDER",
     "innocent_words": ["manuscript", "inheritance", "betrayal"],
     "guilty_words": ["ledger", "poison", "desperate"],
     "character_sheets": [
@@ -152,13 +160,13 @@ Mysteries must conform to the schema defined in [`schemas/mystery.schema.json`](
         "alibi": "I was in the conservatory reading all evening."
       },
       {
-        "role": "guilty",
-        "dark_secret": "You poisoned the victim to prevent exposure.",
+        "role": "suspect",
+        "dark_secret": "I confess everything: I poisoned the victim to prevent exposure.",
         "alibi": "I was in my room writing letters."
       },
       {
-        "role": "innocent",
-        "dark_secret": "You're having an affair with the victim's spouse.",
+        "role": "suspect",
+        "dark_secret": "I confess everything: my affair with the victim's spouse gave me a motive, and I used the confusion to act.",
         "alibi": "I was walking in the garden."
       }
     ]
@@ -174,15 +182,15 @@ Mysteries must conform to the schema defined in [`schemas/mystery.schema.json`](
 - Automatic disconnect detection via heartbeat
 
 ### Role Distribution
-- Minimum 5 players required
-- Investigator and guilty always assigned
-- Innocent roles distributed to remaining players
-- Randomized assignment each round
+- Minimum 2 players required
+- One investigator sheet is assigned each round
+- Suspect sheets are distributed to remaining players
+- The guilty player is chosen deterministically by the server for that round
 
 ### Character Sheets
 - Markdown-formatted secrets and alibis
 - Three words to place in conversation
-- Toggle visibility for secrets
+- Optional inspiration text for alibis
 - Role-specific placeholder images
 
 ### Accusation System

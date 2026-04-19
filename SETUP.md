@@ -185,35 +185,35 @@ Or manually run the SQL from `supabase/migrations/001_initial_schema.sql` in the
   {
     "title": "Murder at the Manor",
     "description": "A wealthy aristocrat was found dead in the library. The killer is among the guests.",
+    "language": "en",
+    "author": "Example",
+    "theme": "SERIOUS_MURDER",
+    "innocent_words": ["manuscript", "inheritance", "betrayal"],
+    "guilty_words": ["ledger", "poison", "desperate"],
     "character_sheets": [
       {
         "role": "investigator",
         "dark_secret": "You secretly gambled away your family fortune and came here to borrow money from the victim.",
-        "words_to_place": ["manuscript", "inheritance", "betrayal"],
         "alibi": "I was in the conservatory reading all evening."
       },
       {
-        "role": "guilty",
-        "dark_secret": "You poisoned the victim's evening whiskey to prevent them from revealing your embezzlement scheme.",
-        "words_to_place": ["ledger", "poison", "desperate"],
+        "role": "suspect",
+        "dark_secret": "I confess everything: I poisoned the victim's evening whiskey to prevent them from revealing my embezzlement scheme.",
         "alibi": "I was in my room writing letters to my family."
       },
       {
-        "role": "innocent",
-        "dark_secret": "You're having a secret affair with the victim's spouse.",
-        "words_to_place": ["secret", "rendezvous", "passion"],
+        "role": "suspect",
+        "dark_secret": "I confess everything: my secret affair with the victim's spouse gave me a motive, and I used the confusion to act.",
         "alibi": "I was walking in the garden, enjoying the moonlight."
       },
       {
-        "role": "innocent",
-        "dark_secret": "You stole the victim's valuable painting last month and replaced it with a forgery.",
-        "words_to_place": ["forgery", "auction", "authenticity"],
+        "role": "suspect",
+        "dark_secret": "I confess everything: I stole the victim's valuable painting last month, and I silenced them before the forgery was exposed.",
         "alibi": "I was in the billiard room playing alone."
       },
       {
-        "role": "innocent",
-        "dark_secret": "You witnessed the murder but are too afraid to speak up.",
-        "words_to_place": ["shadow", "whisper", "fear"],
+        "role": "suspect",
+        "dark_secret": "I confess everything: I was near enough to see the murder because I was the one who arranged it.",
         "alibi": "I was in bed, sleeping soundly all night."
       }
     ]
@@ -254,7 +254,7 @@ npm start
 4. **Admin Starts**: Selects mystery → Distributes roles
 5. **Play**: Players receive character sheets
 6. **Investigation**: Players discuss and investigate
-7. **Accusation**: Investigator selects guilty party
+7. **Accusation**: Investigator selects a suspect
 8. **Results**: Correct/incorrect reveal
 9. **Next Round**: Repeat with new mystery
 

@@ -25,10 +25,13 @@ PROCESSUS (OBLIGATOIRE)
    - `synopsis` : très court (1 à 2 phrases), ton enquête, clair, sans spoiler.
    - `description` : plutôt courte, claire, en markdown, avec des sauts de ligne entre paragraphes.
    - Voix narrative : lu par la voix de l’enquêteur (1re personne, présent).
+   - `role` :
+     - Le JSON utilise uniquement `investigator` et `suspect`.
+     - Le pack ne définit JAMAIS le coupable; l'application le choisit au lancement de la manche.
    - `dark_secret` et `alibi` :
-     - Pour investigator et innocents : chacun tient sur UNE phrase.
-     - Pour le coupable : `dark_secret` est une confession/motif théâtral, peut être aussi long que la description (ou plus), lu à voix haute en fin de partie.
-     - `alibi` du coupable reste UNE phrase.
+     - Pour investigator : chacun tient sur UNE phrase.
+     - Pour chaque suspect : `dark_secret` est une confession/motif possible, lu à voix haute en fin de partie si ce suspect est choisi comme coupable.
+     - `alibi` de chaque suspect reste UNE phrase.
 
 4) Format JSON (OBLIGATOIRE)
    - Quand tu fournis un mystère en JSON, tu le fournis dans un bloc de code.
@@ -99,6 +102,7 @@ Dans la base de connaissances (mystery.schema.json)
 
 RAPPEL IMPORTANT
 
-* Tu ne dois jamais faire fuiter explicitement qui est coupable en dehors du `role` du JSON.
-* Les portraits ne doivent pas “trahir” le coupable visuellement.
+* Tu ne dois jamais désigner explicitement un coupable dans le JSON ou dans tes réponses.
+* Tous les personnages non-enquêteurs ont `role: "suspect"` et un `dark_secret` utilisable comme aveu possible.
+* Les portraits ne doivent pas suggérer qu'un suspect est plus coupable qu'un autre.
 * Si je demande seulement le JSON, tu ne génères pas d’images.
