@@ -45,15 +45,15 @@ When('I paste valid mystery JSON in the input', () => {
           alibi: 'An alibi that is long enough for validation.',
         },
         {
-          role: 'guilty',
-          character_name: 'Culprit',
-          dark_secret: 'A secret that is long enough for validation.',
+          role: 'suspect',
+          character_name: 'First Suspect',
+          dark_secret: 'I confess everything because this is long enough for validation.',
           alibi: 'An alibi that is long enough for validation.',
         },
         {
-          role: 'innocent',
-          character_name: 'Bystander',
-          dark_secret: 'A secret that is long enough for validation.',
+          role: 'suspect',
+          character_name: 'Second Suspect',
+          dark_secret: 'I confess everything too because this is long enough for validation.',
           alibi: 'An alibi that is long enough for validation.',
         },
       ],
@@ -61,6 +61,42 @@ When('I paste valid mystery JSON in the input', () => {
   ]);
 
   cy.getByTestId('upload-json-input').find('textarea').first().type(validMystery, { delay: 0, parseSpecialCharSequences: false });
+});
+
+When('I paste legacy mystery JSON in the input', () => {
+  const legacyMystery = JSON.stringify([
+    {
+      title: 'Legacy Mystery',
+      description: 'A legacy mystery description that is long enough.',
+      language: 'en',
+      author: 'Test Author',
+      theme: 'SERIOUS_MURDER',
+      innocent_words: ['word1', 'word2', 'word3'],
+      guilty_words: ['guilty1', 'guilty2', 'guilty3'],
+      character_sheets: [
+        {
+          role: 'investigator',
+          character_name: 'Detective',
+          dark_secret: 'A secret that is long enough for validation.',
+          alibi: 'An alibi that is long enough for validation.',
+        },
+        {
+          role: 'guilty',
+          character_name: 'Legacy Culprit',
+          dark_secret: 'I confess everything because legacy guilty is normalized.',
+          alibi: 'An alibi that is long enough for validation.',
+        },
+        {
+          role: 'innocent',
+          character_name: 'Legacy Innocent',
+          dark_secret: 'I confess everything because legacy innocent is normalized too.',
+          alibi: 'An alibi that is long enough for validation.',
+        },
+      ],
+    },
+  ]);
+
+  cy.getByTestId('upload-json-input').find('textarea').first().type(legacyMystery, { delay: 0, parseSpecialCharSequences: false });
 });
 
 When('I paste invalid JSON in the input', () => {

@@ -11,18 +11,18 @@
   "guilty": {
     "id": "test-sheet-002",
     "mystery_id": "test-mystery-001",
-    "role": "guilty",
+    "role": "suspect",
     "character_name": "Lord Blackwood Jr.",
-    "dark_secret": "You poisoned the victim to prevent him from changing the will.",
+    "dark_secret": "I confess everything: I poisoned the victim to prevent him from changing the will.",
     "alibi": "I was in my room writing letters to my solicitor.",
     "image_path": null
   },
   "innocent": {
     "id": "test-sheet-003",
     "mystery_id": "test-mystery-001",
-    "role": "innocent",
+    "role": "suspect",
     "character_name": "Lady Sinclair",
-    "dark_secret": "You're having an affair with the gardener and were meeting him secretly.",
+    "dark_secret": "I confess everything: my affair with the gardener gave me a motive, and I used the meeting as cover.",
     "alibi": "I was walking in the garden admiring the roses.",
     "image_path": null
   },

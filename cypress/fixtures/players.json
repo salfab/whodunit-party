@@ -42,14 +42,14 @@
       "name": "Bob",
       "status": "active",
       "score": 0,
-      "role": "guilty"
+      "role": "suspect"
     },
     {
       "id": "test-player-003",
       "name": "Charlie",
       "status": "active",
       "score": 0,
-      "role": "innocent"
+      "role": "suspect"
     }
   ]
 }

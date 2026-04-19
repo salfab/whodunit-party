@@ -18,6 +18,14 @@ Feature: Upload Mysteries
     Then I should see a success message
 
   @mocked
+  Scenario: Admin can upload legacy JSON mystery roles
+    Given I mock the bulk create API for success
+    And I visit the upload mysteries page
+    When I paste legacy mystery JSON in the input
+    And I click the upload JSON button
+    Then I should see a success message
+
+  @mocked
   Scenario: Admin sees validation error for invalid JSON
     Given I visit the upload mysteries page
     When I paste invalid JSON in the input

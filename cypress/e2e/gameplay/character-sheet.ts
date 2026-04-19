@@ -53,7 +53,16 @@ Given('I am logged in as a player in a playing session', () => {
 
 // ==================== Role Assignment Mocks ====================
 
+const mockAssignedRole = (assignedRole: 'investigator' | 'guilty' | 'innocent') => {
+  cy.intercept('GET', '/api/sessions/test-session-playing/assigned-role*', {
+    statusCode: 200,
+    body: { assignedRole },
+  }).as('getAssignedRole');
+};
+
 Given('I am assigned the investigator role', () => {
+  mockAssignedRole('investigator');
+
   // Mock Supabase player_assignments query
   // Handle both .maybeSingle() (returns object) and array queries (for player index)
   cy.intercept('GET', '**/rest/v1/player_assignments*', (req) => {
@@ -134,6 +143,8 @@ Given('I am assigned the investigator role', () => {
 });
 
 Given('I am assigned the guilty role', () => {
+  mockAssignedRole('guilty');
+
   // Mock placeholder images for characters without custom images
   cy.intercept('GET', '/characters/suspect_0*.jpg', {
     statusCode: 200,
@@ -162,7 +173,7 @@ Given('I am assigned the guilty role', () => {
           sheet_id: 'test-sheet-002',
           character_sheets: {
             id: 'test-sheet-002',
-            role: 'guilty',
+            role: 'suspect',
             character_name: 'Jean Dupont',
             occupation: 'Butler',
             image_path: null, // No custom image - will show name overlay on placeholder
@@ -219,6 +230,8 @@ Given('I am assigned the guilty role', () => {
 });
 
 Given('I am assigned the guilty role with words', () => {
+  mockAssignedRole('guilty');
+
   // Mock Supabase player_assignments query
   // Handle both .maybeSingle() (returns object) and array queries (for player index)
   cy.intercept('GET', '**/rest/v1/player_assignments*', (req) => {
@@ -240,7 +253,7 @@ Given('I am assigned the guilty role with words', () => {
           sheet_id: 'test-sheet-002',
           character_sheets: {
             id: 'test-sheet-002',
-            role: 'guilty',
+            role: 'suspect',
             character_name: 'Lord Blackwood Jr.',
             occupation: 'Heir',
             image_path: null,
@@ -287,6 +300,8 @@ Given('I am assigned the guilty role with words', () => {
 });
 
 Given('I am assigned the innocent role', () => {
+  mockAssignedRole('innocent');
+
   // Mock the character image to prevent 404 errors
   cy.intercept('GET', '/characters/innocent.png', {
     statusCode: 200,
@@ -315,7 +330,7 @@ Given('I am assigned the innocent role', () => {
           sheet_id: 'test-sheet-003',
           character_sheets: {
             id: 'test-sheet-003',
-            role: 'innocent',
+            role: 'suspect',
             character_name: 'Lady Sinclair',
             occupation: 'Aristocrat',
             image_path: '/characters/innocent.png',
@@ -361,6 +376,72 @@ Given('I am assigned the innocent role', () => {
   }).as('getRounds');
 });
 
+Given('I am assigned a legacy guilty sheet as an innocent suspect', () => {
+  mockAssignedRole('innocent');
+
+  cy.intercept('GET', '**/rest/v1/player_assignments*', (req) => {
+    const url = req.url;
+    if (url.includes('select=player_id')) {
+      req.reply({
+        statusCode: 200,
+        headers: { 'content-range': '0-0/1' },
+        body: [{ player_id: 'test-player-001' }],
+      });
+    } else {
+      req.reply({
+        statusCode: 200,
+        headers: { 'content-range': '0-0/1' },
+        body: {
+          player_id: 'test-player-001',
+          session_id: 'test-session-playing',
+          mystery_id: 'test-mystery-001',
+          sheet_id: 'test-sheet-legacy-guilty',
+          character_sheets: {
+            id: 'test-sheet-legacy-guilty',
+            role: 'guilty',
+            character_name: 'Legacy Red Herring',
+            occupation: 'Archivist',
+            image_path: null,
+            dark_secret: 'I confess everything, but only if the server chooses me.',
+            alibi: 'I was cataloguing letters in the archive.',
+            mystery_id: 'test-mystery-001',
+            mysteries: {
+              id: 'test-mystery-001',
+              title: 'Murder at the Manor',
+              description: 'Lord Blackwood was found dead...',
+              innocent_words: ['manuscript', 'inheritance', 'betrayal'],
+              guilty_words: ['ledger', 'poison', 'desperate'],
+            },
+          },
+        },
+      });
+    }
+  }).as('getAssignment');
+
+  cy.intercept('GET', '**/rest/v1/players*', {
+    statusCode: 200,
+    headers: { 'content-range': '0-1/2' },
+    body: [
+      {
+        id: 'test-player-002',
+        name: 'Bob',
+        status: 'active',
+        player_assignments: [{
+          character_sheets: {
+            character_name: 'Detective Holmes',
+          },
+        }],
+      },
+    ],
+  }).as('getPlayers');
+
+  cy.intercept('GET', '**/rest/v1/rounds*', {
+    statusCode: 200,
+    headers: { 'content-range': '*/0' },
+    body: [],
+  }).as('getRounds');
+});
+
 // ==================== Navigation ====================
 
 Given('I visit the play page', () => {
@@ -368,6 +449,7 @@ Given('I visit the play page', () => {
   cy.wait('@sessionMe');
   cy.wait('@getSession');
   cy.wait('@getAssignment');
+  cy.wait('@getAssignedRole');
   // Note: @getPlayers intercept may not match the complex PostgREST join query
   // The page will load without it since otherPlayers is optional
   // Wait a bit for React to render after data loads
