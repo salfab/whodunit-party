@@ -100,7 +100,7 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Note: Character sheets data is extensive (175 records)
 -- Inserting in batches for better readability and maintenance
--- Each mystery has multiple character sheets (investigator, guilty, innocents)
+-- Each mystery has multiple character sheets (investigator + suspects)
 
 -- Due to the large size of character sheet data (175 records with long text fields),
 -- this seed includes only the mysteries.

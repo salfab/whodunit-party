@@ -252,39 +252,39 @@ BEGIN
     E'I was in the **conservatory** all evening, reading Lord Blackwood''s latest manuscript. I needed to prepare notes for our morning discussion about publishing rights.\n\nI did not leave the conservatory until I heard the screams.'
   );
 
-  -- Guilty
+  -- Suspect
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     manor_mystery_id,
-    'guilty',
-    E'You''ve been **embezzling funds** from Lord Blackwood''s estate for two years. Tonight, he discovered your ledger and threatened to report you to the authorities unless you confessed.\n\nYou couldn''t let that happen. You slipped arsenic into his brandy while serving him in the study.',
+    'innocent',
+    E'I confess everything.\n\nMy secret was: You''ve been **embezzling funds** from Lord Blackwood''s estate for two years. Tonight, he discovered your ledger and threatened to report you to the authorities unless you confessed.\n\nYou couldn''t let that happen. You slipped arsenic into his brandy while serving him in the study.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in my **private chambers** on the second floor, writing letters to my family back home. I have the drafts as proof.\n\nI only came downstairs when I heard the commotion.'
   );
 
-  -- Innocent 1
+  -- Suspect 1
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     manor_mystery_id,
     'innocent',
-    E'You''re having a **passionate affair** with Lady Blackwood. Tonight was supposed to be your secret rendezvous in the garden house, but she never showed up.\n\nYou''re terrified someone might have seen you waiting.',
+    E'I confess everything.\n\nMy secret was: You''re having a **passionate affair** with Lady Blackwood. Tonight was supposed to be your secret rendezvous in the garden house, but she never showed up.\n\nYou''re terrified someone might have seen you waiting.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was taking a long **walk in the garden**, enjoying the moonlight and fresh air. The weather was pleasant, and I needed time alone to think.\n\nI was near the pond when I heard the bells ringing.'
   );
 
-  -- Innocent 2
+  -- Suspect 2
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     manor_mystery_id,
     'innocent',
-    E'Last month, you **stole Lord Blackwood''s valuable Renaissance painting** and replaced it with a masterful forgery. You''ve already sold the original at auction in Paris.\n\nYou live in fear that he''ll discover the switch.',
+    E'I confess everything.\n\nMy secret was: Last month, you **stole Lord Blackwood''s valuable Renaissance painting** and replaced it with a masterful forgery. You''ve already sold the original at auction in Paris.\n\nYou live in fear that he''ll discover the switch.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **billiard room** practicing shots alone. I''m an amateur player, and I find the practice calming.\n\nI didn''t realize anything was wrong until the butler came running in.'
   );
 
-  -- Innocent 3
+  -- Suspect 3
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     manor_mystery_id,
     'innocent',
-    'You **witnessed the murder** through the study window while walking past. You saw someone slip something into Lord Blackwood''s drink, but you''re too afraid to speak up.\n\nWhat if the killer comes for you next?',
+    E'I confess everything.\n\nMy secret was: You **witnessed the murder** through the study window while walking past. You saw someone slip something into Lord Blackwood''s drink, but you''re too afraid to speak up.\n\nWhat if the killer comes for you next?\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I retired to my **bedroom** early with a headache. I took a sleeping draught and was in bed by 10 PM.\n\nI heard nothing unusual until morning.'
   );
 END $$;
@@ -314,39 +314,39 @@ BEGIN
     E'I was in the **press box** taking notes during the entire performance. My detailed timeline of events should prove my whereabouts.\n\nI only learned of her death when the show stopped.'
   );
 
-  -- Guilty
+  -- Suspect
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     opera_mystery_id,
-    'guilty',
-    E'Valentina stole your original composition and claimed it as her own, launching her career while you remained unknown. Tonight was your **revenge**.\n\nYou mixed cyanide into her stage makeup, knowing she''d apply a fresh layer during intermission.',
+    'innocent',
+    E'I confess everything.\n\nMy secret was: Valentina stole your original composition and claimed it as her own, launching her career while you remained unknown. Tonight was your **revenge**.\n\nYou mixed cyanide into her stage makeup, knowing she''d apply a fresh layer during intermission.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **orchestra pit** conducting the performance. I never left my position until the tragic collapse.\n\nHundreds of people saw me there.'
   );
 
-  -- Innocent 1
+  -- Suspect 1
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     opera_mystery_id,
     'innocent',
-    E'You''re Valentina''s **secret daughter** she gave up for adoption 20 years ago. You came here tonight to finally confront her, but now you''ll never get that chance.',
+    E'I confess everything.\n\nMy secret was: You''re Valentina''s **secret daughter** she gave up for adoption 20 years ago. You came here tonight to finally confront her, but now you''ll never get that chance.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **costume room** repairing torn dresses. I have the needlework to prove it.\n\nI was shocked when I heard the screams.'
   );
 
-  -- Innocent 2
+  -- Suspect 2
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     opera_mystery_id,
     'innocent',
-    E'You''ve been **sabotaging other performers** to ensure Valentina''s success. You''ve cut costume straps, hidden props, and spread malicious rumors.\n\nBut you never wanted her dead.',
+    E'I confess everything.\n\nMy secret was: You''ve been **sabotaging other performers** to ensure Valentina''s success. You''ve cut costume straps, hidden props, and spread malicious rumors.\n\nBut you never wanted her dead.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **lighting booth** operating the spotlights. The technical crew can confirm I was there the entire time.\n\nI couldn''t believe it when she collapsed.'
   );
 
-  -- Innocent 3
+  -- Suspect 3
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     opera_mystery_id,
     'innocent',
-    'You discovered Valentina was **planning to expose a major corruption scandal** in the opera world. You tried to convince her to stay quiet, but she refused.\n\nNow someone silenced her permanently.',
+    E'I confess everything.\n\nMy secret was: You discovered Valentina was **planning to expose a major corruption scandal** in the opera world. You tried to convince her to stay quiet, but she refused.\n\nNow someone silenced her permanently.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in my **office** reviewing next season''s budget. I have spreadsheets timestamped from that evening.\n\nI only came to the stage when I heard the commotion.'
   );
 END $$;
@@ -376,39 +376,39 @@ BEGIN
     E'I was in the **library** reading old family records, searching for evidence to prove my innocence.\n\nI heard the gong for dinner and was heading there when the body was discovered.'
   );
 
-  -- Guilty
+  -- Suspect
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     heir_mystery_id,
-    'guilty',
-    E'Alexandre discovered you''ve been **forging documents** to embezzle from the family trust for years. He was going to expose you tonight after the engagement announcement.\n\nYou lured him to the wine cellar with a fake note and strangled him with his own cravat.',
+    'innocent',
+    E'I confess everything.\n\nMy secret was: Alexandre discovered you''ve been **forging documents** to embezzle from the family trust for years. He was going to expose you tonight after the engagement announcement.\n\nYou lured him to the wine cellar with a fake note and strangled him with his own cravat.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **ballroom** greeting guests and overseeing the catering arrangements. The staff can confirm I was coordinating everything.\n\nI only went to the cellar when we couldn''t find Alexandre.'
   );
 
-  -- Innocent 1
+  -- Suspect 1
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     heir_mystery_id,
     'innocent',
-    'You''re Alexandre''s **illegitimate half-brother** that the family refuses to acknowledge. You came tonight hoping to finally claim your share of the inheritance.',
+    E'I confess everything.\n\nMy secret was: You''re Alexandre''s **illegitimate half-brother** that the family refuses to acknowledge. You came tonight hoping to finally claim your share of the inheritance.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was on the **terrace** smoking cigars with other guests. At least four people can vouch for me.\n\nI was shocked when they found him dead.'
   );
 
-  -- Innocent 2
+  -- Suspect 2
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     heir_mystery_id,
     'innocent',
-    'Alexandre was planning to marry your **secret lover**, breaking your heart. You wrote him threatening letters, but you never acted on them.',
+    E'I confess everything.\n\nMy secret was: Alexandre was planning to marry your **secret lover**, breaking your heart. You wrote him threatening letters, but you never acted on them.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **powder room** repairing my dress after spilling wine on it. I was alone for nearly 20 minutes.\n\nI returned just as they started searching for Alexandre.'
   );
 
-  -- Innocent 3
+  -- Suspect 3
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     heir_mystery_id,
     'innocent',
-    'You witnessed Alexandre having a **violent argument** with someone earlier, but you''re terrified to speak up because they threatened you.',
+    E'I confess everything.\n\nMy secret was: You witnessed Alexandre having a **violent argument** with someone earlier, but you''re terrified to speak up because they threatened you.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **music room** playing the piano for early arrivals. Several guests complimented my performance.\n\nI had no idea anything was wrong until the screaming started.'
   );
 END $$;
@@ -438,39 +438,39 @@ BEGIN
     E'I was in the **dining car** having a late supper with the conductor. We discussed the train schedule and I showed him my ticket.\n\nI returned to my compartment around midnight.'
   );
 
-  -- Guilty
+  -- Suspect
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     train_mystery_id,
-    'guilty',
-    E'Mr. Sterling **destroyed your family''s factory**, leaving hundreds unemployed including your elderly parents who died in poverty. You''ve waited years for this moment of justice.\n\nYou crept into his compartment while he slept and struck twelve times—once for each member of your family who suffered.',
+    'innocent',
+    E'I confess everything.\n\nMy secret was: Mr. Sterling **destroyed your family''s factory**, leaving hundreds unemployed including your elderly parents who died in poverty. You''ve waited years for this moment of justice.\n\nYou crept into his compartment while he slept and struck twelve times—once for each member of your family who suffered.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was **asleep in my compartment** the entire night. I took a sleeping draught because of my chronic insomnia.\n\nI heard nothing until the morning commotion.'
   );
 
-  -- Innocent 1
+  -- Suspect 1
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     train_mystery_id,
     'innocent',
-    'You''re carrying **stolen diamonds** worth a fortune, hidden in your luggage. You''re terrified the investigation will uncover them.',
+    E'I confess everything.\n\nMy secret was: You''re carrying **stolen diamonds** worth a fortune, hidden in your luggage. You''re terrified the investigation will uncover them.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **observation car** watching the countryside pass by. I couldn''t sleep and needed fresh air.\n\nThe porter saw me there around 11 PM.'
   );
 
-  -- Innocent 2
+  -- Suspect 2
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     train_mystery_id,
     'innocent',
-    'You''re **fleeing from an arranged marriage** to a cruel aristocrat. If anyone discovers your real identity, they''ll send you back.',
+    E'I confess everything.\n\nMy secret was: You''re **fleeing from an arranged marriage** to a cruel aristocrat. If anyone discovers your real identity, they''ll send you back.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in my **compartment** writing farewell letters to my family. I have the letters dated and sealed.\n\nI heard shouting in the corridor early this morning.'
   );
 
-  -- Innocent 3
+  -- Suspect 3
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     train_mystery_id,
     'innocent',
-    'You saw someone **sneaking toward Mr. Sterling''s compartment** late at night, but you''re afraid to speak up because they might target you next.',
+    E'I confess everything.\n\nMy secret was: You saw someone **sneaking toward Mr. Sterling''s compartment** late at night, but you''re afraid to speak up because they might target you next.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **smoking car** playing cards with three other passengers until 2 AM. We had quite a game going.\n\nI only learned about the murder at breakfast.'
   );
 END $$;
@@ -500,39 +500,39 @@ BEGIN
     E'I was in the **archives room** reviewing ancient manuscripts for my upcoming lecture series.\n\nI was alone but the security cameras should show me there.'
   );
 
-  -- Guilty
+  -- Suspect
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     museum_mystery_id,
-    'guilty',
-    E'Dr. Wells discovered your entire career is built on **forgeries and falsified artifacts**. His new discovery would expose you as a fraud.\n\nYou poisoned his coffee with toxins extracted from the museum''s ancient Egyptian herb collection.',
+    'innocent',
+    E'I confess everything.\n\nMy secret was: Dr. Wells discovered your entire career is built on **forgeries and falsified artifacts**. His new discovery would expose you as a fraud.\n\nYou poisoned his coffee with toxins extracted from the museum''s ancient Egyptian herb collection.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **restoration lab** working on ceramic repairs. I have detailed work logs from that evening.\n\nI only left when security called about the emergency.'
   );
 
-  -- Innocent 1
+  -- Suspect 1
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     museum_mystery_id,
     'innocent',
-    'You''ve been **smuggling artifacts** to private collectors for years. Dr. Wells suspected, and you''re terrified his notes might reveal your crimes.',
+    E'I confess everything.\n\nMy secret was: You''ve been **smuggling artifacts** to private collectors for years. Dr. Wells suspected, and you''re terrified his notes might reveal your crimes.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **geology wing** cataloging mineral specimens. It''s my monthly inventory night.\n\nThe night guard saw me working there.'
   );
 
-  -- Innocent 2
+  -- Suspect 2
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     museum_mystery_id,
     'innocent',
-    'Dr. Wells was your **mentor and secret father**. He never publicly acknowledged you, but left you clues to prove your heritage after his death.',
+    E'I confess everything.\n\nMy secret was: Dr. Wells was your **mentor and secret father**. He never publicly acknowledged you, but left you clues to prove your heritage after his death.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **break room** catching up on paperwork and eating dinner. I have timestamped emails I sent.\n\nI rushed over when I heard the alarm.'
   );
 
-  -- Innocent 3
+  -- Suspect 3
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     museum_mystery_id,
     'innocent',
-    'You discovered evidence that Dr. Wells'' **newest artifact is a clever forgery**, but you''re afraid to speak up and ruin his legacy.',
+    E'I confess everything.\n\nMy secret was: You discovered evidence that Dr. Wells'' **newest artifact is a clever forgery**, but you''re afraid to speak up and ruin his legacy.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was giving a **private tour** to a wealthy donor in the Renaissance wing. She can confirm I was with her.\n\nWe heard the commotion and went to investigate.'
   );
 END $$;
@@ -562,39 +562,39 @@ BEGIN
     E'I was in the **audience** watching the performance from the critics'' section. My published notes show exactly what scenes I witnessed.\n\nI only went backstage after the curtain call.'
   );
 
-  -- Guilty
+  -- Suspect
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     playwright_mystery_id,
-    'guilty',
-    E'Marcus **stole your entire play** and published it as his own masterwork. You have the original manuscripts, but no one believed you.\n\nYou extracted hemlock from the theatre''s prop garden and added it to his celebration champagne.',
+    'innocent',
+    E'I confess everything.\n\nMy secret was: Marcus **stole your entire play** and published it as his own masterwork. You have the original manuscripts, but no one believed you.\n\nYou extracted hemlock from the theatre''s prop garden and added it to his celebration champagne.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **prop room** organizing items for tomorrow''s matinee. I always work during opening night parties.\n\nI didn''t even know he''d collapsed until later.'
   );
 
-  -- Innocent 1
+  -- Suspect 1
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     playwright_mystery_id,
     'innocent',
-    'You''re Marcus''s **secret illegitimate child** who came to the show hoping he''d finally acknowledge you. You have his letters promising to reveal the truth tonight.',
+    E'I confess everything.\n\nMy secret was: You''re Marcus''s **secret illegitimate child** who came to the show hoping he''d finally acknowledge you. You have his letters promising to reveal the truth tonight.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was **on stage** performing in the play. Hundreds of people watched me deliver my lines.\n\nI was devastated when I heard what happened.'
   );
 
-  -- Innocent 2
+  -- Suspect 2
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     playwright_mystery_id,
     'innocent',
-    'Marcus caught you **embezzling box office receipts**. He was going to fire you tonight after the performance.',
+    E'I confess everything.\n\nMy secret was: Marcus caught you **embezzling box office receipts**. He was going to fire you tonight after the performance.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **ticket booth** counting receipts and closing out the register. I have all the financial records.\n\nI was still there when the ambulance arrived.'
   );
 
-  -- Innocent 3
+  -- Suspect 3
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     playwright_mystery_id,
     'innocent',
-    'You witnessed Marcus having a **violent confrontation** with someone earlier, but they threatened you to stay silent.',
+    E'I confess everything.\n\nMy secret was: You witnessed Marcus having a **violent confrontation** with someone earlier, but they threatened you to stay silent.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **wardrobe department** steaming costumes for tomorrow. I never left until I heard the screaming.\n\nI still can''t believe what happened.'
   );
 END $$;
@@ -624,39 +624,39 @@ BEGIN
     E'I was in the **ballroom** dancing with various partners throughout the evening. The nature of the masquerade makes it difficult to prove, but many saw my distinctive phoenix costume.\n\nI came to the conservatory when I heard the commotion.'
   );
 
-  -- Guilty
+  -- Suspect
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     masquerade_mystery_id,
-    'guilty',
-    E'Isabella was **blackmailing you** with letters proving you falsified your noble lineage. She demanded more money tonight.\n\nThe masks gave you the perfect cover—you lured her to the conservatory and silenced her forever.',
+    'innocent',
+    E'I confess everything.\n\nMy secret was: Isabella was **blackmailing you** with letters proving you falsified your noble lineage. She demanded more money tonight.\n\nThe masks gave you the perfect cover—you lured her to the conservatory and silenced her forever.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **courtyard** by the fountain, enjoying the fresh air away from the crowd. My baroque harlequin costume should be memorable.\n\nI re-entered the palazzo through the west entrance.'
   );
 
-  -- Innocent 1
+  -- Suspect 1
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     masquerade_mystery_id,
     'innocent',
-    'Isabella knew you were **spying for a rival family**. You''ve been feeding them business secrets for months.',
+    E'I confess everything.\n\nMy secret was: Isabella knew you were **spying for a rival family**. You''ve been feeding them business secrets for months.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **dining hall** sampling the elaborate buffet. I spoke with the chef about the menu at length.\n\nMy peacock costume was quite distinctive.'
   );
 
-  -- Innocent 2
+  -- Suspect 2
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     masquerade_mystery_id,
     'innocent',
-    'You''re Isabella''s **secret lover**, meeting at these events under the anonymity of masks. Tonight she said she had something important to tell you.',
+    E'I confess everything.\n\nMy secret was: You''re Isabella''s **secret lover**, meeting at these events under the anonymity of masks. Tonight she said she had something important to tell you.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **music room** listening to the string quartet. I requested several pieces and tipped the musicians.\n\nI wore a black cat costume with gold details.'
   );
 
-  -- Innocent 3
+  -- Suspect 3
   INSERT INTO character_sheets (mystery_id, role, dark_secret, alibi)
   VALUES (
     masquerade_mystery_id,
     'innocent',
-    'You saw someone **following Isabella** toward the conservatory, but you can''t identify them because of their mask and costume.',
+    E'I confess everything.\n\nMy secret was: You saw someone **following Isabella** toward the conservatory, but you can''t identify them because of their mask and costume.\n\nThis secret gave me a motive, and I used the confusion to act before preparing my story to deflect suspicion.',
     E'I was in the **gallery** admiring the host''s art collection. The curator was showing me a new acquisition.\n\nMy white dove costume drew many compliments.'
   );
 END $$;

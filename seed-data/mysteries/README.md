@@ -79,7 +79,29 @@ This script:
       "alibi": "Was called to the scene at midnight",
       "image_path": "images/holmes.jpg"
     },
+    {
+      "role": "suspect",
+      "character_name": "Lady Ashford",
+      "occupation": "Host",
+      "dark_secret": "I confess everything. My secret gave me a motive, and I used the confusion to act.",
+      "alibi": "I was in the library arranging flowers.",
+      "image_path": "images/ashford.jpg"
+    },
     ...
   ]
 }
 ```
+
+## Character Roles
+
+New packs should only use:
+
+- `investigator` for the single investigator sheet
+- `suspect` for every playable suspect sheet
+
+The pack never defines the culprit. The app chooses the guilty suspect at runtime
+for each round. Legacy `guilty` and `innocent` roles are accepted during import
+and normalized to `suspect`, but they should not be used for new packs.
+
+Every suspect `dark_secret` must be written as a possible confession, because
+any suspect can become the culprit.
