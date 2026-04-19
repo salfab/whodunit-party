@@ -90,8 +90,7 @@ export async function GET(
         character_sheets!inner(
           character_name,
           occupation,
-          image_path,
-          role
+          image_path
         )
       `)
       .eq('session_id', sessionId)

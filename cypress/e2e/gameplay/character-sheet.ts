@@ -376,7 +376,7 @@ Given('I am assigned the innocent role', () => {
   }).as('getRounds');
 });
 
-Given('I am assigned a legacy guilty sheet as an innocent suspect', () => {
+Given('I am assigned a suspect sheet as an innocent player', () => {
   mockAssignedRole('innocent');
 
   cy.intercept('GET', '**/rest/v1/player_assignments*', (req) => {
@@ -395,11 +395,11 @@ Given('I am assigned a legacy guilty sheet as an innocent suspect', () => {
           player_id: 'test-player-001',
           session_id: 'test-session-playing',
           mystery_id: 'test-mystery-001',
-          sheet_id: 'test-sheet-legacy-guilty',
+          sheet_id: 'test-sheet-suspect',
           character_sheets: {
-            id: 'test-sheet-legacy-guilty',
-            role: 'guilty',
-            character_name: 'Legacy Red Herring',
+            id: 'test-sheet-suspect',
+            role: 'suspect',
+            character_name: 'Runtime Red Herring',
             occupation: 'Archivist',
             image_path: null,
             dark_secret: 'I confess everything, but only if the server chooses me.',

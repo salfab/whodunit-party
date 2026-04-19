@@ -1,5 +1,5 @@
 export type PublicCharacterRole = 'investigator' | 'suspect';
-export type DatabaseCharacterRole = 'investigator' | 'guilty' | 'innocent';
+export type DatabaseCharacterRole = PublicCharacterRole;
 
 export function normalizeCharacterRole(role: unknown): PublicCharacterRole | unknown {
   if (role === 'investigator') return 'investigator';
@@ -20,9 +20,5 @@ export function normalizeMysteryRoles<T extends { character_sheets?: Array<{ rol
 }
 
 export function publicRoleToDatabaseRole(role: PublicCharacterRole): DatabaseCharacterRole {
-  return role === 'investigator' ? 'investigator' : 'innocent';
-}
-
-export function databaseRoleToPublicRole(role: unknown): PublicCharacterRole | unknown {
-  return role === 'investigator' ? 'investigator' : normalizeCharacterRole(role);
+  return role;
 }

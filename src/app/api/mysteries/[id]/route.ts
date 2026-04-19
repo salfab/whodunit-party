@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import {
-  databaseRoleToPublicRole,
   normalizeMysteryRoles,
   publicRoleToDatabaseRole,
 } from '@/lib/mystery-role-normalization';
@@ -38,10 +37,7 @@ export async function GET(
 
     return NextResponse.json({
       ...(mystery as any),
-      character_sheets: (characterSheets || []).map((sheet: any) => ({
-        ...sheet,
-        role: databaseRoleToPublicRole(sheet.role),
-      })),
+      character_sheets: characterSheets || [],
     });
   } catch (error: any) {
     console.error('Error fetching mystery:', error);

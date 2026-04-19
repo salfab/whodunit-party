@@ -73,7 +73,6 @@ export async function GET(
     .select(`
       player_id,
       character_sheets (
-        role,
         character_name,
         occupation,
         image_path,

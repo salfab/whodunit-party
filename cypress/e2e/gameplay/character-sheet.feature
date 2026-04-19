@@ -35,8 +35,8 @@ Feature: Character Sheet Display
     And I should see the role "COUPABLE" on the card back
 
   @mobile @mocked
-  Scenario: Mobile - Legacy guilty sheet is not automatically the culprit
-    Given I am assigned a legacy guilty sheet as an innocent suspect
+  Scenario: Mobile - Suspect sheet is not automatically the culprit
+    Given I am assigned a suspect sheet as an innocent player
     When I visit the play page
     And I tap the role reveal card
     Then I should see the role "INNOCENT" on the card back

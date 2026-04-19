@@ -67,8 +67,7 @@ export async function POST(request: NextRequest) {
     const { data: accusedAssignmentData, error: accusedError } = await (supabase
       .from('player_assignments') as any)
       .select(`
-        *,
-        character_sheets (role)
+        *
       `)
       .eq('session_id', session.sessionId)
       .eq('player_id', accusedPlayerId)
@@ -139,8 +138,7 @@ export async function POST(request: NextRequest) {
     const { data: allAssignmentsData } = await (supabase
       .from('player_assignments') as any)
       .select(`
-        player_id,
-        character_sheets (role)
+        player_id
       `)
       .eq('session_id', session.sessionId)
       .eq('mystery_id', gameSession.current_mystery_id);
@@ -212,7 +210,6 @@ export async function POST(request: NextRequest) {
       .select(`
         player_id,
         character_sheets (
-          role,
           character_name,
           occupation,
           image_path,

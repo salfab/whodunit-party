@@ -131,11 +131,10 @@ export async function POST(
       );
     }
 
-    // Separate sheets by public sheet type. Legacy DB roles "guilty" and
-    // "innocent" are both treated as suspect sheets; runtime guilt is resolved
-    // deterministically per round.
+    // Separate sheets by public sheet type. Runtime guilt is resolved
+    // deterministically per round, not stored on the sheet.
     const investigatorSheet = sheets.find((s: any) => s.role === 'investigator');
-    const suspectSheets = sheets.filter((s: any) => s.role !== 'investigator');
+    const suspectSheets = sheets.filter((s: any) => s.role === 'suspect');
 
     log('info', `Found sheets for mystery ${mysteryId}: 1 investigator, ${suspectSheets.length} suspects`);
 

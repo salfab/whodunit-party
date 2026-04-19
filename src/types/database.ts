@@ -385,7 +385,7 @@ export type Database = {
       mark_inactive_players_as_quit: { Args: never; Returns: undefined }
     }
     Enums: {
-      player_role: "investigator" | "guilty" | "innocent"
+      player_role: "investigator" | "suspect"
       player_status: "active" | "quit" | "accused" | "kicked"
       session_status: "lobby" | "playing" | "completed"
     }
@@ -1151,7 +1151,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      player_role: ["investigator", "guilty", "innocent"],
+      player_role: ["investigator", "suspect"],
       player_status: ["active", "quit", "accused", "kicked"],
       session_status: ["lobby", "playing", "completed"],
     },

@@ -62,7 +62,7 @@ export function resolveRoundRolesFromAssignments(
 
   const investigatorPlayerId = investigatorAssignments[0].player_id;
   const suspectPlayerIds = assignments
-    .filter((assignment) => assignment.player_id !== investigatorPlayerId)
+    .filter((assignment) => assignment.character_sheets?.role === 'suspect')
     .map((assignment) => assignment.player_id);
 
   if (suspectPlayerIds.length === 0) {
