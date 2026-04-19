@@ -21,9 +21,9 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
 2. **Couvrez le coupable** en essayant de deviner ses mots
    - Dans ce jeu, les suspects n'aiment pas les forces de l'ordre !
 
-3. **Utilisez votre alibi** pour démarrer votre histoire si besoin
+3. **En manque d'inspiration ?** Utilisez le texte d'aide pour démarrer votre histoire si besoin
 
-4. **Pimentez votre récit** avec votre sombre secret si vous voulez étoffer votre personnage`,
+4. Gardez votre rôle secret jusqu'à l'accusation finale`,
   
   guilty: `# Comment jouer - Suspect Coupable
 
@@ -34,9 +34,9 @@ Chaque suspect doit placer **3 mots obligatoires** dans son récit :
 2. **Devinez les mots des innocents** pour brouiller les pistes
    - Essayez d'utiliser leurs mots pour détourner l'attention
 
-3. **Utilisez votre alibi** pour démarrer votre histoire si besoin
+3. **En manque d'inspiration ?** Utilisez le texte d'aide pour démarrer votre histoire si besoin
 
-4. **Pimentez votre récit** avec votre sombre secret si vous voulez étoffer votre personnage`,
+4. Gardez votre aveu pour la révélation finale`,
   rules: `# Déroulement d'une manche
 
 1. **Distribution des rôles**  

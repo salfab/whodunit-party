@@ -40,6 +40,7 @@ Feature: Accusation System
     And I select the guilty player
     And I confirm the accusation
     Then I should see the accusation was correct
+    And I should see the guilty confession
 
   @mobile @mocked
   Scenario: Mobile - Wrong accusation shows failure result

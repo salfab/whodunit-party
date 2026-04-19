@@ -45,6 +45,7 @@ export interface AccusationResult {
     characterName: string;
     occupation?: string;
     imagePath?: string;
+    darkSecret?: string;
     playerIndex: number;
   };
 }

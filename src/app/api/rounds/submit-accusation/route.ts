@@ -222,7 +222,8 @@ export async function POST(request: NextRequest) {
           role,
           character_name,
           occupation,
-          image_path
+          image_path,
+          dark_secret
         ),
         players (
           name
@@ -248,6 +249,7 @@ export async function POST(request: NextRequest) {
       characterName: guiltyPlayerAssignment.character_sheets?.character_name,
       occupation: guiltyPlayerAssignment.character_sheets?.occupation,
       imagePath: guiltyPlayerAssignment.character_sheets?.image_path,
+      darkSecret: guiltyPlayerAssignment.character_sheets?.dark_secret,
       playerIndex: guiltyPlayerIndex,
     } : undefined;
 

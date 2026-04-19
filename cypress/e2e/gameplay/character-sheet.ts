@@ -446,15 +446,22 @@ Then('I should see 3 words to place in conversation', () => {
   cy.getByTestId('play-words-list').find('[data-testid^="play-word-"]').should('have.length', 3);
 });
 
-// ==================== Secret Panel ====================
+// ==================== Inspiration Help Panel ====================
 
-When('I click the secret toggle button', () => {
+Then('I should not see the dark secret on my character sheet', () => {
+  cy.contains('Sombre Secret').should('not.exist');
+  cy.contains('You are having an affair with the gardener.').should('not.exist');
+});
+
+When('I click the inspiration help toggle button', () => {
   cy.get('[data-testid^="play-secret-toggle-"]').first().click();
 });
 
-Then('the secret content should be visible', () => {
+Then('the inspiration help content should be visible', () => {
+  cy.contains("En manque d'inspiration ?").should('be.visible');
   cy.get('[data-testid^="play-secret-content-"]').first()
     .should('not.have.css', 'filter', 'blur(8px)');
+  cy.contains('I was walking in the garden.').should('be.visible');
 });
 
 // ==================== Accuse Button ====================

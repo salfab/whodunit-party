@@ -339,6 +339,7 @@ export async function submitAccusation(
     characterName: string;
     occupation?: string;
     imagePath?: string;
+    darkSecret?: string;
     playerIndex: number;
   };
   messages: {
@@ -371,6 +372,7 @@ export async function fetchGuiltyPlayer(
   characterName: string;
   occupation?: string;
   imagePath?: string;
+  darkSecret?: string;
   playerIndex: number;
 } | undefined> {
   const response = await fetch(`/api/rounds/${sessionId}/guilty-player?mysteryId=${mysteryId}`);

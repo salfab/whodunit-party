@@ -66,7 +66,6 @@ export default function PlayPage() {
   // UI state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [secretVisible, setSecretVisible] = useState(false);
   const [alibiVisible, setAlibiVisible] = useState(false);
   
   // Accusation state
@@ -574,22 +573,11 @@ export default function PlayPage() {
                 {/* Alibi - Only for guilty/innocent */}
                 {characterSheet.role !== 'investigator' && (
                   <SecretPanel
-                    title="Votre alibi"
-                    emoji=""
+                    title="En manque d'inspiration ?"
+                    emoji="💡"
                     content={characterSheet.alibi}
                     visible={alibiVisible}
-                    onToggleVisibility={() => setAlibiVisible(!alibiVisible)}
-                  />
-                )}
-
-                {/* Dark Secret - Only for guilty/innocent */}
-                {characterSheet.role !== 'investigator' && (
-                  <SecretPanel
-                    title="Sombre Secret"
-                    emoji=""
-                    content={characterSheet.dark_secret}
-                    visible={secretVisible}
-                    onToggleVisibility={() => setSecretVisible(!secretVisible)}
+                    onToggleVisibility={() => setAlibiVisible((visible) => !visible)}
                   />
                 )}
 
@@ -664,6 +652,32 @@ export default function PlayPage() {
                       >
                         {accusationResult.message}
                       </Alert>
+
+                      {accusationResult.guiltyPlayer.darkSecret && (
+                        <Box
+                          sx={{
+                            mt: 3,
+                            pt: 3,
+                            borderTop: '1px solid',
+                            borderColor: 'divider',
+                            '& p, & li': {
+                              color: 'text.primary',
+                              lineHeight: 1.8,
+                            },
+                            '& strong': {
+                              color: 'primary.light',
+                              fontWeight: 700,
+                            },
+                          }}
+                        >
+                          <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 600 }}>
+                            🤫 Les aveux du coupable
+                          </Typography>
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                            {accusationResult.guiltyPlayer.darkSecret}
+                          </ReactMarkdown>
+                        </Box>
+                      )}
                     </Box>
                   )}
 

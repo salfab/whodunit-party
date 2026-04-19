@@ -50,8 +50,9 @@ Feature: Character Sheet Display
     Then I should see 3 words to place in conversation
 
   @mobile
-  Scenario: Mobile - Player can toggle secret visibility
+  Scenario: Mobile - Player can toggle inspiration help without seeing dark secret
     Given I am assigned the innocent role
     And I visit the play page
-    When I click the secret toggle button
-    Then the secret content should be visible
+    Then I should not see the dark secret on my character sheet
+    When I click the inspiration help toggle button
+    Then the inspiration help content should be visible
