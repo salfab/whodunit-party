@@ -1,12 +1,12 @@
 import { createServiceClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { resolveRoundRoles } from '@/lib/round-roles';
+import { validateSession } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
-  const supabase = await createServiceClient();
   const { sessionId } = await params; // Await params (Next.js 15 change)
   const searchParams = request.nextUrl.searchParams;
   const mysteryId = searchParams.get('mysteryId');
@@ -19,6 +19,17 @@ export async function GET(
       { status: 400 }
     );
   }
+
+  const session = await validateSession();
+  if (!session) {
+    return NextResponse.json({ error: 'Invalid or missing session' }, { status: 401 });
+  }
+
+  if (session.sessionId !== sessionId) {
+    return NextResponse.json({ error: 'Forbidden for this session' }, { status: 403 });
+  }
+
+  const supabase = await createServiceClient();
 
   // First, verify that an accusation exists for this session and mystery
   console.log('[GUILTY API] Querying rounds table...');

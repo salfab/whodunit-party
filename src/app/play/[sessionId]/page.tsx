@@ -682,7 +682,7 @@ export default function PlayPage() {
                   )}
 
                   {/* Confession CTA - Only for guilty player */}
-                  {characterSheet?.role === 'guilty' && (
+                  {characterSheet?.assignedRole === 'guilty' && (
                     <Box sx={{ textAlign: 'center', mb: 4 }}>
                       <Button
                         variant="contained"
