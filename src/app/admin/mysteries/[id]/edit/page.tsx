@@ -126,9 +126,9 @@ export default function EditMysteryPage() {
     innocent_words: ['', '', ''],
     guilty_words: ['', '', ''],
     character_sheets: [
-      { role: 'investigator', character_name: 'L\'Enquêteur', dark_secret: '', alibi: '' },
-      { role: 'guilty', character_name: 'Le Coupable', dark_secret: '', alibi: '' },
-      { role: 'innocent', character_name: 'Un Innocent', dark_secret: '', alibi: '' },
+      { role: 'investigator', character_name: 'Personnage 1', dark_secret: '', alibi: '' },
+      { role: 'guilty', character_name: 'Personnage 2', dark_secret: '', alibi: '' },
+      { role: 'innocent', character_name: 'Personnage 3', dark_secret: '', alibi: '' },
     ],
   });
 
@@ -247,7 +247,7 @@ export default function EditMysteryPage() {
       ...formData,
       character_sheets: [
         ...formData.character_sheets,
-        { role: 'innocent', character_name: 'Un Innocent', dark_secret: '', alibi: '' },
+        { role: 'innocent', character_name: `Personnage ${formData.character_sheets.length + 1}`, dark_secret: '', alibi: '' },
       ],
     });
   };
