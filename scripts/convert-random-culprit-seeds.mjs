@@ -6,6 +6,7 @@ import JSZip from 'jszip';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MYSTERIES_DIR = path.join(__dirname, '../seed-data/mysteries');
 const TARGET_VERSION = '2.0.0';
+const VALID_THEMES = new Set(['PETTY_CRIME', 'MACABRE', 'SERIOUS_MURDER', 'FUNNY_CRIME']);
 
 function isInvestigator(sheet) {
   return sheet?.role === 'investigator';
@@ -59,22 +60,41 @@ async function convertZip(zipPath) {
   const parsed = JSON.parse(await mysteryFile.async('string'));
   const mysteries = Array.isArray(parsed) ? parsed : [parsed];
   let converted = 0;
+  let changed = false;
 
   for (const mystery of mysteries) {
     const language = mystery.language || 'fr';
-    mystery.version = TARGET_VERSION;
+    if (mystery.version !== TARGET_VERSION) {
+      mystery.version = TARGET_VERSION;
+      changed = true;
+    }
+    if (!VALID_THEMES.has(mystery.theme)) {
+      mystery.theme = 'FUNNY_CRIME';
+      changed = true;
+    }
     mystery.character_sheets = mystery.character_sheets.map((sheet) => {
       if (isInvestigator(sheet)) {
         return sheet;
       }
 
-      converted += 1;
-      return {
+      const nextSecret = asConfession(sheet.dark_secret, language);
+      const nextSheet = {
         ...sheet,
         role: 'suspect',
-        dark_secret: asConfession(sheet.dark_secret, language),
+        dark_secret: nextSecret,
       };
+
+      if (sheet.role !== nextSheet.role || sheet.dark_secret !== nextSecret) {
+        converted += 1;
+        changed = true;
+      }
+
+      return nextSheet;
     });
+  }
+
+  if (!changed) {
+    return { zip: path.basename(zipPath), converted, changed, skipped: false };
   }
 
   const nextJson = Array.isArray(parsed) ? mysteries : mysteries[0];
@@ -88,7 +108,7 @@ async function convertZip(zipPath) {
 
   await fs.writeFile(zipPath, nextBuffer);
 
-  return { zip: path.basename(zipPath), converted, skipped: false };
+  return { zip: path.basename(zipPath), converted, changed, skipped: false };
 }
 
 const zipFiles = (await fs.readdir(MYSTERIES_DIR))
