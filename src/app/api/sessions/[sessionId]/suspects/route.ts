@@ -13,6 +13,17 @@ export interface SuspectInfo {
   imagePath?: string | null;
 }
 
+function shuffleSuspects(suspects: SuspectInfo[]): SuspectInfo[] {
+  const shuffled = [...suspects];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
 /**
  * GET /api/sessions/[sessionId]/suspects
  * Returns all suspects for the current mystery (excluding the investigator)
@@ -125,7 +136,7 @@ export async function GET(
 
     log('info', `Returning ${suspects.length} suspects for session ${sessionId}`);
 
-    return NextResponse.json({ suspects });
+    return NextResponse.json({ suspects: shuffleSuspects(suspects) });
   } catch (error) {
     log('error', 'Unexpected error', { error });
     return NextResponse.json(
