@@ -3,6 +3,7 @@ import type { Database } from '@/types/database';
 export type CharacterSheet = Database['public']['Tables']['character_sheets']['Row'];
 export type Player = Database['public']['Tables']['players']['Row'];
 export type Mystery = Database['public']['Tables']['mysteries']['Row'];
+export type AssignedRole = 'investigator' | 'guilty' | 'innocent';
 
 export interface PlayerOption {
   id: string;
@@ -12,6 +13,7 @@ export interface PlayerOption {
 }
 
 export interface CharacterWithWords extends CharacterSheet {
+  assignedRole: AssignedRole;
   wordsToPlace: string[];
   mystery: Mystery;
   playerIndex: number;

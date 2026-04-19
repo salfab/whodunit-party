@@ -131,14 +131,15 @@ export async function POST(
       );
     }
 
-    // Separate sheets by role
+    // Separate sheets by public sheet type. Legacy DB roles "guilty" and
+    // "innocent" are both treated as suspect sheets; runtime guilt is resolved
+    // deterministically per round.
     const investigatorSheet = sheets.find((s: any) => s.role === 'investigator');
-    const guiltySheet = sheets.find((s: any) => s.role === 'guilty');
-    const innocentSheets = sheets.filter((s: any) => s.role === 'innocent');
+    const suspectSheets = sheets.filter((s: any) => s.role !== 'investigator');
 
-    log('info', `Found sheets for mystery ${mysteryId}: 1 investigator, 1 guilty, ${innocentSheets.length} innocent`);
+    log('info', `Found sheets for mystery ${mysteryId}: 1 investigator, ${suspectSheets.length} suspects`);
 
-    if (!investigatorSheet || !guiltySheet) {
+    if (!investigatorSheet || suspectSheets.length === 0) {
       log('error', 'Mystery missing required roles', { mysteryId });
       return NextResponse.json(
         { error: 'Mystery is missing required roles' },
@@ -156,25 +157,33 @@ export async function POST(
     
     log('info', `Selected investigator: ${investigatorPlayer.id}`);
 
-    // Shuffle remaining players for guilty/innocent assignment
+    // Shuffle remaining players for suspect sheet assignment.
     const remainingPlayersForRoles = players
       .filter((p: any) => p.id !== investigatorPlayer.id)
       .sort(() => Math.random() - 0.5);
 
     log('info', `Assigning roles to ${remainingPlayersForRoles.length} remaining players`);
 
-    // Assign investigator and guilty (always distributed)
+    if (remainingPlayersForRoles.length > suspectSheets.length) {
+      log('error', 'Not enough suspect sheets for players', {
+        mysteryId,
+        suspectSheetCount: suspectSheets.length,
+        suspectPlayerCount: remainingPlayersForRoles.length,
+      });
+      return NextResponse.json(
+        { error: 'Mystery does not have enough suspect sheets for all players' },
+        { status: 400 }
+      );
+    }
+
+    const shuffledSuspectSheets = [...suspectSheets].sort(() => Math.random() - 0.5);
+
+    // Assign investigator first; all other players receive suspect sheets.
     const assignments = [
       {
         session_id: sessionId,
         player_id: investigatorPlayer.id,
         sheet_id: investigatorSheet.id,
-        mystery_id: mysteryId,
-      },
-      {
-        session_id: sessionId,
-        player_id: remainingPlayersForRoles[0].id,
-        sheet_id: guiltySheet.id,
         mystery_id: mysteryId,
       },
     ];
@@ -189,15 +198,13 @@ export async function POST(
       log('warn', 'Failed to mark player as having been investigator', { error: updateInvestigatorError.message });
     }
 
-    // Distribute innocent sheets to remaining players
-    const remainingPlayers = remainingPlayersForRoles.slice(1);
-    const shuffledInnocentSheets = [...innocentSheets].sort(() => Math.random() - 0.5);
-
-    for (let i = 0; i < remainingPlayers.length && i < shuffledInnocentSheets.length; i++) {
+    // Distribute suspect sheets to remaining players. The actual guilty player
+    // is resolved later from all suspect assignments, not from the sheet role.
+    for (let i = 0; i < remainingPlayersForRoles.length; i++) {
       assignments.push({
         session_id: sessionId,
-        player_id: remainingPlayers[i].id,
-        sheet_id: shuffledInnocentSheets[i].id,
+        player_id: remainingPlayersForRoles[i].id,
+        sheet_id: shuffledSuspectSheets[i].id,
         mystery_id: mysteryId,
       });
     }

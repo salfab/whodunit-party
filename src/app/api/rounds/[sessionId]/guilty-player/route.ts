@@ -1,5 +1,6 @@
 import { createServiceClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
+import { resolveRoundRoles } from '@/lib/round-roles';
 
 export async function GET(
   request: NextRequest,
@@ -53,6 +54,7 @@ export async function GET(
   }
 
   console.log('[GUILTY API] Accusation verified, fetching guilty player...');
+  const roundRoles = await resolveRoundRoles(supabase, sessionId, mysteryId);
 
   // Accusation exists, now fetch the guilty player information
   const { data: guiltyAssignmentData, error: assignmentError } = await supabase
@@ -82,19 +84,9 @@ export async function GET(
     );
   }
 
-  // Debug logging
-  console.log('[GUILTY API] Assignment data:', JSON.stringify(guiltyAssignmentData, null, 2));
-  console.log('[GUILTY API] Looking for guilty role...');
-  
-  // Find the guilty player
-  const guiltyPlayerAssignment = guiltyAssignmentData?.find((a: any) => {
-    console.log('[GUILTY API] Checking assignment:', {
-      player_id: a.player_id,
-      role: a.character_sheets?.role,
-      matches: a.character_sheets?.role === 'guilty'
-    });
-    return a.character_sheets?.role === 'guilty';
-  });
+  const guiltyPlayerAssignment = guiltyAssignmentData?.find(
+    (a: any) => a.player_id === roundRoles.guiltyPlayerId
+  );
 
   console.log('[GUILTY API] Found guilty player:', guiltyPlayerAssignment ? 'YES' : 'NO');
 
@@ -107,7 +99,7 @@ export async function GET(
 
   // Calculate player index for consistent placeholders
   const guiltyPlayerIndex = guiltyAssignmentData?.findIndex(
-    (a: any) => a.character_sheets?.role === 'guilty'
+    (a: any) => a.player_id === roundRoles.guiltyPlayerId
   ) ?? 0;
 
   // Return the guilty player information

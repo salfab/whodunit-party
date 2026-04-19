@@ -136,7 +136,7 @@ export default function PlayPage() {
 
     // Build accusation message based on role
     const message = characterSheet 
-      ? getAccusationMessage(characterSheet.role, round.was_correct, currentPlayer?.id === round.accused_player_id)
+      ? getAccusationMessage(characterSheet.assignedRole, round.was_correct, currentPlayer?.id === round.accused_player_id)
       : '';
 
     // Fetch guilty player from secure endpoint
@@ -193,7 +193,7 @@ export default function PlayPage() {
       if (result.joinCode) setJoinCode(result.joinCode);
 
       // Fetch suspects for investigator
-      if (result.characterSheet.role === 'investigator') {
+      if (result.characterSheet.assignedRole === 'investigator') {
         fetchSuspects(sessionId).then(suspectList => {
           setSuspects(suspectList);
         }).catch(err => {
@@ -226,7 +226,7 @@ export default function PlayPage() {
         }
 
         const message = getAccusationMessage(
-          result.characterSheet.role,
+          result.characterSheet.assignedRole,
           wasCorrect,
           accusedPlayerId === result.currentPlayer.id
         );
@@ -325,9 +325,9 @@ export default function PlayPage() {
     try {
       const data = await submitAccusation(playerId);
 
-      const message = characterSheet.role === 'investigator'
+      const message = characterSheet.assignedRole === 'investigator'
         ? data.messages.investigator
-        : characterSheet.role === 'guilty'
+        : characterSheet.assignedRole === 'guilty'
         ? data.messages.guilty
         : data.messages.innocent;
 
@@ -393,9 +393,9 @@ export default function PlayPage() {
     );
   }
 
-  const helpContent = characterSheet.role === 'investigator' 
-    ? HELP_CONTENT.investigator 
-    : characterSheet.role === 'guilty' 
+  const helpContent = characterSheet.assignedRole === 'investigator'
+    ? HELP_CONTENT.investigator
+    : characterSheet.assignedRole === 'guilty'
     ? HELP_CONTENT.guilty
     : HELP_CONTENT.innocent;
 
@@ -487,19 +487,19 @@ export default function PlayPage() {
                   <RoleRevealCard
                     imagePath={
                       characterSheet.image_path || 
-                      (characterSheet.role === 'investigator' 
+                      (characterSheet.assignedRole === 'investigator'
                         ? '/characters/investigator.jpg' 
                         : getPlaceholderImage(characterSheet.playerIndex))
                     }
                     characterName={characterSheet.character_name}
                     occupation={characterSheet.occupation || undefined}
-                    role={characterSheet.role as 'investigator' | 'guilty' | 'innocent'}
+                    role={characterSheet.assignedRole as 'investigator' | 'guilty' | 'innocent'}
                     showNameOverlay={!characterSheet.image_path}
                   />
                 </Box>
 
                 {/* Investigator sees Mystery Description */}
-                {characterSheet.role === 'investigator' && (
+                {characterSheet.assignedRole === 'investigator' && (
                   <Box sx={{ 
                     mb: 4,
                     '& h1, & h2, & h3, & h4, & h5, & h6': {
@@ -561,17 +561,17 @@ export default function PlayPage() {
                 )}
 
                 {/* Suspects List - Only for investigator */}
-                {characterSheet.role === 'investigator' && suspects.length > 0 && (
+                {characterSheet.assignedRole === 'investigator' && suspects.length > 0 && (
                   <SuspectsList suspects={suspects} />
                 )}
 
                 {/* Words to Place - Only for guilty/innocent */}
-                {characterSheet.role !== 'investigator' && (
+                {characterSheet.assignedRole !== 'investigator' && (
                   <WordsToPlace words={characterSheet.wordsToPlace} />
                 )}
 
                 {/* Alibi - Only for guilty/innocent */}
-                {characterSheet.role !== 'investigator' && (
+                {characterSheet.assignedRole !== 'investigator' && (
                   <SecretPanel
                     title="En manque d'inspiration ?"
                     emoji="💡"
@@ -582,7 +582,7 @@ export default function PlayPage() {
                 )}
 
                 {/* J'Accuse Button - Only for investigator */}
-                {characterSheet.role === 'investigator' && !accusationResult && (
+                {characterSheet.assignedRole === 'investigator' && !accusationResult && (
                   <AccuseButton
                     onClick={() => {
                       setSelectedPlayer('');

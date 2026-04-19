@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/client';
-import type { PlayerOption, PlayerScore, AvailableMystery, CharacterWithWords, SuspectInfo } from './types';
+import type { AssignedRole, PlayerOption, PlayerScore, AvailableMystery, CharacterWithWords, SuspectInfo } from './types';
 
 const supabase = createClient();
 
@@ -114,10 +114,12 @@ export async function loadCharacterSheet(
 
   const sheet = assignment.character_sheets;
   const mystery = sheet.mysteries;
+  const assignedRole = await fetchAssignedRole(sessionId, mystery.id);
   
-  // Add the words to place based on role (only for guilty/innocent)
-  const wordsToPlace = sheet.role === 'investigator' ? [] : 
-    (sheet.role === 'guilty' ? mystery.guilty_words : mystery.innocent_words);
+  // Add the words to place based on the runtime role. The stored sheet role is
+  // legacy content metadata and does not decide who is guilty anymore.
+  const wordsToPlace = assignedRole === 'investigator' ? [] :
+    (assignedRole === 'guilty' ? mystery.guilty_words : mystery.innocent_words);
   
   // Get player index for consistent placeholders
   const { data: allPlayerAssignments } = await supabase
@@ -131,7 +133,7 @@ export async function loadCharacterSheet(
     pa => pa.player_id === playerData.playerId
   ) ?? 0;
 
-  const characterSheet: CharacterWithWords = { ...sheet, wordsToPlace, mystery, playerIndex };
+  const characterSheet: CharacterWithWords = { ...sheet, assignedRole, wordsToPlace, mystery, playerIndex };
 
   // Load all active players with their character names FOR THIS MYSTERY (for accusation list)
   // Important: Filter by mystery_id to get correct character assignments
@@ -384,6 +386,21 @@ export async function fetchGuiltyPlayer(
 
   const data = await response.json();
   return data.guiltyPlayer;
+}
+
+async function fetchAssignedRole(
+  sessionId: string,
+  mysteryId: string
+): Promise<AssignedRole> {
+  const response = await fetch(`/api/sessions/${sessionId}/assigned-role?mysteryId=${mysteryId}`);
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error || 'Failed to resolve assigned role');
+  }
+
+  const data = await response.json();
+  return data.assignedRole;
 }
 
 export async function submitMysteryVote(

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { validateSession } from '@/lib/auth';
 import { createLogger } from '@/lib/logging';
+import { resolveRoundRoles } from '@/lib/round-roles';
 
 const log = createLogger('api.rounds.submit-accusation');
 
@@ -48,29 +49,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify the current player is the investigator for this session
-    const { data: assignmentData, error: assignmentError } = await (supabase
-      .from('player_assignments') as any)
-      .select(`
-        *,
-        character_sheets (role)
-      `)
-      .eq('session_id', session.sessionId)
-      .eq('player_id', session.playerId)
-      .eq('mystery_id', gameSession.current_mystery_id)
-      .single();
-    
-    const assignment = assignmentData as any;
+    const roundRoles = await resolveRoundRoles(
+      supabase,
+      session.sessionId,
+      gameSession.current_mystery_id
+    );
+    const currentPlayerRole = roundRoles.rolesByPlayerId.get(session.playerId);
 
-    if (assignmentError || !assignment) {
-      return NextResponse.json(
-        { error: 'Assignment not found' },
-        { status: 404 }
-      );
-    }
-
-    const characterSheet = assignment.character_sheets as any;
-    if (characterSheet.role !== 'investigator') {
+    if (currentPlayerRole !== 'investigator') {
       return NextResponse.json(
         { error: 'Only the investigator can make accusations' },
         { status: 403 }
@@ -98,8 +84,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const accusedSheet = accusedAssignment.character_sheets as any;
-    const wasCorrect = accusedSheet.role === 'guilty';
+    const accusedAssignedRole = roundRoles.rolesByPlayerId.get(accusedPlayerId);
+    if (!accusedAssignedRole || accusedAssignedRole === 'investigator') {
+      return NextResponse.json(
+        { error: 'Accused player is not a suspect' },
+        { status: 400 }
+      );
+    }
+
+    const wasCorrect = accusedAssignedRole === 'guilty';
 
     // Get current round number for this session
     const { data: existingRoundsData } = await (supabase
@@ -159,8 +152,8 @@ export async function POST(request: NextRequest) {
       scoreUpdates.push({ id: session.playerId, increment: 2 });
     } else {
       // Investigator accused wrong: ALL innocents get +1 point each
-      const innocentPlayers = allAssignments.filter((a: any) => 
-        a.character_sheets?.role === 'innocent'
+      const innocentPlayers = allAssignments.filter((a: any) =>
+        roundRoles.rolesByPlayerId.get(a.player_id) === 'innocent'
       );
       
       for (const innocent of innocentPlayers) {
@@ -168,8 +161,8 @@ export async function POST(request: NextRequest) {
       }
       
       // Guilty player gets +2 points for escaping
-      const guiltyPlayer = allAssignments.find((a: any) => 
-        a.character_sheets?.role === 'guilty'
+      const guiltyPlayer = allAssignments.find((a: any) =>
+        roundRoles.rolesByPlayerId.get(a.player_id) === 'guilty'
       );
 
       if (guiltyPlayer) {
@@ -234,13 +227,13 @@ export async function POST(request: NextRequest) {
       .order('player_id', { ascending: true });
     
     const guiltyAssignment = guiltyAssignmentData as any;
-    const guiltyPlayerAssignment = guiltyAssignment?.find((a: any) => 
-      a.character_sheets?.role === 'guilty'
+    const guiltyPlayerAssignment = guiltyAssignment?.find((a: any) =>
+      a.player_id === roundRoles.guiltyPlayerId
     );
 
     // Calculate player index for consistent placeholders
     const guiltyPlayerIndex = guiltyAssignment?.findIndex((a: any) =>
-      a.character_sheets?.role === 'guilty'
+      a.player_id === roundRoles.guiltyPlayerId
     ) ?? 0;
 
     const guiltyPlayerInfo = guiltyPlayerAssignment ? {
@@ -278,7 +271,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       roundId: round.id,
       wasCorrect,
-      accusedRole: accusedSheet.role,
+      accusedRole: accusedAssignedRole,
       gameComplete: allHaveBeenInvestigator,
       guiltyPlayer: guiltyPlayerInfo,
       messages: {

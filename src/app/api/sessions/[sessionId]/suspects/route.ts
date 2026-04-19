@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { validateSession } from '@/lib/auth';
 import { createLogger } from '@/lib/logging';
+import { resolveRoundRoles } from '@/lib/round-roles';
 
 const log = createLogger('api.sessions.suspects');
 
@@ -70,28 +71,10 @@ export async function GET(
 
     const mysteryId = gameSession.current_mystery_id;
 
-    // Verify the requesting player is the investigator
-    const { data: playerAssignment, error: assignmentError } = await (supabase
-      .from('player_assignments') as any)
-      .select(`
-        player_id,
-        character_sheets!inner(role)
-      `)
-      .eq('session_id', sessionId)
-      .eq('player_id', session.playerId)
-      .eq('mystery_id', mysteryId)
-      .single();
-
-    if (assignmentError || !playerAssignment) {
-      log('error', 'Failed to verify player assignment', { error: assignmentError?.message });
-      return NextResponse.json(
-        { error: 'Not assigned to this mystery' },
-        { status: 403 }
-      );
-    }
+    const roundRoles = await resolveRoundRoles(supabase, sessionId, mysteryId);
 
     // Only investigators can see suspect list with descriptions
-    if (playerAssignment.character_sheets?.role !== 'investigator') {
+    if (roundRoles.rolesByPlayerId.get(session.playerId) !== 'investigator') {
       return NextResponse.json(
         { error: 'Only investigators can view suspect details' },
         { status: 403 }
@@ -125,7 +108,7 @@ export async function GET(
 
     // Format response - IMPORTANT: Do NOT include role
     const suspects: SuspectInfo[] = (assignments || [])
-      .filter((a: any) => a.character_sheets?.role !== 'investigator')
+      .filter((a: any) => roundRoles.rolesByPlayerId.get(a.player_id) !== 'investigator')
       .map((a: any) => ({
         id: a.player_id,
         playerName: a.players?.name || 'Unknown',
