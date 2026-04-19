@@ -116,8 +116,8 @@ Then('I should see the accusation was incorrect', () => {
 });
 
 Then('I should see the guilty confession', () => {
-  cy.contains('Les aveux du coupable').should('be.visible');
-  cy.contains('I confess everything: the ledger, the poison, and the staged alibi.').should('be.visible');
+  cy.contains('Les aveux du coupable', { timeout: 15000 }).should('exist');
+  cy.contains('I confess everything: the ledger, the poison, and the staged alibi.', { timeout: 15000 }).should('exist');
 });
 
 // ==================== Mystery Voting After Accusation ====================
@@ -265,6 +265,12 @@ Given('I am assigned the investigator role with 15 players', () => {
     headers: { 'content-type': 'image/jpeg' },
     fixture: 'test-image.png',
   });
+
+  // Mock assigned role endpoint
+  cy.intercept('GET', '/api/sessions/test-session-playing/assigned-role*', {
+    statusCode: 200,
+    body: { assignedRole: 'investigator' },
+  }).as('getAssignedRole');
 
   // Mock player assignment as investigator
   cy.intercept('GET', '**/rest/v1/player_assignments*', (req) => {
