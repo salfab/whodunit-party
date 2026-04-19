@@ -8,7 +8,7 @@ interface CharacterPreviewCardProps {
   imagePath?: string;
   characterName: string;
   occupation?: string;
-  role: 'investigator' | 'guilty' | 'innocent';
+  role: 'investigator' | 'suspect';
 }
 
 // Flip animation keyframes
@@ -38,7 +38,7 @@ const cardDesign = {
 };
 
 // Spoiler-free role label - only shows "Enquêteur" or "Suspect"
-const getSpoilerFreeRoleLabel = (role: 'investigator' | 'guilty' | 'innocent') => {
+const getSpoilerFreeRoleLabel = (role: 'investigator' | 'suspect') => {
   return role === 'investigator' ? 'ENQUÊTEUR' : 'SUSPECT';
 };
 

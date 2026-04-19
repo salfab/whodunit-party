@@ -25,7 +25,7 @@ import AdminNavBar from '@/components/admin/AdminNavBar';
 import CharacterPreviewCard from '@/components/admin/CharacterPreviewCard';
 
 interface CharacterSheet {
-  role: 'investigator' | 'guilty' | 'innocent';
+  role: 'investigator' | 'suspect';
   character_name: string;
   occupation?: string;
   dark_secret: string;
@@ -127,8 +127,8 @@ export default function EditMysteryPage() {
     guilty_words: ['', '', ''],
     character_sheets: [
       { role: 'investigator', character_name: 'Personnage 1', dark_secret: '', alibi: '' },
-      { role: 'guilty', character_name: 'Personnage 2', dark_secret: '', alibi: '' },
-      { role: 'innocent', character_name: 'Personnage 3', dark_secret: '', alibi: '' },
+      { role: 'suspect', character_name: 'Personnage 2', dark_secret: '', alibi: '' },
+      { role: 'suspect', character_name: 'Personnage 3', dark_secret: '', alibi: '' },
     ],
   });
 
@@ -199,8 +199,8 @@ export default function EditMysteryPage() {
       if (!formData.character_sheets.find((s) => s.role === 'investigator')) {
         throw new Error('Un rôle d\'enquêteur est obligatoire');
       }
-      if (!formData.character_sheets.find((s) => s.role === 'guilty')) {
-        throw new Error('Un rôle de coupable est obligatoire');
+      if (!formData.character_sheets.find((s) => s.role === 'suspect')) {
+        throw new Error('Au moins un suspect est obligatoire');
       }
       for (const sheet of formData.character_sheets) {
         if (!sheet.character_name.trim() || !sheet.dark_secret.trim() || !sheet.alibi.trim()) {
@@ -247,7 +247,7 @@ export default function EditMysteryPage() {
       ...formData,
       character_sheets: [
         ...formData.character_sheets,
-        { role: 'innocent', character_name: `Personnage ${formData.character_sheets.length + 1}`, dark_secret: '', alibi: '' },
+        { role: 'suspect', character_name: `Personnage ${formData.character_sheets.length + 1}`, dark_secret: '', alibi: '' },
       ],
     });
   };
@@ -527,8 +527,7 @@ export default function EditMysteryPage() {
                   required
                 >
                   <MenuItem value="investigator">Enquêteur</MenuItem>
-                  <MenuItem value="guilty">Coupable</MenuItem>
-                  <MenuItem value="innocent">Innocent</MenuItem>
+                  <MenuItem value="suspect">Suspect</MenuItem>
                 </TextField>
 
                 <TextField

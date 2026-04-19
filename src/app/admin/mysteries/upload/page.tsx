@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { CloudUpload, Code } from '@mui/icons-material';
 import { validateMysteryFull } from '@/lib/mystery-validation';
+import { normalizeMysteryRoles } from '@/lib/mystery-role-normalization';
 import AdminNavBar from '@/components/admin/AdminNavBar';
 
 interface MysteryData {
@@ -30,7 +31,7 @@ interface MysteryData {
   innocent_words: string[];
   guilty_words: string[];
   character_sheets: Array<{
-    role: 'investigator' | 'guilty' | 'innocent';
+    role: 'investigator' | 'suspect' | 'guilty' | 'innocent';
     character_name: string;
     occupation?: string;
     dark_secret: string;
@@ -83,8 +84,12 @@ export default function UploadMysteriesPage() {
         throw new Error('L\'entrée doit être un tableau de mystères');
       }
 
-      // Validate each mystery against JSON schema and business rules
-      for (const mystery of mysteriesData) {
+      const normalizedMysteries = mysteriesData.map((mystery) =>
+        normalizeMysteryRoles(mystery)
+      ) as MysteryData[];
+
+      // Validate each mystery against canonical JSON schema and business rules
+      for (const mystery of normalizedMysteries) {
         const validation = validateMysteryFull(mystery);
         if (!validation.valid) {
           throw new Error(
@@ -97,7 +102,7 @@ export default function UploadMysteriesPage() {
       const response = await fetch('/api/mysteries/bulk-create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mysteries: mysteriesData }),
+        body: JSON.stringify({ mysteries: normalizedMysteries }),
       });
 
       const data = await response.json();
@@ -106,7 +111,7 @@ export default function UploadMysteriesPage() {
         throw new Error(data.error || 'Échec du téléchargement des mystères');
       }
 
-      setSuccess(`Téléchargement réussi de ${mysteriesData.length} mystère(s) !`);
+      setSuccess(`Téléchargement réussi de ${normalizedMysteries.length} mystère(s) !`);
       setJsonInput('');
       setTimeout(() => {
         router.push('/admin/mysteries');

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
 import { validateMysteryFull } from '@/lib/mystery-validation';
+import { normalizeMysteryRoles, publicRoleToDatabaseRole } from '@/lib/mystery-role-normalization';
 import { Database } from '@/types/database';
 
 const log = createLogger('api.mysteries.bulk-create');
@@ -17,7 +18,7 @@ interface MysteryInput {
   innocent_words: string[];
   guilty_words: string[];
   character_sheets: Array<{
-    role: 'investigator' | 'guilty' | 'innocent';
+    role: 'investigator' | 'suspect' | 'guilty' | 'innocent';
     character_name: string;
     occupation?: string;
     dark_secret: string;
@@ -53,9 +54,11 @@ export async function POST(request: NextRequest) {
 
     log('info', 'Processing mysteries', { count: mysteries.length });
 
+    const normalizedMysteries = mysteries.map((mystery) => normalizeMysteryRoles(mystery)) as MysteryInput[];
+
     // Validate all mysteries against JSON schema and business rules
-    for (let i = 0; i < mysteries.length; i++) {
-      const mysteryInput = mysteries[i];
+    for (let i = 0; i < normalizedMysteries.length; i++) {
+      const mysteryInput = normalizedMysteries[i];
       const validation = validateMysteryFull(mysteryInput);
       
       if (!validation.valid) {
@@ -81,7 +84,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createServiceClient();
     const createdMysteries: Database['public']['Tables']['mysteries']['Row'][] = [];
 
-    for (const mysteryInput of mysteries) {
+    for (const mysteryInput of normalizedMysteries) {
       // Insert mystery
       log('info', 'Inserting mystery', { title: mysteryInput.title });
       const { data: mysteryData, error: mysteryError } = await (supabase
@@ -135,7 +138,7 @@ export async function POST(request: NextRequest) {
       // Insert character sheets
       const characterSheets = mysteryInput.character_sheets.map((sheet) => ({
         mystery_id: mystery.id,
-        role: sheet.role,
+        role: publicRoleToDatabaseRole(sheet.role as 'investigator' | 'suspect'),
         character_name: sheet.character_name,
         occupation: sheet.occupation || null,
         dark_secret: sheet.dark_secret,

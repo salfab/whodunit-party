@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
+import {
+  databaseRoleToPublicRole,
+  normalizeMysteryRoles,
+  publicRoleToDatabaseRole,
+} from '@/lib/mystery-role-normalization';
+import { validateMysteryFull } from '@/lib/mystery-validation';
 
 // GET /api/mysteries/[id] - Get single mystery
 export async function GET(
@@ -32,7 +38,10 @@ export async function GET(
 
     return NextResponse.json({
       ...(mystery as any),
-      character_sheets: characterSheets || [],
+      character_sheets: (characterSheets || []).map((sheet: any) => ({
+        ...sheet,
+        role: databaseRoleToPublicRole(sheet.role),
+      })),
     });
   } catch (error: any) {
     console.error('Error fetching mystery:', error);
@@ -50,8 +59,16 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const body = await request.json();
+    const body = normalizeMysteryRoles(await request.json()) as any;
     const supabase = await createServiceClient();
+
+    const validation = validateMysteryFull(body);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: validation.errors?.join('; ') },
+        { status: 400 }
+      );
+    }
 
     const {
       title,
@@ -96,7 +113,7 @@ export async function PUT(
     if (character_sheets && character_sheets.length > 0) {
       const sheetsToInsert = character_sheets.map((sheet: any) => ({
         mystery_id: id,
-        role: sheet.role,
+        role: publicRoleToDatabaseRole(sheet.role),
         character_name: sheet.character_name,
         occupation: sheet.occupation || null,
         dark_secret: sheet.dark_secret,

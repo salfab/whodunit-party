@@ -64,22 +64,14 @@ function validateBusinessRules(mystery: {
 
   const roles = mystery.character_sheets.map((c) => c.role);
   
-  if (!roles.includes('investigator')) {
-    errors.push('Mystery must have at least one investigator character');
-  }
-  
-  if (!roles.includes('guilty')) {
-    errors.push('Mystery must have exactly one guilty character');
-  }
-  
-  const guiltyCount = roles.filter((r) => r === 'guilty').length;
-  if (guiltyCount > 1) {
-    errors.push(`Mystery has ${guiltyCount} guilty characters, but should have exactly 1`);
+  const investigatorCount = roles.filter((r) => r === 'investigator').length;
+  if (investigatorCount !== 1) {
+    errors.push(`Mystery has ${investigatorCount} investigators, but should have exactly 1`);
   }
 
-  const investigatorCount = roles.filter((r) => r === 'investigator').length;
-  if (investigatorCount > 1) {
-    errors.push(`Mystery has ${investigatorCount} investigators, but should have exactly 1`);
+  const suspectCount = roles.filter((r) => r === 'suspect').length;
+  if (suspectCount < 1) {
+    errors.push('Mystery must have at least one suspect character');
   }
 
   return {

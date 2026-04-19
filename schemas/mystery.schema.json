@@ -53,6 +53,11 @@
           "maxLength": 100,
           "description": "The author of the mystery"
         },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Optional semantic version for ZIP pack replacement decisions"
+        },
         "theme": {
           "type": "string",
           "enum": ["PETTY_CRIME", "MACABRE", "SERIOUS_MURDER", "FUNNY_CRIME"],
@@ -74,16 +79,16 @@
         },
         "character_sheets": {
           "type": "array",
-          "minItems": 3,
-          "description": "Array of character sheets (must include at least investigator, guilty, and one innocent)",
+          "minItems": 2,
+          "description": "Array of character sheets (must include exactly one investigator and at least one suspect)",
           "items": {
             "type": "object",
             "required": ["role", "character_name", "dark_secret", "alibi"],
             "properties": {
               "role": {
                 "type": "string",
-                "enum": ["investigator", "guilty", "innocent"],
-                "description": "The role of this character"
+                "enum": ["investigator", "suspect"],
+                "description": "The public role of this character. Suspects can be selected as the culprit at runtime."
               },
               "character_name": {
                 "type": "string",
@@ -100,7 +105,7 @@
               "dark_secret": {
                 "type": "string",
                 "minLength": 10,
-                "description": "For investigator and innocents: one sentence. For guilty: theatrical motive/confession, multiple sentences allowed."
+                "description": "For investigators: private context. For suspects: a possible confession if this character is selected as the culprit."
               },
               "alibi": {
                 "type": "string",

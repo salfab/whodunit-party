@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
+import {
+  normalizeMysteryRoles,
+  publicRoleToDatabaseRole,
+} from '@/lib/mystery-role-normalization';
+import { validateMysteryFull } from '@/lib/mystery-validation';
 
 /**
  * GET /api/mysteries
@@ -64,8 +69,16 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = normalizeMysteryRoles(await request.json()) as any;
     const supabase = await createServiceClient();
+
+    const validation = validateMysteryFull(body);
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: validation.errors?.join('; ') },
+        { status: 400 }
+      );
+    }
 
     const {
       title,
@@ -105,7 +118,7 @@ export async function POST(request: NextRequest) {
     if (character_sheets && character_sheets.length > 0) {
       const sheetsToInsert = character_sheets.map((sheet: any) => ({
         mystery_id: mystery.id,
-        role: sheet.role,
+        role: publicRoleToDatabaseRole(sheet.role),
         character_name: sheet.character_name,
         occupation: sheet.occupation || null,
         dark_secret: sheet.dark_secret,

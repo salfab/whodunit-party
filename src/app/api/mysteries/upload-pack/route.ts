@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
 import { validateMysteryFull } from '@/lib/mystery-validation';
+import { normalizeMysteryRoles, publicRoleToDatabaseRole } from '@/lib/mystery-role-normalization';
 import JSZip from 'jszip';
 
 const log = createLogger('api.mysteries.upload-pack');
@@ -33,7 +34,7 @@ interface MysteryJson {
   innocent_words: string[];
   guilty_words: string[];
   character_sheets: Array<{
-    role: 'investigator' | 'guilty' | 'innocent';
+    role: 'investigator' | 'suspect' | 'guilty' | 'innocent';
     character_name: string;
     occupation?: string;
     dark_secret: string;
@@ -125,7 +126,7 @@ export async function POST(request: NextRequest) {
 
     // Process each mystery
     for (let i = 0; i < mysteriesData.length; i++) {
-      const mysteryData = mysteriesData[i];
+      const mysteryData = normalizeMysteryRoles(mysteriesData[i]) as MysteryJson;
       
       // Check if mystery already exists by title only (author may vary or be null)
       // This prevents duplicates when author field differs between uploads
@@ -399,7 +400,7 @@ export async function POST(request: NextRequest) {
       // Insert character sheets
       const characterSheets = mysteryData.character_sheets.map((sheet) => ({
         mystery_id: mystery.id,
-        role: sheet.role,
+        role: publicRoleToDatabaseRole(sheet.role as 'investigator' | 'suspect'),
         character_name: sheet.character_name,
         occupation: sheet.occupation || null,
         dark_secret: sheet.dark_secret,
