@@ -80,9 +80,9 @@
       "alibi": "Alibi",
       "saveChanges": "Save Changes",
       "errors": {
-        "minCharacters": "At least 3 character sheets are required",
-        "needInvestigator": "Must have an investigator role",
-        "needGuilty": "Must have a guilty role",
+        "minCharacters": "At least 2 character sheets are required",
+        "needInvestigator": "Exactly one investigator role is required",
+        "needGuilty": "At least one suspect is required",
         "allFieldsRequired": "All character sheets must have a name, secret and alibi",
         "loadFailed": "Failed to load mystery",
         "saveFailed": "Failed to save mystery"

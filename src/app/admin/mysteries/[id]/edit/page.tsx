@@ -193,11 +193,12 @@ export default function EditMysteryPage() {
       if (formData.guilty_words.some((w) => !w.trim())) {
         throw new Error('Les 3 mots coupables sont requis');
       }
-      if (formData.character_sheets.length < 3) {
-        throw new Error('Au moins 3 fiches de personnages sont requises');
+      if (formData.character_sheets.length < 2) {
+        throw new Error('Au moins 2 fiches de personnages sont requises');
       }
-      if (!formData.character_sheets.find((s) => s.role === 'investigator')) {
-        throw new Error('Un rôle d\'enquêteur est obligatoire');
+      const investigatorCount = formData.character_sheets.filter((s) => s.role === 'investigator').length;
+      if (investigatorCount !== 1) {
+        throw new Error('Exactement un rôle d\'enquêteur est obligatoire');
       }
       if (!formData.character_sheets.find((s) => s.role === 'suspect')) {
         throw new Error('Au moins un suspect est obligatoire');

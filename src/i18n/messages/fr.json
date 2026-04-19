@@ -80,9 +80,9 @@
       "alibi": "Alibi",
       "saveChanges": "Enregistrer les Modifications",
       "errors": {
-        "minCharacters": "Au moins 3 fiches de personnages sont requises",
-        "needInvestigator": "Un rôle d'enquêteur est obligatoire",
-        "needGuilty": "Un rôle de coupable est obligatoire",
+        "minCharacters": "Au moins 2 fiches de personnages sont requises",
+        "needInvestigator": "Exactement un rôle d'enquêteur est obligatoire",
+        "needGuilty": "Au moins un suspect est obligatoire",
         "allFieldsRequired": "Toutes les fiches de personnages doivent avoir un nom, un secret et un alibi",
         "loadFailed": "Échec du chargement du mystère",
         "saveFailed": "Échec de l'enregistrement du mystère"

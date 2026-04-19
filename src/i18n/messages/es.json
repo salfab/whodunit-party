@@ -80,9 +80,9 @@
       "alibi": "Coartada",
       "saveChanges": "Guardar Cambios",
       "errors": {
-        "minCharacters": "Se requieren al menos 3 fichas de personajes",
-        "needInvestigator": "Debe haber un rol de investigador",
-        "needGuilty": "Debe haber un rol de culpable",
+        "minCharacters": "Se requieren al menos 2 fichas de personajes",
+        "needInvestigator": "Debe haber exactamente un rol de investigador",
+        "needGuilty": "Debe haber al menos un sospechoso",
         "allFieldsRequired": "Todas las fichas de personajes deben tener nombre, secreto y coartada",
         "loadFailed": "Error al cargar el misterio",
         "saveFailed": "Error al guardar el misterio"
