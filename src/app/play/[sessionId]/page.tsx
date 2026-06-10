@@ -29,7 +29,9 @@ import {
   RoleHelpDialog,
   ScoreboardAndVoting,
   ConfessionDialog,
+  MysteryFeedbackForm,
 } from '@/components/play';
+import type { MysteryFeedbackPayload } from '@/components/play/MysteryFeedbackForm';
 import { MysteryVotingList } from '@/components/shared/MysteryVotingList';
 
 import { HELP_CONTENT } from './constants';
@@ -47,7 +49,9 @@ import {
   loadAvailableMysteries,
   submitAccusation,
   submitMysteryVote,
+  submitMysteryFeedback,
   fetchGuiltyPlayer,
+  fetchRoundWords,
   fetchSuspects,
   getPlaceholderImage,
 } from './api';
@@ -84,6 +88,10 @@ export default function PlayPage() {
   const [hasVoted, setHasVoted] = useState(false);
   const [startingNextRound, setStartingNextRound] = useState(false);
   const [loadingMysteries, setLoadingMysteries] = useState(false);
+
+  // End-of-mystery feedback state
+  const [roundWords, setRoundWords] = useState<string[]>([]);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   
   // Notifications
   const [errorSnackbar, setErrorSnackbar] = useState<{ open: boolean; message: string }>({ open: false, message: '' });
@@ -183,6 +191,19 @@ export default function PlayPage() {
     };
   }, [accusationResult]);
 
+  // The 6 round words only exist server-side until the accusation; fetch them
+  // for the feedback form once the round is over.
+  useEffect(() => {
+    if (accusationResult && !accusationResult.gameComplete && characterSheet?.mystery?.id) {
+      fetchRoundWords(sessionId, characterSheet.mystery.id)
+        .then(setRoundWords)
+        .catch((err) => {
+          console.error('Error fetching round words:', err);
+          setRoundWords([]);
+        });
+    }
+  }, [accusationResult, characterSheet?.mystery?.id, sessionId]);
+
   async function loadData() {
     try {
       const result = await loadCharacterSheet(sessionId, previousMysteryIdRef.current);
@@ -263,6 +284,8 @@ export default function PlayPage() {
           setSelectedMystery('');
           setVoteCounts({});
           setAvailableMysteries([]);
+          setRoundWords([]);
+          setFeedbackSubmitted(false);
           setIsFlipped(false); // Flip back to character sheet for new round
           
           // Scroll to top of page
@@ -297,6 +320,17 @@ export default function PlayPage() {
       setErrorSnackbar({ open: true, message: 'Erreur lors du chargement des données' });
     } finally {
       setLoadingMysteries(false);
+    }
+  }
+
+  async function handleSubmitFeedback(payload: MysteryFeedbackPayload) {
+    if (!characterSheet?.mystery?.id) return;
+    try {
+      await submitMysteryFeedback(sessionId, characterSheet.mystery.id, payload);
+      setFeedbackSubmitted(true);
+    } catch (err: any) {
+      console.error('Error submitting feedback:', err);
+      setErrorSnackbar({ open: true, message: err.message || 'Erreur lors de l\'envoi du retour' });
     }
   }
 
@@ -711,6 +745,13 @@ export default function PlayPage() {
                       </Button>
                     </Box>
                   )}
+
+                  {/* End-of-mystery feedback (optional, all roles) */}
+                  <MysteryFeedbackForm
+                    words={roundWords}
+                    submitted={feedbackSubmitted}
+                    onSubmit={handleSubmitFeedback}
+                  />
 
                   {/* Scoreboard and Mystery Voting */}
                   <ScoreboardAndVoting

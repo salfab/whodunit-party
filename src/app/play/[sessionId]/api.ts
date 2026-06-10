@@ -71,13 +71,15 @@ export async function loadCharacterSheet(
   const maxAttempts = 3;
 
   while (!assignment && attempts < maxAttempts) {
+    // Deliberately not `mysteries (*)`: the word pool must never reach the
+    // client; each player's words come from the assigned-role endpoint.
     const result = await supabase
       .from('player_assignments')
       .select(`
         *,
         character_sheets (
           *,
-          mysteries (*)
+          mysteries (id, title, description, image_path)
         )
       `)
       .eq('session_id', sessionId)
@@ -114,13 +116,11 @@ export async function loadCharacterSheet(
 
   const sheet = assignment.character_sheets;
   const mystery = sheet.mysteries;
-  const assignedRole = await fetchAssignedRole(sessionId, mystery.id);
-  
-  // Add the words to place based on the runtime role. The stored sheet role is
-  // legacy content metadata and does not decide who is guilty anymore.
-  const wordsToPlace = assignedRole === 'investigator' ? [] :
-    (assignedRole === 'guilty' ? mystery.guilty_words : mystery.innocent_words);
-  
+  // Role and words are both resolved server-side; the words are drawn from
+  // the mystery's word pool for this specific round.
+  const { assignedRole, wordsToPlace } = await fetchAssignedRole(sessionId, mystery.id);
+
+
   // Get player index for consistent placeholders
   const { data: allPlayerAssignments } = await supabase
     .from('player_assignments')
@@ -391,7 +391,7 @@ export async function fetchGuiltyPlayer(
 async function fetchAssignedRole(
   sessionId: string,
   mysteryId: string
-): Promise<AssignedRole> {
+): Promise<{ assignedRole: AssignedRole; wordsToPlace: string[] }> {
   const response = await fetch(`/api/sessions/${sessionId}/assigned-role?mysteryId=${mysteryId}`);
 
   if (!response.ok) {
@@ -400,7 +400,43 @@ async function fetchAssignedRole(
   }
 
   const data = await response.json();
-  return data.assignedRole;
+  return { assignedRole: data.assignedRole, wordsToPlace: data.wordsToPlace ?? [] };
+}
+
+export async function fetchRoundWords(
+  sessionId: string,
+  mysteryId: string
+): Promise<string[]> {
+  const response = await fetch(`/api/rounds/${sessionId}/round-words?mysteryId=${mysteryId}`);
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error || 'Failed to fetch round words');
+  }
+
+  const data = await response.json();
+  return data.allWords || [];
+}
+
+export async function submitMysteryFeedback(
+  sessionId: string,
+  mysteryId: string,
+  payload: {
+    rating?: number;
+    comment?: string;
+    flags?: Array<{ word: string; reason: string; reasonText?: string }>;
+  }
+): Promise<void> {
+  const response = await fetch(`/api/rounds/${sessionId}/feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mysteryId, ...payload }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error || 'Failed to submit feedback');
+  }
 }
 
 export async function submitMysteryVote(

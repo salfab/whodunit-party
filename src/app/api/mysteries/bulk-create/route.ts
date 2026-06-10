@@ -15,8 +15,7 @@ interface MysteryInput {
   language: string;
   author?: string;
   theme?: string;
-  innocent_words: string[];
-  guilty_words: string[];
+  word_pool: string[];
   character_sheets: Array<{
     role: 'investigator' | 'suspect' | 'guilty' | 'innocent';
     character_name: string;
@@ -97,8 +96,7 @@ export async function POST(request: NextRequest) {
           language: mysteryInput.language,
           author: mysteryInput.author || 'Built-in',
           theme: mysteryInput.theme || 'SERIOUS_MURDER',
-          innocent_words: mysteryInput.innocent_words,
-          guilty_words: mysteryInput.guilty_words,
+          word_pool: mysteryInput.word_pool,
         })
         .select()
         .single();

@@ -5,8 +5,7 @@
     "language": "en",
     "author": "Built-in",
     "theme": "SERIOUS_MURDER",
-    "innocent_words": ["manuscript", "inheritance", "betrayal"],
-    "guilty_words": ["ledger", "poison", "desperate"],
+    "word_pool": ["manuscript", "inheritance", "betrayal", "ledger", "desperate", "candlestick", "decanter", "telegram", "gramophone", "fireplace", "servant", "tapestry", "revolver", "chandelier", "monocle"],
     "character_sheets": [
       {
         "role": "investigator",
@@ -46,8 +45,7 @@
     "language": "en",
     "author": "Built-in",
     "theme": "SERIOUS_MURDER",
-    "innocent_words": ["reputation", "expose", "truth"],
-    "guilty_words": ["composition", "revenge", "justice"],
+    "word_pool": ["reputation", "composition", "revenge", "aria", "libretto", "curtain", "spotlight", "wig", "rehearsal", "podium", "bouquet", "encore", "velvet", "balcony", "perfume"],
     "character_sheets": [
       {
         "role": "investigator",

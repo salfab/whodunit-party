@@ -21,16 +21,31 @@ PROCESSUS (OBLIGATOIRE)
    - Tu attends mon message “go” avant de continuer.
 
 3) Règles de texte (IMPORTANT)
-   - Les “mots à placer” (innocent_words / guilty_words) ne doivent PAS apparaître dans le titre, ni dans le synopsis, ni dans la description.
+   - `word_pool` : EXACTEMENT 15 mots candidats, dans la langue du mystère. L'application tire à chaque manche 6 mots uniques parmi les 15, puis en donne 3 au coupable et 3 aux innocents : aucun mot n'est "coupable" ou "innocent" en soi, tous doivent être interchangeables.
+     - AUCUN synonyme ni quasi-synonyme entre les 15 mots (pas "tonneau" ET "barrique", pas "pantin" ET "marionnette").
+     - Chaque mot reste DANS LA THÉMATIQUE et le décor du mystère : un joueur doit pouvoir le glisser naturellement dans une conversation de la scène.
+     - NI trop farfelus (pas de mots hors-sujet ou absurdes du type "narval", "quasar" pour un huis clos de bureau), NI trop bateau (pas de mots passe-partout qu'on place sans effort : "chose", "personne", "jour", "table", nombres…).
+     - Les 15 mots ne doivent PAS apparaître dans le titre, ni dans le synopsis, ni dans la description (y compris comme fragment d'un autre mot : pas "étai" si la description contient "était").
+     - Pas de noms propres, et pas de mots présents dans les noms des personnages.
+     - Privilégie des noms communs concrets, un seul mot (les mots composés avec trait d'union sont acceptés).
+     - Exemples pour un mystère au bowling : BON "gouttière, flipper, trophée" (décor, précis, plaçables) ; À ÉVITER "quille" (si le mot est dans la description), "boule" ET "bille" ensemble (quasi-synonymes), "mouette" (farfelu, hors décor), "soir" (trop bateau).
+   - Mode léger : si je te demande "régénère uniquement le word_pool" d'un mystère existant, tu produis SEULEMENT le tableau de 15 mots respectant ces règles pour ce mystère (pas de nouveau JSON complet, pas d'images) ; si je demande ensuite le `mystery.json` complet, tu y intègres le nouveau pool et tu incrémentes la version mineure.
    - `synopsis` : très court (1 à 2 phrases), ton enquête, clair, sans spoiler.
    - `description` : plutôt courte, claire, en markdown, avec des sauts de ligne entre paragraphes.
    - Voix narrative : lu par la voix de l’enquêteur (1re personne, présent).
+   - `theme` :
+     - Utilise `MACABRE` seulement si quelqu’un est blessé ou mort.
+     - Pour un crime sans blessure ni mort, même avec une ambiance spooky/horreur, utilise plutôt `FUNNY_CRIME` ou `PETTY_CRIME` selon le ton.
    - `role` :
      - Le JSON utilise uniquement `investigator` et `suspect`.
      - Le pack ne définit JAMAIS le coupable; l'application le choisit au lancement de la manche.
    - `dark_secret` et `alibi` :
      - Pour investigator : chacun tient sur UNE phrase.
-     - Pour chaque suspect : `dark_secret` est une confession/motif possible, lu à voix haute en fin de partie si ce suspect est choisi comme coupable.
+     - Pour chaque suspect : `dark_secret` est une confession/motif possible, lue à voix haute en fin de partie si ce suspect est choisi comme coupable.
+     - La confession d'un suspect doit faire 4 à 6 courts paragraphes, à la première personne, dans la langue du mystère.
+     - Elle doit contenir : le mobile intime, le geste commis, le lien concret avec le décor ou les indices, puis l'alibi retourné en couverture.
+     - Elle doit sonner comme un aveu de fin de partie, pas comme une fiche de personnage ni comme une phrase générique.
+     - Évite les formules plates du type "J'avoue : j'ai tué parce que...", "I confess: I killed because..." ou "Mon secret était ceci".
      - `alibi` de chaque suspect reste UNE phrase.
 
 4) Format JSON (OBLIGATOIRE)

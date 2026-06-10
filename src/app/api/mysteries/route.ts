@@ -88,8 +88,7 @@ export async function POST(request: NextRequest) {
       language,
       author,
       theme,
-      innocent_words,
-      guilty_words,
+      word_pool,
       character_sheets,
     } = body;
 
@@ -104,8 +103,7 @@ export async function POST(request: NextRequest) {
         language,
         author: author || 'Built-in',
         theme: theme || 'SERIOUS_MURDER',
-        innocent_words,
-        guilty_words,
+        word_pool,
       })
       .select()
       .single();

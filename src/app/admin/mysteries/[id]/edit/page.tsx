@@ -41,10 +41,11 @@ interface MysteryFormData {
   language: string;
   author: string;
   theme: string;
-  innocent_words: [string, string, string];
-  guilty_words: [string, string, string];
+  word_pool: string[];
   character_sheets: CharacterSheet[];
 }
+
+const WORD_POOL_SIZE = 15;
 
 export default function EditMysteryPage() {
   const router = useRouter();
@@ -123,8 +124,7 @@ export default function EditMysteryPage() {
     language: 'fr',
     author: 'Built-in',
     theme: 'SERIOUS_MURDER',
-    innocent_words: ['', '', ''],
-    guilty_words: ['', '', ''],
+    word_pool: Array(WORD_POOL_SIZE).fill(''),
     character_sheets: [
       { role: 'investigator', character_name: 'Personnage 1', dark_secret: '', alibi: '' },
       { role: 'suspect', character_name: 'Personnage 2', dark_secret: '', alibi: '' },
@@ -164,8 +164,7 @@ export default function EditMysteryPage() {
         language: data.language || 'fr',
         author: data.author || 'Built-in',
         theme: data.theme || 'SERIOUS_MURDER',
-        innocent_words: data.innocent_words || ['', '', ''],
-        guilty_words: data.guilty_words || ['', '', ''],
+        word_pool: data.word_pool?.length ? data.word_pool : Array(WORD_POOL_SIZE).fill(''),
         character_sheets: data.character_sheets || [],
       });
     } catch (err: any) {
@@ -187,11 +186,11 @@ export default function EditMysteryPage() {
       if (!formData.description.trim()) {
         throw new Error('La description est requise');
       }
-      if (formData.innocent_words.some((w) => !w.trim())) {
-        throw new Error('Les 3 mots innocents sont requis');
+      if (formData.word_pool.length !== WORD_POOL_SIZE || formData.word_pool.some((w) => !w.trim())) {
+        throw new Error(`Les ${WORD_POOL_SIZE} mots candidats sont requis`);
       }
-      if (formData.guilty_words.some((w) => !w.trim())) {
-        throw new Error('Les 3 mots coupables sont requis');
+      if (new Set(formData.word_pool.map((w) => w.trim().toLowerCase())).size !== WORD_POOL_SIZE) {
+        throw new Error('Les mots candidats doivent être tous différents');
       }
       if (formData.character_sheets.length < 2) {
         throw new Error('Au moins 2 fiches de personnages sont requises');
@@ -231,16 +230,10 @@ export default function EditMysteryPage() {
     }
   };
 
-  const updateInnocentWord = (index: number, value: string) => {
-    const newWords = [...formData.innocent_words] as [string, string, string];
+  const updatePoolWord = (index: number, value: string) => {
+    const newWords = [...formData.word_pool];
     newWords[index] = value;
-    setFormData({ ...formData, innocent_words: newWords });
-  };
-
-  const updateGuiltyWord = (index: number, value: string) => {
-    const newWords = [...formData.guilty_words] as [string, string, string];
-    newWords[index] = value;
-    setFormData({ ...formData, guilty_words: newWords });
+    setFormData({ ...formData, word_pool: newWords });
   };
 
   const addCharacterSheet = () => {
@@ -426,40 +419,17 @@ export default function EditMysteryPage() {
           </Box>
 
           <Typography variant="subtitle1" gutterBottom color="text.secondary">
-            Mots Innocents (3 requis)
+            Mots candidats ({WORD_POOL_SIZE} requis, tous différents) — 3 mots coupables et 3 mots innocents sont tirés au hasard à chaque manche
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-            {formData.innocent_words.map((word, index) => (
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2, mb: 3 }}>
+            {formData.word_pool.map((word, index) => (
               <TextField
                 key={index}
                 label={`Mot ${index + 1}`}
                 value={word}
-                onChange={(e) => updateInnocentWord(index, e.target.value)}
+                onChange={(e) => updatePoolWord(index, e.target.value)}
                 required
                 sx={{
-                  flex: 1,
-                  '& .MuiInputBase-input': {
-                    filter: isFieldBlurred('mandatory-words') ? 'blur(8px)' : 'none',
-                    transition: 'filter 0.3s ease',
-                  },
-                }}
-              />
-            ))}
-          </Box>
-
-          <Typography variant="subtitle1" gutterBottom color="text.secondary">
-            Mots Coupables (3 requis)
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-            {formData.guilty_words.map((word, index) => (
-              <TextField
-                key={index}
-                label={`Mot ${index + 1}`}
-                value={word}
-                onChange={(e) => updateGuiltyWord(index, e.target.value)}
-                required
-                sx={{
-                  flex: 1,
                   '& .MuiInputBase-input': {
                     filter: isFieldBlurred('mandatory-words') ? 'blur(8px)' : 'none',
                     transition: 'filter 0.3s ease',

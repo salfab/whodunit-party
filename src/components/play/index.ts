@@ -8,3 +8,4 @@ export { default as RoleRevealCard } from './RoleRevealCard';
 export { default as RoleHelpDialog } from './RoleHelpDialog';
 export { default as ScoreboardAndVoting } from './ScoreboardAndVoting';
 export { default as ConfessionDialog } from './ConfessionDialog';
+export { default as MysteryFeedbackForm } from './MysteryFeedbackForm';

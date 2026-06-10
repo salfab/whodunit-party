@@ -85,6 +85,85 @@ Given('an accusation has been made', () => {
       },
     ],
   }).as('getMysteries');
+
+  // The voting list loads through the Next API route, not Supabase REST
+  cy.intercept('GET', '**/api/mysteries*', {
+    statusCode: 200,
+    body: {
+      mysteries: [
+        {
+          id: 'mystery-2',
+          title: 'The Poisoned Chalice',
+          synopsis: 'A deadly toast at the royal banquet...',
+          author: 'Built-in',
+          character_count: 10,
+          language: 'fr',
+          image_path: null,
+        },
+      ],
+    },
+  }).as('getMysteriesApi');
+});
+
+// ==================== End-of-Mystery Feedback ====================
+
+const ROUND_WORDS = ['betrayal', 'desperate', 'inheritance', 'ledger', 'manuscript', 'poison'];
+
+Given('the round words are available', () => {
+  cy.intercept('GET', '**/api/rounds/*/round-words*', {
+    statusCode: 200,
+    body: { allWords: ROUND_WORDS },
+  }).as('getRoundWords');
+});
+
+Given('the feedback API accepts my submission', () => {
+  cy.intercept('POST', '**/api/rounds/*/feedback', {
+    statusCode: 200,
+    body: { success: true },
+  }).as('submitFeedback');
+});
+
+Then('I should see the feedback form', () => {
+  cy.getByTestId('feedback-form').should('exist');
+});
+
+Then('the feedback form should list the 6 round words', () => {
+  cy.getByTestId('feedback-words')
+    .find('[data-testid^="feedback-word-"]')
+    .should('have.length', 6);
+});
+
+When('I rate the mystery {int} stars', (stars: number) => {
+  cy.getByTestId('feedback-rating')
+    .find(`input[value="${stars}"]`)
+    .check({ force: true });
+});
+
+When('I flag the word {string} as too obvious', (word: string) => {
+  cy.getByTestId(`feedback-word-${word}`).click({ force: true });
+  cy.getByTestId(`feedback-reason-${word}-too_obvious`).should('exist');
+});
+
+When('I submit my feedback', () => {
+  cy.getByTestId('feedback-submit').click({ force: true });
+  cy.wait('@submitFeedback');
+});
+
+Then('I should see the feedback thanks message', () => {
+  cy.getByTestId('feedback-thanks').should('exist');
+});
+
+When('I skip the feedback form', () => {
+  cy.getByTestId('feedback-skip').click({ force: true });
+});
+
+Then('the feedback form should be collapsed', () => {
+  cy.getByTestId('feedback-form').should('not.exist');
+  cy.getByTestId('feedback-reopen').should('exist');
+});
+
+Then('the next mystery list should be visible', () => {
+  cy.contains('The Poisoned Chalice').should('exist');
 });
 
 // ==================== Card Flip Actions ====================

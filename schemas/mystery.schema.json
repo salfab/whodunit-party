@@ -16,8 +16,7 @@
         "language",
         "author",
         "theme",
-        "innocent_words",
-        "guilty_words",
+        "word_pool",
         "character_sheets"
       ],
       "properties": {
@@ -63,19 +62,13 @@
           "enum": ["PETTY_CRIME", "MACABRE", "SERIOUS_MURDER", "FUNNY_CRIME"],
           "description": "The theme category of the mystery"
         },
-        "innocent_words": {
+        "word_pool": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },
-          "minItems": 3,
-          "maxItems": 3,
-          "description": "Exactly 3 words that innocent players receive"
-        },
-        "guilty_words": {
-          "type": "array",
-          "items": { "type": "string", "minLength": 1 },
-          "minItems": 3,
-          "maxItems": 3,
-          "description": "Exactly 3 words that the guilty player receives"
+          "minItems": 15,
+          "maxItems": 15,
+          "uniqueItems": true,
+          "description": "Exactly 15 neutral, on-theme candidate words (no synonyms among them). At runtime 6 unique words are drawn and partitioned into 3 guilty + 3 innocent words."
         },
         "character_sheets": {
           "type": "array",

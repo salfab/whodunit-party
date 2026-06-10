@@ -53,10 +53,18 @@ Given('I am logged in as a player in a playing session', () => {
 
 // ==================== Role Assignment Mocks ====================
 
+// Words now come from the assigned-role endpoint (drawn server-side from the
+// mystery's word_pool), never from the mysteries row on the client.
+const ROLE_WORDS: Record<'investigator' | 'guilty' | 'innocent', string[]> = {
+  investigator: [],
+  guilty: ['ledger', 'poison', 'desperate'],
+  innocent: ['manuscript', 'inheritance', 'betrayal'],
+};
+
 const mockAssignedRole = (assignedRole: 'investigator' | 'guilty' | 'innocent') => {
   cy.intercept('GET', '/api/sessions/test-session-playing/assigned-role*', {
     statusCode: 200,
-    body: { assignedRole },
+    body: { assignedRole, wordsToPlace: ROLE_WORDS[assignedRole] },
   }).as('getAssignedRole');
 };
 
@@ -97,8 +105,7 @@ Given('I am assigned the investigator role', () => {
               id: 'test-mystery-001',
               title: 'Murder at the Manor',
               description: 'Lord Blackwood was found dead...',
-              innocent_words: ['manuscript', 'inheritance', 'betrayal'],
-              guilty_words: ['ledger', 'poison', 'desperate'],
+              image_path: null,
             },
           },
         },
@@ -184,8 +191,7 @@ Given('I am assigned the guilty role', () => {
               id: 'test-mystery-001',
               title: 'Murder at the Manor',
               description: 'Lord Blackwood was found dead...',
-              innocent_words: ['manuscript', 'inheritance', 'betrayal'],
-              guilty_words: ['ledger', 'poison', 'desperate'],
+              image_path: null,
             },
           },
         },
@@ -264,8 +270,7 @@ Given('I am assigned the guilty role with words', () => {
               id: 'test-mystery-001',
               title: 'Murder at the Manor',
               description: 'Lord Blackwood was found dead...',
-              innocent_words: ['manuscript', 'inheritance', 'betrayal'],
-              guilty_words: ['ledger', 'poison', 'desperate'],
+              image_path: null,
             },
           },
         },
@@ -341,8 +346,7 @@ Given('I am assigned the innocent role', () => {
               id: 'test-mystery-001',
               title: 'Murder at the Manor',
               description: 'Lord Blackwood was found dead...',
-              innocent_words: ['manuscript', 'inheritance', 'betrayal'],
-              guilty_words: ['ledger', 'poison', 'desperate'],
+              image_path: null,
             },
           },
         },
@@ -409,8 +413,7 @@ Given('I am assigned a suspect sheet as an innocent player', () => {
               id: 'test-mystery-001',
               title: 'Murder at the Manor',
               description: 'Lord Blackwood was found dead...',
-              innocent_words: ['manuscript', 'inheritance', 'betrayal'],
-              guilty_words: ['ledger', 'poison', 'desperate'],
+              image_path: null,
             },
           },
         },
@@ -526,6 +529,38 @@ Then('the card should flip back to show the front', () => {
 Then('I should see 3 words to place in conversation', () => {
   cy.getByTestId('play-words-section').should('be.visible');
   cy.getByTestId('play-words-list').find('[data-testid^="play-word-"]').should('have.length', 3);
+});
+
+Then('I should not see any words to place', () => {
+  cy.getByTestId('play-words-section').should('not.exist');
+});
+
+// The draw is deterministic server-side; the client must show the exact same
+// words after a reload (here the stable assigned-role mock plays that part).
+let capturedWords: string[] = [];
+
+When('I capture the displayed words', () => {
+  capturedWords = [];
+  cy.getByTestId('play-words-list')
+    .find('[data-testid^="play-word-"]')
+    .each(($el) => {
+      capturedWords.push($el.text());
+    });
+});
+
+When('I reload the play page', () => {
+  cy.reload();
+  cy.getByTestId('role-reveal-card', { timeout: 20000 }).should('exist');
+});
+
+Then('I should see the same 3 words as before', () => {
+  cy.getByTestId('play-words-list')
+    .find('[data-testid^="play-word-"]')
+    .should('have.length', 3)
+    .then(($els) => {
+      const words = [...$els].map((el) => el.textContent);
+      expect(words).to.deep.equal(capturedWords);
+    });
 });
 
 // ==================== Inspiration Help Panel ====================

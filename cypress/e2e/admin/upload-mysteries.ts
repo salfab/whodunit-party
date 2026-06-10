@@ -35,8 +35,11 @@ When('I paste valid mystery JSON in the input', () => {
       language: 'en',
       author: 'Test Author',
       theme: 'SERIOUS_MURDER',
-      innocent_words: ['word1', 'word2', 'word3'],
-      guilty_words: ['guilty1', 'guilty2', 'guilty3'],
+      word_pool: [
+        'word01', 'word02', 'word03', 'word04', 'word05',
+        'word06', 'word07', 'word08', 'word09', 'word10',
+        'word11', 'word12', 'word13', 'word14', 'word15',
+      ],
       character_sheets: [
         {
           role: 'investigator',
@@ -63,6 +66,40 @@ When('I paste valid mystery JSON in the input', () => {
   cy.getByTestId('upload-json-input').find('textarea').first().type(validMystery, { delay: 0, parseSpecialCharSequences: false });
 });
 
+When('I paste mystery JSON with an invalid word pool in the input', () => {
+  // 14 words instead of the required 15: the schema validation must reject it.
+  const invalidPoolMystery = JSON.stringify([
+    {
+      title: 'Invalid Pool Mystery',
+      description: 'A test mystery description that is long enough.',
+      language: 'en',
+      author: 'Test Author',
+      theme: 'SERIOUS_MURDER',
+      word_pool: [
+        'word01', 'word02', 'word03', 'word04', 'word05',
+        'word06', 'word07', 'word08', 'word09', 'word10',
+        'word11', 'word12', 'word13', 'word14',
+      ],
+      character_sheets: [
+        {
+          role: 'investigator',
+          character_name: 'Detective',
+          dark_secret: 'A secret that is long enough for validation.',
+          alibi: 'An alibi that is long enough for validation.',
+        },
+        {
+          role: 'suspect',
+          character_name: 'First Suspect',
+          dark_secret: 'I confess everything because this is long enough for validation.',
+          alibi: 'An alibi that is long enough for validation.',
+        },
+      ],
+    },
+  ]);
+
+  cy.getByTestId('upload-json-input').find('textarea').first().type(invalidPoolMystery, { delay: 0, parseSpecialCharSequences: false });
+});
+
 When('I paste legacy mystery JSON in the input', () => {
   const legacyMystery = JSON.stringify([
     {
@@ -71,8 +108,11 @@ When('I paste legacy mystery JSON in the input', () => {
       language: 'en',
       author: 'Test Author',
       theme: 'SERIOUS_MURDER',
-      innocent_words: ['word1', 'word2', 'word3'],
-      guilty_words: ['guilty1', 'guilty2', 'guilty3'],
+      word_pool: [
+        'word01', 'word02', 'word03', 'word04', 'word05',
+        'word06', 'word07', 'word08', 'word09', 'word10',
+        'word11', 'word12', 'word13', 'word14', 'word15',
+      ],
       character_sheets: [
         {
           role: 'investigator',

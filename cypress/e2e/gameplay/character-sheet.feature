@@ -57,6 +57,21 @@ Feature: Character Sheet Display
     Then I should see 3 words to place in conversation
 
   @mobile
+  Scenario: Mobile - Words remain identical after a page reload
+    Given I am assigned the guilty role with words
+    When I visit the play page
+    Then I should see 3 words to place in conversation
+    When I capture the displayed words
+    And I reload the play page
+    Then I should see the same 3 words as before
+
+  @mobile
+  Scenario: Mobile - Investigator sees no words to place
+    Given I am assigned the investigator role
+    When I visit the play page
+    Then I should not see any words to place
+
+  @mobile
   Scenario: Mobile - Player can toggle inspiration help without seeing dark secret
     Given I am assigned the innocent role
     And I visit the play page

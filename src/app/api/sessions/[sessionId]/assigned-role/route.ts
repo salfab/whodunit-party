@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { validateSession } from '@/lib/auth';
 import { createServiceClient } from '@/lib/supabase/server';
 import { resolveRoundRoles } from '@/lib/round-roles';
+import { selectRoundWords } from '@/lib/word-selection';
 import { createLogger } from '@/lib/logging';
 
 const log = createLogger('api.sessions.assigned-role');
@@ -35,7 +36,30 @@ export async function GET(
       return NextResponse.json({ error: 'No assignment found for player' }, { status: 404 });
     }
 
-    return NextResponse.json({ assignedRole });
+    // Words are drawn server-side from the mystery's word pool so the client
+    // only ever sees its own role's 3 words, never the full partition.
+    let wordsToPlace: string[] = [];
+    if (assignedRole !== 'investigator') {
+      const { data: mystery, error: mysteryError } = await supabase
+        .from('mysteries')
+        .select('word_pool')
+        .eq('id', mysteryId)
+        .single();
+
+      if (mysteryError || !mystery) {
+        return NextResponse.json({ error: 'Mystery not found' }, { status: 404 });
+      }
+
+      const { guiltyWords, innocentWords } = selectRoundWords(
+        sessionId,
+        mysteryId,
+        mystery.word_pool ?? [],
+        process.env.JWT_SECRET || ''
+      );
+      wordsToPlace = assignedRole === 'guilty' ? guiltyWords : innocentWords;
+    }
+
+    return NextResponse.json({ assignedRole, wordsToPlace });
   } catch (error) {
     log('error', 'Failed to resolve assigned role', { error });
     return NextResponse.json(

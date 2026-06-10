@@ -74,8 +74,7 @@ export async function PUT(
       language,
       author,
       theme,
-      innocent_words,
-      guilty_words,
+      word_pool,
       character_sheets,
     } = body;
 
@@ -90,8 +89,7 @@ export async function PUT(
         language,
         author: author || 'Built-in',
         theme: theme || 'SERIOUS_MURDER',
-        innocent_words,
-        guilty_words,
+        word_pool,
       })
       .eq('id', id);
 

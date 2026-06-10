@@ -96,45 +96,142 @@ export type Database = {
           author: string
           created_at: string
           description: string
-          guilty_words: string[]
           id: string
           image_path: string | null
-          innocent_words: string[]
           language: string
           synopsis: string | null
           theme: string
           title: string
           version: string | null
+          word_pool: string[]
         }
         Insert: {
           author: string
           created_at?: string
           description: string
-          guilty_words?: string[]
           id?: string
           image_path?: string | null
-          innocent_words?: string[]
           language: string
           synopsis?: string | null
           theme?: string
           title: string
           version?: string | null
+          word_pool?: string[]
         }
         Update: {
           author?: string
           created_at?: string
           description?: string
-          guilty_words?: string[]
           id?: string
           image_path?: string | null
-          innocent_words?: string[]
           language?: string
           synopsis?: string | null
           theme?: string
           title?: string
           version?: string | null
+          word_pool?: string[]
         }
         Relationships: []
+      }
+      mystery_feedback: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          mystery_id: string
+          player_id: string
+          rating: number | null
+          session_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          mystery_id: string
+          player_id: string
+          rating?: number | null
+          session_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          mystery_id?: string
+          player_id?: string
+          rating?: number | null
+          session_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mystery_feedback_mystery_id_fkey"
+            columns: ["mystery_id"]
+            isOneToOne: false
+            referencedRelation: "mysteries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mystery_feedback_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mystery_feedback_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "game_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mystery_feedback_word_flags: {
+        Row: {
+          created_at: string
+          feedback_id: string
+          id: string
+          mystery_id: string
+          reason: string
+          reason_text: string | null
+          word: string
+        }
+        Insert: {
+          created_at?: string
+          feedback_id: string
+          id?: string
+          mystery_id: string
+          reason: string
+          reason_text?: string | null
+          word: string
+        }
+        Update: {
+          created_at?: string
+          feedback_id?: string
+          id?: string
+          mystery_id?: string
+          reason?: string
+          reason_text?: string | null
+          word?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mystery_feedback_word_flags_feedback_id_fkey"
+            columns: ["feedback_id"]
+            isOneToOne: false
+            referencedRelation: "mystery_feedback"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mystery_feedback_word_flags_mystery_id_fkey"
+            columns: ["mystery_id"]
+            isOneToOne: false
+            referencedRelation: "mysteries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       mystery_votes: {
         Row: {

@@ -2,8 +2,16 @@ import type { Database } from '@/types/database';
 
 export type CharacterSheet = Database['public']['Tables']['character_sheets']['Row'];
 export type Player = Database['public']['Tables']['players']['Row'];
-export type Mystery = Database['public']['Tables']['mysteries']['Row'];
 export type AssignedRole = 'investigator' | 'guilty' | 'innocent';
+
+// Only the mystery fields the play screen needs. The full row is deliberately
+// not loaded client-side: the word pool partition must stay server-only.
+export interface PlayMysteryInfo {
+  id: string;
+  title: string;
+  description: string;
+  image_path: string | null;
+}
 
 export interface PlayerOption {
   id: string;
@@ -15,7 +23,7 @@ export interface PlayerOption {
 export interface CharacterWithWords extends CharacterSheet {
   assignedRole: AssignedRole;
   wordsToPlace: string[];
-  mystery: Mystery;
+  mystery: PlayMysteryInfo;
   playerIndex: number;
 }
 

@@ -28,8 +28,7 @@ interface MysteryData {
   language: string;
   author?: string;
   theme?: string;
-  innocent_words: string[];
-  guilty_words: string[];
+  word_pool: string[];
   character_sheets: Array<{
     role: 'investigator' | 'suspect' | 'guilty' | 'innocent';
     character_name: string;

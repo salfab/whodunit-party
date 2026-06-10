@@ -33,6 +33,13 @@ Feature: Upload Mysteries
     Then I should see an upload error message
 
   @mocked
+  Scenario: Admin sees validation error for an invalid word pool
+    Given I visit the upload mysteries page
+    When I paste mystery JSON with an invalid word pool in the input
+    And I click the upload JSON button
+    Then I should see an upload error message
+
+  @mocked
   Scenario: Admin can select a ZIP file
     Given I visit the upload mysteries page
     When I select a ZIP file for upload

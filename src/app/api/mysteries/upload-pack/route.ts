@@ -31,8 +31,7 @@ interface MysteryJson {
   author?: string;
   theme?: string;
   version?: string;
-  innocent_words: string[];
-  guilty_words: string[];
+  word_pool: string[];
   character_sheets: Array<{
     role: 'investigator' | 'suspect' | 'guilty' | 'innocent';
     character_name: string;
@@ -383,8 +382,7 @@ export async function POST(request: NextRequest) {
           author: mysteryData.author || 'Unknown',
           theme: mysteryData.theme || 'SERIOUS_MURDER',
           version: mysteryData.version || '1.0.0',
-          innocent_words: mysteryData.innocent_words,
-          guilty_words: mysteryData.guilty_words,
+          word_pool: mysteryData.word_pool,
         })
         .select()
         .single();
