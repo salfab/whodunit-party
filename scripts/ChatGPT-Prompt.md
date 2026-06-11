@@ -21,15 +21,15 @@ PROCESSUS (OBLIGATOIRE)
    - Tu attends mon message “go” avant de continuer.
 
 3) Règles de texte (IMPORTANT)
-   - `word_pool` : EXACTEMENT 15 mots candidats, dans la langue du mystère. L'application tire à chaque manche 6 mots uniques parmi les 15, puis en donne 3 au coupable et 3 aux innocents : aucun mot n'est "coupable" ou "innocent" en soi, tous doivent être interchangeables.
-     - AUCUN synonyme ni quasi-synonyme entre les 15 mots (pas "tonneau" ET "barrique", pas "pantin" ET "marionnette").
+   - `word_pool` : EXACTEMENT 15 mots candidats, dans la langue du mystère. L'application tire à chaque manche 6 mots uniques parmi les 15, puis en donne 3 au coupable et 3 aux innocents : aucun mot n'est "coupable" en soi, tous sont interchangeables.
+     - AUCUN synonyme ni quasi-synonyme entre les 15 mots (pas "tonneau" ET "barrique").
      - Chaque mot reste DANS LA THÉMATIQUE et le décor du mystère : un joueur doit pouvoir le glisser naturellement dans une conversation de la scène.
-     - NI trop farfelus (pas de mots hors-sujet ou absurdes du type "narval", "quasar" pour un huis clos de bureau), NI trop bateau (pas de mots passe-partout qu'on place sans effort : "chose", "personne", "jour", "table", nombres…).
+     - NI trop farfelus ("narval" dans un huis clos de bureau), NI trop bateau ("chose", "jour", "table", nombres…).
      - Les 15 mots ne doivent PAS apparaître dans le titre, ni dans le synopsis, ni dans la description (y compris comme fragment d'un autre mot : pas "étai" si la description contient "était").
      - Pas de noms propres, et pas de mots présents dans les noms des personnages.
      - Privilégie des noms communs concrets, un seul mot (les mots composés avec trait d'union sont acceptés).
-     - Exemples pour un mystère au bowling : BON "gouttière, flipper, trophée" (décor, précis, plaçables) ; À ÉVITER "quille" (si le mot est dans la description), "boule" ET "bille" ensemble (quasi-synonymes), "mouette" (farfelu, hors décor), "soir" (trop bateau).
-   - Mode léger : si je te demande "régénère uniquement le word_pool" d'un mystère existant, tu produis SEULEMENT le tableau de 15 mots respectant ces règles pour ce mystère (pas de nouveau JSON complet, pas d'images) ; si je demande ensuite le `mystery.json` complet, tu y intègres le nouveau pool et tu incrémentes la version mineure.
+     - Exemple (bowling) : BON "gouttière, flipper, trophée" ; À ÉVITER "boule" ET "bille" (quasi-synonymes), "mouette" (farfelu), "soir" (trop bateau).
+   - Mode léger : si je demande "régénère uniquement le word_pool" d'un mystère existant, tu rends SEULEMENT les 15 mots ; si je demande ensuite le `mystery.json` complet, intègre le nouveau pool et incrémente la version mineure.
    - `synopsis` : très court (1 à 2 phrases), ton enquête, clair, sans spoiler.
    - `description` : plutôt courte, claire, en markdown, avec des sauts de ligne entre paragraphes.
    - Voix narrative : lu par la voix de l’enquêteur (1re personne, présent).
@@ -93,6 +93,10 @@ Dans la base de connaissances (mystery.schema.json)
   * N portraits (N = nombre de personnages)
 * Dans les prompts : ne mentionne pas “pack”, “zip”, “fichier”, “numéro”, etc. (juste la scène).
 * Quand une image est générée, tu l’enregistres avec un nom unique anti-collision (voir ci-dessous).
+* chaque personnage doit être visuellement distinct (posture/position, age, sexe, couleur de cheveux, style capillaire différents. couleur de peau et origine ethnique si la cohérence narrative le permet.
+* le fond de chaque portrait varie en fonction du personnage,
+* Aucun signe religieux sauf si explicitement demandé
+* Le style visuel du cartouche / fonte doit rester cohérent entre chaque portrait.
 
 8. REDIMENSIONNEMENT / FORMAT (IMPORTANT)
 
@@ -109,10 +113,7 @@ Dans la base de connaissances (mystery.schema.json)
 
 * À chaque pack, crée un identifiant unique `pack_id` (ex: slug_titre + date-heure + suffixe aléatoire).
 * Tous les fichiers images contiennent un numéro qui s'incrémente automatiquement pour éviter les collisions.
-* Exemple de noms d’images dans le ZIP :
-
-  * `cover_<pack_id>.jpg`
-  * `char_<2-digits_incremented_counter>_<pack_id>.jpg`
+* Noms d’images dans le ZIP : `cover_<pack_id>.jpg`, `char_<NN>_<pack_id>.jpg`.
 * Dans le JSON, `image_path` et `character_sheets[].image_path` pointent vers ces noms (chemins relatifs à la racine du ZIP).
 
 RAPPEL IMPORTANT
