@@ -8,7 +8,6 @@ import {
   Typography,
   TextField,
   Button,
-  Paper,
   Alert,
   FormLabel,
   CircularProgress,
@@ -18,8 +17,10 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { motion } from 'framer-motion';
 import OtpInput from '@/components/OtpInput';
-import LoadingScreen from '@/components/LoadingScreen';
 import TakeoverDialog from '@/components/TakeoverDialog';
+import LoadingScreen from '@/components/LoadingScreen';
+import { DecoFrame } from '@/components/shared/DecoFrame';
+import { DecoPediment } from '@/components/shared/DecoPediment';
 
 function JoinContent() {
   const router = useRouter();
@@ -83,7 +84,7 @@ function JoinContent() {
           setJoinCodeValidationState('invalid');
           setJoinCodeValidationMessage('Code invalide, essayez un autre code');
         }
-      } catch (err) {
+      } catch {
         if (cancelled) return;
         setJoinCodeValidationState('invalid');
         setJoinCodeValidationMessage('Validation impossible, reessayez');
@@ -165,7 +166,7 @@ function JoinContent() {
 
       // Redirect to lobby
       router.push(`/lobby/${data.sessionId}`);
-    } catch (err) {
+    } catch {
       setError('Failed to connect to server');
       setLoading(false);
     }
@@ -202,7 +203,7 @@ function JoinContent() {
         // Redirect to lobby
         router.push(`/lobby/${data.sessionId}`);
       }
-    } catch (err) {
+    } catch {
       setError('Failed to connect to server');
       setShowTakeoverDialog(false);
       setTakeoverLoading(false);
@@ -210,14 +211,15 @@ function JoinContent() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" disableGutters>
       <Box
         sx={{
-          minHeight: '100vh',
+          minHeight: '100svh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          py: 4,
+          px: { xs: 1.25, sm: 2 },
+          py: { xs: 2, sm: 4 },
         }}
       >
         <motion.div
@@ -225,17 +227,79 @@ function JoinContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Paper
-            elevation={3}
+          <Box
+            component="section"
             sx={{
-              p: 4,
-              borderRadius: 2,
+              pt: { xs: 5, sm: 5.4 },
+              px: { xs: 3.25, sm: 3.75 },
+              pb: { xs: 6, sm: 6.5 },
+              borderRadius: 0,
+              position: 'relative',
+              overflow: 'hidden',
+              bgcolor: 'rgba(16, 17, 21, 0.84)',
+              border: 0,
+              backgroundImage:
+                'linear-gradient(180deg, rgba(184, 150, 95, 0.11), transparent 28%), linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%)',
+              boxShadow: '0 26px 86px rgba(0, 0, 0, 0.52), inset 0 0 70px rgba(0, 0, 0, 0.28)',
+              backdropFilter: 'blur(8px)',
             }}
             data-testid="join-form-container"
           >
-          <Typography variant="h4" component="h1" gutterBottom textAlign="center" data-testid="join-page-title">
-            Rejoindre une partie
-          </Typography>
+            <DecoFrame />
+          <Box sx={{ position: 'relative', zIndex: 1, mb: { xs: 1.65, sm: 2 }, textAlign: 'center' }}>
+            <DecoPediment sx={{ mb: 0.6 }} />
+            <Typography
+              component="div"
+              sx={{
+                fontFamily: '"Lobby Deco Display", "Bodoni MT Condensed", "Bodoni MT", serif',
+                fontSize: { xs: '1.38rem', sm: '1.7rem' },
+                fontWeight: 700,
+                letterSpacing: { xs: '0.045em', sm: '0.06em' },
+                lineHeight: 0.95,
+                textTransform: 'uppercase',
+                color: 'secondary.light',
+                textShadow: '0 5px 18px rgba(0, 0, 0, 0.65)',
+                transform: 'scaleX(0.92)',
+                transformOrigin: 'center',
+              }}
+            >
+              Faux Témoignage
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              position: 'relative',
+              zIndex: 1,
+              display: 'grid',
+              gridTemplateColumns: 'minmax(30px, 1fr) auto minmax(30px, 1fr)',
+              alignItems: 'center',
+              gap: { xs: 0.7, sm: 1 },
+              mb: { xs: 2.35, sm: 2.75 },
+            }}
+          >
+            <Box sx={{ height: '1px', bgcolor: 'rgba(184, 150, 95, 0.35)' }} />
+            <Typography
+              variant="h4"
+              component="h1"
+              textAlign="center"
+              data-testid="join-page-title"
+              sx={{
+                fontFamily: '"Bahnschrift Condensed", "Bahnschrift SemiCondensed", "Bahnschrift", "Aptos Display", "Segoe UI", sans-serif',
+                fontSize: { xs: '1.38rem', sm: '1.7rem' },
+                fontWeight: 800,
+                letterSpacing: { xs: '0.04em', sm: '0.06em' },
+                lineHeight: 1,
+                textTransform: 'uppercase',
+                color: '#efe5cf',
+                textShadow: '0 6px 18px rgba(0, 0, 0, 0.62)',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Rejoindre une partie
+            </Typography>
+            <Box sx={{ height: '1px', bgcolor: 'rgba(184, 150, 95, 0.35)' }} />
+          </Box>
 
           {wasKicked && (
             <Alert severity="warning" sx={{ mb: 3 }} onClose={() => setWasKicked(false)} data-testid="kicked-player-alert">
@@ -249,14 +313,17 @@ function JoinContent() {
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleJoin} sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={handleJoin} sx={{ position: 'relative', zIndex: 1 }}>
             {!hasPrefilledJoinCode && <Box sx={{ mb: 4 }}>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, mb: 2 }}>
                 <FormLabel
                   sx={{
                     textAlign: 'center',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: 'secondary.main',
+                    letterSpacing: '0.2em',
+                    textTransform: 'uppercase',
                   }}
                 >
                   Code d'accès
@@ -306,7 +373,13 @@ function JoinContent() {
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="Entrez votre nom"
               required
-              sx={{ mb: 3 }}
+              sx={{
+                mb: 3,
+                '& .MuiFormHelperText-root': {
+                  mx: 0,
+                  color: 'text.secondary',
+                },
+              }}
               inputProps={{
                 maxLength: 15,
                 'data-testid': 'player-name-input',
@@ -321,11 +394,12 @@ function JoinContent() {
               fullWidth
               disabled={loading || !isJoinCodeComplete || !playerName || isJoinCodeValidating}
               data-testid="submit-join-button"
+              sx={{ minHeight: 52 }}
             >
               {loading ? 'Connexion...' : 'Rejoindre la partie'}
             </Button>
           </Box>
-        </Paper>
+        </Box>
         </motion.div>
 
         <TakeoverDialog
@@ -342,7 +416,7 @@ function JoinContent() {
 
 export default function JoinPage() {
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<LoadingScreen message="Chargement" />}>
       <JoinContent />
     </Suspense>
   );
