@@ -9,9 +9,10 @@ import {
   Paper,
   Alert,
   Button,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import { HelpOutline as HelpIcon } from '@mui/icons-material';
-import { motion } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { createClient } from '@/lib/supabase/client';
 import { usePlayerPresence } from '@/hooks/usePlayerPresence';
@@ -22,6 +23,7 @@ import {
   JoinCodeDisplay,
   PlayerList,
   LanguageSelector,
+  LobbyWordmark,
   MysteryVotingList,
   ReadyStatusBar,
   RemovePlayerDialog,
@@ -43,7 +45,6 @@ export default function LobbyPage() {
   const [mysteries, setMysteries] = useState<any[]>([]);
   const [votes, setVotes] = useState<Map<string, string>>(new Map());
   const [myVote, setMyVote] = useState<string | null>(null);
-  const [mysteryCount, setMysteryCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showTransition, setShowTransition] = useState(false);
@@ -93,7 +94,6 @@ export default function LobbyPage() {
         const data = await mysteriesResponse.json();
         const loadedMysteries = data.mysteries || [];
         setMysteries(loadedMysteries);
-        setMysteryCount(loadedMysteries.length);
       }
     } catch (err) {
       console.error('Error loading mysteries:', err);
@@ -112,7 +112,6 @@ export default function LobbyPage() {
   const voteCount = votes.size;
   const readyStates = new Map<string, boolean>();
   activePlayers.forEach(p => readyStates.set(p.id, votes.has(p.id)));
-  const isReady = currentPlayerId ? votes.has(currentPlayerId) : false;
   
   const canStart = activePlayers.length >= MIN_PLAYERS && voteCount === activePlayers.length && availableMysteries.length > 0;
 
@@ -180,7 +179,6 @@ export default function LobbyPage() {
         const data = await mysteriesResponse.json();
         const loadedMysteries = data.mysteries || [];
         setMysteries(loadedMysteries);
-        setMysteryCount(loadedMysteries.length);
       }
 
       // Get next round number
@@ -221,21 +219,6 @@ export default function LobbyPage() {
       setError(err.message || 'Failed to load session');
       setLoading(false);
     }
-  }
-
-  async function loadPlayers() {
-    const { data: playersData, error: playersError } = await supabase
-      .from('players')
-      .select('*')
-      .eq('session_id', sessionId)
-      .order('created_at', { ascending: true });
-
-    if (playersError) {
-      console.error('Error loading players:', playersError);
-      return;
-    }
-    
-    setPlayers(playersData || []);
   }
 
   function setupRealtimeSubscriptions() {
@@ -557,83 +540,436 @@ export default function LobbyPage() {
   }
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ py: 4, minHeight: '100vh' }}>
-        <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 } }}>
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: { xs: 'column', sm: 'row' },
-            justifyContent: 'space-between', 
-            alignItems: { xs: 'flex-start', sm: 'center' },
-            gap: 2,
-            mb: 2 
-          }}>
-            <Button
-              variant="text"
-              size="small"
-              endIcon={<HelpIcon />}
-              onClick={() => setHelpDialogOpen(true)}
-              sx={{ 
-                order: { xs: -1, sm: 1 },
-                alignSelf: 'flex-end',
-                color: 'primary.main',
-                '&:hover': {
-                  bgcolor: 'action.hover',
-                }
-              }}
-            >
-              Déroulement du jeu
-            </Button>
-            <Typography variant="h3" component="h1" gutterBottom sx={{ mb: 0 }}>
-              Salle d'attente
-            </Typography>
+    <Container maxWidth="sm" disableGutters>
+      <Box sx={{ minHeight: '100svh', px: { xs: 1.25, sm: 2 }, py: { xs: 1, sm: 3 } }}>
+        <Box
+          component="section"
+          sx={{
+            minHeight: { xs: 'calc(100svh - 16px)', sm: 'auto' },
+            p: { xs: 1.45, sm: 2.4 },
+            display: 'flex',
+            flexDirection: 'column',
+            gap: { xs: 0.9, sm: 1.65 },
+            position: 'relative',
+            overflow: 'hidden',
+            borderRadius: 1,
+            border: '1px solid rgba(184, 150, 95, 0.34)',
+            bgcolor: 'rgba(7, 8, 10, 0.58)',
+            backgroundImage:
+              'linear-gradient(180deg, rgba(184, 150, 95, 0.11) 0%, transparent 24%), linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 36%)',
+            boxShadow: '0 26px 86px rgba(0, 0, 0, 0.56), inset 0 0 70px rgba(0, 0, 0, 0.36)',
+            backdropFilter: 'blur(8px)',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              inset: 9,
+              border: '1px solid rgba(184, 150, 95, 0.13)',
+              borderRadius: 1,
+              pointerEvents: 'none',
+            },
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              backgroundImage:
+                'radial-gradient(circle at 0% 34%, rgba(120, 147, 154, 0.13), transparent 16rem), radial-gradient(circle at 100% 74%, rgba(184, 150, 95, 0.13), transparent 15rem)',
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: '1fr auto',
+              alignItems: 'start',
+              gap: 1,
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
+            <LobbyWordmark />
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+              <LanguageSelector
+                value={session?.language || 'fr'}
+                onChange={handleLanguageChange}
+                compact
+              />
+              <Tooltip title="Aide">
+                <IconButton
+                  onClick={() => setHelpDialogOpen(true)}
+                  aria-label="Aide"
+                  sx={{
+                    width: 38,
+                    height: 38,
+                    color: 'text.primary',
+                    border: '1px solid rgba(184, 150, 95, 0.58)',
+                    bgcolor: 'rgba(7, 8, 10, 0.28)',
+                  }}
+                >
+                  <HelpIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
 
-          {session && <JoinCodeDisplay code={session.join_code} />}
-
-          {/* QR Code */}
-          {session && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
-              <Box sx={{ textAlign: 'center' }}>
+          <Box sx={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: '1fr auto 1fr',
+                alignItems: 'center',
+                gap: { xs: 0.65, sm: 1.1 },
+                mt: { xs: -0.05, sm: 0.3 },
+                mb: { xs: 0.15, sm: 0.4 },
+              }}
+            >
+              <Box
+                aria-hidden="true"
+                sx={{
+                  position: 'relative',
+                  height: 16,
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: '50%',
+                    height: '1px',
+                    bgcolor: 'rgba(184, 150, 95, 0.48)',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    right: 0,
+                    top: '50%',
+                    width: 7,
+                    height: 7,
+                    border: '1px solid rgba(184, 150, 95, 0.86)',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    bgcolor: 'rgba(7, 8, 10, 0.8)',
+                  },
+                }}
+              >
                 <Box
                   sx={{
-                    p: 2,
-                    bgcolor: 'white',
-                    borderRadius: 2,
-                    display: 'inline-block',
-                    mb: 1,
+                    position: 'absolute',
+                    right: 13,
+                    top: 2,
+                    width: { xs: 34, sm: 58 },
+                    height: '1px',
+                    bgcolor: 'rgba(184, 150, 95, 0.72)',
+                  }}
+                />
+              </Box>
+              <Typography
+                variant="h3"
+                component="h1"
+                sx={{
+                  display: 'inline-block',
+                  fontSize: { xs: '1.38rem', sm: '2.22rem' },
+                  fontFamily: '"Lobby Deco Display", "Bodoni MT Poster Compressed", "Bodoni MT Condensed", "Bodoni MT", "Didot", serif',
+                  fontWeight: 700,
+                  fontVariantCaps: 'small-caps',
+                  letterSpacing: { xs: '0.052em', sm: '0.064em' },
+                  lineHeight: 0.86,
+                  position: 'relative',
+                  zIndex: 1,
+                  textTransform: 'uppercase',
+                  whiteSpace: 'nowrap',
+                  color: '#efe5cf',
+                  backgroundImage:
+                    'linear-gradient(180deg, #f7efdc 0%, #e2d3b6 100%), radial-gradient(circle, rgba(7, 8, 10, 0.22) 0 0.48px, transparent 0.72px)',
+                  backgroundSize: '100% 100%, 6px 6px',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 3px 14px rgba(0, 0, 0, 0.72)',
+                  transform: 'scaleX(0.82) scaleY(1.2)',
+                  transformOrigin: 'center',
+                }}
+              >
+                Salle d’attente
+              </Typography>
+              <Box
+                aria-hidden="true"
+                sx={{
+                  position: 'relative',
+                  height: 16,
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: '50%',
+                    height: '1px',
+                    bgcolor: 'rgba(184, 150, 95, 0.48)',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    left: 0,
+                    top: '50%',
+                    width: 7,
+                    height: 7,
+                    border: '1px solid rgba(184, 150, 95, 0.86)',
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    bgcolor: 'rgba(7, 8, 10, 0.8)',
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    left: 13,
+                    top: 2,
+                    width: { xs: 34, sm: 58 },
+                    height: '1px',
+                    bgcolor: 'rgba(184, 150, 95, 0.72)',
+                  }}
+                />
+              </Box>
+            </Box>
+            <Box
+              component="svg"
+              aria-hidden="true"
+              viewBox="0 0 140 34"
+              sx={{
+                display: 'block',
+                width: { xs: 118, sm: 152 },
+                height: { xs: 30, sm: 36 },
+                mx: 'auto',
+                mb: { xs: 0.08, sm: 0.22 },
+                color: 'secondary.main',
+                opacity: 0.96,
+                filter: 'drop-shadow(0 3px 8px rgba(0, 0, 0, 0.5))',
+              }}
+            >
+              <path d="M4 18H43" stroke="currentColor" strokeWidth="1.05" opacity="0.72" />
+              <path d="M97 18H136" stroke="currentColor" strokeWidth="1.05" opacity="0.72" />
+              <path d="M56 8L69.5 29L63.5 9.5Z" fill="currentColor" opacity="0.62" />
+              <path d="M84 8L70.5 29L76.5 9.5Z" fill="currentColor" opacity="0.62" />
+              <path d="M63.5 5.5L70 29L76.5 5.5Z" fill="currentColor" opacity="0.78" />
+              <path d="M51 10L70 29L89 10L70 15Z" fill="none" stroke="currentColor" strokeWidth="1.55" />
+              <path d="M58 11L70 29L82 11" fill="none" stroke="rgba(7, 8, 10, 0.52)" strokeWidth="1.1" />
+              <path d="M66 13L70 29L74 13" fill="none" stroke="rgba(7, 8, 10, 0.45)" strokeWidth="0.9" />
+            </Box>
+            {session && <JoinCodeDisplay code={session.join_code} />}
+          </Box>
+
+          {session && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+              <Box sx={{ textAlign: 'center', width: '100%' }}>
+                <Box
+                  sx={{
+                    position: 'relative',
+                    width: { xs: 'min(100%, 300px)', sm: 368 },
+                    aspectRatio: '1 / 1',
+                    mx: 'auto',
+                    backgroundImage: 'url("/lobby-qr-frame.png")',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    backgroundSize: '100% 100%',
+                    filter: 'drop-shadow(0 18px 42px rgba(0, 0, 0, 0.52))',
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      inset: { xs: 42, sm: 52 },
+                      bgcolor: '#f5f1e7',
+                      borderRadius: 0.55,
+                      boxShadow: 'inset 0 0 0 1px rgba(7, 8, 10, 0.12)',
+                      pointerEvents: 'none',
+                    },
+                    '& svg': {
+                      position: 'absolute',
+                      top: { xs: 48, sm: 60 },
+                      left: { xs: 48, sm: 60 },
+                      display: 'block',
+                      width: { xs: 'calc(100% - 96px)', sm: 'calc(100% - 120px)' },
+                      height: { xs: 'calc(100% - 96px)', sm: 'calc(100% - 120px)' },
+                      zIndex: 1,
+                    },
                   }}
                 >
                   <QRCodeSVG
                     value={`${typeof window !== 'undefined' ? window.location.origin : ''}/join?code=${session.join_code}`}
-                    size={200}
+                    size={280}
                     level="H"
                   />
                 </Box>
-                <Typography variant="caption" color="text.secondary" display="block">
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  display="block"
+                  sx={{ mt: 1.55, fontWeight: 700 }}
+                >
                   Scannez pour rejoindre
                 </Typography>
               </Box>
             </Box>
           )}
 
-          <PlayerList
-            players={activePlayers}
-            currentPlayerId={currentPlayerId}
-            readyStates={readyStates}
-            minPlayers={MIN_PLAYERS}
-            onRemovePlayer={openRemoveDialog}
-          />
+          <Box sx={{ position: 'relative', zIndex: 1 }}>
+            <PlayerList
+              players={activePlayers}
+              currentPlayerId={currentPlayerId}
+              readyStates={readyStates}
+              minPlayers={MIN_PLAYERS}
+              onRemovePlayer={openRemoveDialog}
+            />
+          </Box>
 
-          <Box sx={{ mt: 4, mb: 2, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-            <Typography variant="h5">
+          <Box sx={{ position: 'relative', zIndex: 1, mt: 'auto' }}>
+            <ReadyStatusBar
+              readyCount={voteCount}
+              totalPlayers={activePlayers.length}
+              canStart={canStart}
+              minPlayers={MIN_PLAYERS}
+              availableMysteriesCount={availableMysteries.length}
+              onRefresh={() => window.location.reload()}
+              onQuit={handleQuit}
+            />
+          </Box>
+
+        </Box>
+
+        <Box
+          component="section"
+          sx={{
+            px: { xs: 0.35, sm: 1.15 },
+            py: { xs: 1.2, sm: 1.55 },
+            mt: 1.25,
+            position: 'relative',
+            overflow: 'visible',
+            bgcolor: 'transparent',
+            boxShadow: 'none',
+            '&::before, &::after': {
+              content: '""',
+              position: 'absolute',
+              insetInline: { xs: 2, sm: 10 },
+              height: 12,
+              pointerEvents: 'none',
+              backgroundImage:
+                'linear-gradient(90deg, rgba(184, 150, 95, 0.48) 0 34px, transparent 34px calc(100% - 34px), rgba(184, 150, 95, 0.48) calc(100% - 34px) 100%), linear-gradient(90deg, rgba(184, 150, 95, 0.28) 0 1px, transparent 1px calc(100% - 1px), rgba(184, 150, 95, 0.28) calc(100% - 1px) 100%)',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '100% 1px, 100% 100%',
+            },
+            '&::before': {
+              top: 0,
+              backgroundPosition: 'center top, center top',
+            },
+            '&::after': {
+              bottom: 0,
+              backgroundPosition: 'center bottom, center top',
+              opacity: 0.58,
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(30px, 1fr) auto minmax(30px, 1fr)',
+              alignItems: 'center',
+              gap: { xs: 0.7, sm: 1 },
+              mb: { xs: 1.15, sm: 1.35 },
+              px: { xs: 0.1, sm: 0.4 },
+            }}
+          >
+            <Box
+              aria-hidden="true"
+              sx={{
+                position: 'relative',
+                height: 12,
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: '50%',
+                  height: '1px',
+                  bgcolor: 'rgba(184, 150, 95, 0.34)',
+                },
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  right: 0,
+                  top: '50%',
+                  width: 6,
+                  height: 6,
+                  border: '1px solid rgba(184, 150, 95, 0.72)',
+                  transform: 'translateY(-50%) rotate(45deg)',
+                  bgcolor: 'rgba(7, 8, 10, 0.82)',
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  right: 11,
+                  top: 2,
+                  width: { xs: 22, sm: 42 },
+                  height: '1px',
+                  bgcolor: 'rgba(184, 150, 95, 0.48)',
+                }}
+              />
+            </Box>
+            <Typography
+              variant="h5"
+              component="h2"
+              data-testid="mystery-voting-title"
+              sx={{
+                textAlign: 'center',
+                fontFamily: '"Bahnschrift Condensed", "Bahnschrift SemiCondensed", "Bahnschrift", "Aptos Display", "Segoe UI", sans-serif',
+                fontSize: { xs: '1.03rem', sm: '1.18rem' },
+                fontWeight: 800,
+                letterSpacing: { xs: '0.075em', sm: '0.09em' },
+                lineHeight: 1,
+                textTransform: 'uppercase',
+                color: '#efe5cf',
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.58)',
+                whiteSpace: 'nowrap',
+              }}
+            >
               Votez pour le mystère
             </Typography>
-            
-            <LanguageSelector
-              value={session?.language || 'fr'}
-              onChange={handleLanguageChange}
-            />
+            <Box
+              aria-hidden="true"
+              sx={{
+                position: 'relative',
+                height: 12,
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  top: '50%',
+                  height: '1px',
+                  bgcolor: 'rgba(184, 150, 95, 0.34)',
+                },
+                '&::after': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  top: '50%',
+                  width: 6,
+                  height: 6,
+                  border: '1px solid rgba(184, 150, 95, 0.72)',
+                  transform: 'translateY(-50%) rotate(45deg)',
+                  bgcolor: 'rgba(7, 8, 10, 0.82)',
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  left: 11,
+                  top: 2,
+                  width: { xs: 22, sm: 42 },
+                  height: '1px',
+                  bgcolor: 'rgba(184, 150, 95, 0.48)',
+                }}
+              />
+            </Box>
           </Box>
 
           <MysteryVotingList
@@ -643,19 +979,9 @@ export default function LobbyPage() {
             myVote={myVote}
             onVote={handleVote}
             hasLanguage={!!session?.language}
-            showTitle={true}
+            showTitle={false}
           />
-
-          <ReadyStatusBar
-            readyCount={voteCount}
-            totalPlayers={activePlayers.length}
-            canStart={canStart}
-            minPlayers={MIN_PLAYERS}
-            availableMysteriesCount={availableMysteries.length}
-            onRefresh={() => window.location.reload()}
-            onQuit={handleQuit}
-          />
-        </Paper>
+        </Box>
       </Box>
 
       {/* Game Start Transition */}

@@ -15,17 +15,11 @@ export default function AccuseButton({ onClick }: AccuseButtonProps) {
         onClick={onClick}
         data-testid="play-accuse-button"
         sx={{ 
-          fontSize: '1.2rem', 
+          fontSize: '1rem', 
           px: 4, 
-          py: 2,
+          py: 1.35,
           fontWeight: 'bold',
-          bgcolor: '#d32f2f',
-          color: 'white',
-          boxShadow: '0 4px 14px 0 rgba(211, 47, 47, 0.39)',
-          '&:hover': {
-            bgcolor: '#b71c1c',
-            boxShadow: '0 6px 20px rgba(211, 47, 47, 0.5)',
-          }
+          minWidth: { xs: '100%', sm: 220 },
         }}
       >
         J&apos;accuse

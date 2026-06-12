@@ -56,7 +56,7 @@ export default function TransitionScreen({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%)',
+            background: 'radial-gradient(circle at 50% 30%, rgba(184, 150, 95, 0.16), transparent 30rem), linear-gradient(135deg, rgba(7, 8, 10, 0.98) 0%, rgba(13, 15, 19, 0.98) 100%)',
           }}
         >
           <Box
@@ -102,11 +102,11 @@ export default function TransitionScreen({
                           maxHeight: 'calc(100vh - 300px)',
                           width: 'auto',
                           height: 'auto',
-                          borderRadius: '16px',
+                          borderRadius: '8px',
                           objectFit: 'contain',
                           mb: 3,
                           boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-                          border: '3px solid rgba(255,255,255,0.2)',
+                          border: '1px solid rgba(184, 150, 95, 0.28)',
                         }}
                       />
                     ) : (
@@ -117,11 +117,11 @@ export default function TransitionScreen({
                         sx={{
                           width: 120,
                           height: 120,
-                          borderRadius: '16px',
-                          objectFit: 'cover',
+                          borderRadius: '8px',
+                          objectFit: 'contain',
                           mb: 3,
                           boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-                          border: '3px solid rgba(255,255,255,0.2)',
+                          border: '1px solid rgba(184, 150, 95, 0.28)',
                         }}
                       />
                     )}
@@ -138,7 +138,7 @@ export default function TransitionScreen({
                       variant="h2" 
                       component="h1"
                       sx={{ 
-                        color: 'primary.light',
+                        color: 'secondary.light',
                         fontWeight: 700,
                         textShadow: '0 2px 10px rgba(0,0,0,0.5)',
                         mb: 2

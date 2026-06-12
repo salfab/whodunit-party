@@ -18,7 +18,7 @@ interface ConfessionDialogProps {
   darkSecret: string;
 }
 
-const goldAccent = '#e4c98b';
+const brassAccent = '#b8965f';
 
 export default function ConfessionDialog({
   open,
@@ -43,9 +43,9 @@ export default function ConfessionDialog({
           bgcolor: 'background.paper',
           backgroundImage: 'none',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
-          borderRadius: { xs: '16px 16px 0 0', sm: 3 },
-          border: `2px solid ${goldAccent}`,
-          borderBottom: { xs: 'none', sm: `2px solid ${goldAccent}` },
+          borderRadius: { xs: '12px 12px 0 0', sm: 1 },
+          border: `1px solid ${brassAccent}55`,
+          borderBottom: { xs: 'none', sm: `1px solid ${brassAccent}55` },
           overflow: 'hidden',
           m: { xs: 0, sm: 2 },
           maxHeight: { xs: '85vh', sm: '90vh' },
@@ -59,11 +59,11 @@ export default function ConfessionDialog({
         }
       }}
     >
-      {/* Gold accent top bar */}
+      {/* Brass accent top bar */}
       <Box
         sx={{
-          height: 4,
-          background: `linear-gradient(90deg, transparent, ${goldAccent}, transparent)`,
+          height: 3,
+          background: `linear-gradient(90deg, transparent, ${brassAccent}, transparent)`,
         }}
       />
       
@@ -79,7 +79,7 @@ export default function ConfessionDialog({
           component="span"
           sx={{
             fontWeight: 700,
-            color: goldAccent,
+            color: 'secondary.light',
             textShadow: '0 2px 8px rgba(0,0,0,0.5)',
           }}
         >
@@ -102,9 +102,9 @@ export default function ConfessionDialog({
         <Box
           sx={{
             p: { xs: 2, sm: 3 },
-            borderRadius: 2,
-            border: `1px solid ${goldAccent}40`,
-            bgcolor: 'rgba(228, 201, 139, 0.05)',
+            borderRadius: 1,
+            border: `1px solid ${brassAccent}40`,
+            bgcolor: 'rgba(184, 150, 95, 0.05)',
             '& p, & li, & span': {
               color: 'text.primary',
               fontSize: { xs: '1.05rem', sm: '1.15rem' },
@@ -117,7 +117,7 @@ export default function ConfessionDialog({
               mb: 0,
             },
             '& strong': {
-              color: goldAccent,
+              color: 'secondary.light',
             },
           }}
           data-testid="confession-secret"
@@ -128,11 +128,11 @@ export default function ConfessionDialog({
         </Box>
       </DialogContent>
 
-      {/* Gold accent bottom bar */}
+      {/* Brass accent bottom bar */}
       <Box
         sx={{
           height: 1,
-          background: `linear-gradient(90deg, transparent, ${goldAccent}60, transparent)`,
+          background: `linear-gradient(90deg, transparent, ${brassAccent}60, transparent)`,
           mx: { xs: 2, sm: 4 },
         }}
       />
@@ -148,15 +148,7 @@ export default function ConfessionDialog({
             py: 1.5,
             fontSize: '1rem',
             fontWeight: 600,
-            bgcolor: goldAccent,
-            color: '#1a1a2e',
-            borderRadius: 2,
             textTransform: 'none',
-            boxShadow: `0 4px 14px rgba(228, 201, 139, 0.4)`,
-            '&:hover': {
-              bgcolor: '#d4b97b',
-              boxShadow: `0 6px 20px rgba(228, 201, 139, 0.5)`,
-            },
           }}
         >
           J&apos;ai tout avoué

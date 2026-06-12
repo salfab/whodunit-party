@@ -34,10 +34,10 @@ export default function RoomQRCodeDialog({ open, onClose, joinCode }: RoomQRCode
       }}
     >
       <DialogTitle sx={{ 
-        fontSize: '1.5rem', 
-        fontWeight: 'bold',
+        fontSize: '1.35rem', 
+        fontWeight: 700,
         pb: 1,
-        borderBottom: '2px solid',
+        borderBottom: '1px solid',
         borderColor: 'divider',
         display: 'flex',
         justifyContent: 'space-between',
@@ -57,8 +57,10 @@ export default function RoomQRCodeDialog({ open, onClose, joinCode }: RoomQRCode
           <Box
             sx={{
               p: 2,
-              bgcolor: 'white',
-              borderRadius: 2,
+              bgcolor: '#f5f1e7',
+              borderRadius: 1,
+              border: '1px solid',
+              borderColor: 'secondary.main',
               display: 'flex',
               justifyContent: 'center',
             }}
@@ -66,7 +68,7 @@ export default function RoomQRCodeDialog({ open, onClose, joinCode }: RoomQRCode
             <QRCodeSVG value={roomUrl} size={250} level="H" />
           </Box>
           <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h5" color="secondary.main" gutterBottom>
+            <Typography variant="h5" color="secondary.light" gutterBottom>
               Code: {joinCode}
             </Typography>
             <Typography variant="body2" color="text.secondary">

@@ -78,36 +78,58 @@ export default function MysteryCard({
         data-voted={selected ? 'true' : 'false'}
         aria-disabled={selected && showRadio ? 'true' : 'false'}
         sx={{
-          border: selected ? '2px solid' : '1px solid',
-          borderColor: selected ? 'primary.main' : 'divider',
+          border: '1px solid',
+          borderColor: selected ? 'secondary.main' : 'divider',
           borderRadius: 1,
-          px: { xs: 1.5, sm: 2 },
-          py: { xs: 1, sm: 1.5 },
+          px: { xs: 1, sm: 1.5 },
+          py: { xs: 1, sm: 1.25 },
+          bgcolor: selected ? 'rgba(143, 47, 50, 0.18)' : 'rgba(7, 8, 10, 0.2)',
+          boxShadow: selected ? '0 0 0 1px rgba(184, 150, 95, 0.32)' : 'none',
           '&:hover': {
-            borderColor: 'primary.light',
+            borderColor: selected ? 'secondary.light' : 'secondary.dark',
+            bgcolor: selected ? 'rgba(143, 47, 50, 0.22)' : 'rgba(184, 150, 95, 0.06)',
           },
         }}
       >
         <Box sx={{ 
           display: 'flex', 
           flexDirection: { xs: 'column', sm: 'row' },
-          alignItems: { xs: 'stretch', sm: 'center' },
+          alignItems: { xs: 'stretch', sm: 'flex-start' },
           width: '100%', 
-          gap: { xs: 0.5, sm: 2 },
+          gap: { xs: 1.25, sm: 1.75 },
         }}>
           {imageUrl && (
             <Box
-              component="img"
-              src={imageUrl}
-              alt={mystery.title}
               sx={{
                 width: { xs: '100%', sm: 80 },
-                height: { xs: 'auto', sm: 60 },
-                objectFit: 'cover',
+                minWidth: { sm: 168 },
+                maxWidth: { sm: 188 },
+                aspectRatio: '3 / 2',
                 borderRadius: 1,
                 flexShrink: 0,
+                bgcolor: 'rgba(0, 0, 0, 0.3)',
+                border: '1px solid',
+                borderColor: selected ? 'rgba(184, 150, 95, 0.56)' : 'rgba(184, 150, 95, 0.18)',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                p: 0.25,
               }}
-            />
+            >
+              <Box
+                component="img"
+                src={imageUrl}
+                alt={mystery.title}
+                sx={{
+                  display: 'block',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  borderRadius: '5px',
+                }}
+              />
+            </Box>
           )}
           <Box sx={{ flex: 1 }}>
             {mystery.title.length > 30 ? (
@@ -122,9 +144,13 @@ export default function MysteryCard({
                 variant="body2" 
                 color="text.secondary"
                 sx={{ 
-                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                  fontStyle: 'italic',
-                  mb: 0.5,
+                  fontSize: { xs: '0.82rem', sm: '0.875rem' },
+                  mb: 0.75,
+                  mt: 0.35,
+                  display: '-webkit-box',
+                  WebkitLineClamp: { xs: 3, sm: 2 },
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
                 }}
               >
                 {mystery.synopsis}
@@ -133,19 +159,20 @@ export default function MysteryCard({
             <Typography 
               variant="body2" 
               color="text.secondary"
-              sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+              sx={{ fontSize: { xs: '0.78rem', sm: '0.84rem' } }}
             >
               {secondaryInfo}
             </Typography>
           </Box>
           <Chip
             label={`${voteCount} vote${voteCount !== 1 ? 's' : ''}`}
-            color={voteCount > 0 ? 'primary' : 'default'}
+            color={voteCount > 0 ? 'secondary' : 'default'}
             size="small"
             variant={voteCount > 0 ? 'filled' : 'outlined'}
             data-testid="vote-count"
             sx={{ 
-              alignSelf: { xs: 'flex-end', sm: 'center' },
+              alignSelf: { xs: 'flex-start', sm: 'flex-start' },
+              flexShrink: 0,
             }}
           />
         </Box>

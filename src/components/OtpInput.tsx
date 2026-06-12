@@ -4,34 +4,39 @@ import { useRef, useEffect, KeyboardEvent, ClipboardEvent } from 'react';
 import { Box, styled } from '@mui/material';
 
 const InputBox = styled('input')(({ theme }) => ({
-  width: '48px',
-  height: '56px',
-  fontSize: '24px',
-  fontWeight: 'bold',
+  width: '46px',
+  height: '54px',
+  fontSize: '23px',
+  fontWeight: 900,
   textAlign: 'center',
   textTransform: 'uppercase',
-  border: `2px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.paper,
+  border: '1px solid rgba(184, 150, 95, 0.46)',
+  borderRadius: 6,
+  backgroundColor: 'rgba(7, 8, 10, 0.42)',
   color: theme.palette.text.primary,
   outline: 'none',
   transition: 'all 0.2s ease',
-  fontFamily: 'monospace',
+  fontFamily: '"Bahnschrift Condensed", "Bahnschrift SemiCondensed", "Arial Narrow", "Arial Black", sans-serif',
+  letterSpacing: '0.02em',
+  boxShadow: 'inset 0 0 18px rgba(0, 0, 0, 0.28)',
   flexShrink: 1,
   minWidth: '32px',
   
   '&:focus': {
-    borderColor: theme.palette.primary.main,
-    boxShadow: `0 0 0 3px ${theme.palette.primary.main}33`,
+    borderColor: theme.palette.secondary.main,
+    boxShadow: `0 0 0 2px ${theme.palette.secondary.main}24, inset 0 0 22px rgba(0, 0, 0, 0.34)`,
+    backgroundColor: 'rgba(7, 8, 10, 0.64)',
   },
   
   '&:disabled': {
-    backgroundColor: theme.palette.action.disabledBackground,
+    backgroundColor: 'rgba(7, 8, 10, 0.24)',
+    color: theme.palette.text.secondary,
+    borderColor: 'rgba(184, 150, 95, 0.24)',
     cursor: 'not-allowed',
   },
   
   [theme.breakpoints.down('sm')]: {
-    width: '40px',
+    width: '39px',
     height: '48px',
     fontSize: '20px',
   },
@@ -40,6 +45,7 @@ const InputBox = styled('input')(({ theme }) => ({
 interface OtpInputProps {
   length: number;
   value: string;
+  // eslint-disable-next-line no-unused-vars -- type-level parameter name
   onChange: (value: string) => void;
   disabled?: boolean;
   'data-testid'?: string;

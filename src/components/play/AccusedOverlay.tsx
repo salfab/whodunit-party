@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AccusedOverlayProps {
@@ -13,9 +13,9 @@ export default function AccusedOverlay({ isAccused }: AccusedOverlayProps) {
       <AnimatePresence>
         {isAccused && (
           <motion.div
-            initial={{ opacity: 0, x: '-100%', y: '-100%', scale: 0.5 }}
-            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
             style={{
               position: 'fixed',
               top: 0,
@@ -25,22 +25,25 @@ export default function AccusedOverlay({ isAccused }: AccusedOverlayProps) {
               pointerEvents: 'none',
               zIndex: 1000,
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               justifyContent: 'center',
+              paddingTop: 24,
             }}
           >
             <Box
-              component="img"
-              src="/blood_smear.png"
-              alt="Blood smear"
               sx={{
-                width: '80%',
-                height: '80%',
-                objectFit: 'contain',
-                opacity: 0.85,
-                filter: 'drop-shadow(0 0 20px rgba(139, 0, 0, 0.5))',
+                px: 2,
+                py: 1,
+                borderRadius: 1,
+                bgcolor: 'rgba(7, 8, 10, 0.76)',
+                border: '1px solid rgba(143, 47, 50, 0.72)',
+                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.36)',
               }}
-            />
+            >
+              <Typography sx={{ color: 'text.primary', fontWeight: 800 }}>
+                Accusé
+              </Typography>
+            </Box>
           </motion.div>
         )}
       </AnimatePresence>

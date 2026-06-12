@@ -26,6 +26,7 @@ interface MysteryVotingListProps {
   /** Current user's vote */
   myVote: string | null;
   /** Callback when voting. Pass null to support unvoting (lobby mode) */
+  // eslint-disable-next-line no-unused-vars -- type-level parameter name
   onVote: (mysteryId: string | null) => void;
   /** Whether language is set (for empty state) */
   hasLanguage?: boolean;
@@ -80,8 +81,8 @@ export function MysteryVotingList({
           mb: 3,
           border: '1px dashed',
           borderColor: 'divider',
-          borderRadius: 2,
-          bgcolor: 'background.paper'
+          borderRadius: 1,
+          bgcolor: 'rgba(7, 8, 10, 0.28)',
         }}
       >
         <CircularProgress size={40} sx={{ mb: 2 }} />
@@ -103,8 +104,8 @@ export function MysteryVotingList({
           mb: 3,
           border: '1px dashed',
           borderColor: 'divider',
-          borderRadius: 2,
-          bgcolor: 'background.paper'
+          borderRadius: 1,
+          bgcolor: 'rgba(7, 8, 10, 0.28)',
         }}
       >
         <Typography variant="h6" color="text.secondary" gutterBottom>
@@ -136,20 +137,37 @@ export function MysteryVotingList({
         {votedMystery && (votedMystery.cover_image_url || votedMystery.image_path) && (
           <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
             <Box
-              component="img"
-              src={votedMystery.cover_image_url || votedMystery.image_path}
-              alt={votedMystery.title}
               sx={{
-                width: { xs: '100%', sm: 'auto' },
+                width: { xs: '100%', sm: 450 },
                 maxWidth: '100%',
-                maxHeight: '300px',
-                borderRadius: 2,
-                objectFit: 'contain',
+                aspectRatio: '3 / 2',
+                borderRadius: 1,
+                bgcolor: 'rgba(0, 0, 0, 0.32)',
+                border: '1px solid',
+                borderColor: 'divider',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                p: 0.5,
+                overflow: 'hidden',
               }}
-            />
+            >
+              <Box
+                component="img"
+                src={votedMystery.cover_image_url || votedMystery.image_path}
+                alt={votedMystery.title}
+                sx={{
+                  display: 'block',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  borderRadius: '5px',
+                }}
+              />
+            </Box>
           </Box>
         )}
-        <Paper elevation={2} sx={{ p: 3 }}>
+        <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="body1" gutterBottom>
               Vote enregistré
@@ -174,31 +192,48 @@ export function MysteryVotingList({
   return (
     <Box sx={{ mb: 3, mt: showTitle ? 4 : 0 }} data-testid="mystery-voting-list">
       {showTitle && (
-        <Typography variant="h5" gutterBottom align="center" data-testid="mystery-voting-title">
+        <Typography variant="h5" gutterBottom align="center" data-testid="mystery-voting-title" sx={{ mb: 2 }}>
           {title}
         </Typography>
       )}
       
       {/* Show voted mystery image prominently (lobby mode with allowUnvote) */}
       {allowUnvote && votedMystery && (
-        <Paper elevation={2} sx={{ p: 2, mb: 3, textAlign: 'center' }}>
+        <Paper elevation={2} sx={{ p: { xs: 1.25, sm: 2 }, mb: 3, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             Vous avez voté pour :
           </Typography>
           {(votedMystery.cover_image_url || votedMystery.image_path) && (
             <Box
-              component="img"
-              src={votedMystery.cover_image_url || votedMystery.image_path}
-              alt={votedMystery.title}
               sx={{
-                width: { xs: '100%', sm: 'auto' },
+                width: '100%',
                 maxWidth: '100%',
-                maxHeight: '250px',
-                borderRadius: 2,
-                objectFit: 'contain',
+                aspectRatio: '3 / 2',
+                borderRadius: 1,
+                bgcolor: 'rgba(0, 0, 0, 0.32)',
+                border: '1px solid',
+                borderColor: 'divider',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                p: 0.5,
+                overflow: 'hidden',
                 mb: 1,
               }}
-            />
+            >
+              <Box
+                component="img"
+                src={votedMystery.cover_image_url || votedMystery.image_path}
+                alt={votedMystery.title}
+                sx={{
+                  display: 'block',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  borderRadius: '5px',
+                }}
+              />
+            </Box>
           )}
           <Typography variant="subtitle1" fontWeight="bold">
             {votedMystery.title}
@@ -207,7 +242,7 @@ export function MysteryVotingList({
       )}
 
       {/* Mystery list - sorted by minimum players ascending */}
-      <List>
+      <List disablePadding>
         {[...availableMysteries].sort((a, b) => (a.character_count || 0) - (b.character_count || 0)).map((mystery) => {
           const voteCount = getVoteCount(mystery.id);
           const isSelected = myVote === mystery.id;
