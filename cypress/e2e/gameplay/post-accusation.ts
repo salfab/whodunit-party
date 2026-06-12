@@ -45,7 +45,10 @@ Given('an accusation has been made', () => {
   }).as('getRounds'); // Use same alias to override the previous one
   
   // Mock the guilty player endpoint for reveal
-  // The actual API returns { guiltyPlayer: {...} }
+  // The actual API returns { guiltyPlayer: {...} } — darkSecret is included
+  // because the server only sends it to the guilty player themselves, and in
+  // these scenarios the current player (test-player-001) is the guilty one.
+  // Non-guilty scenarios reusing this mock verify the UI hides it regardless.
   cy.intercept('GET', '**/api/rounds/*/guilty-player*', {
     statusCode: 200,
     body: {
@@ -55,6 +58,7 @@ Given('an accusation has been made', () => {
         characterName: 'Jean Dupont',
         occupation: 'Butler',
         imagePath: null,
+        darkSecret: 'I confess everything: the ledger, the poison, and the staged alibi.',
         playerIndex: 0,
       },
     },
@@ -182,6 +186,19 @@ Then('I should see the confession button', () => {
 
 Then('I should not see the confession button', () => {
   cy.getByTestId('confession-cta').should('not.exist');
+});
+
+// ==================== Inline Confession Text Assertions ====================
+
+Then('I should see my confession text to read aloud', () => {
+  cy.getByTestId('guilty-confession-text', { timeout: 15000 }).should('exist');
+  cy.contains('Vos aveux').should('exist');
+  cy.contains('I confess everything: the ledger, the poison, and the staged alibi.').should('exist');
+});
+
+Then('I should not see the confession text', () => {
+  cy.getByTestId('guilty-confession-text').should('not.exist');
+  cy.contains('Vos aveux').should('not.exist');
 });
 
 // ==================== Confession Dialog Actions ====================

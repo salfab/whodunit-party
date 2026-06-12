@@ -112,14 +112,19 @@ export async function GET(
     (a: any) => a.player_id === roundRoles.guiltyPlayerId
   ) ?? 0;
 
-  // Return the guilty player information
+  // Return the guilty player information.
+  // The dark secret is only sent to the guilty player themselves: they read
+  // it aloud to the table, so other screens must not spoil it.
   const guiltyPlayer = {
     id: guiltyPlayerAssignment.player_id,
     name: guiltyPlayerAssignment.players?.name,
     characterName: guiltyPlayerAssignment.character_sheets?.character_name,
     occupation: guiltyPlayerAssignment.character_sheets?.occupation,
     imagePath: guiltyPlayerAssignment.character_sheets?.image_path,
-    darkSecret: guiltyPlayerAssignment.character_sheets?.dark_secret,
+    darkSecret:
+      session.playerId === roundRoles.guiltyPlayerId
+        ? guiltyPlayerAssignment.character_sheets?.dark_secret
+        : undefined,
     playerIndex: guiltyPlayerIndex,
   };
 

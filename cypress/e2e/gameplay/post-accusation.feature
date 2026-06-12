@@ -18,6 +18,22 @@ Feature: Post-Accusation Confession
     Then I should see the confession button
 
   @mobile @mocked
+  Scenario: Mobile - Guilty player sees their confession text to read aloud
+    Given I am assigned the guilty role
+    And an accusation has been made
+    And I visit the play page
+    When the card flips to show results
+    Then I should see my confession text to read aloud
+
+  @mobile @mocked
+  Scenario: Mobile - Innocent player does not see the confession text
+    Given I am assigned the innocent role
+    And an accusation has been made
+    And I visit the play page
+    When the card flips to show results
+    Then I should not see the confession text
+
+  @mobile @mocked
   Scenario: Mobile - Guilty player can open confession dialog
     Given I am assigned the guilty role
     And an accusation has been made

@@ -204,7 +204,9 @@ export async function POST(request: NextRequest) {
         .eq('id', session.sessionId);
     }
 
-    // Get guilty player's information for the reveal
+    // Get guilty player's information for the reveal.
+    // No dark_secret here: the accuser is the investigator, and the secret is
+    // only shown to the guilty player (who reads it aloud).
     const { data: guiltyAssignmentData } = await (supabase
       .from('player_assignments') as any)
       .select(`
@@ -212,8 +214,7 @@ export async function POST(request: NextRequest) {
         character_sheets (
           character_name,
           occupation,
-          image_path,
-          dark_secret
+          image_path
         ),
         players (
           name
@@ -222,7 +223,7 @@ export async function POST(request: NextRequest) {
       .eq('session_id', session.sessionId)
       .eq('mystery_id', gameSession.current_mystery_id)
       .order('player_id', { ascending: true });
-    
+
     const guiltyAssignment = guiltyAssignmentData as any;
     const guiltyPlayerAssignment = guiltyAssignment?.find((a: any) =>
       a.player_id === roundRoles.guiltyPlayerId
@@ -239,7 +240,6 @@ export async function POST(request: NextRequest) {
       characterName: guiltyPlayerAssignment.character_sheets?.character_name,
       occupation: guiltyPlayerAssignment.character_sheets?.occupation,
       imagePath: guiltyPlayerAssignment.character_sheets?.image_path,
-      darkSecret: guiltyPlayerAssignment.character_sheets?.dark_secret,
       playerIndex: guiltyPlayerIndex,
     } : undefined;
 

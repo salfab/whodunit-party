@@ -737,8 +737,10 @@ export default function PlayPage() {
                         {accusationResult.message}
                       </Alert>
 
-                      {accusationResult.guiltyPlayer.darkSecret && (
+                      {/* Visible par le seul coupable : c'est lui qui lit ses aveux à voix haute */}
+                      {characterSheet?.assignedRole === 'guilty' && accusationResult.guiltyPlayer.darkSecret && (
                         <Box
+                          data-testid="guilty-confession-text"
                           sx={{
                             mt: 3,
                             pt: 3,
@@ -754,9 +756,15 @@ export default function PlayPage() {
                             },
                           }}
                         >
-                          <DecoRubric component="h3" sx={{ mb: 1.5 }}>
-                            Les aveux du coupable
+                          <DecoRubric component="h3" sx={{ mb: 0.5 }}>
+                            Vos aveux
                           </DecoRubric>
+                          <Typography
+                            variant="caption"
+                            sx={{ display: 'block', color: 'text.secondary', fontStyle: 'italic', mb: 1.5 }}
+                          >
+                            Lisez-les à voix haute aux autres joueurs.
+                          </Typography>
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {accusationResult.guiltyPlayer.darkSecret}
                           </ReactMarkdown>

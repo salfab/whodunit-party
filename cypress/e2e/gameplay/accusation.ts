@@ -37,7 +37,6 @@ Given('I mock the accusation API to return a correct result', () => {
         characterName: 'M. Rouge',
         occupation: 'Détective',
         imagePath: null,
-        darkSecret: 'I confess everything: the ledger, the poison, and the staged alibi.',
         playerIndex: 1,
       },
       messages: {
@@ -63,7 +62,6 @@ Given('I mock the accusation API to return an incorrect result', () => {
         characterName: 'M. Rouge',
         occupation: 'Détective',
         imagePath: null,
-        darkSecret: 'I confess everything: the ledger, the poison, and the staged alibi.',
         playerIndex: 1,
       },
       messages: {
@@ -115,9 +113,11 @@ Then('I should see the accusation was incorrect', () => {
   cy.getByTestId('accusation-result').invoke('text').should('match', /incorrect|Raté/);
 });
 
-Then('I should see the guilty confession', () => {
-  cy.contains('Les aveux du coupable', { timeout: 15000 }).should('exist');
-  cy.contains('I confess everything: the ledger, the poison, and the staged alibi.', { timeout: 15000 }).should('exist');
+Then('I should not see the guilty confession text', () => {
+  // The dark secret is only shown on the guilty player's screen (they read it
+  // aloud) — the investigator must not see it on the results card.
+  cy.getByTestId('guilty-confession-text').should('not.exist');
+  cy.contains('Vos aveux').should('not.exist');
 });
 
 // ==================== Mystery Voting After Accusation ====================
