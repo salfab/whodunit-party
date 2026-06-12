@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSecret } from '@/lib/admin-auth';
 import { createServiceClient } from '@/lib/supabase/server';
 import {
   normalizeMysteryRoles,
@@ -7,10 +8,15 @@ import {
 import { validateMysteryFull } from '@/lib/mystery-validation';
 
 // GET /api/mysteries/[id] - Get single mystery
+// Admin-only: the response includes every character sheet with its role,
+// dark secret and alibi, which would let players cheat mid-game.
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = requireAdminSecret(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const supabase = await createServiceClient();
@@ -53,6 +59,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = requireAdminSecret(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const body = normalizeMysteryRoles(await request.json()) as any;
@@ -137,6 +146,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = requireAdminSecret(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const supabase = await createServiceClient();

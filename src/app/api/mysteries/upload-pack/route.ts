@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSecret } from '@/lib/admin-auth';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
 import { validateMysteryFull } from '@/lib/mystery-validation';
@@ -54,6 +55,9 @@ interface MysteryJson {
  *   - etc.
  */
 export async function POST(request: NextRequest) {
+  const authError = requireAdminSecret(request);
+  if (authError) return authError;
+
   try {
     log('info', 'Mystery pack upload request received');
 
@@ -96,7 +100,7 @@ export async function POST(request: NextRequest) {
       const parsed = JSON.parse(mysteryJsonContent);
       // Support both single mystery object and array of mysteries
       mysteriesData = Array.isArray(parsed) ? parsed : [parsed];
-    } catch (e) {
+    } catch {
       return NextResponse.json(
         { error: 'Invalid JSON', details: 'mystery.json is not valid JSON' },
         { status: 400 }

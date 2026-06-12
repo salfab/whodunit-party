@@ -6,7 +6,7 @@ import tsParser from "@typescript-eslint/parser";
 import reactPlugin from "eslint-plugin-react";
 
 export default [
-  { ignores: [".next", "node_modules", "out", "dist", ".turbo", "cypress.config.ts"] },
+  { ignores: [".next", "node_modules", "out", "dist", ".turbo", "cypress.config.ts", "vitest.config.mts"] },
   js.configs.recommended,
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
@@ -26,6 +26,12 @@ export default [
         File: "readonly",
         Blob: "readonly",
         FormData: "readonly",
+        Headers: "readonly",
+        Request: "readonly",
+        RequestInfo: "readonly",
+        RequestInit: "readonly",
+        Response: "readonly",
+        localStorage: "readonly",
         HTMLElement: "readonly",
         HTMLInputElement: "readonly",
         JQuery: "readonly",
@@ -55,6 +61,9 @@ export default [
       globals: {
         console: "readonly",
         process: "readonly",
+        fetch: "readonly",
+        Blob: "readonly",
+        FormData: "readonly",
       },
     },
     rules: {

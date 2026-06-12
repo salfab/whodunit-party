@@ -97,7 +97,12 @@ NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54421
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key from supabase start>
 SUPABASE_SERVICE_ROLE_KEY=<service_role key from supabase start>
 JWT_SECRET=<JWT secret from supabase start>
+# Protects the mystery management endpoints — any value works locally
+ADMIN_API_SECRET=local-dev-admin-secret
 ```
+
+> The admin pages (create/edit/delete/upload mysteries) need this same secret: click the
+> key icon in the admin nav bar and enter it once per browser.
 
 > **Tip:** You can also run `npx supabase status` anytime to see the credentials again.
 

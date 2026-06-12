@@ -11,7 +11,6 @@ import {
   Card,
   CardContent,
   CardMedia,
-  CardActions,
   Grid,
   IconButton,
   Dialog,
@@ -25,6 +24,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Upload as UploadIcon, ImageNotSupported as NoImageIcon } from '@mui/icons-material';
 import LoadingScreen from '@/components/LoadingScreen';
 import AdminNavBar from '@/components/admin/AdminNavBar';
+import { adminAuthErrorMessage, adminFetch } from '@/lib/admin-client';
 
 interface Mystery {
   id: string;
@@ -75,12 +75,12 @@ export default function MysteriesPage() {
 
     setDeleting(true);
     try {
-      const response = await fetch(`/api/mysteries/${mysteryToDelete.id}`, {
+      const response = await adminFetch(`/api/mysteries/${mysteryToDelete.id}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete mystery');
+        throw new Error(adminAuthErrorMessage(response.status) ?? 'Failed to delete mystery');
       }
 
       setMysteries(mysteries.filter((m) => m.id !== mysteryToDelete.id));
@@ -183,16 +183,28 @@ export default function MysteriesPage() {
                   data-testid={`admin-mystery-row-${mystery.id}`}
                 >
                   {mystery.image_path ? (
-                    <CardMedia
-                      component="img"
-                      image={mystery.image_path}
-                      alt={mystery.title}
-                      sx={{ 
-                        objectFit: 'cover',
-                        width: '100%',
-                        height: 'auto',
+                    <Box
+                      sx={{
+                        aspectRatio: '3 / 2',
+                        bgcolor: 'rgba(0, 0, 0, 0.28)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        p: 0.5,
                       }}
-                    />
+                    >
+                      <CardMedia
+                        component="img"
+                        image={mystery.image_path}
+                        alt={mystery.title}
+                        sx={{
+                          objectFit: 'contain',
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '5px',
+                        }}
+                      />
+                    </Box>
                   ) : (
                     <Box
                       sx={{

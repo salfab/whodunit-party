@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSecret } from '@/lib/admin-auth';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
 import { validateMysteryFull } from '@/lib/mystery-validation';
@@ -35,6 +36,9 @@ interface BulkCreateBody {
  * Creates multiple mysteries with their character sheets
  */
 export async function POST(request: NextRequest) {
+  const authError = requireAdminSecret(request);
+  if (authError) return authError;
+
   try {
     log('info', 'Bulk create mysteries request received');
     const body: BulkCreateBody = await request.json();

@@ -9,6 +9,10 @@ Before deploying, ensure you have the following secrets configured in your deplo
 - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
 - `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key (for server-side operations)
+- `ADMIN_API_SECRET` - Shared secret protecting the mystery management endpoints
+  (`POST /api/mysteries`, `GET/PUT/DELETE /api/mysteries/[id]`, `bulk-create`, `upload-pack`).
+  Those endpoints reject every request until this is set (fail-closed). Generate a strong value:
+  `node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`
 
 ### For GitHub Actions Deployment
 
@@ -18,6 +22,8 @@ Add these secrets to your GitHub repository (Settings → Secrets and variables 
 - `VERCEL_ORG_ID` - Your Vercel organization ID
 - `VERCEL_PROJECT_ID` - Your Vercel project ID
 - `PRODUCTION_URL` - Your production URL (e.g., `https://your-app.vercel.app`)
+- `ADMIN_API_SECRET` - Same value as the `ADMIN_API_SECRET` environment variable on your
+  hosting platform; the post-deploy seeding workflow sends it as the `x-admin-secret` header
 
 ## Deployment Process
 
@@ -47,8 +53,8 @@ pnpm build
 
 # 2. Wait for deployment to be live
 
-# 3. Seed mysteries
-API_URL=https://your-production-url.com pnpm seed:mysteries
+# 3. Seed mysteries (the API requires the admin secret)
+API_URL=https://your-production-url.com ADMIN_API_SECRET=your-admin-secret pnpm seed:mysteries
 ```
 
 ## Local Testing
@@ -103,6 +109,8 @@ Common issues:
 - Invalid JSON in mystery.json → Upload fails
 - Missing images referenced in JSON → Images skipped, mystery still uploaded
 - API not accessible → Check URL and network
+- `401 Unauthorized` → `ADMIN_API_SECRET` missing or different from the server's value
+- `503 Admin API is not configured` → the server itself has no `ADMIN_API_SECRET` env var
 
 ### Re-running seed script
 

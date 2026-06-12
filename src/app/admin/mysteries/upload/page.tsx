@@ -19,6 +19,7 @@ import { CloudUpload, Code } from '@mui/icons-material';
 import { validateMysteryFull } from '@/lib/mystery-validation';
 import { normalizeMysteryRoles } from '@/lib/mystery-role-normalization';
 import AdminNavBar from '@/components/admin/AdminNavBar';
+import { adminAuthErrorMessage, adminFetch } from '@/lib/admin-client';
 
 interface MysteryData {
   title: string;
@@ -98,7 +99,7 @@ export default function UploadMysteriesPage() {
       }
 
       // Upload to API
-      const response = await fetch('/api/mysteries/bulk-create', {
+      const response = await adminFetch('/api/mysteries/bulk-create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mysteries: normalizedMysteries }),
@@ -107,7 +108,7 @@ export default function UploadMysteriesPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Échec du téléchargement des mystères');
+        throw new Error(adminAuthErrorMessage(response.status) ?? (data.error || 'Échec du téléchargement des mystères'));
       }
 
       setSuccess(`Téléchargement réussi de ${normalizedMysteries.length} mystère(s) !`);
@@ -143,7 +144,7 @@ export default function UploadMysteriesPage() {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('/api/mysteries/upload-pack', {
+        const response = await adminFetch('/api/mysteries/upload-pack', {
           method: 'POST',
           body: formData,
         });
@@ -151,7 +152,7 @@ export default function UploadMysteriesPage() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.details || data.error || 'Échec du téléchargement du paquet mystère');
+          throw new Error(adminAuthErrorMessage(response.status) ?? (data.details || data.error || 'Échec du téléchargement du paquet mystère'));
         }
 
         // API returns { uploaded: [...], skipped: [...], summary: {...} }

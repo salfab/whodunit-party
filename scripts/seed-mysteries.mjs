@@ -6,6 +6,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const MYSTERIES_DIR = path.join(__dirname, '../seed-data/mysteries');
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3000';
 
+// Upload endpoints are admin-protected; the server checks this against its own
+// ADMIN_API_SECRET. For local runs, fall back to .env.local like Next.js does.
+if (!process.env.ADMIN_API_SECRET) {
+  try {
+    process.loadEnvFile(path.join(__dirname, '../.env.local'));
+  } catch {
+    // No .env.local (e.g. CI) — the secret must come from the environment itself.
+  }
+}
+const ADMIN_API_SECRET = (process.env.ADMIN_API_SECRET || '').trim();
+
 async function seedMysteries() {
   try {
     // Check if mysteries directory exists
@@ -26,6 +37,10 @@ async function seedMysteries() {
     console.log(`🎭 Found ${zipFiles.length} mystery packs to seed\n`);
     console.log(`📡 API URL: ${API_URL}\n`);
 
+    if (!ADMIN_API_SECRET) {
+      console.warn('⚠️  ADMIN_API_SECRET is not set — the API will reject every upload (401/503).\n');
+    }
+
     let totalUploaded = 0;
     let totalSkipped = 0;
     let totalFailed = 0;
@@ -44,6 +59,7 @@ async function seedMysteries() {
       try {
         const response = await fetch(`${API_URL}/api/mysteries/upload-pack`, {
           method: 'POST',
+          headers: ADMIN_API_SECRET ? { 'x-admin-secret': ADMIN_API_SECRET } : {},
           body: formData,
         });
 

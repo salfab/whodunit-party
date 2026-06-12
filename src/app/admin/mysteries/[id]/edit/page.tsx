@@ -23,6 +23,7 @@ import remarkGfm from 'remark-gfm';
 import LoadingScreen from '@/components/LoadingScreen';
 import AdminNavBar from '@/components/admin/AdminNavBar';
 import CharacterPreviewCard from '@/components/admin/CharacterPreviewCard';
+import { adminAuthErrorMessage, adminFetch } from '@/lib/admin-client';
 
 interface CharacterSheet {
   role: 'investigator' | 'suspect';
@@ -151,9 +152,9 @@ export default function EditMysteryPage() {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`/api/mysteries/${mysteryId}`);
+      const response = await adminFetch(`/api/mysteries/${mysteryId}`);
       if (!response.ok) {
-        throw new Error('Failed to load mystery');
+        throw new Error(adminAuthErrorMessage(response.status) ?? 'Failed to load mystery');
       }
       const data = await response.json();
       setFormData({
@@ -211,7 +212,7 @@ export default function EditMysteryPage() {
       const url = isNew ? '/api/mysteries' : `/api/mysteries/${mysteryId}`;
       const method = isNew ? 'POST' : 'PUT';
 
-      const response = await fetch(url, {
+      const response = await adminFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -219,7 +220,7 @@ export default function EditMysteryPage() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to save mystery');
+        throw new Error(adminAuthErrorMessage(response.status) ?? (data.error || 'Failed to save mystery'));
       }
 
       router.push('/admin/mysteries');

@@ -1,8 +1,24 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
-import { ArrowBack as ArrowBackIcon, Home as HomeIcon } from '@mui/icons-material';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Tooltip,
+} from '@mui/material';
+import { ArrowBack as ArrowBackIcon, Home as HomeIcon, Key as KeyIcon } from '@mui/icons-material';
+import { getStoredAdminSecret, storeAdminSecret } from '@/lib/admin-client';
 
 interface Breadcrumb {
   label: string;
@@ -25,6 +41,26 @@ export default function AdminNavBar({
   onBack,
 }: AdminNavBarProps) {
   const router = useRouter();
+  const [secretDialogOpen, setSecretDialogOpen] = useState(false);
+  const [secretInput, setSecretInput] = useState('');
+  const [hasSecret, setHasSecret] = useState(false);
+
+  // Read localStorage after mount only, to keep server and client renders identical.
+  useEffect(() => {
+    setHasSecret(getStoredAdminSecret() !== null);
+  }, []);
+
+  const handleSecretOpen = () => {
+    setSecretInput(getStoredAdminSecret() ?? '');
+    setSecretDialogOpen(true);
+  };
+
+  const handleSecretSave = () => {
+    storeAdminSecret(secretInput);
+    setSecretDialogOpen(false);
+    // Reload so data fetched on mount (e.g. the edit page) retries with the new secret.
+    window.location.reload();
+  };
 
   const handleBack = () => {
     if (onBack) {
@@ -109,7 +145,55 @@ export default function AdminNavBar({
             {title}
           </Typography>
         )}
+
+        <Tooltip title={hasSecret ? 'Secret admin enregistré' : 'Saisir le secret admin'}>
+          <IconButton
+            onClick={handleSecretOpen}
+            color={hasSecret ? 'default' : 'warning'}
+            aria-label="Secret admin"
+            data-testid="admin-secret-button"
+            sx={{ ml: 'auto' }}
+          >
+            <KeyIcon />
+          </IconButton>
+        </Tooltip>
       </Toolbar>
+
+      <Dialog
+        open={secretDialogOpen}
+        onClose={() => setSecretDialogOpen(false)}
+        data-testid="admin-secret-dialog"
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle>Secret admin</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2 }}>
+            Requis pour créer, modifier, supprimer ou uploader des mystères. Il est conservé dans
+            ce navigateur uniquement.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            fullWidth
+            type="password"
+            label="Secret"
+            value={secretInput}
+            onChange={(e) => setSecretInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSecretSave();
+            }}
+            data-testid="admin-secret-input"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSecretDialogOpen(false)} data-testid="admin-secret-cancel">
+            Annuler
+          </Button>
+          <Button onClick={handleSecretSave} variant="contained" data-testid="admin-secret-save">
+            Enregistrer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </AppBar>
   );
 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSecret } from '@/lib/admin-auth';
 import { createServiceClient } from '@/lib/supabase/server';
 import {
   normalizeMysteryRoles,
@@ -68,6 +69,9 @@ export async function GET(request: NextRequest) {
  * Create a new mystery
  */
 export async function POST(request: NextRequest) {
+  const authError = requireAdminSecret(request);
+  if (authError) return authError;
+
   try {
     const body = normalizeMysteryRoles(await request.json()) as any;
     const supabase = await createServiceClient();

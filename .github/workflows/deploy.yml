@@ -30,3 +30,5 @@ jobs:
         run: node scripts/seed-mysteries.mjs
         env:
           API_URL: ${{ env.PRODUCTION_URL }}
+          # Must match the ADMIN_API_SECRET env var configured on Vercel.
+          ADMIN_API_SECRET: ${{ secrets.ADMIN_API_SECRET }}

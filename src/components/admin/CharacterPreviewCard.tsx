@@ -32,9 +32,9 @@ const flipToFront = keyframes`
 
 // Unified elegant card design
 const cardDesign = {
-  gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-  accentColor: '#e4c98b', // Elegant gold
-  borderColor: '#3d5a80',
+  gradient: 'linear-gradient(135deg, #10141a 0%, #161b22 52%, #0b0d11 100%)',
+  accentColor: '#b8965f',
+  borderColor: 'rgba(184, 150, 95, 0.34)',
 };
 
 // Spoiler-free role label - only shows "Enquêteur" or "Suspect"
@@ -52,8 +52,8 @@ export default function CharacterPreviewCard({
   const [isAnimating, setIsAnimating] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [cardHeight, setCardHeight] = useState<number | null>(null);
+  // eslint-disable-next-line no-undef -- DOM type used by this client component
   const frontRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
 
   const roleLabel = getSpoilerFreeRoleLabel(role);
   
@@ -70,7 +70,7 @@ export default function CharacterPreviewCard({
   useEffect(() => {
     if (frontRef.current) {
       // Use ResizeObserver to track size changes
-      const observer = new ResizeObserver(updateCardHeight);
+      const observer = new globalThis.ResizeObserver(updateCardHeight);
       observer.observe(frontRef.current);
       return () => observer.disconnect();
     }
@@ -131,10 +131,10 @@ export default function CharacterPreviewCard({
             left: 0,
             width: '100%',
             backfaceVisibility: 'hidden',
-            borderRadius: '12px',
+            borderRadius: '8px',
             overflow: 'hidden',
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-            backgroundColor: '#1a1a2e',
+            backgroundColor: '#10141a',
           }}
         >
           {!imageError ? (
@@ -186,7 +186,7 @@ export default function CharacterPreviewCard({
             height: '100%',
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
-            borderRadius: '12px',
+            borderRadius: '8px',
             overflow: 'hidden',
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
             background: cardDesign.gradient,
@@ -195,7 +195,7 @@ export default function CharacterPreviewCard({
             alignItems: 'center',
             justifyContent: 'center',
             padding: 2,
-            border: `2px solid ${cardDesign.borderColor}`,
+            border: `1px solid ${cardDesign.borderColor}`,
           }}
         >
           {/* Decorative top border */}
@@ -304,9 +304,9 @@ export default function CharacterPreviewCard({
             sx={{
               color: 'rgba(255, 255, 255, 1)',
               fontSize: '0.85rem',
-              letterSpacing: '0.15em',
+              letterSpacing: 0,
               textTransform: 'uppercase',
-              fontWeight: 300,
+              fontWeight: 800,
             }}
           >
             {roleLabel}

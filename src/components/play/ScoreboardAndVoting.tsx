@@ -36,6 +36,7 @@ interface ScoreboardAndVotingProps {
   /** Whether next round is starting */
   startingNextRound?: boolean;
   /** Callback when voting */
+  // eslint-disable-next-line no-unused-vars -- type-level parameter name
   onVote: (mysteryId: string | null) => void;
   /** Whether to allow unvoting */
   allowUnvote?: boolean;
