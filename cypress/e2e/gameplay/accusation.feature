@@ -70,7 +70,6 @@ Feature: Accusation System
     And I visit the play page
     And I mock the mysteries list for voting
     And I mock the mystery vote API
-    And I mock real-time vote updates
     And I mock the accusation API to return an incorrect result
     When I click the accuse button
     And I select an innocent player
@@ -80,18 +79,19 @@ Feature: Accusation System
     And I should not be able to vote again
 
   @mobile @mocked
-  Scenario: Mobile - Vote counts update in real-time
+  Scenario: Mobile - Vote counts reflect other players' votes
     Given I am assigned the investigator role
     And I visit the play page
     And I mock the mysteries list for voting
     And I mock the mystery vote API
-    And I mock real-time vote updates
+    And other players have already voted
     And I mock the accusation API to return an incorrect result
     When I click the accuse button
     And I select an innocent player
     And I confirm the accusation
-    And I vote for a mystery
-    Then I should see the vote count increase
+    Then the mystery cards show the existing votes
+    When I vote for a mystery
+    Then I should see my vote was recorded
 
   @mobile @mocked
   Scenario: Mobile - Accusation dialog scrolls with 15 players

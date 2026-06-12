@@ -206,16 +206,19 @@ Given('I mock the mystery vote API', () => {
   }).as('voteMystery');
 });
 
-Given('I mock real-time vote updates', () => {
-  // Mock the Supabase realtime channel subscription for mystery_votes
-  cy.window().then((win) => {
-    // Store initial vote counts
-    win.localStorage.setItem('mock_vote_counts', JSON.stringify({
-      'mystery-1': 0,
-      'mystery-2': 0,
-      'mystery-3': 0,
-    }));
-  });
+Given('other players have already voted', () => {
+  // Override the tally mock so existing votes show up on the cards
+  cy.intercept('GET', '/api/sessions/*/tally-votes', {
+    statusCode: 200,
+    body: {
+      voteCounts: {
+        'mystery-1': 0,
+        'mystery-2': 1,
+        'mystery-3': 2,
+      },
+      roundNumber: 1,
+    },
+  }).as('getTallyVotes');
 });
 
 Then('I should see the mystery voting list', () => {
@@ -230,26 +233,24 @@ Then('I should see the mystery voting list', () => {
 // Note: "When I vote for a mystery" step is defined in lobby.ts and reused here
 
 Then('I should see my vote was recorded', () => {
-  // The vote was submitted via API, state should update
-  // Wait for React to re-render with the new state
-  cy.getByTestId('mystery-card-mystery-1', { timeout: 10000 })
-    .should('have.attr', 'data-voted', 'true');
+  // In play mode, voting replaces the list with a confirmation panel
+  cy.contains('Vote enregistré', { timeout: 10000 }).should('exist');
+  cy.contains('En attente des autres joueurs').should('exist');
 });
 
 Then('I should not be able to vote again', () => {
-  // In play mode with showRadio=false, aria-disabled is always 'false'
-  // Instead check that the card is still rendered and selected
-  cy.getByTestId('mystery-card-mystery-2').should('exist');
+  // The voting list is gone once the vote is registered
+  cy.getByTestId('mystery-voting-list').should('not.exist');
 });
 
-Then('I should see the vote count increase', () => {
-  // Vote counts come from the tally-votes API or realtime subscription
-  // In tests without realtime, we can't truly test this without mocking the tally endpoint dynamically
-  // For now, just verify the vote count element exists and the mystery is voted
-  cy.getByTestId('mystery-card-mystery-1')
-    .should('have.attr', 'data-voted', 'true')
+Then('the mystery cards show the existing votes', () => {
+  // Counts come from the tally-votes endpoint and render on each card
+  cy.getByTestId('mystery-card-mystery-2', { timeout: 15000 })
     .find('[data-testid="vote-count"]')
-    .should('exist');
+    .should('contain', '1 vote');
+  cy.getByTestId('mystery-card-mystery-3')
+    .find('[data-testid="vote-count"]')
+    .should('contain', '2 votes');
 });
 // ==================== 15 Players Scroll Test ====================
 

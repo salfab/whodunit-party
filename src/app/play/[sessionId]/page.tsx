@@ -800,7 +800,7 @@ export default function PlayPage() {
                     availableMysteries={availableMysteries}
                     myVote={selectedMystery || null}
                     voteCounts={voteCounts}
-                    hasVoted={false}
+                    hasVoted={hasVoted}
                     startingNextRound={startingNextRound}
                     onVote={handleVoteForMystery}
                     allowUnvote={true}
