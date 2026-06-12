@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { keyframes } from '@mui/material/styles';
 import { useCardFlip } from '@/contexts/CardFlipContext';
+import { DecoFrame } from '@/components/shared/DecoFrame';
+import { DecoDivider } from '@/components/shared/DecoDivider';
 
 interface RoleRevealCardProps {
   imagePath: string;
@@ -12,7 +14,7 @@ interface RoleRevealCardProps {
   role: 'investigator' | 'guilty' | 'innocent';
   onImageError?: () => void;
   showNameOverlay?: boolean; // Show name elegantly at bottom of image
-  isAccused?: boolean; // Show blood smear overlay
+  isAccused?: boolean; // Mark the accused player without hiding the portrait
 }
 
 // Flip animation keyframes
@@ -64,21 +66,12 @@ const fadeOut = keyframes`
   100% { opacity: 0; }
 `;
 
-// Wipe reveal animation for blood smear (diagonal from top-left)
-const wipeReveal = keyframes`
-  0% {
-    clip-path: polygon(0 0, 0 0, 0 0);
-  }
-  100% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-`;
-
 // Unified elegant card design - same for all roles
 const cardDesign = {
-  gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-  accentColor: '#e4c98b', // Elegant gold
-  borderColor: '#3d5a80',
+  gradient:
+    'linear-gradient(180deg, rgba(184, 150, 95, 0.10), transparent 30%), linear-gradient(135deg, #10141a 0%, #161b22 52%, #0b0d11 100%)',
+  accentColor: '#b8965f',
+  borderColor: 'rgba(184, 150, 95, 0.34)',
 };
 
 const getRoleLabel = (role: 'investigator' | 'guilty' | 'innocent') => {
@@ -106,7 +99,6 @@ export default function RoleRevealCard({
   const [isHinting, setIsHinting] = useState(false);
   const [showHintPill, setShowHintPill] = useState(false);
   const [imageHidden, setImageHidden] = useState(false);
-  const [bloodSmearLoaded, setBloodSmearLoaded] = useState(false);
   const { hasEverBeenFlipped, markAsFlipped } = useCardFlip();
 
   const roleLabel = getRoleLabel(role);
@@ -167,7 +159,7 @@ export default function RoleRevealCard({
     setTimeout(() => setIsAnimating(false), 600);
   };
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const handleImageError = () => {
     setImageHidden(true);
     onImageError?.();
   };
@@ -190,7 +182,8 @@ export default function RoleRevealCard({
   return (
     <Box
       sx={{
-        width: 'fit-content',
+        width: '100%',
+        maxWidth: 640,
         margin: '0 auto',
         mb: 2,
       }}
@@ -202,6 +195,7 @@ export default function RoleRevealCard({
         data-flipped={isFlipped}
         sx={{
           position: 'relative',
+          width: '100%',
           cursor: 'pointer',
           transformStyle: 'preserve-3d',
           animation: getAnimation(),
@@ -238,11 +232,18 @@ export default function RoleRevealCard({
         <Box
           sx={{
             backfaceVisibility: 'hidden',
-            borderRadius: '12px',
+            width: '100%',
+            aspectRatio: '3 / 2',
+            borderRadius: 1,
             overflow: 'hidden',
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-            backgroundColor: '#000',
+            backgroundColor: 'rgba(0, 0, 0, 0.36)',
+            border: '1px solid rgba(184, 150, 95, 0.24)',
             position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: 0.5,
           }}
         >
           <Box
@@ -253,32 +254,42 @@ export default function RoleRevealCard({
             sx={{
               display: 'block',
               width: '100%',
-              height: 'auto',
+              height: '100%',
+              objectFit: 'contain',
+              borderRadius: '5px',
             }}
           />
           
-          {/* Blood smear overlay for accused players */}
+          {/* Non-destructive accused marker: keeps the portrait visible. */}
           {isAccused && (
             <Box
-              component="img"
-              src="/blood_smear.png"
-              alt="Blood smear"
-              onLoad={() => setBloodSmearLoaded(true)}
               sx={{
                 position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                objectPosition: 'top left',
-                opacity: 0.85,
-                filter: 'drop-shadow(0 0 20px rgba(139, 0, 0, 0.5))',
-                animation: bloodSmearLoaded ? `${wipeReveal} 1.5s ease-out forwards` : 'none',
-                clipPath: bloodSmearLoaded ? undefined : 'polygon(0 0, 0 0, 0 0)',
+                inset: 8,
+                borderRadius: 1,
+                border: '2px solid rgba(143, 47, 50, 0.72)',
+                boxShadow: 'inset 0 0 0 999px rgba(143, 47, 50, 0.06)',
                 pointerEvents: 'none',
               }}
-            />
+            >
+              <Typography
+                sx={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 10,
+                  px: 1,
+                  py: 0.35,
+                  borderRadius: 1,
+                  bgcolor: 'rgba(10, 10, 12, 0.72)',
+                  color: '#f1ead9',
+                  border: '1px solid rgba(143, 47, 50, 0.72)',
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                }}
+              >
+                ACCUSÉ
+              </Typography>
+            </Box>
           )}
           
           {/* Name overlay for placeholder images */}
@@ -289,8 +300,8 @@ export default function RoleRevealCard({
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: '33%',
-                background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0.4) 80%, transparent 100%)',
+                minHeight: '30%',
+                background: 'linear-gradient(to top, rgba(7,8,10,0.92) 0%, rgba(7,8,10,0.68) 58%, transparent 100%)',
                 backdropFilter: 'blur(4px)',
                 display: 'flex',
                 flexDirection: 'column',
@@ -301,13 +312,11 @@ export default function RoleRevealCard({
             >
               <Typography
                 sx={{
-                  color: '#ffd700',
+                  color: '#f1ead9',
                   textAlign: 'center',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   textShadow: '0 3px 12px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.8)',
-                  letterSpacing: '0.05em',
-                  // Auto-sizing text: smaller on mobile, larger on desktop, clamped
-                  fontSize: 'clamp(1rem, 5vw, 2rem)',
+                  fontSize: 'clamp(1rem, 4.8vw, 1.75rem)',
                   lineHeight: 1.2,
                   wordBreak: 'break-word',
                 }}
@@ -344,7 +353,7 @@ export default function RoleRevealCard({
             height: '100%',
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
-            borderRadius: '12px',
+            borderRadius: 1,
             overflow: 'hidden',
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
             background: cardDesign.gradient,
@@ -353,81 +362,26 @@ export default function RoleRevealCard({
             alignItems: 'center',
             justifyContent: 'center',
             padding: 3,
-            border: `2px solid ${cardDesign.borderColor}`,
+            border: `1px solid ${cardDesign.borderColor}`,
           }}
         >
-        {/* Decorative top border */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '4px',
-            background: cardDesign.accentColor,
-          }}
-        />
-
-        {/* Elegant corner decorations */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 16,
-            left: 16,
-            width: 24,
-            height: 24,
-            borderTop: `1px solid ${cardDesign.accentColor}`,
-            borderLeft: `1px solid ${cardDesign.accentColor}`,
-            opacity: 0.5,
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            width: 24,
-            height: 24,
-            borderTop: `1px solid ${cardDesign.accentColor}`,
-            borderRight: `1px solid ${cardDesign.accentColor}`,
-            opacity: 0.5,
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 16,
-            left: 16,
-            width: 24,
-            height: 24,
-            borderBottom: `1px solid ${cardDesign.accentColor}`,
-            borderLeft: `1px solid ${cardDesign.accentColor}`,
-            opacity: 0.5,
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 16,
-            right: 16,
-            width: 24,
-            height: 24,
-            borderBottom: `1px solid ${cardDesign.accentColor}`,
-            borderRight: `1px solid ${cardDesign.accentColor}`,
-            opacity: 0.5,
-          }}
-        />
+        {/* Cadre art déco partagé (coins à gradins + filets) */}
+        <DecoFrame bottomOrnament={false} />
 
         {/* Character name - prominent */}
         <Typography
           variant="h5"
           data-testid="character-name"
           sx={{
-            color: cardDesign.accentColor,
-            fontWeight: 600,
+            position: 'relative',
+            fontFamily: '"Lobby Deco Display", "Bodoni MT Condensed", "Bodoni MT", serif',
+            color: 'secondary.light',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
             textAlign: 'center',
             mb: 1,
-            textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+            textShadow: '0 4px 14px rgba(0,0,0,0.5)',
           }}
         >
           {characterName}
@@ -436,6 +390,7 @@ export default function RoleRevealCard({
           <Typography
             variant="subtitle1"
             sx={{
+              position: 'relative',
               color: 'text.secondary',
               fontStyle: 'italic',
               textAlign: 'center',
@@ -446,49 +401,33 @@ export default function RoleRevealCard({
           </Typography>
         )}
 
-        {/* Decorative line */}
-        <Box
-          sx={{
-            width: '40%',
-            height: '1px',
-            background: `linear-gradient(90deg, transparent, ${cardDesign.accentColor}, transparent)`,
-            mb: 3,
-          }}
-        />
+        {/* Séparateur : filets effilés et diamant central */}
+        <DecoDivider sx={{ position: 'relative', mb: { xs: 2, sm: 3 } }} />
 
         {/* Role label - discreet, small text */}
         <Typography
           sx={{
-            color: 'rgba(255, 255, 255, 1)',
+            position: 'relative',
+            color: '#f1ead9',
             fontSize: '1rem',
-            letterSpacing: '0.2em',
+            letterSpacing: '0.24em',
+            pl: '0.24em',
             textTransform: 'uppercase',
-            fontWeight: 300,
+            fontWeight: 800,
+            textShadow: '0 3px 10px rgba(0,0,0,0.55)',
           }}
         >
           {roleLabel}
         </Typography>
 
-        {/* Bottom decorative line */}
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '4px',
-            background: cardDesign.accentColor,
-          }}
-        />
-
         {/* Tap hint on back - also discreet */}
         <Typography
           sx={{
-            position: 'absolute',
-            bottom: 20,
+            position: 'relative',
+            mt: { xs: 2, sm: 3.5 },
             fontSize: '0.6rem',
-            color: 'rgba(255,255,255,0.3)',
-            letterSpacing: '0.05em',
+            color: 'rgba(241, 234, 217, 0.32)',
+            letterSpacing: '0.08em',
           }}
         >
           touchez pour retourner

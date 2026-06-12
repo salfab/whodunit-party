@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, Typography, Paper, List, ListItem, ListItemText, Chip } from '@mui/material';
+import { DecoRubric } from '@/components/shared/DecoRubric';
 
 interface PlayerScore {
   id: string;
@@ -19,28 +20,33 @@ export default function Scoreboard({ playerScores, currentPlayerId, title = 'Sco
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom align="center">
+      <DecoRubric component="h2" align="center" sx={{ mb: 1.5 }}>
         {title}
-      </Typography>
-      <Paper elevation={2} sx={{ p: 3 }}>
-        <List>
+      </DecoRubric>
+      <Paper elevation={2} sx={{ p: { xs: 1, sm: 2 } }}>
+        <List disablePadding>
           {playerScores.map((player, index) => (
             <ListItem
               key={player.id}
               sx={{
-                borderBottom: index < playerScores.length - 1 ? '1px solid #eee' : 'none',
+                px: 1,
+                py: 1,
+                borderRadius: 1,
+                borderBottom: index < playerScores.length - 1 ? '1px solid' : 'none',
+                borderColor: 'divider',
+                bgcolor: player.id === currentPlayerId ? 'rgba(143, 47, 50, 0.16)' : 'transparent',
               }}
             >
               <ListItemText
                 primary={
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Typography variant="h6" sx={{ minWidth: '30px' }}>
+                    <Typography variant="h6" sx={{ minWidth: '30px', color: 'secondary.light' }}>
                       {getRank(index)}
                     </Typography>
                     <Typography variant="body1" sx={{ flex: 1 }}>
                       {player.name} {player.id === currentPlayerId ? '(Vous)' : ''}
                     </Typography>
-                    <Chip label={`${player.score} pts`} color="primary" />
+                    <Chip label={`${player.score} pts`} color="secondary" />
                   </Box>
                 }
               />

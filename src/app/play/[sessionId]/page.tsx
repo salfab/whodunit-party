@@ -19,6 +19,9 @@ import { usePlayerPresence } from '@/hooks/usePlayerPresence';
 import LoadingScreen from '@/components/LoadingScreen';
 import TransitionScreen from '@/components/TransitionScreen';
 import RoomQRCodeDialog from '@/components/shared/RoomQRCodeDialog';
+import { DecoFrame } from '@/components/shared/DecoFrame';
+import { DecoDivider } from '@/components/shared/DecoDivider';
+import { DecoRubric } from '@/components/shared/DecoRubric';
 import {
   SecretPanel,
   WordsToPlace,
@@ -32,7 +35,6 @@ import {
   MysteryFeedbackForm,
 } from '@/components/play';
 import type { MysteryFeedbackPayload } from '@/components/play/MysteryFeedbackForm';
-import { MysteryVotingList } from '@/components/shared/MysteryVotingList';
 
 import { HELP_CONTENT } from './constants';
 import type {
@@ -65,7 +67,6 @@ export default function PlayPage() {
   // Player state
   const [currentPlayer, setCurrentPlayer] = useState<{ id: string; name: string } | null>(null);
   const [characterSheet, setCharacterSheet] = useState<CharacterWithWords | null>(null);
-  const [isAccused, setIsAccused] = useState(false);
   
   // UI state
   const [loading, setLoading] = useState(true);
@@ -86,7 +87,7 @@ export default function PlayPage() {
   const [selectedMystery, setSelectedMystery] = useState<string | null>(null);
   const [voteCounts, setVoteCounts] = useState<Record<string, number>>({});
   const [hasVoted, setHasVoted] = useState(false);
-  const [startingNextRound, setStartingNextRound] = useState(false);
+  const [startingNextRound] = useState(false);
   const [loadingMysteries, setLoadingMysteries] = useState(false);
 
   // End-of-mystery feedback state
@@ -137,14 +138,9 @@ export default function PlayPage() {
       return;
     }
 
-    // Set isAccused if this player was accused
-    if (currentPlayer && round.accused_player_id === currentPlayer.id) {
-      setIsAccused(true);
-    }
-
     // Build accusation message based on role
     const message = characterSheet 
-      ? getAccusationMessage(characterSheet.assignedRole, round.was_correct, currentPlayer?.id === round.accused_player_id)
+      ? getAccusationMessage(characterSheet.assignedRole, round.was_correct)
       : '';
 
     // Fetch guilty player from secure endpoint
@@ -240,16 +236,11 @@ export default function PlayPage() {
 
       // Handle existing accusation
       if (result.existingAccusation) {
-        const { accusedPlayerId, wasCorrect, role, mysteryId } = result.existingAccusation;
+        const { wasCorrect, role, mysteryId } = result.existingAccusation;
         
-        if (accusedPlayerId === result.currentPlayer.id) {
-          setIsAccused(true);
-        }
-
         const message = getAccusationMessage(
           result.characterSheet.assignedRole,
-          wasCorrect,
-          accusedPlayerId === result.currentPlayer.id
+          wasCorrect
         );
 
         // Fetch guilty player from secure endpoint
@@ -274,7 +265,6 @@ export default function PlayPage() {
         });
       } else {
         setAccusationResult(null);
-        setIsAccused(false);
         
         // If there's no accusation result and mystery changed, 
         // it means we just started a new round, so reset voting state
@@ -334,7 +324,7 @@ export default function PlayPage() {
     }
   }
 
-  function getAccusationMessage(role: string, wasCorrect: boolean, _isMe: boolean): string {
+  function getAccusationMessage(role: string, wasCorrect: boolean): string {
     if (role === 'investigator') {
       return wasCorrect 
         ? 'Bravo ! Vous avez trouvé le coupable ! +2 points'
@@ -435,7 +425,7 @@ export default function PlayPage() {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ py: 4, minHeight: '100vh', position: 'relative' }}>
+      <Box sx={{ py: { xs: 2, sm: 4 }, minHeight: '100svh', position: 'relative' }}>
         {/* Flip Card Container */}
         <Box
           sx={{
@@ -458,18 +448,48 @@ export default function PlayPage() {
                 position: 'relative',
               }}
             >
-              <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
-                {/* Top Right Action Icons */}
-                <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
+              <Paper
+                elevation={3}
+                sx={{
+                  px: { xs: 3, sm: 4 },
+                  pt: { xs: 4, sm: 4.5 },
+                  pb: { xs: 5, sm: 6 },
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                <DecoFrame />
+                {/* Top action row */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
+                  <Typography
+                    component="div"
+                    sx={{
+                      fontFamily: '"Bahnschrift", "Aptos Display", "Segoe UI", sans-serif',
+                      fontWeight: 700,
+                      color: 'secondary.light',
+                      fontSize: '0.95rem',
+                    }}
+                  >
+                    Faux Témoignage
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
                   {accusationResult && (
                     <IconButton
                       size="small"
                       onClick={() => setIsFlipped(true)}
                       sx={{ 
-                        color: 'primary.main',
-                        bgcolor: 'background.paper',
+                        color: 'secondary.main',
+                        bgcolor: 'rgba(7, 8, 10, 0.42)',
                         boxShadow: 1,
-                        '&:hover': { bgcolor: 'background.paper', transform: 'scale(1.1)' },
+                        '&:hover': { bgcolor: 'rgba(184, 150, 95, 0.1)', transform: 'scale(1.05)' },
                       }}
                       title="Voir les résultats"
                     >
@@ -486,43 +506,55 @@ export default function PlayPage() {
                   </IconButton>
                   {joinCode && (
                     <IconButton
-                      size="small"
-                      onClick={() => setQrDialogOpen(true)}
-                      sx={{ color: 'secondary.main' }}
-                      title="Afficher le QR code"
+                    size="small"
+                    onClick={() => setQrDialogOpen(true)}
+                    sx={{ color: 'secondary.main' }}
+                    title="Afficher le QR code"
                     >
                       <QrCodeIcon fontSize="small" />
                     </IconButton>
                   )}
                 </Box>
+                </Box>
 
                 {/* Character Header */}
-                <Box sx={{ 
-                  mb: 4,
-                  pb: 3,
-                  borderBottom: '2px solid',
-                  borderColor: 'primary.main',
-                  mt: 4
-                }}>
+                <Box sx={{ mb: 3 }}>
                   {/* Mystery Title */}
                   <Box sx={{ mb: 3, textAlign: 'center' }}>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        color: 'primary.main',
-                        fontStyle: 'italic',
-                        textShadow: '0 1px 2px rgba(0,0,0,0.3)'
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontFamily: '"Lobby Deco Display", "Bodoni MT Condensed", "Bodoni MT", serif',
+                        color: 'secondary.light',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        textShadow: '0 2px 8px rgba(0,0,0,0.45)',
+                        mb: 1,
                       }}
                     >
                       {characterSheet.mystery.title}
+                    </Typography>
+                    <Typography
+                      variant="h4"
+                      component="h1"
+                      sx={{
+                        fontFamily: '"Bahnschrift Condensed", "Bahnschrift SemiCondensed", "Bahnschrift", "Aptos Display", "Segoe UI", sans-serif',
+                        fontWeight: 800,
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase',
+                        color: '#efe5cf',
+                        textShadow: '0 6px 18px rgba(0, 0, 0, 0.62)',
+                      }}
+                    >
+                      Votre personnage
                     </Typography>
                   </Box>
 
                   <RoleRevealCard
                     imagePath={
-                      characterSheet.image_path || 
+                      characterSheet.image_path ||
                       (characterSheet.assignedRole === 'investigator'
-                        ? '/characters/investigator.jpg' 
+                        ? '/characters/investigator.jpg'
                         : getPlaceholderImage(characterSheet.playerIndex))
                     }
                     characterName={characterSheet.character_name}
@@ -530,6 +562,8 @@ export default function PlayPage() {
                     role={characterSheet.assignedRole as 'investigator' | 'guilty' | 'innocent'}
                     showNameOverlay={!characterSheet.image_path}
                   />
+
+                  <DecoDivider sx={{ mx: 'auto', mt: 3 }} />
                 </Box>
 
                 {/* Investigator sees Mystery Description */}
@@ -537,7 +571,7 @@ export default function PlayPage() {
                   <Box sx={{ 
                     mb: 4,
                     '& h1, & h2, & h3, & h4, & h5, & h6': {
-                      color: 'primary.main',
+                      color: 'secondary.light',
                       fontWeight: 600,
                       mt: 3,
                       mb: 2,
@@ -562,32 +596,23 @@ export default function PlayPage() {
                       textShadow: '0 1px 2px rgba(0,0,0,0.5)'
                     },
                     '& strong': {
-                      color: 'primary.light',
+                      color: 'secondary.light',
                       fontWeight: 700
                     },
                     '& em': {
-                      color: 'primary.main',
+                      color: 'secondary.light',
                       fontStyle: 'italic'
                     },
                     '& code': {
-                      backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                      color: 'primary.main',
+                      backgroundColor: 'rgba(184, 150, 95, 0.1)',
+                      color: 'secondary.light',
                       padding: '2px 6px',
                       borderRadius: '4px'
                     }
                   }}>
-                    <Typography 
-                      variant="h5" 
-                      gutterBottom
-                      sx={{ 
-                        color: 'primary.main',
-                        fontWeight: 600,
-                        textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-                        mb: 3
-                      }}
-                    >
+                    <DecoRubric component="h2" sx={{ mb: 2.5 }}>
                       Description du mystère
-                    </Typography>
+                    </DecoRubric>
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {characterSheet.mystery.description}
                     </ReactMarkdown>
@@ -608,7 +633,6 @@ export default function PlayPage() {
                 {characterSheet.assignedRole !== 'investigator' && (
                   <SecretPanel
                     title="En manque d'inspiration ?"
-                    emoji="💡"
                     content={characterSheet.alibi}
                     visible={alibiVisible}
                     onToggleVisibility={() => setAlibiVisible((visible) => !visible)}
@@ -640,33 +664,59 @@ export default function PlayPage() {
               }}
             >
               {accusationResult && !accusationResult.gameComplete && (
-                <Paper elevation={3} sx={{ p: 4, position: 'relative' }}>
-                  {/* Flip back icon */}
-                  <IconButton
-                    onClick={() => setIsFlipped(false)}
+                <Paper
+                  elevation={3}
+                  sx={{
+                    px: { xs: 3, sm: 4 },
+                    pt: { xs: 4, sm: 4.5 },
+                    pb: { xs: 5, sm: 6 },
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <DecoFrame />
+                  {/* Top action row */}
+                  <Box
                     sx={{
-                      position: 'absolute',
-                      top: 16,
-                      right: 16,
-                      color: 'primary.main',
-                      bgcolor: 'background.paper',
-                      boxShadow: 2,
-                      '&:hover': {
-                        bgcolor: 'background.paper',
-                        transform: 'scale(1.1)',
-                      },
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 2,
+                      mb: 2,
                     }}
-                    title="Voir ma fiche personnage"
                   >
-                    <FlipIcon />
-                  </IconButton>
+                    <Typography
+                      component="div"
+                      sx={{
+                        fontFamily: '"Bahnschrift", "Aptos Display", "Segoe UI", sans-serif',
+                        fontWeight: 700,
+                        color: 'secondary.light',
+                        fontSize: '0.95rem',
+                      }}
+                    >
+                      Faux Témoignage
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() => setIsFlipped(false)}
+                      sx={{
+                        color: 'secondary.main',
+                        bgcolor: 'rgba(7, 8, 10, 0.42)',
+                        boxShadow: 1,
+                        '&:hover': { bgcolor: 'rgba(184, 150, 95, 0.1)', transform: 'scale(1.05)' },
+                      }}
+                      title="Voir ma fiche personnage"
+                    >
+                      <FlipIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
 
                   {/* Guilty Player Reveal */}
                   {accusationResult.guiltyPlayer && (
                     <Box sx={{ mb: 4 }}>
-                      <Typography variant="h5" gutterBottom align="center" sx={{ mb: 3 }}>
+                      <DecoRubric component="h2" align="center" sx={{ mb: 3 }}>
                         Le coupable révélé
-                      </Typography>
+                      </DecoRubric>
                       <RoleRevealCard
                         imagePath={
                           accusationResult.guiltyPlayer.imagePath || 
@@ -699,14 +749,14 @@ export default function PlayPage() {
                               lineHeight: 1.8,
                             },
                             '& strong': {
-                              color: 'primary.light',
+                              color: 'secondary.light',
                               fontWeight: 700,
                             },
                           }}
                         >
-                          <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 600 }}>
-                            🤫 Les aveux du coupable
-                          </Typography>
+                          <DecoRubric component="h3" sx={{ mb: 1.5 }}>
+                            Les aveux du coupable
+                          </DecoRubric>
                           <ReactMarkdown remarkPlugins={[remarkGfm]}>
                             {accusationResult.guiltyPlayer.darkSecret}
                           </ReactMarkdown>
@@ -728,17 +778,7 @@ export default function PlayPage() {
                           py: 1.5,
                           fontSize: '1.1rem',
                           fontWeight: 600,
-                          bgcolor: '#e4c98b',
-                          color: '#1a1a2e',
-                          borderRadius: 2,
                           textTransform: 'none',
-                          boxShadow: '0 4px 14px rgba(228, 201, 139, 0.4)',
-                          '&:hover': {
-                            bgcolor: '#d4b97b',
-                            boxShadow: '0 6px 20px rgba(228, 201, 139, 0.5)',
-                            transform: 'translateY(-2px)',
-                          },
-                          transition: 'all 0.2s ease',
                         }}
                       >
                         J&apos;avoue tout !
@@ -781,7 +821,7 @@ export default function PlayPage() {
 
         {/* Game Complete - Outside flip card */}
         {accusationResult && accusationResult.gameComplete && (
-          <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
+          <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 }, mt: 4 }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="h4" gutterBottom>
                 Partie terminée !

@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Typography, Card, CardMedia, CardContent, Chip } from '@mui/material';
-import { Person as PersonIcon } from '@mui/icons-material';
+import { DecoRubric } from '@/components/shared/DecoRubric';
 import type { SuspectInfo } from '../types';
 import { getPlaceholderImage } from '../api';
 
@@ -16,25 +16,13 @@ export default function SuspectsList({ suspects }: SuspectsListProps) {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography 
-        variant="h5" 
-        gutterBottom
-        sx={{ 
-          color: 'primary.main',
-          fontWeight: 600,
-          textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-          mb: 3,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1
-        }}
-      >
+      <DecoRubric component="h2" sx={{ mb: 2.5 }}>
         Les suspects
-      </Typography>
+      </DecoRubric>
       
       <Box sx={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+        gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fill, minmax(190px, 1fr))' },
         gap: 2 
       }}>
         {suspects.map((suspect, index) => (
@@ -50,22 +38,35 @@ export default function SuspectsList({ suspects }: SuspectsListProps) {
               }
             }}
           >
-            <CardMedia
-              component="img"
-              image={suspect.imagePath || getPlaceholderImage(index)}
-              alt={suspect.characterName}
-              sx={{ 
-                height: 180,
-                objectFit: 'cover',
+            <Box
+              sx={{
+                aspectRatio: '3 / 2',
+                bgcolor: 'rgba(0, 0, 0, 0.32)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                p: 0.5,
               }}
-            />
+            >
+              <CardMedia
+                component="img"
+                image={suspect.imagePath || getPlaceholderImage(index)}
+                alt={suspect.characterName}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  borderRadius: '5px',
+                }}
+              />
+            </Box>
             
             <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
               <Typography 
                 variant="subtitle1" 
                 sx={{ 
                   fontWeight: 600,
-                  color: 'primary.main',
+                  color: 'secondary.light',
                   lineHeight: 1.2,
                   mb: 0.5,
                 }}
@@ -79,8 +80,8 @@ export default function SuspectsList({ suspects }: SuspectsListProps) {
                   size="small" 
                   variant="outlined"
                   sx={{ 
-                    borderColor: 'primary.light',
-                    color: 'primary.light',
+                    borderColor: 'secondary.dark',
+                    color: 'text.primary',
                     fontSize: '0.7rem',
                     height: 22,
                     mb: 0.5,
