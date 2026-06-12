@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Container, Typography, Button, IconButton, MenuItem, Select } from '@mui/material';
+import { Box, Container, Button, IconButton, MenuItem, Select } from '@mui/material';
 import { Settings as SettingsIcon } from '@mui/icons-material';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,7 +14,7 @@ export default function Home() {
 
   // Load locale from cookie on mount
   useEffect(() => {
-    const cookieLocale = document.cookie
+    const cookieLocale = globalThis.document.cookie
       .split('; ')
       .find(row => row.startsWith('NEXT_LOCALE='))
       ?.split('=')[1] as Locale | undefined;
@@ -49,8 +49,8 @@ export default function Home() {
       <Box
         sx={{
           position: 'absolute',
-          top: 16,
-          right: 16,
+          top: { xs: 12, sm: 18 },
+          right: { xs: 12, sm: 18 },
           display: 'flex',
           alignItems: 'center',
           gap: 1,
@@ -61,12 +61,13 @@ export default function Home() {
           onChange={(e) => handleLanguageChange(e.target.value as Locale)}
           size="small"
           sx={{
-            minWidth: 100,
+            minWidth: 86,
+            bgcolor: 'rgba(7, 8, 10, 0.45)',
             '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'rgba(255, 255, 255, 0.23)',
+              borderColor: 'divider',
             },
             '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'rgba(255, 255, 255, 0.4)',
+              borderColor: 'secondary.main',
             },
           }}
         >
@@ -86,19 +87,22 @@ export default function Home() {
       </Box>
       <Box
         sx={{
-          minHeight: '100vh',
+          minHeight: '100svh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          gap: 4,
+          gap: { xs: 3, sm: 4 },
+          py: { xs: 8, sm: 10 },
         }}
       >
-        <Box 
+        <Box
           sx={{ 
-            filter: 'drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.9))',
+            position: 'relative',
+            filter: 'drop-shadow(0px 18px 42px rgba(0, 0, 0, 0.82))',
             display: 'flex',
             width: 'calc(100% + 28px)',
+            maxWidth: 540,
             marginLeft: '-14px',
             marginRight: '-14px',
           }}
@@ -113,12 +117,21 @@ export default function Home() {
           />
         </Box>
         
-        <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
+        <Box
+          sx={{
+            width: '100%',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+            gap: 1.5,
+            mt: { xs: 1, sm: 3 },
+          }}
+        >
           <Button
             variant="contained"
             size="large"
             href="/create-room"
             data-testid="create-room-button"
+            sx={{ minHeight: 52 }}
           >
             {t('home.createRoom')}
           </Button>
@@ -127,6 +140,7 @@ export default function Home() {
             size="large"
             href="/join"
             data-testid="join-game-button"
+            sx={{ minHeight: 52 }}
           >
             {t('home.joinRoom')}
           </Button>

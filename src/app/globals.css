@@ -4,20 +4,52 @@
   margin: 0;
 }
 
+@font-face {
+  font-family: "Lobby Deco Display";
+  src:
+    local("Bodoni Moda SC Bold"),
+    local("Bodoni Moda SC"),
+    url("/fonts/bodoni-moda-sc-700.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 700;
+}
+
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background-image: url('/background.jpg');
-  background-size: 100% auto;
-  background-position: top center;
+  min-height: 100svh;
+  position: relative;
+  background-image:
+    linear-gradient(180deg, rgba(7, 8, 10, 0.56) 0%, rgba(7, 8, 10, 0.74) 42%, rgba(7, 8, 10, 0.92) 100%),
+    radial-gradient(circle at 50% -10%, rgba(184, 150, 95, 0.2), transparent 34rem),
+    radial-gradient(circle at 12% 18%, rgba(143, 47, 50, 0.2), transparent 20rem),
+    url('/background.jpg');
+  background-size: cover, cover, cover, cover;
+  background-position: center, center, center, top center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.3;
+  background-image:
+    linear-gradient(90deg, rgba(184, 150, 95, 0.065) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(184, 150, 95, 0.045) 1px, transparent 1px);
+  background-size: 96px 96px, 96px 96px;
+  mask-image: radial-gradient(circle at 50% 18%, black, transparent 82%);
 }
 
 a {
@@ -26,9 +58,9 @@ a {
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 241, 234, 217;
+  --background-start-rgb: 7, 8, 10;
+  --background-end-rgb: 9, 10, 13;
 }
 
 @media (prefers-color-scheme: dark) {
