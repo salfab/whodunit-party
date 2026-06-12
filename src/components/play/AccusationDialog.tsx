@@ -23,12 +23,12 @@ interface AccusationDialogProps {
   onClose: () => void;
   players: PlayerOption[];
   selectedPlayer: string;
+  // eslint-disable-next-line no-unused-vars -- type-level parameter name
   onSelectPlayer: (playerId: string) => void;
+  // eslint-disable-next-line no-unused-vars -- type-level parameter name
   onConfirm: (playerId: string) => void;
   submitting: boolean;
 }
-
-const goldAccent = '#e4c98b';
 
 export default function AccusationDialog({
   open,
@@ -89,7 +89,7 @@ export default function AccusationDialog({
           component="span"
           sx={{
             fontWeight: 700,
-            color: goldAccent,
+            color: 'secondary.light',
           }}
         >
           Qui accusez-vous ?
@@ -135,15 +135,15 @@ export default function AccusationDialog({
                 px: 3,
                 borderRadius: 2,
                 border: '2px solid',
-                borderColor: selectedPlayer === player.id ? '#d32f2f' : 'divider',
-                bgcolor: selectedPlayer === player.id ? 'rgba(211, 47, 47, 0.1)' : 'transparent',
+                borderColor: selectedPlayer === player.id ? 'primary.light' : 'divider',
+                bgcolor: selectedPlayer === player.id ? 'rgba(143, 47, 50, 0.16)' : 'transparent',
                 textAlign: 'left',
                 justifyContent: 'flex-start',
                 textTransform: 'none',
                 transition: 'all 0.2s ease',
                 '&:hover': {
-                  borderColor: '#d32f2f',
-                  bgcolor: 'rgba(211, 47, 47, 0.08)',
+                  borderColor: 'primary.light',
+                  bgcolor: 'rgba(143, 47, 50, 0.12)',
                   transform: 'scale(1.01)',
                 },
                 '&:active': {
@@ -186,7 +186,7 @@ export default function AccusationDialog({
             sx={{
               mt: 3,
               textAlign: 'center',
-              color: '#d32f2f',
+              color: 'secondary.light',
               fontWeight: 500,
             }}
           >

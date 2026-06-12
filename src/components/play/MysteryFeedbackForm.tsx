@@ -97,7 +97,7 @@ export default function MysteryFeedbackForm({ words, submitted, onSubmit }: Myst
   if (submitted) {
     return (
       <Paper variant="outlined" sx={{ p: 3, mb: 4, textAlign: 'center' }} data-testid="feedback-thanks">
-        <Typography variant="h6" sx={{ color: 'primary.main' }}>
+        <Typography variant="h6" sx={{ color: 'secondary.main' }}>
           Merci pour votre retour !
         </Typography>
       </Paper>

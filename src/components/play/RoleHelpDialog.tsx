@@ -26,11 +26,11 @@ export default function RoleHelpDialog({ open, onClose, helpContent }: RoleHelpD
         }
       }}
     >
-      <DialogTitle sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+      <DialogTitle sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        color: 'primary.main',
+        color: 'secondary.main',
         fontWeight: 600,
       }}>
         <Box component="span">Aide</Box>
@@ -41,14 +41,14 @@ export default function RoleHelpDialog({ open, onClose, helpContent }: RoleHelpD
       <DialogContent>
         <Box sx={{
           '& h1': {
-            color: 'primary.main',
+            color: 'secondary.main',
             fontSize: '1.5rem',
             fontWeight: 600,
             mb: 2,
             mt: 1,
           },
           '& h2': {
-            color: 'primary.light',
+            color: 'secondary.light',
             fontSize: '1.2rem',
             fontWeight: 600,
             mb: 2,
@@ -69,7 +69,7 @@ export default function RoleHelpDialog({ open, onClose, helpContent }: RoleHelpD
             lineHeight: 1.6,
           },
           '& strong': {
-            color: 'primary.light',
+            color: 'secondary.light',
             fontWeight: 700,
           },
           '& ul ul': {
