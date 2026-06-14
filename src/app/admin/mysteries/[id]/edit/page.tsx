@@ -16,6 +16,8 @@ import {
   Select,
   FormControl,
   InputLabel,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon, Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon, Edit as EditIcon } from '@mui/icons-material';
 import ReactMarkdown from 'react-markdown';
@@ -42,6 +44,7 @@ interface MysteryFormData {
   language: string;
   author: string;
   theme: string;
+  adult_content: boolean;
   word_pool: string[];
   character_sheets: CharacterSheet[];
 }
@@ -125,6 +128,7 @@ export default function EditMysteryPage() {
     language: 'fr',
     author: 'Built-in',
     theme: 'SERIOUS_MURDER',
+    adult_content: false,
     word_pool: Array(WORD_POOL_SIZE).fill(''),
     character_sheets: [
       { role: 'investigator', character_name: 'Personnage 1', dark_secret: '', alibi: '' },
@@ -165,6 +169,7 @@ export default function EditMysteryPage() {
         language: data.language || 'fr',
         author: data.author || 'Built-in',
         theme: data.theme || 'SERIOUS_MURDER',
+        adult_content: data.adult_content ?? false,
         word_pool: data.word_pool?.length ? data.word_pool : Array(WORD_POOL_SIZE).fill(''),
         character_sheets: data.character_sheets || [],
       });
@@ -404,6 +409,21 @@ export default function EditMysteryPage() {
                 <MenuItem value="FUNNY_CRIME">Crime Comique</MenuItem>
               </Select>
             </FormControl>
+          </Box>
+
+          <Box sx={{ mb: 3 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formData.adult_content}
+                  onChange={(e) => setFormData({ ...formData, adult_content: e.target.checked })}
+                />
+              }
+              label="Contenu adulte / NSFW (sexuel, gore, drogues)"
+            />
+            <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 0.5 }}>
+              Si activé, ce mystère est masqué dans les salles qui n&apos;ont pas explicitement inclus les thèmes adultes.
+            </Typography>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 4, mb: 1 }}>

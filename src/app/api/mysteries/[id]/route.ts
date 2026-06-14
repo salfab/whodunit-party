@@ -83,6 +83,7 @@ export async function PUT(
       language,
       author,
       theme,
+      adult_content,
       word_pool,
       character_sheets,
     } = body;
@@ -98,6 +99,7 @@ export async function PUT(
         language,
         author: author || 'Built-in',
         theme: theme || 'SERIOUS_MURDER',
+        adult_content: adult_content ?? false,
         word_pool,
       })
       .eq('id', id);

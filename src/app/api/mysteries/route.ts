@@ -17,15 +17,23 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('language');
     const includeCharacterCount = searchParams.get('includeCharacterCount') === 'true';
+    const includeAdult = searchParams.get('includeAdult');
 
     let query = supabase
       .from('mysteries')
-      .select('id, title, synopsis, description, language, author, theme, created_at, image_path')
+      .select('id, title, synopsis, description, language, author, theme, adult_content, created_at, image_path')
       .order('created_at', { ascending: false });
 
     // Filter by language if provided
     if (language) {
       query = query.eq('language', language);
+    }
+
+    // Hide adult / NSFW mysteries unless the caller explicitly opts in.
+    // Only filters when includeAdult is explicitly 'false' (rooms pass their
+    // stored preference); callers that omit the param (e.g. admin) see all.
+    if (includeAdult === 'false') {
+      query = query.eq('adult_content', false);
     }
 
     const { data: mysteries, error } = await query;
@@ -92,6 +100,7 @@ export async function POST(request: NextRequest) {
       language,
       author,
       theme,
+      adult_content,
       word_pool,
       character_sheets,
     } = body;
@@ -107,6 +116,7 @@ export async function POST(request: NextRequest) {
         language,
         author: author || 'Built-in',
         theme: theme || 'SERIOUS_MURDER',
+        adult_content: adult_content ?? false,
         word_pool,
       })
       .select()

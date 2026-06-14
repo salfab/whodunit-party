@@ -16,6 +16,7 @@ interface MysteryInput {
   language: string;
   author?: string;
   theme?: string;
+  adult_content?: boolean;
   word_pool: string[];
   character_sheets: Array<{
     role: 'investigator' | 'suspect' | 'guilty' | 'innocent';
@@ -100,6 +101,7 @@ export async function POST(request: NextRequest) {
           language: mysteryInput.language,
           author: mysteryInput.author || 'Built-in',
           theme: mysteryInput.theme || 'SERIOUS_MURDER',
+          adult_content: mysteryInput.adult_content ?? false,
           word_pool: mysteryInput.word_pool,
         })
         .select()

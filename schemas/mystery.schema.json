@@ -62,6 +62,10 @@
           "enum": ["PETTY_CRIME", "MACABRE", "SERIOUS_MURDER", "FUNNY_CRIME"],
           "description": "The theme category of the mystery"
         },
+        "adult_content": {
+          "type": "boolean",
+          "description": "Optional. True if the mystery carries adult / NSFW themes (sexual, graphic gore, drugs). Rooms hide these unless the host opts in. Defaults to false when omitted."
+        },
         "word_pool": {
           "type": "array",
           "items": { "type": "string", "minLength": 1 },

@@ -31,6 +31,7 @@ interface MysteryJson {
   language: string;
   author?: string;
   theme?: string;
+  adult_content?: boolean;
   version?: string;
   word_pool: string[];
   character_sheets: Array<{
@@ -385,6 +386,7 @@ export async function POST(request: NextRequest) {
           language: mysteryData.language,
           author: mysteryData.author || 'Unknown',
           theme: mysteryData.theme || 'SERIOUS_MURDER',
+          adult_content: mysteryData.adult_content ?? false,
           version: mysteryData.version || '1.0.0',
           word_pool: mysteryData.word_pool,
         })
