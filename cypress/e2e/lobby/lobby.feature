@@ -34,6 +34,15 @@ Feature: Game Lobby
     When I visit the lobby page
     Then I should see the mystery voting section
 
+  @mocked
+  Scenario: Adult content is excluded by default and can be toggled on
+    Given I mock a lobby session as "Alice" with mysteries
+    And I mock the adult content update API
+    When I visit the lobby page
+    Then the adult content toggle should be off
+    When I enable the adult content toggle
+    Then the adult content update should be requested with inclusion enabled
+
   # ==================== Real Multi-Player Tests ====================
   # Note: These tests require Supabase database access and real-time subscriptions
   # They are marked @realtime and @skip because they need actual backend

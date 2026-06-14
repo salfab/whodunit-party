@@ -236,14 +236,15 @@ export async function loadAvailableMysteries(
   selectedMystery: string;
   hasVoted: boolean;
 }> {
-  // Get session info for language filtering
+  // Get session info for language + adult-content filtering
   const { data: sessionData } = await supabase
     .from('game_sessions')
-    .select('language')
+    .select('language, include_adult_content')
     .eq('id', sessionId)
     .single();
-  
+
   const language = sessionData?.language || 'fr';
+  const includeAdult = sessionData?.include_adult_content ?? false;
 
   // Get active player count for filtering by character_count
   const { data: activePlayers } = await supabase
@@ -254,8 +255,8 @@ export async function loadAvailableMysteries(
   
   const playerCount = activePlayers?.length || 0;
 
-  // Get mysteries filtered by language and including character count
-  const mysteriesResponse = await fetch(`/api/mysteries?language=${language}&includeCharacterCount=true`);
+  // Get mysteries filtered by language + adult preference, including character count
+  const mysteriesResponse = await fetch(`/api/mysteries?language=${language}&includeCharacterCount=true&includeAdult=${includeAdult}`);
   if (!mysteriesResponse.ok) {
     throw new Error('Failed to fetch mysteries');
   }

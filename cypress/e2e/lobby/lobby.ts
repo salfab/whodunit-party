@@ -237,6 +237,31 @@ Then('I should see the mystery voting section', () => {
   cy.getByTestId('mystery-voting-title').should('be.visible');
 });
 
+// ==================== Adult Content Toggle ====================
+
+Given('I mock the adult content update API', () => {
+  cy.intercept('PUT', '**/api/sessions/*/update-adult-content', {
+    statusCode: 200,
+    body: { success: true },
+  }).as('updateAdult');
+});
+
+Then('the adult content toggle should be off', () => {
+  cy.getByTestId('lobby-adult-content-toggle')
+    .find('input[type=checkbox]')
+    .should('not.be.checked');
+});
+
+When('I enable the adult content toggle', () => {
+  cy.getByTestId('lobby-adult-content-toggle')
+    .find('input[type=checkbox]')
+    .check({ force: true });
+});
+
+Then('the adult content update should be requested with inclusion enabled', () => {
+  cy.wait('@updateAdult').its('request.body').should('deep.equal', { includeAdultContent: true });
+});
+
 // ==================== Voting and Ready State ====================
 
 When('I vote for a mystery', () => {

@@ -11,6 +11,8 @@ import {
   Button,
   IconButton,
   Tooltip,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import { HelpOutline as HelpIcon } from '@mui/icons-material';
 import { QRCodeSVG } from 'qrcode.react';
@@ -80,16 +82,16 @@ export default function LobbyPage() {
     }
   }, [currentPlayerId, votes]);
 
-  // Reload mysteries when session language changes
+  // Reload mysteries when session language or adult-content preference changes
   useEffect(() => {
     if (session?.language) {
-      loadMysteriesByLanguage(session.language);
+      loadMysteriesByLanguage(session.language, session.include_adult_content ?? false);
     }
-  }, [session?.language]);
+  }, [session?.language, session?.include_adult_content]);
 
-  async function loadMysteriesByLanguage(language: string) {
+  async function loadMysteriesByLanguage(language: string, includeAdult: boolean) {
     try {
-      const mysteriesResponse = await fetch(`/api/mysteries?language=${language}&includeCharacterCount=true`);
+      const mysteriesResponse = await fetch(`/api/mysteries?language=${language}&includeCharacterCount=true&includeAdult=${includeAdult}`);
       if (mysteriesResponse.ok) {
         const data = await mysteriesResponse.json();
         const loadedMysteries = data.mysteries || [];
@@ -102,7 +104,7 @@ export default function LobbyPage() {
 
   // Calculate if game can start
   const activePlayers = players.filter((p) => p.status === 'active');
-  
+
   // Filter mysteries that can accommodate the current player count
   const availableMysteries = mysteries.filter(
     (mystery) => mystery.character_count >= activePlayers.length
@@ -173,8 +175,8 @@ export default function LobbyPage() {
         return;
       }
 
-      // Fetch mysteries filtered by session language
-      const mysteriesResponse = await fetch(`/api/mysteries?language=${sessionData.language || 'fr'}&includeCharacterCount=true`);
+      // Fetch mysteries filtered by session language + adult-content preference
+      const mysteriesResponse = await fetch(`/api/mysteries?language=${sessionData.language || 'fr'}&includeCharacterCount=true&includeAdult=${sessionData.include_adult_content ?? false}`);
       if (mysteriesResponse.ok) {
         const data = await mysteriesResponse.json();
         const loadedMysteries = data.mysteries || [];
@@ -494,6 +496,32 @@ export default function LobbyPage() {
     } catch (err) {
       console.error('Error updating language:', err);
       setError('Failed to update language. Please try again.');
+      setTimeout(() => setError(''), 3000);
+    }
+  }
+
+  async function handleToggleAdultContent(include: boolean) {
+    if (!session) return;
+
+    try {
+      const response = await fetch(`/api/sessions/${sessionId}/update-adult-content`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ includeAdultContent: include }),
+      });
+
+      if (!response.ok) {
+        console.error('Error updating adult content preference');
+        setError('Failed to update content settings. Please try again.');
+        setTimeout(() => setError(''), 3000);
+        return;
+      }
+
+      // Preference will be updated via Realtime subscription
+      console.log('Adult content preference updated successfully');
+    } catch (err) {
+      console.error('Error updating adult content preference:', err);
+      setError('Failed to update content settings. Please try again.');
       setTimeout(() => setError(''), 3000);
     }
   }
@@ -970,6 +998,31 @@ export default function LobbyPage() {
                 }}
               />
             </Box>
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: { xs: 1, sm: 1.35 } }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  size="small"
+                  checked={session?.include_adult_content ?? false}
+                  onChange={(e) => handleToggleAdultContent(e.target.checked)}
+                  inputProps={{ 'aria-label': 'Inclure les mystères pour adultes' }}
+                  data-testid="lobby-adult-content-toggle"
+                />
+              }
+              label="Inclure les mystères pour adultes"
+              sx={{
+                m: 0,
+                '& .MuiFormControlLabel-label': {
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  color: 'secondary.main',
+                },
+              }}
+            />
           </Box>
 
           <MysteryVotingList
