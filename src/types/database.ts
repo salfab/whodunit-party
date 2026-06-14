@@ -58,6 +58,7 @@ export type Database = {
           created_at: string
           current_mystery_id: string | null
           id: string
+          include_adult_content: boolean
           join_code: string
           language: string
           status: Database["public"]["Enums"]["session_status"]
@@ -67,6 +68,7 @@ export type Database = {
           created_at?: string
           current_mystery_id?: string | null
           id?: string
+          include_adult_content?: boolean
           join_code: string
           language: string
           status?: Database["public"]["Enums"]["session_status"]
@@ -76,6 +78,7 @@ export type Database = {
           created_at?: string
           current_mystery_id?: string | null
           id?: string
+          include_adult_content?: boolean
           join_code?: string
           language?: string
           status?: Database["public"]["Enums"]["session_status"]
@@ -93,6 +96,7 @@ export type Database = {
       }
       mysteries: {
         Row: {
+          adult_content: boolean
           author: string
           created_at: string
           description: string
@@ -106,6 +110,7 @@ export type Database = {
           word_pool: string[]
         }
         Insert: {
+          adult_content?: boolean
           author: string
           created_at?: string
           description: string
@@ -119,6 +124,7 @@ export type Database = {
           word_pool?: string[]
         }
         Update: {
+          adult_content?: boolean
           author?: string
           created_at?: string
           description?: string
