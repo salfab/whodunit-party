@@ -7,6 +7,7 @@ interface LanguageSelectorProps {
   // eslint-disable-next-line no-unused-vars -- type-level parameter name
   onChange: (language: string) => void;
   compact?: boolean;
+  disabled?: boolean;
 }
 
 const LANGUAGES = [
@@ -17,7 +18,7 @@ const LANGUAGES = [
   { code: 'it', label: 'Italiano' },
 ];
 
-export function LanguageSelector({ value, onChange, compact = false }: LanguageSelectorProps) {
+export function LanguageSelector({ value, onChange, compact = false, disabled = false }: LanguageSelectorProps) {
   const handleChange = (event: SelectChangeEvent<string>) => {
     onChange(event.target.value);
   };
@@ -53,6 +54,7 @@ export function LanguageSelector({ value, onChange, compact = false }: LanguageS
         value={value}
         label={compact ? undefined : 'Langue'}
         onChange={handleChange}
+        disabled={disabled}
         inputProps={compact ? { 'aria-label': 'Langue' } : undefined}
         renderValue={compact ? () => selectedLanguage?.code.toUpperCase() || value.toUpperCase() : undefined}
       >

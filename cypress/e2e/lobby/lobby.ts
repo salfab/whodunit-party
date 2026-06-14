@@ -126,7 +126,7 @@ Given('I mock a lobby session as {string} with mysteries', (playerName: string) 
 
   cy.intercept('GET', '**/rest/v1/players*', {
     statusCode: 200,
-    body: [{ id: testPlayerId, name: playerName, status: 'active', session_id: testSessionId }],
+    body: [{ id: testPlayerId, name: playerName, status: 'active', session_id: testSessionId, created_at: '2026-01-01T00:00:01Z' }],
   }).as('getPlayers');
 
   cy.intercept('GET', '/api/mysteries*', {
@@ -149,6 +149,47 @@ Given('I mock a lobby session as {string} with mysteries', (playerName: string) 
         },
       ],
     },
+  }).as('getMysteries');
+
+  cy.intercept('GET', '**/rest/v1/player_ready_states*', { statusCode: 200, body: [] }).as('getReadyStates');
+  cy.intercept('GET', '**/rest/v1/mystery_votes*', { statusCode: 200, body: [] }).as('getVotes');
+  cy.intercept('GET', '**/rest/v1/rounds*', { statusCode: 200, body: [] }).as('getRounds');
+});
+
+Given('I mock a lobby session as {string} who is not the host', (playerName: string) => {
+  testSessionId = 'mock-session-001';
+  testJoinCode = 'TEST01';
+  testPlayerId = 'mock-player-001';
+
+  cy.intercept('GET', '/api/session/me', {
+    statusCode: 200,
+    body: { playerId: testPlayerId, sessionId: testSessionId, playerName },
+  }).as('sessionMe');
+
+  cy.intercept('GET', '**/rest/v1/game_sessions*', {
+    statusCode: 200,
+    body: {
+      id: testSessionId,
+      join_code: testJoinCode,
+      status: 'lobby',
+      language: 'en',
+      include_adult_content: false,
+    },
+  }).as('getSession');
+
+  // An earlier-joined player (the host) plus the current player, who is NOT
+  // the host. The lobby picks the earliest active player by created_at.
+  cy.intercept('GET', '**/rest/v1/players*', {
+    statusCode: 200,
+    body: [
+      { id: 'mock-host-000', name: 'Alice', status: 'active', session_id: testSessionId, created_at: '2026-01-01T00:00:01Z' },
+      { id: testPlayerId, name: playerName, status: 'active', session_id: testSessionId, created_at: '2026-01-01T00:00:05Z' },
+    ],
+  }).as('getPlayers');
+
+  cy.intercept('GET', '/api/mysteries*', {
+    statusCode: 200,
+    body: { mysteries: [{ id: 'mystery-1', title: 'Test Mystery', character_count: 10 }] },
   }).as('getMysteries');
 
   cy.intercept('GET', '**/rest/v1/player_ready_states*', { statusCode: 200, body: [] }).as('getReadyStates');
@@ -260,6 +301,16 @@ When('I enable the adult content toggle', () => {
 
 Then('the adult content update should be requested with inclusion enabled', () => {
   cy.wait('@updateAdult').its('request.body').should('deep.equal', { includeAdultContent: true });
+});
+
+Then('the adult content toggle should be disabled', () => {
+  cy.getByTestId('lobby-adult-content-toggle')
+    .find('input[type=checkbox]')
+    .should('be.disabled');
+});
+
+Then('I should see the host-only settings hint', () => {
+  cy.getByTestId('lobby-host-only-hint').should('be.visible');
 });
 
 // ==================== Voting and Ready State ====================

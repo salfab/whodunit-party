@@ -35,13 +35,20 @@ Feature: Game Lobby
     Then I should see the mystery voting section
 
   @mocked
-  Scenario: Adult content is excluded by default and can be toggled on
+  Scenario: Host can toggle adult content (excluded by default)
     Given I mock a lobby session as "Alice" with mysteries
     And I mock the adult content update API
     When I visit the lobby page
     Then the adult content toggle should be off
     When I enable the adult content toggle
     Then the adult content update should be requested with inclusion enabled
+
+  @mocked
+  Scenario: Non-host sees room settings as read-only
+    Given I mock a lobby session as "Bob" who is not the host
+    When I visit the lobby page
+    Then the adult content toggle should be disabled
+    And I should see the host-only settings hint
 
   # ==================== Real Multi-Player Tests ====================
   # Note: These tests require Supabase database access and real-time subscriptions

@@ -105,6 +105,20 @@ export default function LobbyPage() {
   // Calculate if game can start
   const activePlayers = players.filter((p) => p.status === 'active');
 
+  // The host is the earliest-joined active player (the room creator; the role
+  // transfers to the next-oldest if they leave). Mirrors the server-side guard
+  // in requireHost (order by created_at, then id). Compare parsed timestamps
+  // (not raw strings) so client ordering matches Postgres timestamptz ordering;
+  // tiebreak by id, exactly like the server. Only the host can change room
+  // settings (language, adult content).
+  const hostId = [...activePlayers].sort((a, b) => {
+    const ta = a.created_at ? Date.parse(a.created_at) : 0;
+    const tb = b.created_at ? Date.parse(b.created_at) : 0;
+    if (ta !== tb) return ta - tb;
+    return (a.id ?? '') < (b.id ?? '') ? -1 : 1;
+  })[0]?.id;
+  const isHost = !!currentPlayerId && hostId === currentPlayerId;
+
   // Filter mysteries that can accommodate the current player count
   const availableMysteries = mysteries.filter(
     (mystery) => mystery.character_count >= activePlayers.length
@@ -622,6 +636,7 @@ export default function LobbyPage() {
                 value={session?.language || 'fr'}
                 onChange={handleLanguageChange}
                 compact
+                disabled={!isHost}
               />
               <Tooltip title="Aide">
                 <IconButton
@@ -1000,13 +1015,14 @@ export default function LobbyPage() {
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: { xs: 1, sm: 1.35 } }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: { xs: 1, sm: 1.35 } }}>
             <FormControlLabel
               control={
                 <Switch
                   size="small"
                   checked={session?.include_adult_content ?? false}
                   onChange={(e) => handleToggleAdultContent(e.target.checked)}
+                  disabled={!isHost}
                   inputProps={{ 'aria-label': 'Inclure les mystères pour adultes' }}
                   data-testid="lobby-adult-content-toggle"
                 />
@@ -1023,6 +1039,15 @@ export default function LobbyPage() {
                 },
               }}
             />
+            {!isHost && (
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.secondary', fontStyle: 'italic', mt: 0.25 }}
+                data-testid="lobby-host-only-hint"
+              >
+                Seul l&apos;hôte peut modifier les réglages de la salle (langue et contenu).
+              </Typography>
+            )}
           </Box>
 
           <MysteryVotingList

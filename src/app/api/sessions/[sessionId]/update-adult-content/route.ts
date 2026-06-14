@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { createLogger } from '@/lib/logging';
+import { requireHost } from '@/lib/host-auth';
 
 const log = createLogger('api.sessions.update-adult-content');
 
@@ -14,6 +15,10 @@ export async function PUT(
 ) {
   try {
     const { sessionId } = await params;
+
+    const authError = await requireHost(sessionId);
+    if (authError) return authError;
+
     const { includeAdultContent } = await request.json();
 
     if (typeof includeAdultContent !== 'boolean') {
